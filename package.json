@@ -1,0 +1,12 @@
+{
+  "name": "name-tbd",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "dev": "pnpm --filter frontend dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.7"
+  }
+}
