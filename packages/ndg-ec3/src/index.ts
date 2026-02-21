@@ -1,1 +1,1 @@
-export type * from "@ndg/ndg-core"
+export * from "@ndg/ndg-core";

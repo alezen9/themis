@@ -6,6 +6,7 @@
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "dev": "pnpm --filter frontend dev",
+    "validate": "pnpm -r --if-present validate",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

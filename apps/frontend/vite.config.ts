@@ -18,5 +18,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     passWithNoTests: true,
+    exclude: ["**/node_modules/**", "**/dist/**", "src/verifications/**"],
   },
+
 });
