@@ -1,0 +1,87 @@
+[
+  {
+    "id": "node-fy",
+    "type": "constant",
+    "label": "Yield strength",
+    "children": [],
+    "payload": {
+      "key": "fy",
+      "value": 355,
+      "description": "Nominal yield strength for S355 steel (t ≤ 16mm)"
+    }
+  },
+  {
+    "id": "node-gamma-M0",
+    "type": "coefficient",
+    "label": "Partial factor γM0",
+    "children": [],
+    "meta": {
+      "sectionId": "6.1",
+      "tableId": "NA.1"
+    },
+    "payload": {
+      "key": "gamma_M0",
+      "value": 1.0,
+      "unit": "-"
+    }
+  },
+  {
+    "id": "node-A",
+    "type": "user-input",
+    "label": "Gross cross-sectional area",
+    "children": [],
+    "payload": {
+      "key": "A",
+      "value": 98.8,
+      "unit": "cm²"
+    }
+  },
+  {
+    "id": "node-NEd",
+    "type": "user-input",
+    "label": "Design compression force",
+    "children": [],
+    "payload": {
+      "key": "NEd",
+      "value": 1200,
+      "unit": "kN"
+    }
+  },
+  {
+    "id": "node-NcRd",
+    "type": "formula",
+    "label": "Design compression resistance",
+    "children": [
+      { "nodeId": "node-A" },
+      { "nodeId": "node-fy" },
+      { "nodeId": "node-gamma-M0" }
+    ],
+    "meta": {
+      "sectionId": "6.2.4",
+      "formulaId": "(6.11)"
+    },
+    "payload": {
+      "key": "Nc_Rd",
+      "latex": "N_{c,Rd} = \\frac{A \\cdot f_y}{\\gamma_{M0}}",
+      "unit": "kN"
+    }
+  },
+  {
+    "id": "node-check-compression",
+    "type": "check",
+    "label": "Compression resistance",
+    "children": [
+      { "nodeId": "node-NEd" },
+      { "nodeId": "node-NcRd" }
+    ],
+    "meta": {
+      "sectionId": "6.2.4",
+      "verificationConditionId": "(6.10)"
+    },
+    "payload": {
+      "label": "Cross-section compression resistance",
+      "verificationExpression": "NEd / Nc_Rd <= 1.0",
+      "description": "EN 1993-1-1 §6.2.4"
+    }
+  }
+]

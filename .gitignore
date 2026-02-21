@@ -4,3 +4,4 @@ dist/
 .env.local
 src/routeTree.gen.ts
 apps/frontend/src/routeTree.gen.ts
+.DS_Store

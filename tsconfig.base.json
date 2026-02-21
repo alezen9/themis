@@ -8,6 +8,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "customConditions": ["development"]
   }
 }
