@@ -15,8 +15,11 @@
     "@ndg/ndg-ec3": "workspace:*",
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-router": "^1.114",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "react": "^18.3",
-    "react-dom": "^18.3"
+    "react-dom": "^18.3",
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0",
