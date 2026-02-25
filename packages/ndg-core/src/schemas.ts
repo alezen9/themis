@@ -5,19 +5,19 @@ import { z } from "zod";
 // ########################################
 
 export const NodeMetaSchema = z.object({
-  sectionId: z.string().optional(),
-  paragraphId: z.string().optional(),
-  subParagraphId: z.string().optional(),
-  formulaId: z.string().optional(),
-  verificationConditionId: z.string().optional(),
-  tableId: z.string().optional(),
+  sectionRef: z.string().optional(),
+  paragraphRef: z.string().optional(),
+  subParagraphRef: z.string().optional(),
+  formulaRef: z.string().optional(),
+  tableRef: z.string().optional(),
+  verificationRef: z.string().optional(),
 });
 
 // ########################################
 //              CONDITION (recursive)
 // ########################################
 
-// Type must be declared explicitly for recursive Zod schemas
+// Explicit type declaration required for recursive Zod schemas
 export type Condition =
   | { eq: [string, unknown] }
   | { lt: [string, number] }
@@ -49,110 +49,117 @@ export const ChildSchema = z.object({
 });
 
 // ########################################
-//              PAYLOADS
+//              BASE NODE
 // ########################################
 
-export const CheckPayloadSchema = z.object({
-  label: z.string(),
-  verificationExpression: z.string(),
+const BaseNodeSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  symbol: z.string().optional(), // LaTeX: "N_{cr}", "\\bar{\\lambda}", "A"
   description: z.string().optional(),
+  children: z.array(ChildSchema),
 });
 
-export const FormulaPayloadSchema = z.object({
-  key: z.string(),
-  latex: z.string(),
-  unit: z.string().optional(),
-});
+// ########################################
+//              VALUE TYPE
+// ########################################
 
-export const UserInputPayloadSchema = z.object({
-  key: z.string(),
-  label: z.string().optional(),
-  value: z.number(),
-  unit: z.string(),
-});
-
-export const TablePayloadSchema = z.object({
-  tableKey: z.string(),
-  selectedRow: z.string().optional(),
-  selectedColumn: z.string().optional(),
-  unit: z.string().optional(),
-});
-
-export const CoefficientPayloadSchema = z.object({
-  key: z.string(),
-  value: z.number(),
-  unit: z.string().optional(),
-});
-
-export const DerivedCoefficientPayloadSchema = z.object({
-  key: z.string(),
-  latex: z.string().optional(),
-  unit: z.string().optional(),
-});
-
-export const ConstantPayloadSchema = z.object({
-  key: z.string(),
-  value: z.number(),
-  description: z.string().optional(),
-});
+const NumericValueType = z.literal("number");
+const AnyValueType = z.enum(["number", "string"]);
 
 // ########################################
 //              NODES
 // ########################################
 
-const BaseNodeSchema = z.object({
-  id: z.string(),
-  label: z.string().optional(),
-  children: z.array(ChildSchema),
-});
-
+/**
+ * Root node of a verification.
+ * Evaluator returns the utilisation ratio; pass = ratio ≤ 1.0.
+ */
 export const CheckNodeSchema = BaseNodeSchema.extend({
   type: z.literal("check"),
-  meta: NodeMetaSchema,
-  payload: CheckPayloadSchema,
+  key: z.string(),
+  valueType: NumericValueType,
+  meta: NodeMetaSchema.optional(),
+  verificationExpression: z.string(), // LaTeX: "\\frac{N_{Ed}}{N_{c,Rd}} \\leq 1.0"
 });
 
+/**
+ * Numbered Eurocode equation. formulaRef is required.
+ */
 export const FormulaNodeSchema = BaseNodeSchema.extend({
   type: z.literal("formula"),
-  meta: NodeMetaSchema,
-  payload: FormulaPayloadSchema,
+  key: z.string(),
+  valueType: NumericValueType,
+  meta: NodeMetaSchema.extend({ formulaRef: z.string() }),
+  expression: z.string(), // LaTeX: "\\frac{A \\cdot f_y}{\\gamma_{M0}}"
+  unit: z.string().optional(),
 });
 
-export const UserInputNodeSchema = BaseNodeSchema.extend({
-  type: z.literal("user-input"),
-  payload: UserInputPayloadSchema,
+/**
+ * Computed value not tied to a numbered equation (e.g. derived from geometry,
+ * selected from logic, or a categorical result).
+ */
+export const DerivedNodeSchema = BaseNodeSchema.extend({
+  type: z.literal("derived"),
+  key: z.string(),
+  valueType: AnyValueType,
+  meta: NodeMetaSchema.optional(),
+  expression: z.string().optional(), // LaTeX, optional
+  unit: z.string().optional(),
 });
 
+/**
+ * Value selected from a structured normative or external table.
+ * source is documentary; resolution is handled by the evaluator.
+ */
 export const TableNodeSchema = BaseNodeSchema.extend({
   type: z.literal("table"),
-  meta: NodeMetaSchema,
-  payload: TablePayloadSchema,
+  key: z.string(),
+  valueType: AnyValueType,
+  meta: NodeMetaSchema.optional(),
+  source: z.string(), // e.g. "EC3-Table-6.2"
+  unit: z.string().optional(),
 });
 
+/**
+ * Fixed normative factor (e.g. γ_M0). Value comes from the national annex.
+ */
 export const CoefficientNodeSchema = BaseNodeSchema.extend({
   type: z.literal("coefficient"),
+  key: z.string(),
+  valueType: NumericValueType,
   meta: NodeMetaSchema,
-  payload: CoefficientPayloadSchema,
+  unit: z.string().optional(),
 });
 
-export const DerivedCoefficientNodeSchema = BaseNodeSchema.extend({
-  type: z.literal("derived-coefficient"),
-  meta: NodeMetaSchema,
-  payload: DerivedCoefficientPayloadSchema,
+/**
+ * Value provided by the engineer at runtime.
+ */
+export const UserInputNodeSchema = BaseNodeSchema.extend({
+  type: z.literal("user-input"),
+  key: z.string(),
+  valueType: AnyValueType,
+  unit: z.string().optional(),
 });
 
+/**
+ * Mathematical constant (e.g. π). Value comes from the engine's CONSTANTS map.
+ * symbol is required.
+ */
 export const ConstantNodeSchema = BaseNodeSchema.extend({
   type: z.literal("constant"),
-  payload: ConstantPayloadSchema,
+  key: z.string(),
+  valueType: NumericValueType,
+  symbol: z.string(), // overrides BaseNode's optional symbol — required here
 });
 
 export const NodeSchema = z.discriminatedUnion("type", [
   CheckNodeSchema,
   FormulaNodeSchema,
-  UserInputNodeSchema,
+  DerivedNodeSchema,
   TableNodeSchema,
   CoefficientNodeSchema,
-  DerivedCoefficientNodeSchema,
+  UserInputNodeSchema,
   ConstantNodeSchema,
 ]);
 
@@ -164,22 +171,14 @@ export const VerificationSchema = z.array(NodeSchema);
 
 export type NodeMeta = z.infer<typeof NodeMetaSchema>;
 export type Child = z.infer<typeof ChildSchema>;
-export type CheckPayload = z.infer<typeof CheckPayloadSchema>;
-export type FormulaPayload = z.infer<typeof FormulaPayloadSchema>;
-export type UserInputPayload = z.infer<typeof UserInputPayloadSchema>;
-export type TablePayload = z.infer<typeof TablePayloadSchema>;
-export type CoefficientPayload = z.infer<typeof CoefficientPayloadSchema>;
-export type DerivedCoefficientPayload = z.infer<
-  typeof DerivedCoefficientPayloadSchema
->;
-export type ConstantPayload = z.infer<typeof ConstantPayloadSchema>;
 export type CheckNode = z.infer<typeof CheckNodeSchema>;
 export type FormulaNode = z.infer<typeof FormulaNodeSchema>;
-export type UserInputNode = z.infer<typeof UserInputNodeSchema>;
+export type DerivedNode = z.infer<typeof DerivedNodeSchema>;
 export type TableNode = z.infer<typeof TableNodeSchema>;
 export type CoefficientNode = z.infer<typeof CoefficientNodeSchema>;
-export type DerivedCoefficientNode = z.infer<typeof DerivedCoefficientNodeSchema>;
+export type UserInputNode = z.infer<typeof UserInputNodeSchema>;
 export type ConstantNode = z.infer<typeof ConstantNodeSchema>;
 export type Node = z.infer<typeof NodeSchema>;
+export type Verification = z.infer<typeof VerificationSchema>;
 export type NodeId = string;
 export type NodeType = Node["type"];

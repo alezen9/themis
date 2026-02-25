@@ -1,87 +1,72 @@
 [
   {
     "id": "node-fy",
-    "type": "constant",
-    "label": "Yield strength",
-    "children": [],
-    "payload": {
-      "key": "fy",
-      "value": 355,
-      "description": "Nominal yield strength for S355 steel (t ≤ 16mm)"
-    }
+    "type": "user-input",
+    "key": "fy",
+    "valueType": "number",
+    "name": "Characteristic yield strength",
+    "symbol": "f_y",
+    "unit": "MPa",
+    "children": []
   },
   {
     "id": "node-gamma-M0",
     "type": "coefficient",
-    "label": "Partial factor γM0",
-    "children": [],
-    "meta": {
-      "sectionId": "6.1",
-      "tableId": "NA.1"
-    },
-    "payload": {
-      "key": "gamma_M0",
-      "value": 1.0,
-      "unit": "-"
-    }
+    "key": "gamma_M0",
+    "valueType": "number",
+    "name": "Partial factor for cross-section resistance",
+    "symbol": "\\gamma_{M0}",
+    "meta": { "sectionRef": "6.1" },
+    "children": []
   },
   {
     "id": "node-A",
     "type": "user-input",
-    "label": "Gross cross-sectional area",
-    "children": [],
-    "payload": {
-      "key": "A",
-      "value": 98.8,
-      "unit": "cm²"
-    }
+    "key": "A",
+    "valueType": "number",
+    "name": "Cross-sectional area",
+    "symbol": "A",
+    "unit": "mm²",
+    "children": []
   },
   {
-    "id": "node-NEd",
+    "id": "node-N-Ed",
     "type": "user-input",
-    "label": "Design compression force",
-    "children": [],
-    "payload": {
-      "key": "NEd",
-      "value": 1200,
-      "unit": "kN"
-    }
+    "key": "N_Ed",
+    "valueType": "number",
+    "name": "Design value of compression force",
+    "symbol": "N_{Ed}",
+    "unit": "N",
+    "children": []
   },
   {
-    "id": "node-NcRd",
+    "id": "node-N-c-Rd",
     "type": "formula",
-    "label": "Design compression resistance",
+    "key": "N_c_Rd",
+    "valueType": "number",
+    "name": "Design resistance to normal forces",
+    "symbol": "N_{c,Rd}",
+    "meta": { "sectionRef": "6.2.4", "formulaRef": "(6.11)" },
+    "expression": "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
+    "unit": "N",
     "children": [
       { "nodeId": "node-A" },
       { "nodeId": "node-fy" },
       { "nodeId": "node-gamma-M0" }
-    ],
-    "meta": {
-      "sectionId": "6.2.4",
-      "formulaId": "(6.11)"
-    },
-    "payload": {
-      "key": "Nc_Rd",
-      "latex": "N_{c,Rd} = \\frac{A \\cdot f_y}{\\gamma_{M0}}",
-      "unit": "kN"
-    }
+    ]
   },
   {
-    "id": "node-check-compression",
+    "id": "node-check",
     "type": "check",
-    "label": "Compression resistance",
+    "key": "compression_check",
+    "valueType": "number",
+    "name": "Cross-section compression resistance",
+    "symbol": "\\eta",
+    "meta": { "sectionRef": "6.2.4", "verificationRef": "(6.10)" },
+    "verificationExpression": "\\frac{N_{Ed}}{N_{c,Rd}} \\leq 1.0",
     "children": [
-      { "nodeId": "node-NEd" },
-      { "nodeId": "node-NcRd" }
-    ],
-    "meta": {
-      "sectionId": "6.2.4",
-      "verificationConditionId": "(6.10)"
-    },
-    "payload": {
-      "label": "Cross-section compression resistance",
-      "verificationExpression": "NEd / Nc_Rd <= 1.0",
-      "description": "EN 1993-1-1 §6.2.4"
-    }
+      { "nodeId": "node-N-Ed" },
+      { "nodeId": "node-N-c-Rd" }
+    ]
   }
 ]
