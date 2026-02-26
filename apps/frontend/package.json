@@ -7,7 +7,7 @@
     "generate": "tsr generate",
     "dev": "vite",
     "build": "tsr generate && vite build",
-    "typecheck": "tsc -p tsconfig.app.json",
+    "typecheck": "tsr generate && tsc -p tsconfig.app.json",
     "test": "vitest run",
     "validate": "vitest run --config vitest.validate.config.ts",
     "preview": "vite preview"
