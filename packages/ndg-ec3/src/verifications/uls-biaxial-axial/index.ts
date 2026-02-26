@@ -1,10 +1,13 @@
 import type { VerificationDefinition } from "@ndg/ndg-core";
 
 /**
- * §6.2.9.1(6) — Biaxial bending and axial force.
+ * §6.2.9.1(6) — Biaxial bending and axial force, eq (6.41).
  * (M_y_Ed / M_N_y_Rd)^α + (M_z_Ed / M_N_z_Rd)^β ≤ 1.0
- * For I-sections: α = 2, β = 5n ≥ 1
- * For CHS/RHS: α = β = 2 (conservative)
+ *
+ * Exponents per §6.2.9.1(6):
+ *   I/H sections:  α = 2,  β = max(1, 5n)
+ *   CHS:           α = 2,  β = 2
+ *   RHS:           α = β = 1.66/(1 − 1.13n²)  but ≤ 6
  */
 
 const nodes = [
@@ -167,22 +170,30 @@ const nodes = [
     ],
   },
   {
+    type: "user-input",
+    key: "section_shape",
+    valueType: "string",
+    id: "biax-section-shape",
+    name: "Section shape family (I, CHS, RHS)",
+    children: [],
+  },
+  {
     type: "derived",
     key: "alpha_biax",
     valueType: "number",
     id: "biax-alpha",
-    name: "Biaxial exponent alpha",
+    name: "Biaxial exponent α per §6.2.9.1(6)",
     symbol: "\\alpha",
-    children: [{ nodeId: "biax-n" }],
+    children: [{ nodeId: "biax-section-shape" }, { nodeId: "biax-n" }],
   },
   {
     type: "derived",
     key: "beta_biax",
     valueType: "number",
     id: "biax-beta",
-    name: "Biaxial exponent beta",
+    name: "Biaxial exponent β per §6.2.9.1(6)",
     symbol: "\\beta",
-    children: [{ nodeId: "biax-n" }],
+    children: [{ nodeId: "biax-section-shape" }, { nodeId: "biax-n" }],
   },
   {
     type: "check",
@@ -220,9 +231,16 @@ export const ulsBiaxialAxial: VerificationDefinition<typeof nodes> = {
       if (n <= a_f) return MplRd;
       return MplRd * (1 - ((n - a_f) / (1 - a_f)) ** 2);
     },
-    // I-sections: α = 2, β = max(1, 5n)
-    alpha_biax: () => 2,
-    beta_biax: ({ n }) => Math.max(1, 5 * n),
+    // §6.2.9.1(6): exponents depend on section shape
+    alpha_biax: ({ section_shape, n }) => {
+      if (section_shape === "RHS") return Math.min(1.66 / (1 - 1.13 * (n as number) ** 2), 6);
+      return 2; // I/H and CHS
+    },
+    beta_biax: ({ section_shape, n }) => {
+      if (section_shape === "CHS") return 2;
+      if (section_shape === "RHS") return Math.min(1.66 / (1 - 1.13 * (n as number) ** 2), 6);
+      return Math.max(1, 5 * (n as number)); // I/H sections
+    },
     biaxial_axial_check: ({
       M_y_Ed,
       M_z_Ed,

@@ -4,8 +4,9 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "generate": "tsr generate",
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsr generate && vite build",
     "typecheck": "tsc -p tsconfig.app.json",
     "test": "vitest run",
     "validate": "vitest run --config vitest.validate.config.ts",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0",
+    "@tanstack/router-cli": "^1.163.2",
     "@tanstack/router-plugin": "^1.114",
     "@testing-library/react": "^16.0",
     "@types/react": "^18.3",

@@ -11,6 +11,9 @@ function Home() {
   return (
     <div className="p-8">
       <nav className="flex gap-4 mb-8">
+        <Link to="/ec3" className="underline hover:no-underline">
+          EC3 Verifications
+        </Link>
         <Link to="/about" className="underline hover:no-underline">
           About Us
         </Link>

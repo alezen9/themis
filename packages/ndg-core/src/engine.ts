@@ -29,10 +29,12 @@ type ComputedNodeType = "formula" | "derived" | "table" | "check";
 /**
  * Minimal node shape required for cache type inference.
  * Allows `as const` on the whole array without per-property casts.
+ * Includes `name` since all node types carry it (BaseNodeSchema).
  */
 export type InferableNode = {
   readonly type: string;
   readonly key: string;
+  readonly name: string;
   readonly valueType: "number" | "string";
 };
 

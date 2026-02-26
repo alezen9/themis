@@ -2,8 +2,9 @@ import type { VerificationDefinition } from "@ndg/ndg-core";
 
 /**
  * §6.2.8 — Bending and shear (y-axis).
- * When V_z_Ed > 0.5·V_pl_z_Rd, reduced bending resistance M_V_y_Rd applies.
- * Otherwise M_V_y_Rd = M_c_y_Rd (no reduction).
+ * When V_z_Ed > 0.5·V_pl,z,Rd, reduced bending resistance M_y,V,Rd applies
+ * per §6.2.8(5) eq (6.30) for I-sections with equal flanges.
+ * Otherwise M_y,V,Rd = M_c,y,Rd (no reduction, §6.2.8(2)).
  */
 
 const nodes = [
@@ -42,9 +43,19 @@ const nodes = [
     key: "Av_z",
     valueType: "number",
     id: "bys-Av-z",
-    name: "Shear area in z",
+    name: "Shear area in z (≈ A_w = h_w t_w)",
     symbol: "A_{v,z}",
     unit: "mm²",
+    children: [],
+  },
+  {
+    type: "user-input",
+    key: "tw",
+    valueType: "number",
+    id: "bys-tw",
+    name: "Web thickness",
+    symbol: "t_w",
+    unit: "mm",
     children: [],
   },
   {
@@ -74,7 +85,7 @@ const nodes = [
     id: "bys-V-pl-z-Rd",
     name: "Plastic shear resistance in z",
     symbol: "V_{pl,z,Rd}",
-    expression: "\\frac{A_{v,z} \\cdot f_y / \\sqrt{3}}{\\gamma_{M0}}",
+    expression: "\\frac{A_{v,z} f_y / \\sqrt{3}}{\\gamma_{M0}}",
     unit: "N",
     meta: { sectionRef: "6.2.6", formulaRef: "(6.18)" },
     children: [
@@ -88,9 +99,9 @@ const nodes = [
     key: "rho_z",
     valueType: "number",
     id: "bys-rho-z",
-    name: "Shear interaction factor",
+    name: "Shear reduction factor",
     symbol: "\\rho",
-    expression: "(2V_{z,Ed}/V_{pl,z,Rd} - 1)^2",
+    expression: "\\left(\\frac{2 V_{z,Ed}}{V_{pl,z,Rd}} - 1\\right)^2",
     children: [
       { nodeId: "bys-V-z-Ed" },
       { nodeId: "bys-V-pl-z-Rd" },
@@ -98,18 +109,19 @@ const nodes = [
   },
   {
     type: "formula",
-    key: "M_V_y_Rd",
+    key: "M_y_V_Rd",
     valueType: "number",
-    id: "bys-M-V-y-Rd",
-    name: "Reduced bending resistance about y-y",
-    symbol: "M_{V,y,Rd}",
-    expression: "\\frac{(W_{pl,y} - \\rho A_{v,z}^2 / (4t_w)) f_y}{\\gamma_{M0}}",
+    id: "bys-M-y-V-Rd",
+    name: "Reduced plastic resistance moment about y-y allowing for shear",
+    symbol: "M_{y,V,Rd}",
+    expression: "\\frac{\\left(W_{pl,y} - \\rho \\dfrac{A_{v,z}^2}{4 t_w}\\right) f_y}{\\gamma_{M0}}",
     unit: "N·mm",
-    meta: { sectionRef: "6.2.8", formulaRef: "(6.29)" },
+    meta: { sectionRef: "6.2.8", formulaRef: "(6.30)" },
     children: [
       { nodeId: "bys-Wpl-y" },
       { nodeId: "bys-rho-z" },
       { nodeId: "bys-Av-z" },
+      { nodeId: "bys-tw" },
       { nodeId: "bys-fy" },
       { nodeId: "bys-gamma-M0" },
     ],
@@ -119,12 +131,12 @@ const nodes = [
     key: "bending_y_shear_check",
     valueType: "number",
     id: "bys-check",
-    name: "Bending and shear check (y-axis)",
-    verificationExpression: "\\frac{M_{y,Ed}}{M_{V,y,Rd}} \\leq 1.0",
+    name: "Bending and shear check (y-axis) §6.2.8",
+    verificationExpression: "\\frac{M_{y,Ed}}{M_{y,V,Rd}} \\leq 1.0",
     meta: { sectionRef: "6.2.8" },
     children: [
       { nodeId: "bys-M-y-Ed" },
-      { nodeId: "bys-M-V-y-Rd" },
+      { nodeId: "bys-M-y-V-Rd" },
     ],
   },
 ] as const;
@@ -136,18 +148,14 @@ export const ulsBendingYShear: VerificationDefinition<typeof nodes> = {
       (Av_z * (fy / Math.sqrt(3))) / gamma_M0,
     rho_z: ({ V_z_Ed, V_pl_z_Rd }) => {
       const ratio = Math.abs(V_z_Ed) / V_pl_z_Rd;
-      if (ratio <= 0.5) return 0; // no reduction
+      if (ratio <= 0.5) return 0;
       return (2 * ratio - 1) ** 2;
     },
-    M_V_y_Rd: ({ Wpl_y, rho_z, fy, gamma_M0 }) => {
-      // Simplified: reduced Wpl approach per §6.2.8(5)
-      // For I-sections: M_V_Rd = (Wpl - ρ·Av²/(4·tw))·fy/γM0
-      // We use simplified formula: Wpl_reduced = Wpl·(1 - ρ) as conservative approx
-      // when no web thickness available
-      const Wpl_reduced = Wpl_y * (1 - rho_z);
-      return (Wpl_reduced * fy) / gamma_M0;
-    },
-    bending_y_shear_check: ({ M_y_Ed, M_V_y_Rd }) =>
-      Math.abs(M_y_Ed) / M_V_y_Rd,
+    // §6.2.8(5) eq (6.30): for I-sections with equal flanges, bending about major axis.
+    // A_w = h_w·t_w ≈ A_v,z, so A_w²/(4t_w) = A_v,z²/(4t_w).
+    M_y_V_Rd: ({ Wpl_y, rho_z, Av_z, tw, fy, gamma_M0 }) =>
+      ((Wpl_y - rho_z * Av_z ** 2 / (4 * tw)) * fy) / gamma_M0,
+    bending_y_shear_check: ({ M_y_Ed, M_y_V_Rd }) =>
+      Math.abs(M_y_Ed) / M_y_V_Rd,
   },
 };

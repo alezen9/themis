@@ -17,8 +17,5 @@ export const italianAnnex: Ec3NationalAnnex = {
     // LTB NDP — same as Eurocode base
     lambda_LT_0: 0.4,
     beta_LT: 0.75,
-
-    // LTB correction factor f
-    k_c_correction: 1,
   },
 };

@@ -25,7 +25,7 @@ const nodes = [
   { type: "user-input", key: "M_cr", valueType: "number", id: "bc61m1-M-cr", name: "Elastic critical moment", unit: "N·mm", children: [] },
   { type: "user-input", key: "Cm_y", valueType: "number", id: "bc61m1-Cm-y", name: "Equivalent moment factor y", symbol: "C_{m,y}", children: [] },
   { type: "user-input", key: "Cm_z", valueType: "number", id: "bc61m1-Cm-z", name: "Equivalent moment factor z", symbol: "C_{m,z}", children: [] },
-  { type: "user-input", key: "Cm_y", valueType: "number", id: "bc61m1-Cm-LT", name: "Equivalent moment factor LT", symbol: "C_{m,LT}", children: [] },
+  { type: "user-input", key: "Cm_LT", valueType: "number", id: "bc61m1-Cm-LT", name: "Equivalent moment factor LT", symbol: "C_{m,LT}", children: [] },
   // --- Coefficients ---
   { type: "coefficient", key: "gamma_M1", valueType: "number", id: "bc61m1-gamma-M1", name: "Partial factor", symbol: "\\gamma_{M1}", meta: { sectionRef: "6.1" }, children: [] },
   { type: "coefficient", key: "lambda_LT_0", valueType: "number", id: "bc61m1-lLT0", name: "LTB plateau", meta: { sectionRef: "6.3.2.3" }, children: [] },
@@ -98,14 +98,14 @@ export const ulsBeamColumn61M1: VerificationDefinition<typeof nodes> = {
         Cm_y * (1 + 0.8 * (Math.abs(N_Ed) / NbyRd)),
       );
     },
-    k_yz: ({ Cm_y, lambda_bar_y, N_Ed, chi_y, N_Rk, gamma_M1 }) => {
-      // Method 1: k_yz = 0.6 · k_yy
-      const NbyRd = (chi_y * N_Rk) / gamma_M1;
-      const k_yy_val = Math.min(
-        Cm_y * (1 + (lambda_bar_y - 0.2) * (Math.abs(N_Ed) / NbyRd)),
-        Cm_y * (1 + 0.8 * (Math.abs(N_Ed) / NbyRd)),
+    k_yz: ({ Cm_z, lambda_bar_z, N_Ed, chi_z, N_Rk, gamma_M1 }) => {
+      // Annex B Table B.1, Class 1&2: k_yz = 0.6·k_zz
+      const NbzRd = (chi_z * N_Rk) / gamma_M1;
+      const k_zz_val = Math.min(
+        Cm_z * (1 + (2 * lambda_bar_z - 0.6) * (Math.abs(N_Ed) / NbzRd)),
+        Cm_z * (1 + 1.4 * (Math.abs(N_Ed) / NbzRd)),
       );
-      return 0.6 * k_yy_val;
+      return 0.6 * k_zz_val;
     },
     bc_61_m1_check: ({ N_Ed, M_y_Ed, M_z_Ed, chi_y, chi_LT, N_Rk, M_y_Rk, M_z_Rk, gamma_M1, k_yy, k_yz }) => {
       const term1 = Math.abs(N_Ed) / ((chi_y * N_Rk) / gamma_M1);

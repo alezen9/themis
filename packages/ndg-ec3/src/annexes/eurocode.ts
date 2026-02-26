@@ -17,8 +17,5 @@ export const eurocodeAnnex: Ec3NationalAnnex = {
     // LTB NDP §6.3.2.3
     lambda_LT_0: 0.4,
     beta_LT: 0.75,
-
-    // LTB correction factor f §6.3.2.3(2)
-    k_c_correction: 1, // 1 = apply f correction, 0 = no correction
   },
 };
