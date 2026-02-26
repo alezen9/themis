@@ -41,6 +41,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter frontend build
+      - run: cp apps/frontend/dist/index.html apps/frontend/dist/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: apps/frontend/dist
