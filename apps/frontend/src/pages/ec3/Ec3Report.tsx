@@ -6,7 +6,7 @@ interface Ec3ReportProps {
   mode: "summary" | "verbose";
 }
 
-function formatValue(value: number | string, unit?: string): string {
+function formatValue(value: number | string): string {
   if (typeof value === "string") return value;
   if (Math.abs(value) >= 1e6) return `${(value / 1e6).toFixed(2)} x10\u2076`;
   if (Math.abs(value) >= 1e3) return `${(value / 1e3).toFixed(2)} x10\u00B3`;
@@ -49,7 +49,7 @@ function TraceRow({ entry }: { entry: TraceEntry }) {
       </td>
       <td className="py-1 pr-3 text-xs text-gray-600">{entry.description}</td>
       <td className="py-1 pr-3 font-mono text-xs tabular-nums">
-        {formatValue(entry.value, entry.unit)}
+        {formatValue(entry.value)}
         {entry.unit && <span className="text-gray-400 ml-1">{entry.unit}</span>}
       </td>
       {isComputed && entry.expression && (
@@ -131,7 +131,7 @@ function SummaryVerification({ result, index }: { result: VerificationRow; index
         <div className="mt-1 text-xs text-gray-500 font-mono flex flex-wrap gap-x-4">
           {formulas.map((f) => (
             <span key={f.nodeId}>
-              {f.symbol || f.key} = {formatValue(f.value, f.unit)}
+              {f.symbol || f.key} = {formatValue(f.value)}
               {f.unit && <span className="text-gray-300 ml-0.5">{f.unit}</span>}
             </span>
           ))}
