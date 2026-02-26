@@ -2,9 +2,8 @@ import { useMemo } from "react";
 import {
   evaluate,
   ec3Verifications,
-  eurocodeAnnex,
 } from "@ndg/ndg-ec3";
-import type { EvaluationResult, EvaluationContext } from "@ndg/ndg-ec3";
+import type { EvaluationResult, EvaluationContext, TraceEntry } from "@ndg/ndg-ec3";
 
 /**
  * Unit system: mm / N / MPa (= N/mm²) / N·mm throughout.
@@ -68,6 +67,7 @@ export interface VerificationRow {
   ratio: number;
   passed: boolean;
   cache: Record<string, number | string>;
+  trace: TraceEntry[];
   error?: string;
 }
 
@@ -79,7 +79,7 @@ export function useEc3Evaluate(
     const context: EvaluationContext = {
       inputs,
       annex: {
-        id: eurocodeAnnex.id,
+        id: "custom",
         coefficients: annexCoeffs,
       },
     };
@@ -95,6 +95,7 @@ export function useEc3Evaluate(
           ratio: result.ratio,
           passed: result.passed,
           cache: result.cache,
+          trace: result.trace,
         };
       } catch (e) {
         return {
@@ -102,6 +103,7 @@ export function useEc3Evaluate(
           ratio: NaN,
           passed: false,
           cache: {},
+          trace: [],
           error: e instanceof Error ? e.message : String(e),
         };
       }
