@@ -1,4 +1,5 @@
 import type { VerificationDefinition } from "@ndg/ndg-core";
+import { input, coeff, formula, derived, check } from "@ndg/ndg-core";
 
 /**
  * §6.2.8 — Bending and shear (z-axis).
@@ -14,161 +15,42 @@ import type { VerificationDefinition } from "@ndg/ndg-core";
  *            = [W_pl,z − ρ·(W_pl,z − A_v,z·t_w/4)]·f_y/γ_M0
  */
 
+const p = "bzs";
+
 const nodes = [
-  {
-    type: "user-input",
-    key: "M_z_Ed",
-    valueType: "number",
-    id: "bzs-M-z-Ed",
-    name: "Design bending moment about z-z",
-    symbol: "M_{z,Ed}",
-    unit: "N·mm",
-    children: [],
-  },
-  {
-    type: "user-input",
-    key: "V_y_Ed",
-    valueType: "number",
-    id: "bzs-V-y-Ed",
-    name: "Design shear force in y",
-    symbol: "V_{y,Ed}",
-    unit: "N",
-    children: [],
-  },
-  {
-    type: "user-input",
-    key: "Wpl_z",
-    valueType: "number",
-    id: "bzs-Wpl-z",
-    name: "Plastic section modulus about z-z",
-    symbol: "W_{pl,z}",
-    unit: "mm³",
-    children: [],
-  },
-  {
-    type: "user-input",
-    key: "Av_y",
-    valueType: "number",
-    id: "bzs-Av-y",
-    name: "Shear area in y (flanges)",
-    symbol: "A_{v,y}",
-    unit: "mm²",
-    children: [],
-  },
-  {
-    type: "user-input",
-    key: "Av_z",
-    valueType: "number",
-    id: "bzs-Av-z",
-    name: "Shear area in z (≈ A_w = h_w t_w)",
-    symbol: "A_{v,z}",
-    unit: "mm²",
-    children: [],
-  },
-  {
-    type: "user-input",
-    key: "tw",
-    valueType: "number",
-    id: "bzs-tw",
-    name: "Web thickness",
-    symbol: "t_w",
-    unit: "mm",
-    children: [],
-  },
-  {
-    type: "user-input",
-    key: "fy",
-    valueType: "number",
-    id: "bzs-fy",
-    name: "Yield strength",
-    symbol: "f_y",
-    unit: "MPa",
-    children: [],
-  },
-  {
-    type: "coefficient",
-    key: "gamma_M0",
-    valueType: "number",
-    id: "bzs-gamma-M0",
-    name: "Partial safety factor",
-    symbol: "\\gamma_{M0}",
-    meta: { sectionRef: "6.1" },
-    children: [],
-  },
-  {
-    type: "formula",
-    key: "V_pl_y_Rd",
-    valueType: "number",
-    id: "bzs-V-pl-y-Rd",
-    name: "Plastic shear resistance in y",
+  input(p, "M_z_Ed", "Design bending moment about z-z", { symbol: "M_{z,Ed}", unit: "N·mm" }),
+  input(p, "V_y_Ed", "Design shear force in y", { symbol: "V_{y,Ed}", unit: "N" }),
+  input(p, "Wpl_z", "Plastic section modulus about z-z", { symbol: "W_{pl,z}", unit: "mm³" }),
+  input(p, "Av_y", "Shear area in y (flanges)", { symbol: "A_{v,y}", unit: "mm²" }),
+  input(p, "Av_z", "Shear area in z (≈ A_w = h_w t_w)", { symbol: "A_{v,z}", unit: "mm²" }),
+  input(p, "tw", "Web thickness", { symbol: "t_w", unit: "mm" }),
+  input(p, "fy", "Yield strength", { symbol: "f_y", unit: "MPa" }),
+  coeff(p, "gamma_M0", "Partial safety factor", { sectionRef: "6.1" }, { symbol: "\\gamma_{M0}" }),
+  formula(p, "V_pl_y_Rd", "Plastic shear resistance in y", ["Av_y", "fy", "gamma_M0"], {
     symbol: "V_{pl,y,Rd}",
     expression: "\\frac{A_{v,y} f_y / \\sqrt{3}}{\\gamma_{M0}}",
     unit: "N",
     meta: { sectionRef: "6.2.6", formulaRef: "(6.18)" },
-    children: [
-      { nodeId: "bzs-Av-y" },
-      { nodeId: "bzs-fy" },
-      { nodeId: "bzs-gamma-M0" },
-    ],
-  },
-  {
-    type: "derived",
-    key: "rho_y",
-    valueType: "number",
-    id: "bzs-rho-y",
-    name: "Shear reduction factor",
+  }),
+  derived(p, "rho_y", "Shear reduction factor", ["V_y_Ed", "V_pl_y_Rd"], {
     symbol: "\\rho",
     expression: "\\left(\\frac{2 V_{y,Ed}}{V_{pl,y,Rd}} - 1\\right)^2",
-    children: [
-      { nodeId: "bzs-V-y-Ed" },
-      { nodeId: "bzs-V-pl-y-Rd" },
-    ],
-  },
-  {
-    type: "derived",
-    key: "Wpl_z_web",
-    valueType: "number",
-    id: "bzs-Wpl-z-web",
-    name: "Web contribution to plastic modulus about z-z",
+  }),
+  derived(p, "Wpl_z_web", "Web contribution to plastic modulus about z-z", ["Av_z", "tw"], {
     symbol: "W_{pl,z,web}",
     expression: "\\frac{t_w^2 h_w}{4} = \\frac{A_{v,z} t_w}{4}",
     unit: "mm³",
-    children: [
-      { nodeId: "bzs-Av-z" },
-      { nodeId: "bzs-tw" },
-    ],
-  },
-  {
-    type: "formula",
-    key: "M_z_V_Rd",
-    valueType: "number",
-    id: "bzs-M-z-V-Rd",
-    name: "Reduced plastic resistance moment about z-z allowing for shear",
+  }),
+  formula(p, "M_z_V_Rd", "Reduced plastic resistance moment about z-z allowing for shear", ["Wpl_z", "rho_y", "Wpl_z_web", "fy", "gamma_M0"], {
     symbol: "M_{z,V,Rd}",
     expression: "\\frac{\\bigl[W_{pl,z} - \\rho\\,(W_{pl,z} - W_{pl,z,web})\\bigr] f_y}{\\gamma_{M0}}",
     unit: "N·mm",
     meta: { sectionRef: "6.2.8", formulaRef: "(6.2.8(3))" },
-    children: [
-      { nodeId: "bzs-Wpl-z" },
-      { nodeId: "bzs-rho-y" },
-      { nodeId: "bzs-Wpl-z-web" },
-      { nodeId: "bzs-fy" },
-      { nodeId: "bzs-gamma-M0" },
-    ],
-  },
-  {
-    type: "check",
-    key: "bending_z_shear_check",
-    valueType: "number",
-    id: "bzs-check",
-    name: "Bending and shear check (z-axis) §6.2.8",
+  }),
+  check(p, "bending_z_shear_check", "Bending and shear check (z-axis) §6.2.8", ["M_z_Ed", "M_z_V_Rd"], {
     verificationExpression: "\\frac{M_{z,Ed}}{M_{z,V,Rd}} \\leq 1.0",
     meta: { sectionRef: "6.2.8" },
-    children: [
-      { nodeId: "bzs-M-z-Ed" },
-      { nodeId: "bzs-M-z-V-Rd" },
-    ],
-  },
+  }),
 ] as const;
 
 export const ulsBendingZShear: VerificationDefinition<typeof nodes> = {

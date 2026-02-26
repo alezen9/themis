@@ -1,77 +1,25 @@
 import type { VerificationDefinition } from "@ndg/ndg-core";
+import { input, coeff, formula, check } from "@ndg/ndg-core";
 
 /** §6.2.6 — Shear resistance (z-axis): V_z_Ed / V_pl_z_Rd ≤ 1.0 */
 
+const p = "shearz";
+
 const nodes = [
-  {
-    type: "user-input",
-    key: "V_z_Ed",
-    valueType: "number",
-    id: "shearz-V-z-Ed",
-    name: "Design shear force in z",
-    symbol: "V_{z,Ed}",
-    unit: "N",
-    children: [],
-  },
-  {
-    type: "user-input",
-    key: "Av_z",
-    valueType: "number",
-    id: "shearz-Av-z",
-    name: "Shear area in z",
-    symbol: "A_{v,z}",
-    unit: "mm²",
-    children: [],
-  },
-  {
-    type: "user-input",
-    key: "fy",
-    valueType: "number",
-    id: "shearz-fy",
-    name: "Yield strength",
-    symbol: "f_y",
-    unit: "MPa",
-    children: [],
-  },
-  {
-    type: "coefficient",
-    key: "gamma_M0",
-    valueType: "number",
-    id: "shearz-gamma-M0",
-    name: "Partial safety factor",
-    symbol: "\\gamma_{M0}",
-    meta: { sectionRef: "6.1" },
-    children: [],
-  },
-  {
-    type: "formula",
-    key: "V_pl_z_Rd",
-    valueType: "number",
-    id: "shearz-V-pl-z-Rd",
-    name: "Plastic shear resistance in z",
+  input(p, "V_z_Ed", "Design shear force in z", { symbol: "V_{z,Ed}", unit: "N" }),
+  input(p, "Av_z", "Shear area in z", { symbol: "A_{v,z}", unit: "mm²" }),
+  input(p, "fy", "Yield strength", { symbol: "f_y", unit: "MPa" }),
+  coeff(p, "gamma_M0", "Partial safety factor", { sectionRef: "6.1" }, { symbol: "\\gamma_{M0}" }),
+  formula(p, "V_pl_z_Rd", "Plastic shear resistance in z", ["Av_z", "fy", "gamma_M0"], {
     symbol: "V_{pl,z,Rd}",
     expression: "\\frac{A_{v,z} \\cdot f_y / \\sqrt{3}}{\\gamma_{M0}}",
     unit: "N",
     meta: { sectionRef: "6.2.6", formulaRef: "(6.18)" },
-    children: [
-      { nodeId: "shearz-Av-z" },
-      { nodeId: "shearz-fy" },
-      { nodeId: "shearz-gamma-M0" },
-    ],
-  },
-  {
-    type: "check",
-    key: "shear_z_check",
-    valueType: "number",
-    id: "shearz-check",
-    name: "Shear resistance check (z-axis)",
+  }),
+  check(p, "shear_z_check", "Shear resistance check (z-axis)", ["V_z_Ed", "V_pl_z_Rd"], {
     verificationExpression: "\\frac{V_{z,Ed}}{V_{pl,z,Rd}} \\leq 1.0",
     meta: { sectionRef: "6.2.6", verificationRef: "(6.17)" },
-    children: [
-      { nodeId: "shearz-V-z-Ed" },
-      { nodeId: "shearz-V-pl-z-Rd" },
-    ],
-  },
+  }),
 ] as const;
 
 export const ulsShearZ: VerificationDefinition<typeof nodes> = {
