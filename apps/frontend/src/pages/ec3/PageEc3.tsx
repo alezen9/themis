@@ -92,12 +92,12 @@ const DEFAULT_ANNEX = italianAnnex;
  * toEngine: multiply user value by this to get engine value
  * fromEngine: multiply engine value by this to get display value (= 1/toEngine)
  */
-interface FieldDef {
+type FieldDef = {
   key: string;
   label: string;
   displayUnit?: string;
   toEngine?: number;
-}
+};
 
 // kN → N: *1000, kNm → N·mm: *1e6, m → mm: *1000
 const FIELD_GROUPS: { legend: string; fields: FieldDef[] }[] = [
@@ -114,11 +114,11 @@ const FIELD_GROUPS: { legend: string; fields: FieldDef[] }[] = [
   {
     legend: "Section properties",
     fields: [
-      { key: "A", label: "A", displayUnit: "mm\u00B2" },
-      { key: "Wpl_y", label: "W_pl,y", displayUnit: "mm\u00B3" },
-      { key: "Wpl_z", label: "W_pl,z", displayUnit: "mm\u00B3" },
-      { key: "Av_y", label: "A_v,y", displayUnit: "mm\u00B2" },
-      { key: "Av_z", label: "A_v,z", displayUnit: "mm\u00B2" },
+      { key: "A", label: "A", displayUnit: "cm\u00B2", toEngine: 100 },
+      { key: "Wpl_y", label: "W_pl,y", displayUnit: "cm\u00B3", toEngine: 1000 },
+      { key: "Wpl_z", label: "W_pl,z", displayUnit: "cm\u00B3", toEngine: 1000 },
+      { key: "Av_y", label: "A_v,y", displayUnit: "cm\u00B2", toEngine: 100 },
+      { key: "Av_z", label: "A_v,z", displayUnit: "cm\u00B2", toEngine: 100 },
       { key: "tw", label: "t_w", displayUnit: "mm" },
       { key: "hw", label: "h_w", displayUnit: "mm" },
       { key: "fy", label: "f_y", displayUnit: "MPa" },
@@ -129,10 +129,10 @@ const FIELD_GROUPS: { legend: string; fields: FieldDef[] }[] = [
   {
     legend: "Inertia",
     fields: [
-      { key: "Iy", label: "I_y", displayUnit: "mm\u2074" },
-      { key: "Iz", label: "I_z", displayUnit: "mm\u2074" },
-      { key: "It", label: "I_t", displayUnit: "mm\u2074" },
-      { key: "Iw", label: "I_w", displayUnit: "mm\u2076" },
+      { key: "Iy", label: "I_y", displayUnit: "cm\u2074", toEngine: 10000 },
+      { key: "Iz", label: "I_z", displayUnit: "cm\u2074", toEngine: 10000 },
+      { key: "It", label: "I_t", displayUnit: "cm\u2074", toEngine: 10000 },
+      { key: "Iw", label: "I_w", displayUnit: "cm\u2076", toEngine: 1e6 },
     ],
   },
   {

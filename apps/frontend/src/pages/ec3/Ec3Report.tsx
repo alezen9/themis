@@ -10,6 +10,22 @@ type Ec3ReportProps = {
 
 // -- Helpers --
 
+const UNIT_MAP: Record<string, { unit: string; scale: number }> = {
+  "N":    { unit: "kN",  scale: 1e-3 },
+  "N\u00B7mm": { unit: "kNm", scale: 1e-6 },
+  "mm\u00B2":  { unit: "cm\u00B2", scale: 1e-2 },
+  "mm\u00B3":  { unit: "cm\u00B3", scale: 1e-3 },
+  "mm\u2074":  { unit: "cm\u2074", scale: 1e-4 },
+  "mm\u2076":  { unit: "cm\u2076", scale: 1e-6 },
+};
+
+const convertUnit = (value: number, unit?: string): { value: number; unit?: string } => {
+  if (!unit) return { value, unit };
+  const mapping = UNIT_MAP[unit];
+  if (!mapping) return { value, unit };
+  return { value: value * mapping.scale, unit: mapping.unit };
+};
+
 const formatValue = (value: number | string) => {
   if (typeof value === "string") return value;
   return value.toLocaleString("en-US", { maximumFractionDigits: 4 });
@@ -40,6 +56,10 @@ const SectionRef = ({ meta }: { meta?: Record<string, unknown> }) => {
   if (parts.length === 0) return null;
   return <span className="text-gray-400 text-xs">[{parts.join(" ")}]</span>;
 };
+
+const SectionHeading = ({ children }: { children: React.ReactNode }) => (
+  <p className="text-xs text-gray-500 mb-1.5 pl-2 border-l-2 border-gray-300">{children}</p>
+);
 
 // -- Verbose layout --
 
@@ -106,70 +126,91 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
         <div className="px-4 py-3 text-sm text-red-600">{result.error}</div>
       ) : (
         <div className="px-4 py-3 space-y-4">
-          {/* Rule */}
+          {/* Verification rule */}
           {checkEntry?.verificationExpression && (
             <div>
-              <p className="text-xs text-gray-500 mb-1">Rule</p>
+              <SectionHeading>Verification rule</SectionHeading>
               <div className="bg-gray-50 rounded px-3 py-2 text-center">
                 <Formula tex={checkEntry.verificationExpression} display />
+                {typeof checkMeta?.formulaRef === "string" && (
+                  <p className="text-xs text-gray-400 mt-1">{checkMeta.formulaRef}</p>
+                )}
               </div>
             </div>
           )}
 
-          {/* Given (inputs) */}
+          {/* Parameters */}
           {relevantInputs.length > 0 && (
             <div>
-              <p className="text-xs text-gray-500 mb-1">Given</p>
+              <SectionHeading>Parameters</SectionHeading>
               <div className="bg-gray-50 rounded px-3 py-1.5">
-                {relevantInputs.map((entry) => (
-                  <div key={entry.key} className="flex items-baseline gap-2 py-0.5">
-                    <span className="min-w-[100px] text-sm">
-                      {entry.symbol ? <Formula tex={entry.symbol} /> : <code className="text-xs">{entry.key}</code>}
-                    </span>
-                    <span className="text-xs text-gray-400 flex-1">{entry.description}</span>
-                    <span className="font-mono text-xs tabular-nums">
-                      {formatValue(entry.value)}
-                      {entry.unit && <span className="text-gray-400 ml-1">{entry.unit}</span>}
-                    </span>
-                  </div>
-                ))}
+                <div className="grid grid-cols-[minmax(90px,auto)_1fr_auto] gap-x-4 py-0.5 border-b border-gray-200 mb-1">
+                  <span className="text-xs text-gray-400">Symbol</span>
+                  <span className="text-xs text-gray-400">Description</span>
+                  <span className="text-xs text-gray-400 text-right">Value</span>
+                </div>
+                {relevantInputs.map((entry) => {
+                  const { value: dv, unit: du } = convertUnit(entry.value as number, entry.unit);
+                  return (
+                    <div key={entry.key} className="grid grid-cols-[minmax(90px,auto)_1fr_auto] gap-x-4 py-0.5 items-baseline">
+                      <span className="text-sm">
+                        {entry.symbol ? <Formula tex={entry.symbol} /> : <code className="text-xs">{entry.key}</code>}
+                      </span>
+                      <span className="text-xs text-gray-400">{entry.description}</span>
+                      <span className="font-mono text-xs tabular-nums text-right">
+                        {formatValue(dv)}
+                        {du && <span className="text-gray-400 ml-1">{du}</span>}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
 
-          {/* Calculated (formulas + derived) */}
+          {/* Calculations */}
           {calculated.length > 0 && (
             <div>
-              <p className="text-xs text-gray-500 mb-1">Calculated</p>
+              <SectionHeading>Calculations</SectionHeading>
               <div className="bg-gray-50 rounded px-3 py-1.5">
                 {calculated.map((entry) => {
                   const meta = entry.meta as Record<string, unknown> | undefined;
+                  const { value: dv, unit: du } = convertUnit(entry.value as number, entry.unit);
                   return (
-                    <div key={entry.key} className="py-1 border-b border-gray-100 last:border-b-0">
-                      <div className="flex items-baseline gap-2">
-                        <span className="min-w-[100px] text-sm">
+                    <div key={entry.key} className="py-1.5 border-b border-gray-100 last:border-b-0">
+                      <div className="grid grid-cols-[minmax(90px,auto)_1fr_auto_auto] gap-x-4 items-baseline">
+                        <span className="text-sm">
                           {entry.symbol ? <Formula tex={entry.symbol} /> : <code className="text-xs">{entry.key}</code>}
                         </span>
-                        <span className="text-xs text-gray-400 flex-1">{entry.description}</span>
-                        <span className="font-mono text-xs tabular-nums font-medium">
-                          {formatValue(entry.value)}
-                          {entry.unit && <span className="text-gray-400 ml-1">{entry.unit}</span>}
+                        <span className="text-xs text-gray-400">{entry.description}</span>
+                        <span className="font-mono text-xs tabular-nums font-medium text-right">
+                          {formatValue(dv)}
+                          {du && <span className="text-gray-400 ml-1">{du}</span>}
                         </span>
                         {typeof meta?.formulaRef === "string" && (
                           <span className="text-gray-300 text-xs">{meta.formulaRef}</span>
                         )}
                       </div>
                       {entry.expression && (
-                        <div className="ml-[100px] mt-0.5">
-                          <Formula tex={`= ${entry.expression}`} />
+                        <div className="ml-[94px] mt-1 space-y-0.5">
+                          <div className="text-sm">
+                            <Formula tex={`= ${entry.expression}`} />
+                          </div>
                           {entry.evaluatorInputs && Object.keys(entry.evaluatorInputs).length > 0 && (
-                            <div className="mt-0.5 flex flex-wrap gap-x-4 gap-y-0.5">
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-0">
+                              <span className="text-xs text-gray-300 italic">where</span>
                               {Object.entries(entry.evaluatorInputs).map(([k, v]) => {
                                 const sub = traceMap.get(k);
+                                const { value: sdv, unit: sdu } = convertUnit(
+                                  typeof v === "number" ? v : 0,
+                                  sub?.unit,
+                                );
                                 return (
                                   <span key={k} className="text-xs text-gray-400 font-mono">
-                                    {sub?.symbol ? <Formula tex={sub.symbol} /> : k} = {typeof v === "number" ? formatValue(v) : v}
-                                    {sub?.unit && <span className="ml-0.5">{sub.unit}</span>}
+                                    {sub?.symbol ? <Formula tex={sub.symbol} /> : k}
+                                    {"\u00A0=\u00A0"}
+                                    {typeof v === "number" ? formatValue(sdv) : v}
+                                    {typeof v === "number" && sdu && <span className="ml-0.5">{sdu}</span>}
                                   </span>
                                 );
                               })}
@@ -184,10 +225,35 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
             </div>
           )}
 
-          {/* Result */}
+          {/* Utilization ratio */}
           <div>
-            <p className="text-xs text-gray-500 mb-1">Result</p>
-            <div className="bg-gray-50 rounded px-3 py-2">
+            <SectionHeading>Utilization ratio</SectionHeading>
+            <div className="bg-gray-50 rounded px-3 py-2 space-y-1.5">
+              {checkEntry?.evaluatorInputs && Object.keys(checkEntry.evaluatorInputs).length > 0 && (
+                <div className="flex flex-wrap gap-x-6 gap-y-0.5 pb-1.5 border-b border-gray-200">
+                  {Object.entries(checkEntry.evaluatorInputs).map(([k, v]) => {
+                    const sub = traceMap.get(k);
+                    const { value: sdv, unit: sdu } = convertUnit(
+                      typeof v === "number" ? v : 0,
+                      sub?.unit,
+                    );
+                    return (
+                      <span key={k} className="text-xs font-mono tabular-nums">
+                        <span className="text-gray-500">
+                          {sub?.symbol ? <Formula tex={sub.symbol} /> : k}
+                        </span>
+                        {" = "}
+                        <span className="font-medium">
+                          {typeof v === "number" ? formatValue(sdv) : v}
+                        </span>
+                        {typeof v === "number" && sdu && (
+                          <span className="text-gray-400 ml-0.5">{sdu}</span>
+                        )}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
               <p className="font-mono text-sm">
                 <span className="text-gray-500">ratio</span>
                 {" = "}
@@ -196,9 +262,11 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
                 <span className={result.passed ? "text-green-700" : "text-red-600"}>
                   {result.passed ? "\u2264" : ">"} 1.0
                 </span>
-              </p>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Utilization: {pct(result.ratio)}
+                {"  "}
+                <span className={`font-semibold ${result.passed ? "text-green-700" : "text-red-600"}`}>
+                  {result.passed ? "\u2713 PASS" : "\u2717 FAIL"}
+                </span>
+                <span className="text-gray-400 ml-2">({pct(result.ratio)})</span>
               </p>
             </div>
           </div>
@@ -239,12 +307,15 @@ const SummaryVerification = ({ result, index }: { result: VerificationRow; index
 
       {!result.error && formulas.length > 0 && (
         <div className="mt-1 text-xs text-gray-500 font-mono flex flex-wrap gap-x-4">
-          {formulas.map((f) => (
-            <span key={f.nodeId}>
-              {f.symbol ? <Formula tex={f.symbol} /> : f.key} = {formatValue(f.value)}
-              {f.unit && <span className="text-gray-300 ml-0.5">{f.unit}</span>}
-            </span>
-          ))}
+          {formulas.map((f) => {
+            const { value: dv, unit: du } = convertUnit(f.value as number, f.unit);
+            return (
+              <span key={f.nodeId}>
+                {f.symbol ? <Formula tex={f.symbol} /> : f.key} = {formatValue(dv)}
+                {du && <span className="text-gray-300 ml-0.5">{du}</span>}
+              </span>
+            );
+          })}
         </div>
       )}
     </div>
