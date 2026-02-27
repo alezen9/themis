@@ -1,26 +1,21 @@
 import type { Shape } from "../data/types";
 
-interface BucklingCurves {
-  y: string;
-  z: string;
-}
-
 /**
- * EC3 Table 6.2 — Selection of buckling curves for cross-sections.
+ * EC3 Table 6.2 -- Selection of buckling curves for cross-sections.
  * For custom sections without catalogue data.
  */
-export function getBucklingCurves(
+export const getBucklingCurves = (
   shape: Shape,
   sectionType: "rolled" | "welded",
   h_over_b: number,
   tf: number,
-): BucklingCurves {
+) => {
   if (shape === "CHS") {
     return { y: "a", z: "a" };
   }
 
   if (shape === "RHS") {
-    // Hot finished: "a", Cold formed: "c" — assume hot finished for rolled
+    // Hot finished: "a", Cold formed: "c" -- assume hot finished for rolled
     return sectionType === "rolled"
       ? { y: "a", z: "a" }
       : { y: "b", z: "b" };
@@ -34,7 +29,7 @@ export function getBucklingCurves(
         ? { y: "a", z: "b" }
         : { y: "b", z: "c" };
     } else {
-      // h/b ≤ 1.2
+      // h/b <= 1.2
       return tf <= 100
         ? { y: "b", z: "c" }
         : { y: "d", z: "d" };
@@ -45,4 +40,4 @@ export function getBucklingCurves(
       ? { y: "b", z: "c" }
       : { y: "c", z: "d" };
   }
-}
+};

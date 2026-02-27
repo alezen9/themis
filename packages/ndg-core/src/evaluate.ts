@@ -7,11 +7,7 @@ import type {
 import { CONSTANTS } from "./engine";
 import { evaluateCondition } from "./evaluate-condition";
 
-// ########################################
-//              RESULT TYPES
-// ########################################
-
-export interface TraceEntry {
+export type TraceEntry = {
   nodeId: string;
   type: Node["type"];
   key: string;
@@ -19,39 +15,37 @@ export interface TraceEntry {
   unit?: string;
   symbol?: string;
   expression?: string;
+  /** LaTeX expression for check nodes (the verification rule). */
+  verificationExpression?: string;
   description?: string;
   meta?: Node extends { meta?: infer M } ? M : never;
   /** Cache values that were passed to the evaluator for this node. */
   evaluatorInputs?: Record<string, number | string>;
   children: string[];
-}
+};
 
-export interface EvaluationResult {
+export type EvaluationResult = {
   passed: boolean;
   ratio: number;
   cache: Record<string, number | string>;
   trace: TraceEntry[];
-}
-
-// ########################################
-//              EVALUATE
-// ########################################
+};
 
 /**
  * Evaluate a verification definition against a context.
  * Topologically sorts nodes, resolves values, and produces a traced result.
  */
-export function evaluate<TNodes extends readonly InferableNode[]>(
+export const evaluate = <TNodes extends readonly InferableNode[]>(
   def: VerificationDefinition<TNodes>,
   context: EvaluationContext,
-): EvaluationResult {
+): EvaluationResult => {
   const nodes = def.nodes as unknown as readonly Node[];
   const evaluators = def.evaluate as unknown as Record<
     string,
     (cache: Record<string, number | string>) => number | string
   >;
 
-  // Build node lookup — detect duplicate IDs
+  // Build node lookup -- detect duplicate IDs
   const nodeById = new Map<string, Node>();
   for (const node of nodes) {
     if (nodeById.has(node.id)) {
@@ -77,7 +71,7 @@ export function evaluate<TNodes extends readonly InferableNode[]>(
   }
   for (const key of Object.keys(evaluators)) {
     if (!nodeKeys.has(key)) {
-      throw new Error(`Evaluator key "${key}" does not match any node — possible typo`);
+      throw new Error(`Evaluator key "${key}" does not match any node -- possible typo`);
     }
   }
 
@@ -86,7 +80,7 @@ export function evaluate<TNodes extends readonly InferableNode[]>(
   const visited = new Set<string>();
   const visiting = new Set<string>();
 
-  function visit(nodeId: string): void {
+  const visit = (nodeId: string): void => {
     if (visited.has(nodeId)) return;
     if (visiting.has(nodeId)) {
       throw new Error(`Circular dependency detected at node: ${nodeId}`);
@@ -103,9 +97,9 @@ export function evaluate<TNodes extends readonly InferableNode[]>(
     visiting.delete(nodeId);
     visited.add(nodeId);
     sorted.push(node);
-  }
+  };
 
-  // Find root (check node) — visit from all nodes to handle disconnected graphs
+  // Find root (check node) -- visit from all nodes to handle disconnected graphs
   for (const node of nodes) {
     visit(node.id);
   }
@@ -141,6 +135,7 @@ export function evaluate<TNodes extends readonly InferableNode[]>(
       unit: "unit" in node ? (node.unit as string | undefined) : undefined,
       symbol: node.symbol,
       expression: "expression" in node ? (node.expression as string | undefined) : undefined,
+      verificationExpression: "verificationExpression" in node ? (node.verificationExpression as string | undefined) : undefined,
       description: node.description,
       meta: "meta" in node ? (node.meta as TraceEntry["meta"]) : undefined,
       evaluatorInputs,
@@ -148,7 +143,7 @@ export function evaluate<TNodes extends readonly InferableNode[]>(
     });
   }
 
-  // Find the check node (root) — last check node in the array
+  // Find the check node (root) -- last check node in the array
   const checkNode = [...nodes].reverse().find((n) => n.type === "check");
   if (!checkNode) {
     throw new Error("No check node found in verification");
@@ -159,7 +154,7 @@ export function evaluate<TNodes extends readonly InferableNode[]>(
     throw new Error(`Check node "${checkNode.key}" must evaluate to a number, got ${typeof ratio}`);
   }
   if (!isFinite(ratio)) {
-    throw new Error(`Check node "${checkNode.key}" produced ${ratio} — likely division by zero or invalid computation`);
+    throw new Error(`Check node "${checkNode.key}" produced ${ratio} -- likely division by zero or invalid computation`);
   }
 
   return {
@@ -168,21 +163,21 @@ export function evaluate<TNodes extends readonly InferableNode[]>(
     cache,
     trace,
   };
-}
+};
 
-function resolveChildren(
+const resolveChildren = (
   children: readonly Child[],
   cache: Record<string, number | string>,
-): string[] {
+) => {
   return children
     .filter((child) => {
       if (!child.when) return true;
       return evaluateCondition(child.when, cache);
     })
     .map((child) => child.nodeId);
-}
+};
 
-function resolveNode(
+const resolveNode = (
   node: Node,
   cache: Record<string, number | string>,
   evaluators: Record<
@@ -190,7 +185,7 @@ function resolveNode(
     (cache: Record<string, number | string>) => number | string
   >,
   context: EvaluationContext,
-): number | string {
+): number | string => {
   switch (node.type) {
     case "user-input": {
       const val = context.inputs[node.key];
@@ -228,7 +223,7 @@ function resolveNode(
       const result = evaluator(cache);
       if (typeof result === "number" && !isFinite(result)) {
         throw new Error(
-          `Node "${node.key}" (${node.type}) produced ${result} — check inputs for division by zero or invalid values`,
+          `Node "${node.key}" (${node.type}) produced ${result} -- check inputs for division by zero or invalid values`,
         );
       }
       return result;
@@ -238,4 +233,4 @@ function resolveNode(
       throw new Error(`Unhandled node type: ${(_exhaustive as Node).type}`);
     }
   }
-}
+};

@@ -11,7 +11,7 @@ import type { EvaluationResult, EvaluationContext, TraceEntry } from "@ndg/ndg-e
  * - forces: N, moments: N·mm, lengths: mm, strength/stiffness: MPa
  * Ratios produced by verifications are dimensionless.
  */
-export interface Ec3Inputs {
+export type Ec3Inputs = {
   [key: string]: number | string;
   // Actions
   N_Ed: number;
@@ -25,11 +25,11 @@ export interface Ec3Inputs {
   Wpl_z: number;
   Av_y: number;
   Av_z: number;
-  /** Web thickness t_w — used in §6.2.8 bending+shear formulas */
+  /** Web thickness t_w -- used in §6.2.8 bending+shear formulas */
   tw: number;
-  /** Clear web height h_w — informational */
+  /** Clear web height h_w -- informational */
   hw: number;
-  /** Section shape family: "I" | "RHS" | "CHS" — used in §6.2.9.1 biaxial exponents */
+  /** Section shape family: "I" | "RHS" | "CHS" -- used in §6.2.9.1 biaxial exponents */
   section_shape: string;
   fy: number;
   E: number;
@@ -52,7 +52,7 @@ export interface Ec3Inputs {
   Cm_LT: number;
 }
 
-export interface AnnexCoeffs {
+export type AnnexCoeffs = {
   [key: string]: number;
   gamma_M0: number;
   gamma_M1: number;
@@ -62,7 +62,7 @@ export interface AnnexCoeffs {
   beta_LT: number;
 }
 
-export interface VerificationRow {
+export type VerificationRow = {
   name: string;
   ratio: number;
   passed: boolean;
@@ -71,10 +71,10 @@ export interface VerificationRow {
   error?: string;
 }
 
-export function useEc3Evaluate(
+export const useEc3Evaluate = (
   inputs: Ec3Inputs,
   annexCoeffs: AnnexCoeffs,
-): VerificationRow[] {
+): VerificationRow[] => {
   return useMemo(() => {
     const context: EvaluationContext = {
       inputs,
@@ -109,4 +109,4 @@ export function useEc3Evaluate(
       }
     });
   }, [inputs, annexCoeffs]);
-}
+};

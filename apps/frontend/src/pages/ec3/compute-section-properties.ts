@@ -2,7 +2,7 @@ import { getBucklingCurves, getImperfectionFactor } from "@ndg/ndg-ec3";
 import type { Section } from "./data";
 
 /** All outputs are in mm-based units: A→mm², I→mm⁴, W→mm³, I_w→mm⁶, lengths→mm. */
-export interface ComputedSectionProperties {
+export type ComputedSectionProperties = {
   A: number;
   Iy: number;
   Iz: number;
@@ -27,22 +27,83 @@ export interface ComputedSectionProperties {
 }
 
 /** Compute all section properties + buckling curves from raw dimensions. */
-export function computeSectionProperties(section: Section): ComputedSectionProperties {
+export const computeSectionProperties = (section: Section): ComputedSectionProperties => {
+  // Precomputed path -- catalogue sections carry tabulated values
+  if ("A" in section && "Iy" in section) return fromPrecomputed(section);
+  // Fallback -- custom sections computed from dimensions (future use)
+  return computeFromDimensions(section as Section);
+};
+
+const computeFromDimensions = (section: Section): ComputedSectionProperties => {
   if (section.shape === "I") return computeFlanged(section);
   if (section.shape === "CHS") return computeCHS(section);
   return computeRHS(section);
-}
+};
 
-// ── I-section ──
+// -- Precomputed (catalogue sections) --
 
-function computeFlanged(s: {
+const fromPrecomputed = (section: Section): ComputedSectionProperties => {
+  if (section.shape === "I") {
+    const { h, b, tw, tf, r, A, Iy, Iz, Wpl_y, Wpl_z, It, Iw } = section;
+    const hw = h - 2 * tf;
+    const Av_z = A - 2 * b * tf + (tw + 2 * r) * tf;
+    const Av_y = 2 * b * tf;
+    const isRolled = !section.sectionType.toLowerCase().includes("welded");
+    const h_over_b = h / b;
+    const curves = getBucklingCurves("I", isRolled ? "rolled" : "welded", h_over_b, tf);
+    const bucklingLT = h_over_b > 2 ? "a" : "b";
+    return {
+      A, Iy, Iz, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw,
+      tw, hw,
+      section_shape: "I",
+      bucklingY: curves.y, bucklingZ: curves.z, bucklingLT,
+      alpha_y: getImperfectionFactor(curves.y),
+      alpha_z: getImperfectionFactor(curves.z),
+      alpha_LT: getImperfectionFactor(bucklingLT),
+    };
+  }
+  if (section.shape === "CHS") {
+    const { d, t, A, Iy, Wpl_y, It } = section;
+    const Iz = Iy;
+    const Wpl_z = Wpl_y;
+    const Av = (2 * A) / Math.PI;
+    const curves = getBucklingCurves("CHS", "rolled", 1, t);
+    return {
+      A, Iy, Iz, Wpl_y, Wpl_z, Av_y: Av, Av_z: Av, It, Iw: 0,
+      tw: t, hw: d - 2 * t,
+      section_shape: "CHS",
+      bucklingY: curves.y, bucklingZ: curves.z, bucklingLT: "a",
+      alpha_y: getImperfectionFactor(curves.y),
+      alpha_z: getImperfectionFactor(curves.z),
+      alpha_LT: getImperfectionFactor("a"),
+    };
+  }
+  // RHS/SHS
+  const { h, b, tw, A, Iy, Iz, Wpl_y, Wpl_z, It } = section;
+  const Av_z = A * h / (b + h);
+  const Av_y = A * b / (b + h);
+  const curves = getBucklingCurves("RHS", "rolled", h / b, tw);
+  return {
+    A, Iy, Iz, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw: 0,
+    tw, hw: h - 2 * tw,
+    section_shape: "RHS",
+    bucklingY: curves.y, bucklingZ: curves.z, bucklingLT: "a",
+    alpha_y: getImperfectionFactor(curves.y),
+    alpha_z: getImperfectionFactor(curves.z),
+    alpha_LT: getImperfectionFactor("a"),
+  };
+};
+
+// -- I-section --
+
+const computeFlanged = (s: {
   h: number;
   b: number;
   tw: number;
   tf: number;
   r: number;
   sectionType: string;
-}): ComputedSectionProperties {
+}): ComputedSectionProperties => {
   const { h, b, tw, tf, r } = s;
   const hw = h - 2 * tf;
 
@@ -86,16 +147,16 @@ function computeFlanged(s: {
     alpha_z: getImperfectionFactor(curves.z),
     alpha_LT: getImperfectionFactor(bucklingLT),
   };
-}
+};
 
-// ── RHS / SHS ──
+// -- RHS / SHS --
 
-function computeRHS(s: {
+const computeRHS = (s: {
   h: number;
   b: number;
   tw: number;
   sectionType: string;
-}): ComputedSectionProperties {
+}): ComputedSectionProperties => {
   const { h, b, tw } = s;
   const hi = h - 2 * tw;
   const bi = b - 2 * tw;
@@ -118,7 +179,7 @@ function computeRHS(s: {
   // Warping constant ≈ 0 for closed sections
   const Iw = 0;
 
-  // Buckling curves — assume hot-finished (rolled) for catalogue sections
+  // Buckling curves -- assume hot-finished (rolled) for catalogue sections
   const curves = getBucklingCurves("RHS", "rolled", h / b, tw);
   // No LTB for closed sections
   const bucklingLT = "a";
@@ -134,15 +195,15 @@ function computeRHS(s: {
     alpha_z: getImperfectionFactor(curves.z),
     alpha_LT: getImperfectionFactor(bucklingLT),
   };
-}
+};
 
-// ── CHS ──
+// -- CHS --
 
-function computeCHS(s: {
+const computeCHS = (s: {
   d: number;
   t: number;
   sectionType: string;
-}): ComputedSectionProperties {
+}): ComputedSectionProperties => {
   const { d, t } = s;
   const di = d - 2 * t;
 
@@ -177,4 +238,4 @@ function computeCHS(s: {
     alpha_z: getImperfectionFactor(curves.z),
     alpha_LT: getImperfectionFactor(bucklingLT),
   };
-}
+};

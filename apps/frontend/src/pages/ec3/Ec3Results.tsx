@@ -2,11 +2,11 @@ import { useState } from "react";
 import type { VerificationRow } from "./use-ec3-evaluate";
 import { Ec3Report } from "./Ec3Report";
 
-interface Ec3ResultsProps {
+type Ec3ResultsProps = {
   results: VerificationRow[];
 }
 
-export function Ec3Results({ results }: Ec3ResultsProps) {
+export const Ec3Results = ({ results }: Ec3ResultsProps) => {
   const [reportMode, setReportMode] = useState<"none" | "summary" | "verbose">("none");
 
   return (
@@ -64,4 +64,4 @@ export function Ec3Results({ results }: Ec3ResultsProps) {
       )}
     </div>
   );
-}
+};

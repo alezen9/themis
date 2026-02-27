@@ -1,4 +1,4 @@
-// Auto-generated from resources/materials.json — do not edit manually.
+// Auto-generated from resources/materials.json -- do not edit manually.
 
 export interface SteelGrade {
   id: string;

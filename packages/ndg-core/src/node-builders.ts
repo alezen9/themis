@@ -5,28 +5,28 @@ type Dep = string | { key: string; when: Condition };
 
 /**
  * Node ID = `${prefix}-${key}` with underscores replaced by hyphens.
- * e.g. prefix="tension", key="N_pl_Rd" → id="tension-N-pl-Rd"
+ * e.g. prefix="tension", key="N_pl_Rd" -> id="tension-N-pl-Rd"
  * Children reference the same convention, so deps are just key strings.
  */
-function toId(prefix: string, key: string): string {
+const toId = (prefix: string, key: string) => {
   return `${prefix}-${key.replace(/_/g, "-")}`;
-}
+};
 
-function depsToChildren(prefix: string, deps: readonly Dep[]): Child[] {
+const depsToChildren = (prefix: string, deps: readonly Dep[]) => {
   return deps.map((dep) => {
     if (typeof dep === "string") return { nodeId: toId(prefix, dep) };
     return { nodeId: toId(prefix, dep.key), when: dep.when };
   });
-}
+};
 
-// ── Leaf nodes (no dependencies) ──
+// -- Leaf nodes (no dependencies) --
 
-export function input<K extends string>(
+export const input = <K extends string>(
   prefix: string,
   key: K,
   name: string,
   opts?: { unit?: string; symbol?: string; description?: string },
-) {
+) => {
   return {
     type: "user-input" as const,
     key,
@@ -38,14 +38,14 @@ export function input<K extends string>(
     unit: opts?.unit,
     children: [] as Child[],
   };
-}
+};
 
-export function stringInput<K extends string>(
+export const stringInput = <K extends string>(
   prefix: string,
   key: K,
   name: string,
   opts?: { unit?: string; symbol?: string; description?: string },
-) {
+) => {
   return {
     type: "user-input" as const,
     key,
@@ -57,15 +57,15 @@ export function stringInput<K extends string>(
     unit: opts?.unit,
     children: [] as Child[],
   };
-}
+};
 
-export function coeff<K extends string>(
+export const coeff = <K extends string>(
   prefix: string,
   key: K,
   name: string,
   meta: NodeMeta,
   opts?: { symbol?: string; description?: string },
-) {
+) => {
   return {
     type: "coefficient" as const,
     key,
@@ -77,11 +77,11 @@ export function coeff<K extends string>(
     meta,
     children: [] as Child[],
   };
-}
+};
 
-// ── Computed nodes (have dependencies) ──
+// -- Computed nodes (have dependencies) --
 
-export function formula<K extends string>(
+export const formula = <K extends string>(
   prefix: string,
   key: K,
   name: string,
@@ -93,7 +93,7 @@ export function formula<K extends string>(
     symbol?: string;
     description?: string;
   },
-) {
+) => {
   return {
     type: "formula" as const,
     key,
@@ -107,9 +107,9 @@ export function formula<K extends string>(
     meta: opts.meta,
     children: depsToChildren(prefix, deps),
   };
-}
+};
 
-export function derived<K extends string>(
+export const derived = <K extends string>(
   prefix: string,
   key: K,
   name: string,
@@ -121,7 +121,7 @@ export function derived<K extends string>(
     symbol?: string;
     description?: string;
   },
-) {
+) => {
   return {
     type: "derived" as const,
     key,
@@ -135,9 +135,9 @@ export function derived<K extends string>(
     meta: opts?.meta,
     children: depsToChildren(prefix, deps),
   };
-}
+};
 
-export function check<K extends string>(
+export const check = <K extends string>(
   prefix: string,
   key: K,
   name: string,
@@ -146,7 +146,7 @@ export function check<K extends string>(
     verificationExpression: string;
     meta?: NodeMeta;
   },
-) {
+) => {
   return {
     type: "check" as const,
     key,
@@ -157,4 +157,4 @@ export function check<K extends string>(
     meta: opts.meta,
     children: depsToChildren(prefix, deps),
   };
-}
+};

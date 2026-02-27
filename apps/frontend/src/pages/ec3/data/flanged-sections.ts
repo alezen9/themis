@@ -1,4 +1,4 @@
-// Auto-generated from resources/*.json — do not edit manually.
+// Auto-generated from resources/*.json -- do not edit manually.
 
 export interface FlangedSection {
   id: string;
@@ -9,6 +9,13 @@ export interface FlangedSection {
   tw: number;
   tf: number;
   r: number;
+  A: number;
+  Iy: number;
+  Iz: number;
+  Wpl_y: number;
+  Wpl_z: number;
+  It: number;
+  Iw: number;
 }
 
 export const flangedSections: readonly FlangedSection[] = [
@@ -20,7 +27,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 46,
     "tw": 3.8,
     "tf": 5.2,
-    "r": 5
+    "r": 5,
+    "A": 764,
+    "Iy": 801400.0,
+    "Iz": 84890.0,
+    "Wpl_y": 23220.0,
+    "Wpl_z": 5818.0,
+    "It": 6727.0,
+    "Iw": 115100000.0
   },
   {
     "id": "IPE100",
@@ -30,7 +44,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 55,
     "tw": 4.1,
     "tf": 5.7,
-    "r": 7
+    "r": 7,
+    "A": 1032,
+    "Iy": 1710000.0,
+    "Iz": 159200.0,
+    "Wpl_y": 39410.0,
+    "Wpl_z": 9146.0,
+    "It": 11530.0,
+    "Iw": 342100000.0
   },
   {
     "id": "IPE120",
@@ -40,7 +61,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 64,
     "tw": 4.4,
     "tf": 6.3,
-    "r": 7
+    "r": 7,
+    "A": 1321,
+    "Iy": 3178000.0,
+    "Iz": 276700.0,
+    "Wpl_y": 60730.0,
+    "Wpl_z": 13580.0,
+    "It": 16890.0,
+    "Iw": 872000000.0
   },
   {
     "id": "IPE140",
@@ -50,7 +78,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 73,
     "tw": 4.7,
     "tf": 6.9,
-    "r": 7
+    "r": 7,
+    "A": 1643,
+    "Iy": 5412000.0,
+    "Iz": 449200.0,
+    "Wpl_y": 88340.0,
+    "Wpl_z": 19250.0,
+    "It": 24010.0,
+    "Iw": 1951000000.0
   },
   {
     "id": "IPE160",
@@ -58,9 +93,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 160,
     "b": 82,
-    "tw": 5,
+    "tw": 5.0,
     "tf": 7.4,
-    "r": 9
+    "r": 9,
+    "A": 2009,
+    "Iy": 8693000.0,
+    "Iz": 683100.0,
+    "Wpl_y": 123900.0,
+    "Wpl_z": 26100.0,
+    "It": 35300.0,
+    "Iw": 3889000000.0
   },
   {
     "id": "IPE180",
@@ -69,8 +111,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 180,
     "b": 91,
     "tw": 5.3,
-    "tf": 8,
-    "r": 9
+    "tf": 8.0,
+    "r": 9,
+    "A": 2395,
+    "Iy": 13170000.0,
+    "Iz": 1009000.0,
+    "Wpl_y": 166400.0,
+    "Wpl_z": 34600.0,
+    "It": 47230.0,
+    "Iw": 7322000000.0
   },
   {
     "id": "IPE200",
@@ -80,7 +129,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 100,
     "tw": 5.6,
     "tf": 8.5,
-    "r": 12
+    "r": 12,
+    "A": 2848,
+    "Iy": 19430000.0,
+    "Iz": 1424000.0,
+    "Wpl_y": 220600.0,
+    "Wpl_z": 44610.0,
+    "It": 68460.0,
+    "Iw": 12746000000.0
   },
   {
     "id": "IPE220",
@@ -90,7 +146,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 110,
     "tw": 5.9,
     "tf": 9.2,
-    "r": 12
+    "r": 12,
+    "A": 3337,
+    "Iy": 27720000.0,
+    "Iz": 2049000.0,
+    "Wpl_y": 285400.0,
+    "Wpl_z": 58110.0,
+    "It": 89820.0,
+    "Iw": 22310000000.0
   },
   {
     "id": "IPE240",
@@ -100,7 +163,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 120,
     "tw": 6.2,
     "tf": 9.8,
-    "r": 15
+    "r": 15,
+    "A": 3912,
+    "Iy": 38920000.0,
+    "Iz": 2836000.0,
+    "Wpl_y": 366600.0,
+    "Wpl_z": 73920.0,
+    "It": 127400.0,
+    "Iw": 36680000000.0
   },
   {
     "id": "IPE270",
@@ -110,7 +180,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 135,
     "tw": 6.6,
     "tf": 10.2,
-    "r": 15
+    "r": 15,
+    "A": 4595,
+    "Iy": 57900000.0,
+    "Iz": 4199000.0,
+    "Wpl_y": 484000.0,
+    "Wpl_z": 96950.0,
+    "It": 157100.0,
+    "Iw": 69469000000.0
   },
   {
     "id": "IPE300",
@@ -120,7 +197,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 150,
     "tw": 7.1,
     "tf": 10.7,
-    "r": 15
+    "r": 15,
+    "A": 5381,
+    "Iy": 83560000.0,
+    "Iz": 6038000.0,
+    "Wpl_y": 628400.0,
+    "Wpl_z": 125200.0,
+    "It": 197500.0,
+    "Iw": 124260000000.0
   },
   {
     "id": "IPE330",
@@ -130,7 +214,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 160,
     "tw": 7.5,
     "tf": 11.5,
-    "r": 18
+    "r": 18,
+    "A": 6261,
+    "Iy": 117700000.0,
+    "Iz": 7881000.0,
+    "Wpl_y": 804300.0,
+    "Wpl_z": 153700.0,
+    "It": 275900.0,
+    "Iw": 196090000000.0
   },
   {
     "id": "IPE360",
@@ -138,9 +229,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 360,
     "b": 170,
-    "tw": 8,
+    "tw": 8.0,
     "tf": 12.7,
-    "r": 18
+    "r": 18,
+    "A": 7273,
+    "Iy": 162700000.0,
+    "Iz": 10430000.0,
+    "Wpl_y": 1019000.0,
+    "Wpl_z": 191100.0,
+    "It": 370800.0,
+    "Iw": 309370000000.0
   },
   {
     "id": "IPE400",
@@ -150,7 +248,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 180,
     "tw": 8.6,
     "tf": 13.5,
-    "r": 21
+    "r": 21,
+    "A": 8446,
+    "Iy": 231300000.0,
+    "Iz": 13180000.0,
+    "Wpl_y": 1307000.0,
+    "Wpl_z": 229000.0,
+    "It": 504100.0,
+    "Iw": 482890000000.0
   },
   {
     "id": "IPE450",
@@ -160,7 +265,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 190,
     "tw": 9.4,
     "tf": 14.6,
-    "r": 21
+    "r": 21,
+    "A": 9882,
+    "Iy": 337400000.0,
+    "Iz": 16760000.000000002,
+    "Wpl_y": 1702000.0,
+    "Wpl_z": 276400.0,
+    "It": 660500.0,
+    "Iw": 780970000000.0
   },
   {
     "id": "IPE500",
@@ -169,8 +281,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 500,
     "b": 200,
     "tw": 10.2,
-    "tf": 16,
-    "r": 21
+    "tf": 16.0,
+    "r": 21,
+    "A": 11552,
+    "Iy": 482000000.0,
+    "Iz": 21420000.0,
+    "Wpl_y": 2194000.0,
+    "Wpl_z": 335900.0,
+    "It": 886200.0,
+    "Iw": 1235400000000.0
   },
   {
     "id": "IPE550",
@@ -180,7 +299,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 210,
     "tw": 11.1,
     "tf": 17.2,
-    "r": 24
+    "r": 24,
+    "A": 13442,
+    "Iy": 671200000.0,
+    "Iz": 26680000.0,
+    "Wpl_y": 2787000.0,
+    "Wpl_z": 400500.0,
+    "It": 1217000.0,
+    "Iw": 1861500000000.0
   },
   {
     "id": "IPE600",
@@ -188,9 +314,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 600,
     "b": 220,
-    "tw": 12,
-    "tf": 19,
-    "r": 24
+    "tw": 12.0,
+    "tf": 19.0,
+    "r": 24,
+    "A": 15598,
+    "Iy": 920800000.0,
+    "Iz": 33870000.0,
+    "Wpl_y": 3512000.0,
+    "Wpl_z": 485600.0,
+    "It": 1646000.0,
+    "Iw": 2814700000000.0
   },
   {
     "id": "HEA100",
@@ -198,9 +331,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 96,
     "b": 100,
-    "tw": 5,
-    "tf": 8,
-    "r": 12
+    "tw": 5.0,
+    "tf": 8.0,
+    "r": 12,
+    "A": 2124,
+    "Iy": 3492000.0,
+    "Iz": 1338000.0,
+    "Wpl_y": 83010.0,
+    "Wpl_z": 41140.0,
+    "It": 51990.0,
+    "Iw": 2475000000.0
   },
   {
     "id": "HEA120",
@@ -208,9 +348,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 114,
     "b": 120,
-    "tw": 5,
-    "tf": 8,
-    "r": 12
+    "tw": 5.0,
+    "tf": 8.0,
+    "r": 12,
+    "A": 2534,
+    "Iy": 6062000.0,
+    "Iz": 2309000.0,
+    "Wpl_y": 119500.0,
+    "Wpl_z": 58850.0,
+    "It": 59570.0,
+    "Iw": 6285000000.0
   },
   {
     "id": "HEA140",
@@ -220,7 +367,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 140,
     "tw": 5.5,
     "tf": 8.5,
-    "r": 12
+    "r": 12,
+    "A": 3142,
+    "Iy": 10330000.0,
+    "Iz": 3893000.0,
+    "Wpl_y": 173500.0,
+    "Wpl_z": 84850.0,
+    "It": 80320.0,
+    "Iw": 14729000000.0
   },
   {
     "id": "HEA160",
@@ -228,9 +382,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 152,
     "b": 160,
-    "tw": 6,
-    "tf": 9,
-    "r": 15
+    "tw": 6.0,
+    "tf": 9.0,
+    "r": 15,
+    "A": 3877,
+    "Iy": 16730000.0,
+    "Iz": 6156000.0,
+    "Wpl_y": 245100.0,
+    "Wpl_z": 117600.0,
+    "It": 118400.0,
+    "Iw": 30615000000.0
   },
   {
     "id": "HEA180",
@@ -238,9 +399,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 171,
     "b": 180,
-    "tw": 6,
+    "tw": 6.0,
     "tf": 9.5,
-    "r": 15
+    "r": 15,
+    "A": 4525,
+    "Iy": 25100000.0,
+    "Iz": 9246000.0,
+    "Wpl_y": 324900.0,
+    "Wpl_z": 156500.0,
+    "It": 146600.0,
+    "Iw": 59014000000.0
   },
   {
     "id": "HEA200",
@@ -249,8 +417,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 190,
     "b": 200,
     "tw": 6.5,
-    "tf": 10,
-    "r": 18
+    "tf": 10.0,
+    "r": 18,
+    "A": 5383,
+    "Iy": 36920000.0,
+    "Iz": 13360000.0,
+    "Wpl_y": 429500.0,
+    "Wpl_z": 203800.0,
+    "It": 204300.0,
+    "Iw": 105580000000.0
   },
   {
     "id": "HEA220",
@@ -258,9 +433,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 210,
     "b": 220,
-    "tw": 7,
-    "tf": 11,
-    "r": 18
+    "tw": 7.0,
+    "tf": 11.0,
+    "r": 18,
+    "A": 6434,
+    "Iy": 54100000.0,
+    "Iz": 19550000.0,
+    "Wpl_y": 568500.0,
+    "Wpl_z": 270600.0,
+    "It": 280900.0,
+    "Iw": 189610000000.0
   },
   {
     "id": "HEA240",
@@ -269,8 +451,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 230,
     "b": 240,
     "tw": 7.5,
-    "tf": 12,
-    "r": 21
+    "tf": 12.0,
+    "r": 21,
+    "A": 7684,
+    "Iy": 77630000.0,
+    "Iz": 27690000.0,
+    "Wpl_y": 744600.0,
+    "Wpl_z": 351700.0,
+    "It": 410300.0,
+    "Iw": 321640000000.0
   },
   {
     "id": "HEA260",
@@ -280,7 +469,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 260,
     "tw": 7.5,
     "tf": 12.5,
-    "r": 24
+    "r": 24,
+    "A": 8682,
+    "Iy": 104500000.0,
+    "Iz": 36680000.0,
+    "Wpl_y": 919800.0,
+    "Wpl_z": 430200.0,
+    "It": 520000.0,
+    "Iw": 504990000000.0
   },
   {
     "id": "HEA280",
@@ -288,9 +484,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 270,
     "b": 280,
-    "tw": 8,
-    "tf": 13,
-    "r": 24
+    "tw": 8.0,
+    "tf": 13.0,
+    "r": 24,
+    "A": 9726,
+    "Iy": 136700000.0,
+    "Iz": 47630000.0,
+    "Wpl_y": 1112000.0,
+    "Wpl_z": 518100.0,
+    "It": 613900.0,
+    "Iw": 770140000000.0
   },
   {
     "id": "HEA300",
@@ -299,8 +502,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 290,
     "b": 300,
     "tw": 8.5,
-    "tf": 14,
-    "r": 27
+    "tf": 14.0,
+    "r": 27,
+    "A": 11253,
+    "Iy": 182600000.0,
+    "Iz": 63100000.0,
+    "Wpl_y": 1383000.0,
+    "Wpl_z": 641200.0,
+    "It": 842400.0,
+    "Iw": 1174700000000.0
   },
   {
     "id": "HEA320",
@@ -308,9 +518,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 310,
     "b": 300,
-    "tw": 9,
+    "tw": 9.0,
     "tf": 15.5,
-    "r": 27
+    "r": 27,
+    "A": 12437,
+    "Iy": 229300000.0,
+    "Iz": 69850000.0,
+    "Wpl_y": 1628000.0,
+    "Wpl_z": 709700.0,
+    "It": 1088000.0,
+    "Iw": 1482600000000.0
   },
   {
     "id": "HEA340",
@@ -320,7 +537,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 300,
     "tw": 9.5,
     "tf": 16.5,
-    "r": 27
+    "r": 27,
+    "A": 13347,
+    "Iy": 276900000.0,
+    "Iz": 74360000.0,
+    "Wpl_y": 1850000.0,
+    "Wpl_z": 755900.0,
+    "It": 1287000.0,
+    "Iw": 1790200000000.0
   },
   {
     "id": "HEA360",
@@ -328,9 +552,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 350,
     "b": 300,
-    "tw": 10,
+    "tw": 10.0,
     "tf": 17.5,
-    "r": 27
+    "r": 27,
+    "A": 14276,
+    "Iy": 330900000.0,
+    "Iz": 78870000.0,
+    "Wpl_y": 2088000.0,
+    "Wpl_z": 802300.0,
+    "It": 1510000.0,
+    "Iw": 2137700000000.0
   },
   {
     "id": "HEA400",
@@ -338,9 +569,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 390,
     "b": 300,
-    "tw": 11,
-    "tf": 19,
-    "r": 27
+    "tw": 11.0,
+    "tf": 19.0,
+    "r": 27,
+    "A": 15898,
+    "Iy": 450700000.0,
+    "Iz": 85640000.0,
+    "Wpl_y": 2562000.0,
+    "Wpl_z": 872900.0,
+    "It": 1914000.0,
+    "Iw": 2893600000000.0
   },
   {
     "id": "HEA450",
@@ -349,8 +587,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 440,
     "b": 300,
     "tw": 11.5,
-    "tf": 21,
-    "r": 27
+    "tf": 21.0,
+    "r": 27,
+    "A": 17803,
+    "Iy": 637200000.0,
+    "Iz": 94650000.0,
+    "Wpl_y": 3216000.0,
+    "Wpl_z": 965500.0,
+    "It": 2491000.0,
+    "Iw": 4087200000000.0
   },
   {
     "id": "HEA500",
@@ -358,9 +603,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 490,
     "b": 300,
-    "tw": 12,
-    "tf": 23,
-    "r": 27
+    "tw": 12.0,
+    "tf": 23.0,
+    "r": 27,
+    "A": 19754,
+    "Iy": 869700000.0,
+    "Iz": 103700000.0,
+    "Wpl_y": 3949000.0,
+    "Wpl_z": 1059000.0,
+    "It": 3177000.0,
+    "Iw": 5569200000000.0
   },
   {
     "id": "HEA550",
@@ -369,8 +621,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 540,
     "b": 300,
     "tw": 12.5,
-    "tf": 24,
-    "r": 27
+    "tf": 24.0,
+    "r": 27,
+    "A": 21176,
+    "Iy": 1119000000.0,
+    "Iz": 108200000.0,
+    "Wpl_y": 4622000.0,
+    "Wpl_z": 1107000.0,
+    "It": 3606000.0,
+    "Iw": 7103100000000.0
   },
   {
     "id": "HEA600",
@@ -378,9 +637,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 590,
     "b": 300,
-    "tw": 13,
-    "tf": 25,
-    "r": 27
+    "tw": 13.0,
+    "tf": 25.0,
+    "r": 27,
+    "A": 22646,
+    "Iy": 1412000000.0,
+    "Iz": 112700000.0,
+    "Wpl_y": 5350000.0,
+    "Wpl_z": 1156000.0,
+    "It": 4075000.0,
+    "Iw": 8879600000000.0
   },
   {
     "id": "HEA650",
@@ -389,8 +655,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 640,
     "b": 300,
     "tw": 13.5,
-    "tf": 26,
-    "r": 27
+    "tf": 26.0,
+    "r": 27,
+    "A": 24164,
+    "Iy": 1752000000.0,
+    "Iz": 117200000.0,
+    "Wpl_y": 6136000.0,
+    "Wpl_z": 1205000.0,
+    "It": 4586000.0,
+    "Iw": 10915000000000.0
   },
   {
     "id": "HEA700",
@@ -399,8 +672,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 690,
     "b": 300,
     "tw": 14.5,
-    "tf": 27,
-    "r": 27
+    "tf": 27.0,
+    "r": 27,
+    "A": 26048,
+    "Iy": 2153000000.0,
+    "Iz": 121800000.0,
+    "Wpl_y": 7032000.0,
+    "Wpl_z": 1257000.0,
+    "It": 5228000.0,
+    "Iw": 13223000000000.0
   },
   {
     "id": "HEA800",
@@ -408,9 +688,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 790,
     "b": 300,
-    "tw": 15,
-    "tf": 28,
-    "r": 30
+    "tw": 15.0,
+    "tf": 28.0,
+    "r": 30,
+    "A": 28583,
+    "Iy": 3034000000.0,
+    "Iz": 126400000.0,
+    "Wpl_y": 8699000.0,
+    "Wpl_z": 1312000.0,
+    "It": 6096000.0,
+    "Iw": 18113000000000.0
   },
   {
     "id": "HEA900",
@@ -418,9 +705,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 890,
     "b": 300,
-    "tw": 16,
-    "tf": 30,
-    "r": 30
+    "tw": 16.0,
+    "tf": 30.0,
+    "r": 30,
+    "A": 32053,
+    "Iy": 4221000000.0,
+    "Iz": 135500000.0,
+    "Wpl_y": 10810000.0,
+    "Wpl_z": 1414000.0,
+    "It": 7510000.0,
+    "Iw": 24748000000000.0
   },
   {
     "id": "HEA1000",
@@ -429,8 +723,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 990,
     "b": 300,
     "tw": 16.5,
-    "tf": 31,
-    "r": 30
+    "tf": 31.0,
+    "r": 30,
+    "A": 34685,
+    "Iy": 5538000000.0,
+    "Iz": 140000000.0,
+    "Wpl_y": 12820000.0,
+    "Wpl_z": 1470000.0,
+    "It": 8373000.0,
+    "Iw": 31834000000000.0
   },
   {
     "id": "HEB100",
@@ -438,9 +739,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 100,
     "b": 100,
-    "tw": 6,
-    "tf": 10,
-    "r": 12
+    "tw": 6.0,
+    "tf": 10.0,
+    "r": 12,
+    "A": 2604,
+    "Iy": 4495000.0,
+    "Iz": 1673000.0,
+    "Wpl_y": 104200.0,
+    "Wpl_z": 51420.0,
+    "It": 93090.0,
+    "Iw": 3233000000.0
   },
   {
     "id": "HEB120",
@@ -449,8 +757,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 120,
     "b": 120,
     "tw": 6.5,
-    "tf": 11,
-    "r": 12
+    "tf": 11.0,
+    "r": 12,
+    "A": 3401,
+    "Iy": 8644000.0,
+    "Iz": 3175000.0,
+    "Wpl_y": 165200.0,
+    "Wpl_z": 80970.0,
+    "It": 139400.0,
+    "Iw": 9125000000.0
   },
   {
     "id": "HEB140",
@@ -458,9 +773,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 140,
     "b": 140,
-    "tw": 7,
-    "tf": 12,
-    "r": 12
+    "tw": 7.0,
+    "tf": 12.0,
+    "r": 12,
+    "A": 4296,
+    "Iy": 15090000.0,
+    "Iz": 5497000.0,
+    "Wpl_y": 245400.0,
+    "Wpl_z": 119800.0,
+    "It": 202000.0,
+    "Iw": 21965000000.0
   },
   {
     "id": "HEB160",
@@ -468,9 +790,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 160,
     "b": 160,
-    "tw": 8,
-    "tf": 13,
-    "r": 15
+    "tw": 8.0,
+    "tf": 13.0,
+    "r": 15,
+    "A": 5425,
+    "Iy": 24920000.0,
+    "Iz": 8892000.0,
+    "Wpl_y": 354000.0,
+    "Wpl_z": 170000.0,
+    "It": 312400.0,
+    "Iw": 46667000000.0
   },
   {
     "id": "HEB180",
@@ -479,8 +808,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 180,
     "b": 180,
     "tw": 8.5,
-    "tf": 14,
-    "r": 15
+    "tf": 14.0,
+    "r": 15,
+    "A": 6525,
+    "Iy": 38310000.0,
+    "Iz": 13630000.0,
+    "Wpl_y": 481400.0,
+    "Wpl_z": 231000.0,
+    "It": 422400.0,
+    "Iw": 91728000000.0
   },
   {
     "id": "HEB200",
@@ -488,9 +824,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 200,
     "b": 200,
-    "tw": 9,
-    "tf": 15,
-    "r": 18
+    "tw": 9.0,
+    "tf": 15.0,
+    "r": 18,
+    "A": 7808,
+    "Iy": 56960000.0,
+    "Iz": 20030000.0,
+    "Wpl_y": 642500.0,
+    "Wpl_z": 305800.0,
+    "It": 595900.0,
+    "Iw": 167060000000.0
   },
   {
     "id": "HEB220",
@@ -499,8 +842,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 220,
     "b": 220,
     "tw": 9.5,
-    "tf": 16,
-    "r": 18
+    "tf": 16.0,
+    "r": 18,
+    "A": 9104,
+    "Iy": 80910000.0,
+    "Iz": 28430000.0,
+    "Wpl_y": 827000.0,
+    "Wpl_z": 393900.0,
+    "It": 770200.0,
+    "Iw": 289510000000.0
   },
   {
     "id": "HEB240",
@@ -508,9 +858,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 240,
     "b": 240,
-    "tw": 10,
-    "tf": 17,
-    "r": 21
+    "tw": 10.0,
+    "tf": 17.0,
+    "r": 21,
+    "A": 10599,
+    "Iy": 112600000.0,
+    "Iz": 39230000.0,
+    "Wpl_y": 1053000.0,
+    "Wpl_z": 498400.0,
+    "It": 1036000.0,
+    "Iw": 476280000000.0
   },
   {
     "id": "HEB260",
@@ -518,9 +875,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 260,
     "b": 260,
-    "tw": 10,
+    "tw": 10.0,
     "tf": 17.5,
-    "r": 24
+    "r": 24,
+    "A": 11844,
+    "Iy": 149200000.0,
+    "Iz": 51350000.0,
+    "Wpl_y": 1283000.0,
+    "Wpl_z": 602200.0,
+    "It": 1257000.0,
+    "Iw": 736280000000.0
   },
   {
     "id": "HEB280",
@@ -529,8 +893,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 280,
     "b": 280,
     "tw": 10.5,
-    "tf": 18,
-    "r": 24
+    "tf": 18.0,
+    "r": 24,
+    "A": 13136,
+    "Iy": 192700000.0,
+    "Iz": 65950000.0,
+    "Wpl_y": 1534000.0,
+    "Wpl_z": 717600.0,
+    "It": 1453000.0,
+    "Iw": 1107200000000.0
   },
   {
     "id": "HEB300",
@@ -538,9 +909,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 300,
     "b": 300,
-    "tw": 11,
-    "tf": 19,
-    "r": 27
+    "tw": 11.0,
+    "tf": 19.0,
+    "r": 27,
+    "A": 14908,
+    "Iy": 251700000.0,
+    "Iz": 85630000.0,
+    "Wpl_y": 1869000.0,
+    "Wpl_z": 870100.0,
+    "It": 1874000.0,
+    "Iw": 1651000000000.0
   },
   {
     "id": "HEB320",
@@ -550,7 +928,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 300,
     "tw": 11.5,
     "tf": 20.5,
-    "r": 27
+    "r": 27,
+    "A": 16134,
+    "Iy": 308200000.0,
+    "Iz": 92390000.0,
+    "Wpl_y": 2149000.0,
+    "Wpl_z": 939100.0,
+    "It": 2292000.0,
+    "Iw": 2026200000000.0
   },
   {
     "id": "HEB340",
@@ -558,9 +943,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 340,
     "b": 300,
-    "tw": 12,
+    "tw": 12.0,
     "tf": 21.5,
-    "r": 27
+    "r": 27,
+    "A": 17090,
+    "Iy": 366600000.0,
+    "Iz": 96900000.0,
+    "Wpl_y": 2408000.0,
+    "Wpl_z": 985700.0,
+    "It": 2620000.0,
+    "Iw": 2405600000000.0
   },
   {
     "id": "HEB360",
@@ -570,7 +962,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 300,
     "tw": 12.5,
     "tf": 22.5,
-    "r": 27
+    "r": 27,
+    "A": 18063,
+    "Iy": 431900000.0,
+    "Iz": 101400000.0,
+    "Wpl_y": 2683000.0,
+    "Wpl_z": 1032000.0,
+    "It": 2979000.0,
+    "Iw": 2829300000000.0
   },
   {
     "id": "HEB400",
@@ -579,8 +978,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 400,
     "b": 300,
     "tw": 13.5,
-    "tf": 24,
-    "r": 27
+    "tf": 24.0,
+    "r": 27,
+    "A": 19778,
+    "Iy": 576800000.0,
+    "Iz": 108200000.0,
+    "Wpl_y": 3232000.0,
+    "Wpl_z": 1104000.0,
+    "It": 3611000.0,
+    "Iw": 3751100000000.0
   },
   {
     "id": "HEB450",
@@ -588,9 +994,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 450,
     "b": 300,
-    "tw": 14,
-    "tf": 26,
-    "r": 27
+    "tw": 14.0,
+    "tf": 26.0,
+    "r": 27,
+    "A": 21798,
+    "Iy": 798900000.0,
+    "Iz": 117200000.0,
+    "Wpl_y": 3982000.0,
+    "Wpl_z": 1198000.0,
+    "It": 4489000.0,
+    "Iw": 5177700000000.0
   },
   {
     "id": "HEB500",
@@ -599,8 +1012,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 500,
     "b": 300,
     "tw": 14.5,
-    "tf": 28,
-    "r": 27
+    "tf": 28.0,
+    "r": 27,
+    "A": 23864,
+    "Iy": 1072000000.0,
+    "Iz": 126200000.0,
+    "Wpl_y": 4815000.0,
+    "Wpl_z": 1292000.0,
+    "It": 5499000.0,
+    "Iw": 6920700000000.0
   },
   {
     "id": "HEB550",
@@ -608,9 +1028,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 550,
     "b": 300,
-    "tw": 15,
-    "tf": 29,
-    "r": 27
+    "tw": 15.0,
+    "tf": 29.0,
+    "r": 27,
+    "A": 25406,
+    "Iy": 1367000000.0,
+    "Iz": 130800000.00000001,
+    "Wpl_y": 5591000.0,
+    "Wpl_z": 1341000.0,
+    "It": 6123000.0,
+    "Iw": 8743900000000.0
   },
   {
     "id": "HEB600",
@@ -619,8 +1046,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 600,
     "b": 300,
     "tw": 15.5,
-    "tf": 30,
-    "r": 27
+    "tf": 30.0,
+    "r": 27,
+    "A": 26996,
+    "Iy": 1710000000.0,
+    "Iz": 135300000.0,
+    "Wpl_y": 6425000.0,
+    "Wpl_z": 1391000.0,
+    "It": 6796000.0,
+    "Iw": 10838000000000.0
   },
   {
     "id": "HEB650",
@@ -628,9 +1062,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 650,
     "b": 300,
-    "tw": 16,
-    "tf": 31,
-    "r": 27
+    "tw": 16.0,
+    "tf": 31.0,
+    "r": 27,
+    "A": 28634,
+    "Iy": 2106000000.0,
+    "Iz": 139800000.0,
+    "Wpl_y": 7320000.0,
+    "Wpl_z": 1441000.0,
+    "It": 7520000.0,
+    "Iw": 13219000000000.0
   },
   {
     "id": "HEB700",
@@ -638,9 +1079,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 700,
     "b": 300,
-    "tw": 17,
-    "tf": 32,
-    "r": 27
+    "tw": 17.0,
+    "tf": 32.0,
+    "r": 27,
+    "A": 30638,
+    "Iy": 2569000000.0,
+    "Iz": 144400000.0,
+    "Wpl_y": 8327000.0,
+    "Wpl_z": 1495000.0,
+    "It": 8417000.0,
+    "Iw": 15900000000000.0
   },
   {
     "id": "HEB800",
@@ -649,8 +1097,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 800,
     "b": 300,
     "tw": 17.5,
-    "tf": 33,
-    "r": 30
+    "tf": 33.0,
+    "r": 30,
+    "A": 33418,
+    "Iy": 3591000000.0,
+    "Iz": 149000000.0,
+    "Wpl_y": 10230000.0,
+    "Wpl_z": 1553000.0,
+    "It": 9621000.0,
+    "Iw": 21617000000000.0
   },
   {
     "id": "HEB900",
@@ -659,8 +1114,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 900,
     "b": 300,
     "tw": 18.5,
-    "tf": 35,
-    "r": 30
+    "tf": 35.0,
+    "r": 30,
+    "A": 37128,
+    "Iy": 4941000000.0,
+    "Iz": 158200000.0,
+    "Wpl_y": 12580000.0,
+    "Wpl_z": 1658000.0,
+    "It": 11540000.0,
+    "Iw": 29196000000000.0
   },
   {
     "id": "HEB1000",
@@ -668,9 +1130,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 1000,
     "b": 300,
-    "tw": 19,
-    "tf": 36,
-    "r": 30
+    "tw": 19.0,
+    "tf": 36.0,
+    "r": 30,
+    "A": 40005,
+    "Iy": 6447000000.0,
+    "Iz": 162800000.0,
+    "Wpl_y": 14860000.0,
+    "Wpl_z": 1716000.0,
+    "It": 12720000.0,
+    "Iw": 37340000000000.0
   },
   {
     "id": "HEM100",
@@ -678,9 +1147,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 120,
     "b": 106,
-    "tw": 12,
-    "tf": 20,
-    "r": 12
+    "tw": 12.0,
+    "tf": 20.0,
+    "r": 12,
+    "A": 5324,
+    "Iy": 11430000.0,
+    "Iz": 3992000.0,
+    "Wpl_y": 235800.0,
+    "Wpl_z": 116300.0,
+    "It": 672800.0,
+    "Iw": 9430000000.0
   },
   {
     "id": "HEM120",
@@ -689,8 +1165,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 140,
     "b": 126,
     "tw": 12.5,
-    "tf": 21,
-    "r": 12
+    "tf": 21.0,
+    "r": 12,
+    "A": 6641,
+    "Iy": 20180000.0,
+    "Iz": 7028000.0,
+    "Wpl_y": 350600.0,
+    "Wpl_z": 171600.0,
+    "It": 905300.0,
+    "Iw": 23887000000.0
   },
   {
     "id": "HEM140",
@@ -698,9 +1181,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 160,
     "b": 146,
-    "tw": 13,
-    "tf": 22,
-    "r": 12
+    "tw": 13.0,
+    "tf": 22.0,
+    "r": 12,
+    "A": 8056,
+    "Iy": 32909999.999999996,
+    "Iz": 11440000.0,
+    "Wpl_y": 493800.0,
+    "Wpl_z": 240500.0,
+    "It": 1186000.0,
+    "Iw": 52826000000.0
   },
   {
     "id": "HEM160",
@@ -708,9 +1198,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 180,
     "b": 166,
-    "tw": 14,
-    "tf": 23,
-    "r": 15
+    "tw": 14.0,
+    "tf": 23.0,
+    "r": 15,
+    "A": 9705,
+    "Iy": 50980000.0,
+    "Iz": 17590000.0,
+    "Wpl_y": 674600.0,
+    "Wpl_z": 325500.0,
+    "It": 1608000.0,
+    "Iw": 104700000000.0
   },
   {
     "id": "HEM180",
@@ -719,8 +1216,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 200,
     "b": 186,
     "tw": 14.5,
-    "tf": 24,
-    "r": 15
+    "tf": 24.0,
+    "r": 15,
+    "A": 11325,
+    "Iy": 74830000.0,
+    "Iz": 25800000.0,
+    "Wpl_y": 883400.0,
+    "Wpl_z": 425200.0,
+    "It": 2014000.0,
+    "Iw": 194300000000.0
   },
   {
     "id": "HEM200",
@@ -728,9 +1232,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 220,
     "b": 206,
-    "tw": 15,
-    "tf": 25,
-    "r": 18
+    "tw": 15.0,
+    "tf": 25.0,
+    "r": 18,
+    "A": 13128,
+    "Iy": 106400000.0,
+    "Iz": 36510000.0,
+    "Wpl_y": 1135000.0,
+    "Wpl_z": 543200.0,
+    "It": 2581000.0,
+    "Iw": 336870000000.0
   },
   {
     "id": "HEM220",
@@ -739,8 +1250,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 240,
     "b": 226,
     "tw": 15.5,
-    "tf": 26,
-    "r": 18
+    "tf": 26.0,
+    "r": 18,
+    "A": 14944,
+    "Iy": 146000000.0,
+    "Iz": 50120000.0,
+    "Wpl_y": 1419000.0,
+    "Wpl_z": 678600.0,
+    "It": 3136000.0,
+    "Iw": 559550000000.0
   },
   {
     "id": "HEM240",
@@ -748,9 +1266,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 270,
     "b": 248,
-    "tw": 18,
-    "tf": 32,
-    "r": 21
+    "tw": 18.0,
+    "tf": 32.0,
+    "r": 21,
+    "A": 19959,
+    "Iy": 242900000.0,
+    "Iz": 81530000.0,
+    "Wpl_y": 2117000.0,
+    "Wpl_z": 1006000.0,
+    "It": 6272000.0,
+    "Iw": 1123500000000.0
   },
   {
     "id": "HEM260",
@@ -758,9 +1283,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 290,
     "b": 268,
-    "tw": 18,
+    "tw": 18.0,
     "tf": 32.5,
-    "r": 24
+    "r": 24,
+    "A": 21964,
+    "Iy": 313100000.0,
+    "Iz": 104500000.0,
+    "Wpl_y": 2524000.0,
+    "Wpl_z": 1192000.0,
+    "It": 7223000.0,
+    "Iw": 1684000000000.0
   },
   {
     "id": "HEM280",
@@ -769,8 +1301,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 310,
     "b": 288,
     "tw": 18.5,
-    "tf": 33,
-    "r": 24
+    "tf": 33.0,
+    "r": 24,
+    "A": 24016,
+    "Iy": 395500000.0,
+    "Iz": 131600000.0,
+    "Wpl_y": 2966000.0,
+    "Wpl_z": 1397000.0,
+    "It": 8094000.0,
+    "Iw": 2463000000000.0
   },
   {
     "id": "HEM300",
@@ -778,9 +1317,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 340,
     "b": 310,
-    "tw": 21,
-    "tf": 39,
-    "r": 27
+    "tw": 21.0,
+    "tf": 39.0,
+    "r": 27,
+    "A": 30308,
+    "Iy": 592000000.0,
+    "Iz": 194000000.0,
+    "Wpl_y": 4078000.0,
+    "Wpl_z": 1913000.0,
+    "It": 14150000.0,
+    "Iw": 4280100000000.0
   },
   {
     "id": "HEM320",
@@ -788,9 +1334,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 359,
     "b": 309,
-    "tw": 21,
-    "tf": 40,
-    "r": 27
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 27,
+    "A": 31205,
+    "Iy": 681300000.0,
+    "Iz": 197100000.0,
+    "Wpl_y": 4435000.0,
+    "Wpl_z": 1951000.0,
+    "It": 15100000.0,
+    "Iw": 4890000000000.0
   },
   {
     "id": "HEM340",
@@ -798,9 +1351,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 377,
     "b": 309,
-    "tw": 21,
-    "tf": 40,
-    "r": 27
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 27,
+    "A": 31583,
+    "Iy": 763700000.0,
+    "Iz": 197100000.0,
+    "Wpl_y": 4718000.0,
+    "Wpl_z": 1953000.0,
+    "It": 15160000.0,
+    "Iw": 5463300000000.0
   },
   {
     "id": "HEM360",
@@ -808,9 +1368,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 395,
     "b": 308,
-    "tw": 21,
-    "tf": 40,
-    "r": 27
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 27,
+    "A": 31881,
+    "Iy": 848700000.0,
+    "Iz": 195200000.0,
+    "Wpl_y": 4989000.0,
+    "Wpl_z": 1942000.0,
+    "It": 15170000.0,
+    "Iw": 6009300000000.0
   },
   {
     "id": "HEM400",
@@ -818,9 +1385,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 432,
     "b": 307,
-    "tw": 21,
-    "tf": 40,
-    "r": 27
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 27,
+    "A": 32578,
+    "Iy": 1041000000.0,
+    "Iz": 193400000.0,
+    "Wpl_y": 5571000.0,
+    "Wpl_z": 1934000.0,
+    "It": 15240000.0,
+    "Iw": 7268800000000.0
   },
   {
     "id": "HEM450",
@@ -828,9 +1402,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 478,
     "b": 307,
-    "tw": 21,
-    "tf": 40,
-    "r": 27
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 27,
+    "A": 33544,
+    "Iy": 1315000000.0,
+    "Iz": 193400000.0,
+    "Wpl_y": 6331000.0,
+    "Wpl_z": 1939000.0,
+    "It": 15380000.0,
+    "Iw": 9092300000000.0
   },
   {
     "id": "HEM500",
@@ -838,9 +1419,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 524,
     "b": 306,
-    "tw": 21,
-    "tf": 40,
-    "r": 27
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 27,
+    "A": 34430,
+    "Iy": 1619000000.0,
+    "Iz": 191500000.0,
+    "Wpl_y": 7094000.0,
+    "Wpl_z": 1932000.0,
+    "It": 15480000.0,
+    "Iw": 11012000000000.0
   },
   {
     "id": "HEM550",
@@ -848,9 +1436,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 572,
     "b": 306,
-    "tw": 21,
-    "tf": 40,
-    "r": 27
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 27,
+    "A": 35438,
+    "Iy": 1980000000.0,
+    "Iz": 191600000.0,
+    "Wpl_y": 7933000.0,
+    "Wpl_z": 1937000.0,
+    "It": 15630000.0,
+    "Iw": 13323000000000.0
   },
   {
     "id": "HEM600",
@@ -858,9 +1453,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 620,
     "b": 305,
-    "tw": 21,
-    "tf": 40,
-    "r": 27
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 27,
+    "A": 36366,
+    "Iy": 2374000000.0,
+    "Iz": 189800000.0,
+    "Wpl_y": 8772000.0,
+    "Wpl_z": 1930000.0,
+    "It": 15740000.0,
+    "Iw": 15700000000000.0
   },
   {
     "id": "HEM650",
@@ -868,9 +1470,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 668,
     "b": 305,
-    "tw": 21,
-    "tf": 40,
-    "r": 27
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 27,
+    "A": 37374,
+    "Iy": 2817000000.0,
+    "Iz": 189800000.0,
+    "Wpl_y": 9657000.0,
+    "Wpl_z": 1936000.0,
+    "It": 15880000.0,
+    "Iw": 18427000000000.0
   },
   {
     "id": "HEM700",
@@ -878,9 +1487,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 716,
     "b": 304,
-    "tw": 21,
-    "tf": 40,
-    "r": 27
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 27,
+    "A": 38302,
+    "Iy": 3293000000.0,
+    "Iz": 188000000.0,
+    "Wpl_y": 10540000.0,
+    "Wpl_z": 1929000.0,
+    "It": 15990000.0,
+    "Iw": 21161000000000.0
   },
   {
     "id": "HEM800",
@@ -888,9 +1504,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 814,
     "b": 303,
-    "tw": 21,
-    "tf": 40,
-    "r": 30
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 30,
+    "A": 40427,
+    "Iy": 4426000000.0,
+    "Iz": 186300000.0,
+    "Wpl_y": 12490000.0,
+    "Wpl_z": 1930000.0,
+    "It": 16630000.0,
+    "Iw": 27472000000000.0
   },
   {
     "id": "HEM900",
@@ -898,9 +1521,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 910,
     "b": 302,
-    "tw": 21,
-    "tf": 40,
-    "r": 30
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 30,
+    "A": 42363,
+    "Iy": 5704000000.0,
+    "Iz": 184500000.0,
+    "Wpl_y": 14440000.0,
+    "Wpl_z": 1929000.0,
+    "It": 16890000.0,
+    "Iw": 34419000000000.0
   },
   {
     "id": "HEM1000",
@@ -908,9 +1538,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 1008,
     "b": 302,
-    "tw": 21,
-    "tf": 40,
-    "r": 30
+    "tw": 21.0,
+    "tf": 40.0,
+    "r": 30,
+    "A": 44421,
+    "Iy": 7223000000.0,
+    "Iz": 184600000.0,
+    "Wpl_y": 16570000.0,
+    "Wpl_z": 1940000.0,
+    "It": 17190000.0,
+    "Iw": 42665000000000.0
   },
   {
     "id": "UB127x76x13",
@@ -918,9 +1555,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 127,
     "b": 76,
-    "tw": 4,
+    "tw": 4.0,
     "tf": 7.6,
-    "r": 8
+    "r": 8,
+    "A": 1652,
+    "Iy": 4734000.0,
+    "Iz": 557400.0,
+    "Wpl_y": 84150.0,
+    "Wpl_z": 22580.0,
+    "It": 28500.0,
+    "Iw": 2000000000.0
   },
   {
     "id": "UB152x89x16",
@@ -930,7 +1574,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 89,
     "tw": 4.5,
     "tf": 7.7,
-    "r": 8
+    "r": 8,
+    "A": 2032,
+    "Iy": 8343000.0,
+    "Iz": 897500.0,
+    "Wpl_y": 123300.0,
+    "Wpl_z": 31180.0,
+    "It": 35600.0,
+    "Iw": 4700000000.0
   },
   {
     "id": "UB178x102x19",
@@ -940,7 +1591,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 101,
     "tw": 4.8,
     "tf": 7.9,
-    "r": 8
+    "r": 8,
+    "A": 2426,
+    "Iy": 13560000.0,
+    "Iz": 1367000.0,
+    "Wpl_y": 171300.0,
+    "Wpl_z": 41590.0,
+    "It": 44100.0,
+    "Iw": 9900000000.0
   },
   {
     "id": "UB203x102x23",
@@ -950,7 +1608,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 102,
     "tw": 5.4,
     "tf": 9.3,
-    "r": 8
+    "r": 8,
+    "A": 2940,
+    "Iy": 21050000.0,
+    "Iz": 1639000.0,
+    "Wpl_y": 234100.0,
+    "Wpl_z": 49750.0,
+    "It": 70200.0,
+    "Iw": 15400000000.0
   },
   {
     "id": "UB203x133x25",
@@ -960,7 +1625,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 133,
     "tw": 5.7,
     "tf": 7.8,
-    "r": 8
+    "r": 8,
+    "A": 3197,
+    "Iy": 23400000.0,
+    "Iz": 3076000.0,
+    "Wpl_y": 257700.0,
+    "Wpl_z": 70940.0,
+    "It": 59600.0,
+    "Iw": 29400000000.0
   },
   {
     "id": "UB203x133x30",
@@ -970,7 +1642,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 134,
     "tw": 6.4,
     "tf": 9.6,
-    "r": 8
+    "r": 8,
+    "A": 3821,
+    "Iy": 28960000.0,
+    "Iz": 3847000.0,
+    "Wpl_y": 314400.0,
+    "Wpl_z": 88220.0,
+    "It": 103000.0,
+    "Iw": 37400000000.0
   },
   {
     "id": "UB254x102x22",
@@ -980,7 +1659,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 102,
     "tw": 5.7,
     "tf": 6.8,
-    "r": 8
+    "r": 8,
+    "A": 2802,
+    "Iy": 28410000.0,
+    "Iz": 1193000.0,
+    "Wpl_y": 259000.0,
+    "Wpl_z": 37270.0,
+    "It": 41500.0,
+    "Iw": 18200000000.0
   },
   {
     "id": "UB254x102x25",
@@ -988,9 +1674,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 257,
     "b": 102,
-    "tw": 6,
+    "tw": 6.0,
     "tf": 8.4,
-    "r": 8
+    "r": 8,
+    "A": 3204,
+    "Iy": 34150000.0,
+    "Iz": 1487000.0,
+    "Wpl_y": 305500.0,
+    "Wpl_z": 46010.0,
+    "It": 64200.0,
+    "Iw": 23000000000.0
   },
   {
     "id": "UB254x102x28",
@@ -999,8 +1692,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 260,
     "b": 102,
     "tw": 6.3,
-    "tf": 10,
-    "r": 8
+    "tf": 10.0,
+    "r": 8,
+    "A": 3608,
+    "Iy": 40050000.0,
+    "Iz": 1785000.0,
+    "Wpl_y": 352800.0,
+    "Wpl_z": 54850.0,
+    "It": 95700.0,
+    "Iw": 28000000000.0
   },
   {
     "id": "UB254x146x31",
@@ -1008,9 +1708,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 251,
     "b": 146,
-    "tw": 6,
+    "tw": 6.0,
     "tf": 8.6,
-    "r": 8
+    "r": 8,
+    "A": 3968,
+    "Iy": 44130000.0,
+    "Iz": 4475000.0,
+    "Wpl_y": 393100.0,
+    "Wpl_z": 94130.0,
+    "It": 85500.0,
+    "Iw": 66000000000.0
   },
   {
     "id": "UB254x146x37",
@@ -1020,7 +1727,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 146,
     "tw": 6.3,
     "tf": 10.9,
-    "r": 8
+    "r": 8,
+    "A": 4717,
+    "Iy": 55370000.0,
+    "Iz": 5706000.0,
+    "Wpl_y": 483200.0,
+    "Wpl_z": 119400.0,
+    "It": 153000.0,
+    "Iw": 85700000000.0
   },
   {
     "id": "UB254x146x43",
@@ -1030,7 +1744,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 147,
     "tw": 7.2,
     "tf": 12.7,
-    "r": 8
+    "r": 8,
+    "A": 5477,
+    "Iy": 65440000.0,
+    "Iz": 6774000.0,
+    "Wpl_y": 566300.0,
+    "Wpl_z": 141100.0,
+    "It": 239000.0,
+    "Iw": 103000000000.0
   },
   {
     "id": "UB305x102x25",
@@ -1039,8 +1760,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 305,
     "b": 102,
     "tw": 5.8,
-    "tf": 7,
-    "r": 8
+    "tf": 7.0,
+    "r": 8,
+    "A": 3160,
+    "Iy": 44550000.0,
+    "Iz": 1229000.0,
+    "Wpl_y": 342000.0,
+    "Wpl_z": 38810.0,
+    "It": 47700.0,
+    "Iw": 27300000000.0
   },
   {
     "id": "UB305x102x28",
@@ -1048,9 +1776,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 309,
     "b": 102,
-    "tw": 6,
+    "tw": 6.0,
     "tf": 8.8,
-    "r": 8
+    "r": 8,
+    "A": 3588,
+    "Iy": 53660000.0,
+    "Iz": 1554000.0,
+    "Wpl_y": 402900.0,
+    "Wpl_z": 48450.0,
+    "It": 74000.0,
+    "Iw": 34900000000.0
   },
   {
     "id": "UB305x102x33",
@@ -1060,7 +1795,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 102,
     "tw": 6.6,
     "tf": 10.8,
-    "r": 8
+    "r": 8,
+    "A": 4183,
+    "Iy": 65010000.00000001,
+    "Iz": 1941000.0,
+    "Wpl_y": 480800.0,
+    "Wpl_z": 60040.0,
+    "It": 122000.0,
+    "Iw": 44200000000.0
   },
   {
     "id": "UB305x127x37",
@@ -1070,7 +1812,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 123,
     "tw": 7.1,
     "tf": 10.7,
-    "r": 9
+    "r": 9,
+    "A": 4718,
+    "Iy": 71710000.0,
+    "Iz": 3362000.0,
+    "Wpl_y": 539400.0,
+    "Wpl_z": 85410.0,
+    "It": 148000.0,
+    "Iw": 72500000000.0
   },
   {
     "id": "UB305x127x42",
@@ -1078,9 +1827,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 307,
     "b": 124,
-    "tw": 8,
+    "tw": 8.0,
     "tf": 12.1,
-    "r": 9
+    "r": 9,
+    "A": 5340,
+    "Iy": 81960000.0,
+    "Iz": 3888000.0,
+    "Wpl_y": 613500.0,
+    "Wpl_z": 98410.0,
+    "It": 211000.0,
+    "Iw": 84600000000.0
   },
   {
     "id": "UB305x127x48",
@@ -1088,9 +1844,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 311,
     "b": 125,
-    "tw": 9,
-    "tf": 14,
-    "r": 9
+    "tw": 9.0,
+    "tf": 14.0,
+    "r": 9,
+    "A": 6123,
+    "Iy": 95750000.0,
+    "Iz": 4610000.0,
+    "Wpl_y": 710700.0,
+    "Wpl_z": 116100.0,
+    "It": 318000.0,
+    "Iw": 102000000000.0
   },
   {
     "id": "UB305x165x40",
@@ -1098,9 +1861,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 303,
     "b": 165,
-    "tw": 6,
+    "tw": 6.0,
     "tf": 10.2,
-    "r": 9
+    "r": 9,
+    "A": 5132,
+    "Iy": 85030000.0,
+    "Iz": 7644000.0,
+    "Wpl_y": 623100.0,
+    "Wpl_z": 141700.0,
+    "It": 147000.0,
+    "Iw": 164000000000.0
   },
   {
     "id": "UB305x165x46",
@@ -1110,7 +1880,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 166,
     "tw": 6.7,
     "tf": 11.8,
-    "r": 9
+    "r": 9,
+    "A": 5875,
+    "Iy": 98990000.0,
+    "Iz": 8957000.0,
+    "Wpl_y": 720000.0,
+    "Wpl_z": 165500.0,
+    "It": 222000.0,
+    "Iw": 195000000000.0
   },
   {
     "id": "UB305x165x54",
@@ -1120,7 +1897,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 167,
     "tw": 7.9,
     "tf": 13.7,
-    "r": 9
+    "r": 9,
+    "A": 6877,
+    "Iy": 117000000.0,
+    "Iz": 10630000.0,
+    "Wpl_y": 846100.0,
+    "Wpl_z": 195600.0,
+    "It": 348000.0,
+    "Iw": 234000000000.0
   },
   {
     "id": "UB356x171x45",
@@ -1128,9 +1912,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 351,
     "b": 171,
-    "tw": 7,
+    "tw": 7.0,
     "tf": 9.7,
-    "r": 13
+    "r": 13,
+    "A": 5782,
+    "Iy": 122000000.0,
+    "Iz": 8114000.0,
+    "Wpl_y": 782600.0,
+    "Wpl_z": 146900.0,
+    "It": 169000.0,
+    "Iw": 237000000000.0
   },
   {
     "id": "UB356x171x51",
@@ -1140,7 +1931,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 172,
     "tw": 7.4,
     "tf": 11.5,
-    "r": 13
+    "r": 13,
+    "A": 6540,
+    "Iy": 142700000.0,
+    "Iz": 9686000.0,
+    "Wpl_y": 904000.0,
+    "Wpl_z": 174600.0,
+    "It": 251000.0,
+    "Iw": 286000000000.0
   },
   {
     "id": "UB356x171x57",
@@ -1149,8 +1947,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 358,
     "b": 172,
     "tw": 8.1,
-    "tf": 13,
-    "r": 13
+    "tf": 13.0,
+    "r": 13,
+    "A": 7305,
+    "Iy": 161700000.0,
+    "Iz": 11090000.0,
+    "Wpl_y": 1018000.0,
+    "Wpl_z": 199100.0,
+    "It": 349000.0,
+    "Iw": 330000000000.0
   },
   {
     "id": "UB356x171x67",
@@ -1160,7 +1965,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 173,
     "tw": 9.1,
     "tf": 15.7,
-    "r": 13
+    "r": 13,
+    "A": 8598,
+    "Iy": 195900000.0,
+    "Iz": 13620000.0,
+    "Wpl_y": 1219000.0,
+    "Wpl_z": 243400.0,
+    "It": 577000.0,
+    "Iw": 412000000000.0
   },
   {
     "id": "UB406x140x39",
@@ -1170,7 +1982,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 142,
     "tw": 6.4,
     "tf": 8.6,
-    "r": 13
+    "r": 13,
+    "A": 5015,
+    "Iy": 126800000.0,
+    "Iz": 4101000.0,
+    "Wpl_y": 732800.0,
+    "Wpl_z": 91200.0,
+    "It": 116000.0,
+    "Iw": 155000000000.0
   },
   {
     "id": "UB406x140x46",
@@ -1180,7 +1999,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 142,
     "tw": 6.8,
     "tf": 11.2,
-    "r": 13
+    "r": 13,
+    "A": 5913,
+    "Iy": 158600000.0,
+    "Iz": 5384000.0,
+    "Wpl_y": 896800.0,
+    "Wpl_z": 118500.0,
+    "It": 202000.0,
+    "Iw": 207000000000.0
   },
   {
     "id": "UB406x140x53",
@@ -1190,7 +2016,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 143,
     "tw": 7.9,
     "tf": 12.9,
-    "r": 13
+    "r": 13,
+    "A": 6844,
+    "Iy": 184500000.0,
+    "Iz": 6350000.0,
+    "Wpl_y": 1040000.0,
+    "Wpl_z": 139300.0,
+    "It": 304000.0,
+    "Iw": 246000000000.0
   },
   {
     "id": "UB406x178x54",
@@ -1200,7 +2033,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 178,
     "tw": 7.7,
     "tf": 10.9,
-    "r": 13
+    "r": 13,
+    "A": 6944,
+    "Iy": 188900000.0,
+    "Iz": 10220000.0,
+    "Wpl_y": 1064000.0,
+    "Wpl_z": 178700.0,
+    "It": 243000.0,
+    "Iw": 392000000000.0
   },
   {
     "id": "UB406x178x60",
@@ -1210,7 +2050,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 178,
     "tw": 7.9,
     "tf": 12.8,
-    "r": 13
+    "r": 13,
+    "A": 7701,
+    "Iy": 217700000.0,
+    "Iz": 12030000.0,
+    "Wpl_y": 1209000.0,
+    "Wpl_z": 209400.0,
+    "It": 348000.0,
+    "Iw": 466000000000.0
   },
   {
     "id": "UB406x178x67",
@@ -1220,7 +2067,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 179,
     "tw": 8.8,
     "tf": 14.3,
-    "r": 13
+    "r": 13,
+    "A": 8603,
+    "Iy": 245000000.0,
+    "Iz": 13650000.0,
+    "Wpl_y": 1355000.0,
+    "Wpl_z": 237000.0,
+    "It": 479000.0,
+    "Iw": 533000000000.0
   },
   {
     "id": "UB406x178x74",
@@ -1229,8 +2083,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 413,
     "b": 180,
     "tw": 9.5,
-    "tf": 16,
-    "r": 13
+    "tf": 16.0,
+    "r": 13,
+    "A": 9500,
+    "Iy": 274800000.0,
+    "Iz": 15460000.0,
+    "Wpl_y": 1510000.0,
+    "Wpl_z": 267400.0,
+    "It": 649000.0,
+    "Iw": 608000000000.0
   },
   {
     "id": "UB406x178x85",
@@ -1240,7 +2101,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 182,
     "tw": 10.9,
     "tf": 18.2,
-    "r": 13
+    "r": 13,
+    "A": 10910,
+    "Iy": 318700000.0,
+    "Iz": 18310000.0,
+    "Wpl_y": 1742000.0,
+    "Wpl_z": 313600.0,
+    "It": 957000.0,
+    "Iw": 729000000000.0
   },
   {
     "id": "UB457x152x52",
@@ -1250,7 +2118,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 152,
     "tw": 7.6,
     "tf": 10.9,
-    "r": 13
+    "r": 13,
+    "A": 6714,
+    "Iy": 215900000.0,
+    "Iz": 6453000.0,
+    "Wpl_y": 1106000.0,
+    "Wpl_z": 133700.0,
+    "It": 226000.0,
+    "Iw": 311000000000.0
   },
   {
     "id": "UB457x152x60",
@@ -1260,7 +2135,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 153,
     "tw": 8.1,
     "tf": 13.3,
-    "r": 13
+    "r": 13,
+    "A": 7672,
+    "Iy": 257200000.0,
+    "Iz": 7950000.0,
+    "Wpl_y": 1298000.0,
+    "Wpl_z": 163400.0,
+    "It": 354000.0,
+    "Iw": 387000000000.0
   },
   {
     "id": "UB457x152x67",
@@ -1268,9 +2150,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 458,
     "b": 154,
-    "tw": 9,
-    "tf": 15,
-    "r": 13
+    "tw": 9.0,
+    "tf": 15.0,
+    "r": 13,
+    "A": 8604,
+    "Iy": 291400000.0,
+    "Iz": 9129000.0,
+    "Wpl_y": 1463000.0,
+    "Wpl_z": 187100.0,
+    "It": 496000.0,
+    "Iw": 448000000000.0
   },
   {
     "id": "UB457x152x74",
@@ -1279,8 +2168,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 462,
     "b": 154,
     "tw": 9.6,
-    "tf": 17,
-    "r": 13
+    "tf": 17.0,
+    "r": 13,
+    "A": 9497,
+    "Iy": 328900000.0,
+    "Iz": 10470000.0,
+    "Wpl_y": 1637000.0,
+    "Wpl_z": 213600.0,
+    "It": 682000.0,
+    "Iw": 518000000000.0
   },
   {
     "id": "UB457x152x82",
@@ -1290,7 +2186,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 155,
     "tw": 10.5,
     "tf": 18.9,
-    "r": 13
+    "r": 13,
+    "A": 10503,
+    "Iy": 368100000.0,
+    "Iz": 11850000.0,
+    "Wpl_y": 1822000.0,
+    "Wpl_z": 240800.0,
+    "It": 920000.0,
+    "Iw": 592000000000.0
   },
   {
     "id": "UB457x191x67",
@@ -1300,7 +2203,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 190,
     "tw": 8.5,
     "tf": 12.7,
-    "r": 13
+    "r": 13,
+    "A": 8600,
+    "Iy": 296000000.0,
+    "Iz": 14520000.0,
+    "Wpl_y": 1481000.0,
+    "Wpl_z": 237700.0,
+    "It": 387000.0,
+    "Iw": 705000000000.0
   },
   {
     "id": "UB457x191x74",
@@ -1308,9 +2218,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 457,
     "b": 190,
-    "tw": 9,
+    "tw": 9.0,
     "tf": 14.5,
-    "r": 13
+    "r": 13,
+    "A": 9512,
+    "Iy": 335400000.0,
+    "Iz": 16719999.999999998,
+    "Wpl_y": 1663000.0,
+    "Wpl_z": 272500.0,
+    "It": 536000.0,
+    "Iw": 818000000000.0
   },
   {
     "id": "UB457x191x82",
@@ -1319,8 +2236,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 460,
     "b": 191,
     "tw": 9.9,
-    "tf": 16,
-    "r": 13
+    "tf": 16.0,
+    "r": 13,
+    "A": 10497,
+    "Iy": 372700000.0,
+    "Iz": 18710000.0,
+    "Wpl_y": 1842000.0,
+    "Wpl_z": 304300.0,
+    "It": 714000.0,
+    "Iw": 922000000000.0
   },
   {
     "id": "UB457x191x89",
@@ -1330,7 +2254,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 192,
     "tw": 10.5,
     "tf": 17.7,
-    "r": 13
+    "r": 13,
+    "A": 11426,
+    "Iy": 412300000.0,
+    "Iz": 20900000.0,
+    "Wpl_y": 2024000.0,
+    "Wpl_z": 338800.0,
+    "It": 933000.0,
+    "Iw": 1040000000000.0
   },
   {
     "id": "UB457x191x98",
@@ -1340,7 +2271,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 193,
     "tw": 11.4,
     "tf": 19.6,
-    "r": 13
+    "r": 13,
+    "A": 12575,
+    "Iy": 459400000.0,
+    "Iz": 23480000.0,
+    "Wpl_y": 2243000.0,
+    "Wpl_z": 379400.0,
+    "It": 1240000.0,
+    "Iw": 1180000000000.0
   },
   {
     "id": "UB457x191x106",
@@ -1350,7 +2288,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 194,
     "tw": 12.6,
     "tf": 20.6,
-    "r": 13
+    "r": 13,
+    "A": 13524,
+    "Iy": 490900000.0,
+    "Iz": 25150000.0,
+    "Wpl_y": 2399000.0,
+    "Wpl_z": 405900.0,
+    "It": 1490000.0,
+    "Iw": 1270000000000.0
   },
   {
     "id": "UB457x191x133",
@@ -1360,7 +2305,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 197,
     "tw": 15.3,
     "tf": 26.3,
-    "r": 13
+    "r": 13,
+    "A": 17033,
+    "Iy": 640600000.0,
+    "Iz": 33500000.0,
+    "Wpl_y": 3080000.0,
+    "Wpl_z": 535300.0,
+    "It": 2980000.0,
+    "Iw": 1730000000000.0
   },
   {
     "id": "UB457x191x161",
@@ -1368,9 +2320,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 492,
     "b": 199,
-    "tw": 18,
-    "tf": 32,
-    "r": 13
+    "tw": 18.0,
+    "tf": 32.0,
+    "r": 13,
+    "A": 20604,
+    "Iy": 800000000.0,
+    "Iz": 42510000.0,
+    "Wpl_y": 3789000.0,
+    "Wpl_z": 672500.0,
+    "It": 5240000.0,
+    "Iw": 2250000000000.0
   },
   {
     "id": "UB460x280x113",
@@ -1380,7 +2339,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 280,
     "tw": 10.8,
     "tf": 17.3,
-    "r": 20
+    "r": 20,
+    "A": 14658,
+    "Iy": 567200000.0,
+    "Iz": 63380000.0,
+    "Wpl_y": 2727000.0,
+    "Wpl_z": 694000.0,
+    "It": 1320000.0,
+    "Iw": 3150000000000.0
   },
   {
     "id": "UB460x280x128",
@@ -1390,7 +2356,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 282,
     "tw": 12.2,
     "tf": 19.6,
-    "r": 20
+    "r": 20,
+    "A": 16617,
+    "Iy": 648200000.0,
+    "Iz": 73370000.0,
+    "Wpl_y": 3103000.0,
+    "Wpl_z": 798900.0,
+    "It": 1890000.0,
+    "Iw": 3670000000000.0
   },
   {
     "id": "UB460x280x144",
@@ -1400,7 +2373,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 283,
     "tw": 13.6,
     "tf": 22.1,
-    "r": 20
+    "r": 20,
+    "A": 18670,
+    "Iy": 737300000.0,
+    "Iz": 83620000.0,
+    "Wpl_y": 3508000.0,
+    "Wpl_z": 908600.0,
+    "It": 2660000.0,
+    "Iw": 4230000000000.0
   },
   {
     "id": "UB460x280x158",
@@ -1408,9 +2388,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 476,
     "b": 284,
-    "tw": 15,
+    "tw": 15.0,
     "tf": 23.9,
-    "r": 20
+    "r": 20,
+    "A": 20342,
+    "Iy": 807600000.0,
+    "Iz": 91420000.0,
+    "Wpl_y": 3828000.0,
+    "Wpl_z": 992000.0,
+    "It": 3370000.0,
+    "Iw": 4670000000000.0
   },
   {
     "id": "UB460x280x177",
@@ -1420,7 +2407,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 286,
     "tw": 16.6,
     "tf": 26.9,
-    "r": 20
+    "r": 20,
+    "A": 22838,
+    "Iy": 921300000.0,
+    "Iz": 105100000.0,
+    "Wpl_y": 4334000.0,
+    "Wpl_z": 1134000.0,
+    "It": 4730000.0,
+    "Iw": 5440000000000.0
   },
   {
     "id": "UB460x280x193",
@@ -1428,9 +2422,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 489,
     "b": 283,
-    "tw": 17,
+    "tw": 17.0,
     "tf": 30.5,
-    "r": 20
+    "r": 20,
+    "A": 24882,
+    "Iy": 1035000000.0,
+    "Iz": 115500000.0,
+    "Wpl_y": 4808000.0,
+    "Wpl_z": 1257000.0,
+    "It": 6410000.0,
+    "Iw": 6070000000000.0
   },
   {
     "id": "UB460x280x213",
@@ -1440,7 +2441,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 285,
     "tw": 18.5,
     "tf": 33.5,
-    "r": 20
+    "r": 20,
+    "A": 27356,
+    "Iy": 1154000000.0,
+    "Iz": 129500000.0,
+    "Wpl_y": 5325000.0,
+    "Wpl_z": 1402000.0,
+    "It": 8430000.0,
+    "Iw": 6900000000000.0
   },
   {
     "id": "UB460x280x235",
@@ -1450,7 +2458,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 287,
     "tw": 20.6,
     "tf": 36.6,
-    "r": 20
+    "r": 20,
+    "A": 30164,
+    "Iy": 1285000000.0,
+    "Iz": 144600000.0,
+    "Wpl_y": 5893000.0,
+    "Wpl_z": 1558000.0,
+    "It": 11060000.0,
+    "Iw": 7800000000000.0
   },
   {
     "id": "UB460x280x260",
@@ -1460,7 +2475,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 289,
     "tw": 22.6,
     "tf": 40.4,
-    "r": 20
+    "r": 20,
+    "A": 33372,
+    "Iy": 1448000000.0,
+    "Iz": 163000000.0,
+    "Wpl_y": 6579000.0,
+    "Wpl_z": 1747000.0,
+    "It": 14790000.0,
+    "Iw": 8950000000000.0
   },
   {
     "id": "UB460x280x286",
@@ -1470,7 +2492,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 291,
     "tw": 24.4,
     "tf": 44.4,
-    "r": 20
+    "r": 20,
+    "A": 36632,
+    "Iy": 1622000000.0,
+    "Iz": 183000000.0,
+    "Wpl_y": 7297000.0,
+    "Wpl_z": 1949000.0,
+    "It": 19420000.0,
+    "Iw": 10200000000000.0
   },
   {
     "id": "UB460x280x315",
@@ -1480,7 +2509,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 293,
     "tw": 26.9,
     "tf": 48.5,
-    "r": 20
+    "r": 20,
+    "A": 40278,
+    "Iy": 1810000000.0,
+    "Iz": 204100000.0,
+    "Wpl_y": 8075000.0,
+    "Wpl_z": 2165000.0,
+    "It": 25370000.0,
+    "Iw": 11600000000000.0
   },
   {
     "id": "UB533x165x66",
@@ -1490,7 +2526,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 165,
     "tw": 8.9,
     "tf": 11.4,
-    "r": 13
+    "r": 13,
+    "A": 8370,
+    "Iy": 350300000.0,
+    "Iz": 8588000.0,
+    "Wpl_y": 1561000.0,
+    "Wpl_z": 166300.0,
+    "It": 320000.0,
+    "Iw": 566000000000.0
   },
   {
     "id": "UB533x165x74",
@@ -1500,7 +2543,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 166,
     "tw": 9.7,
     "tf": 13.6,
-    "r": 13
+    "r": 13,
+    "A": 9519,
+    "Iy": 410600000.0,
+    "Iz": 10400000.0,
+    "Wpl_y": 1808000.0,
+    "Wpl_z": 200000.0,
+    "It": 479000.0,
+    "Iw": 691000000000.0
   },
   {
     "id": "UB533x165x85",
@@ -1510,7 +2560,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 166,
     "tw": 10.3,
     "tf": 16.5,
-    "r": 13
+    "r": 13,
+    "A": 10803,
+    "Iy": 486300000.0,
+    "Iz": 12750000.0,
+    "Wpl_y": 2107000.0,
+    "Wpl_z": 243100.0,
+    "It": 738000.0,
+    "Iw": 857000000000.0
   },
   {
     "id": "UB533x210x82",
@@ -1520,7 +2577,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 209,
     "tw": 9.6,
     "tf": 13.2,
-    "r": 13
+    "r": 13,
+    "A": 10469,
+    "Iy": 475400000.0,
+    "Iz": 20070000.0,
+    "Wpl_y": 2059000.0,
+    "Wpl_z": 300400.0,
+    "It": 515000.0,
+    "Iw": 1330000000000.0
   },
   {
     "id": "UB533x210x92",
@@ -1530,7 +2594,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 209,
     "tw": 10.1,
     "tf": 15.6,
-    "r": 13
+    "r": 13,
+    "A": 11738,
+    "Iy": 552300000.0,
+    "Iz": 23890000.0,
+    "Wpl_y": 2360000.0,
+    "Wpl_z": 355600.0,
+    "It": 757000.0,
+    "Iw": 1600000000000.0
   },
   {
     "id": "UB533x210x101",
@@ -1540,7 +2611,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 210,
     "tw": 10.8,
     "tf": 17.4,
-    "r": 13
+    "r": 13,
+    "A": 12867,
+    "Iy": 615200000.0,
+    "Iz": 26920000.0,
+    "Wpl_y": 2612000.0,
+    "Wpl_z": 399400.0,
+    "It": 1010000.0,
+    "Iw": 1810000000000.0
   },
   {
     "id": "UB533x210x109",
@@ -1550,7 +2628,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 211,
     "tw": 11.6,
     "tf": 18.8,
-    "r": 13
+    "r": 13,
+    "A": 13887,
+    "Iy": 668200000.0,
+    "Iz": 29430000.0,
+    "Wpl_y": 2828000.0,
+    "Wpl_z": 435800.0,
+    "It": 1260000.0,
+    "Iw": 1990000000000.0
   },
   {
     "id": "UB533x210x122",
@@ -1560,7 +2645,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 212,
     "tw": 12.7,
     "tf": 21.3,
-    "r": 13
+    "r": 13,
+    "A": 15540,
+    "Iy": 760400000.0,
+    "Iz": 33880000.0,
+    "Wpl_y": 3196000.0,
+    "Wpl_z": 499700.0,
+    "It": 1780000.0,
+    "Iw": 2320000000000.0
   },
   {
     "id": "UB533x210x138",
@@ -1570,7 +2662,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 214,
     "tw": 14.7,
     "tf": 23.6,
-    "r": 13
+    "r": 13,
+    "A": 17612,
+    "Iy": 860900000.0,
+    "Iz": 38640000.0,
+    "Wpl_y": 3613000.0,
+    "Wpl_z": 568400.0,
+    "It": 2500000.0,
+    "Iw": 2670000000000.0
   },
   {
     "id": "UB533x312x150",
@@ -1580,7 +2679,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 312,
     "tw": 12.7,
     "tf": 20.3,
-    "r": 13
+    "r": 13,
+    "A": 19180,
+    "Iy": 1006000000.0,
+    "Iz": 102900000.0,
+    "Wpl_y": 4142000.0,
+    "Wpl_z": 1010000.0,
+    "It": 2160000.0,
+    "Iw": 7010000000000.0
   },
   {
     "id": "UB533x312x165",
@@ -1588,9 +2694,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 546,
     "b": 313,
-    "tw": 14,
+    "tw": 14.0,
     "tf": 22.2,
-    "r": 13
+    "r": 13,
+    "A": 21058,
+    "Iy": 1110000000.0,
+    "Iz": 113600000.0,
+    "Wpl_y": 4555000.0,
+    "Wpl_z": 1113000.0,
+    "It": 2830000.0,
+    "Iw": 7790000000000.0
   },
   {
     "id": "UB533x312x182",
@@ -1600,7 +2713,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 314,
     "tw": 15.2,
     "tf": 24.4,
-    "r": 13
+    "r": 13,
+    "A": 23115,
+    "Iy": 1232000000.0,
+    "Iz": 126700000.0,
+    "Wpl_y": 5030000.0,
+    "Wpl_z": 1237000.0,
+    "It": 3730000.0,
+    "Iw": 8770000000000.0
   },
   {
     "id": "UB533x312x196",
@@ -1610,7 +2730,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 316,
     "tw": 16.5,
     "tf": 26.3,
-    "r": 13
+    "r": 13,
+    "A": 25033,
+    "Iy": 1340000000.0,
+    "Iz": 138500000.0,
+    "Wpl_y": 5457000.0,
+    "Wpl_z": 1349000.0,
+    "It": 4700000.0,
+    "Iw": 9640000000000.0
   },
   {
     "id": "UB533x312x219",
@@ -1620,7 +2747,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 317,
     "tw": 18.3,
     "tf": 29.2,
-    "r": 13
+    "r": 13,
+    "A": 27859,
+    "Iy": 1510000000.0,
+    "Iz": 155900000.0,
+    "Wpl_y": 6109000.0,
+    "Wpl_z": 1515000.0,
+    "It": 6420000.0,
+    "Iw": 11000000000000.0
   },
   {
     "id": "UB533x312x248",
@@ -1628,9 +2762,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 571,
     "b": 315,
-    "tw": 19,
+    "tw": 19.0,
     "tf": 34.5,
-    "r": 13
+    "r": 13,
+    "A": 31411,
+    "Iy": 1775000000.0,
+    "Iz": 180000000.0,
+    "Wpl_y": 7062000.0,
+    "Wpl_z": 1759000.0,
+    "It": 9770000.0,
+    "Iw": 13000000000000.0
   },
   {
     "id": "UB533x312x272",
@@ -1640,7 +2781,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 320,
     "tw": 21.1,
     "tf": 37.6,
-    "r": 13
+    "r": 13,
+    "A": 34808,
+    "Iy": 1986000000.0,
+    "Iz": 206100000.0,
+    "Wpl_y": 7858000.0,
+    "Wpl_z": 1985000.0,
+    "It": 12880000.0,
+    "Iw": 15000000000000.0
   },
   {
     "id": "UB610x178x82",
@@ -1648,9 +2796,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 599,
     "b": 178,
-    "tw": 10,
+    "tw": 10.0,
     "tf": 12.8,
-    "r": 20
+    "r": 20,
+    "A": 10628,
+    "Iy": 574900000.0,
+    "Iz": 12090000.0,
+    "Wpl_y": 2252000.0,
+    "Wpl_z": 220100.0,
+    "It": 570000.0,
+    "Iw": 1040000000000.0
   },
   {
     "id": "UB610x178x92",
@@ -1659,8 +2814,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 603,
     "b": 179,
     "tw": 10.9,
-    "tf": 15,
-    "r": 20
+    "tf": 15.0,
+    "r": 20,
+    "A": 11953,
+    "Iy": 661900000.0,
+    "Iz": 14390000.0,
+    "Wpl_y": 2569000.0,
+    "Wpl_z": 260200.0,
+    "It": 810000.0,
+    "Iw": 1240000000000.0
   },
   {
     "id": "UB610x178x100",
@@ -1670,7 +2832,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 179,
     "tw": 11.3,
     "tf": 17.2,
-    "r": 20
+    "r": 20,
+    "A": 12983,
+    "Iy": 741500000.0,
+    "Iz": 16610000.0,
+    "Wpl_y": 2844000.0,
+    "Wpl_z": 297900.0,
+    "It": 1070000.0,
+    "Iw": 1450000000000.0
   },
   {
     "id": "UB610x229x101",
@@ -1680,7 +2849,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 228,
     "tw": 10.5,
     "tf": 14.8,
-    "r": 20
+    "r": 20,
+    "A": 13097,
+    "Iy": 774000000.0,
+    "Iz": 29170000.0,
+    "Wpl_y": 2939000.0,
+    "Wpl_z": 402500.0,
+    "It": 867000.0,
+    "Iw": 2520000000000.0
   },
   {
     "id": "UB610x229x113",
@@ -1690,7 +2866,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 228,
     "tw": 11.1,
     "tf": 17.3,
-    "r": 20
+    "r": 20,
+    "A": 14599,
+    "Iy": 889400000.0,
+    "Iz": 34370000.0,
+    "Wpl_y": 3338000.0,
+    "Wpl_z": 471500.0,
+    "It": 1230000.0,
+    "Iw": 2990000000000.0
   },
   {
     "id": "UB610x229x125",
@@ -1700,7 +2883,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 229,
     "tw": 11.9,
     "tf": 19.6,
-    "r": 20
+    "r": 20,
+    "A": 16139,
+    "Iy": 1002000000.0,
+    "Iz": 39350000.0,
+    "Wpl_y": 3733000.0,
+    "Wpl_z": 537800.0,
+    "It": 1680000.0,
+    "Iw": 3450000000000.0
   },
   {
     "id": "UB610x229x140",
@@ -1710,7 +2900,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 230,
     "tw": 13.1,
     "tf": 22.1,
-    "r": 20
+    "r": 20,
+    "A": 18025,
+    "Iy": 1134000000.0,
+    "Iz": 45090000.0,
+    "Wpl_y": 4200000.0,
+    "Wpl_z": 613900.0,
+    "It": 2330000.0,
+    "Iw": 3990000000000.0
   },
   {
     "id": "UB610x305x149",
@@ -1720,7 +2917,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 305,
     "tw": 11.8,
     "tf": 19.7,
-    "r": 20
+    "r": 20,
+    "A": 19114,
+    "Iy": 1267000000.0,
+    "Iz": 93090000.0,
+    "Wpl_y": 4624000.0,
+    "Wpl_z": 938600.0,
+    "It": 2080000.0,
+    "Iw": 8180000000000.0
   },
   {
     "id": "UB610x305x179",
@@ -1730,7 +2934,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 307,
     "tw": 14.1,
     "tf": 23.6,
-    "r": 20
+    "r": 20,
+    "A": 22918,
+    "Iy": 1539000000.0,
+    "Iz": 114100000.0,
+    "Wpl_y": 5578000.0,
+    "Wpl_z": 1145000.0,
+    "It": 3510000.0,
+    "Iw": 10200000000000.0
   },
   {
     "id": "UB610x305x238",
@@ -1740,7 +2951,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 311,
     "tw": 18.4,
     "tf": 31.4,
-    "r": 20
+    "r": 20,
+    "A": 30442,
+    "Iy": 2103000000.0,
+    "Iz": 158400000.0,
+    "Wpl_y": 7517000.0,
+    "Wpl_z": 1576000.0,
+    "It": 8030000.0,
+    "Iw": 14500000000000.0
   },
   {
     "id": "UB610x324x155",
@@ -1749,8 +2967,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 611,
     "b": 324,
     "tw": 12.7,
-    "tf": 19,
-    "r": 20
+    "tf": 19.0,
+    "r": 20,
+    "A": 19932,
+    "Iy": 1306000000.0,
+    "Iz": 107800000.0,
+    "Wpl_y": 4784000.0,
+    "Wpl_z": 1024000.0,
+    "It": 2100000.0,
+    "Iw": 9450000000000.0
   },
   {
     "id": "UB610x324x174",
@@ -1758,9 +2983,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 616,
     "b": 325,
-    "tw": 14,
+    "tw": 14.0,
     "tf": 21.6,
-    "r": 20
+    "r": 20,
+    "A": 22403,
+    "Iy": 1487000000.0,
+    "Iz": 123800000.0,
+    "Wpl_y": 5418000.0,
+    "Wpl_z": 1173000.0,
+    "It": 2980000.0,
+    "Iw": 10900000000000.0
   },
   {
     "id": "UB610x324x195",
@@ -1770,7 +3002,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 327,
     "tw": 15.4,
     "tf": 24.4,
-    "r": 20
+    "r": 20,
+    "A": 25128,
+    "Iy": 1695000000.0,
+    "Iz": 142400000.0,
+    "Wpl_y": 6130000.0,
+    "Wpl_z": 1343000.0,
+    "It": 4180000.0,
+    "Iw": 12700000000000.0
   },
   {
     "id": "UB610x324x217",
@@ -1780,7 +3019,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 328,
     "tw": 16.5,
     "tf": 27.7,
-    "r": 20
+    "r": 20,
+    "A": 27962,
+    "Iy": 1924000000.0,
+    "Iz": 163200000.0,
+    "Wpl_y": 6903000.0,
+    "Wpl_z": 1533000.0,
+    "It": 5860000.0,
+    "Iw": 14700000000000.0
   },
   {
     "id": "UB610x324x241",
@@ -1789,8 +3035,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 635,
     "b": 329,
     "tw": 17.9,
-    "tf": 31,
-    "r": 20
+    "tf": 31.0,
+    "r": 20,
+    "A": 30998,
+    "Iy": 2170000000.0,
+    "Iz": 184300000.0,
+    "Wpl_y": 7726000.0,
+    "Wpl_z": 1728000.0,
+    "It": 8020000.0,
+    "Iw": 16800000000000.0
   },
   {
     "id": "UB610x324x262",
@@ -1798,9 +3051,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 641,
     "b": 327,
-    "tw": 19,
-    "tf": 34,
-    "r": 20
+    "tw": 19.0,
+    "tf": 34.0,
+    "r": 20,
+    "A": 33466,
+    "Iy": 2376000000.0,
+    "Iz": 198500000.0,
+    "Wpl_y": 8405000.0,
+    "Wpl_z": 1874000.0,
+    "It": 10280000.0,
+    "Iw": 18300000000000.0
   },
   {
     "id": "UB610x324x285",
@@ -1810,7 +3070,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 329,
     "tw": 20.6,
     "tf": 37.1,
-    "r": 20
+    "r": 20,
+    "A": 36555,
+    "Iy": 2623000000.0,
+    "Iz": 220700000.0,
+    "Wpl_y": 9231000.0,
+    "Wpl_z": 2074000.0,
+    "It": 13290000.0,
+    "Iw": 20500000000000.0
   },
   {
     "id": "UB610x324x307",
@@ -1820,7 +3087,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 330,
     "tw": 22.1,
     "tf": 39.9,
-    "r": 20
+    "r": 20,
+    "A": 39345,
+    "Iy": 2852000000.0,
+    "Iz": 239600000.0,
+    "Wpl_y": 9985000.0,
+    "Wpl_z": 2248000.0,
+    "It": 16460000.0,
+    "Iw": 22500000000000.0
   },
   {
     "id": "UB610x324x341",
@@ -1830,7 +3104,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 333,
     "tw": 24.4,
     "tf": 43.9,
-    "r": 20
+    "r": 20,
+    "A": 43567,
+    "Iy": 3198000000.0,
+    "Iz": 271000000.0,
+    "Wpl_y": 11120000.0,
+    "Wpl_z": 2525000.0,
+    "It": 21960000.0,
+    "Iw": 25800000000000.0
   },
   {
     "id": "UB610x324x372",
@@ -1839,8 +3120,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 669,
     "b": 335,
     "tw": 26.4,
-    "tf": 48,
-    "r": 20
+    "tf": 48.0,
+    "r": 20,
+    "A": 47631,
+    "Iy": 3548000000.0,
+    "Iz": 301800000.0,
+    "Wpl_y": 12250000.0,
+    "Wpl_z": 2799000.0,
+    "It": 28500000.0,
+    "Iw": 29100000000000.0
   },
   {
     "id": "UB686x254x125",
@@ -1850,7 +3138,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 253,
     "tw": 11.7,
     "tf": 16.2,
-    "r": 20
+    "r": 20,
+    "A": 16093,
+    "Iy": 1194000000.0,
+    "Iz": 43850000.0,
+    "Wpl_y": 4040000.0,
+    "Wpl_z": 544100.0,
+    "It": 1240000.0,
+    "Iw": 4800000000000.0
   },
   {
     "id": "UB686x254x140",
@@ -1859,8 +3154,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 684,
     "b": 254,
     "tw": 12.4,
-    "tf": 19,
-    "r": 20
+    "tf": 19.0,
+    "r": 20,
+    "A": 17988,
+    "Iy": 1377000000.0,
+    "Iz": 51860000.0,
+    "Wpl_y": 4604000.0,
+    "Wpl_z": 639900.0,
+    "It": 1790000.0,
+    "Iw": 5720000000000.0
   },
   {
     "id": "UB686x254x152",
@@ -1869,8 +3171,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 688,
     "b": 254,
     "tw": 13.2,
-    "tf": 21,
-    "r": 20
+    "tf": 21.0,
+    "r": 20,
+    "A": 19553,
+    "Iy": 1518000000.0,
+    "Iz": 57860000.0,
+    "Wpl_y": 5046000.0,
+    "Wpl_z": 712000.0,
+    "It": 2310000.0,
+    "Iw": 6430000000000.0
   },
   {
     "id": "UB686x254x170",
@@ -1880,7 +3189,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 256,
     "tw": 14.5,
     "tf": 23.7,
-    "r": 20
+    "r": 20,
+    "A": 21828,
+    "Iy": 1718000000.0,
+    "Iz": 66330000.0,
+    "Wpl_y": 5677000.0,
+    "Wpl_z": 813300.0,
+    "It": 3220000.0,
+    "Iw": 7430000000000.0
   },
   {
     "id": "UB762x267x134",
@@ -1888,9 +3204,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 750,
     "b": 264,
-    "tw": 12,
+    "tw": 12.0,
     "tf": 15.5,
-    "r": 20
+    "r": 20,
+    "A": 17168,
+    "Iy": 1521000000.0,
+    "Iz": 47900000.0,
+    "Wpl_y": 4683000.0,
+    "Wpl_z": 571300.0,
+    "It": 1250000.0,
+    "Iw": 6460000000000.0
   },
   {
     "id": "UB762x267x147",
@@ -1900,7 +3223,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 265,
     "tw": 12.8,
     "tf": 17.5,
-    "r": 20
+    "r": 20,
+    "A": 18829,
+    "Iy": 1699000000.0,
+    "Iz": 54570000.0,
+    "Wpl_y": 5194000.0,
+    "Wpl_z": 648600.0,
+    "It": 1660000.0,
+    "Iw": 7400000000000.0
   },
   {
     "id": "UB762x267x161",
@@ -1910,7 +3240,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 266,
     "tw": 13.8,
     "tf": 19.3,
-    "r": 20
+    "r": 20,
+    "A": 20539,
+    "Iy": 1873000000.0,
+    "Iz": 60750000.0,
+    "Wpl_y": 5700000.0,
+    "Wpl_z": 720900.0,
+    "It": 2150000.0,
+    "Iw": 8290000000000.0
   },
   {
     "id": "UB762x267x173",
@@ -1920,7 +3257,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 267,
     "tw": 14.3,
     "tf": 21.6,
-    "r": 20
+    "r": 20,
+    "A": 22147,
+    "Iy": 2067000000.0,
+    "Iz": 68520000.0,
+    "Wpl_y": 6236000.0,
+    "Wpl_z": 808900.0,
+    "It": 2770000.0,
+    "Iw": 9400000000000.0
   },
   {
     "id": "UB762x267x185",
@@ -1930,7 +3274,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 267,
     "tw": 14.9,
     "tf": 23.6,
-    "r": 20
+    "r": 20,
+    "A": 23656,
+    "Iy": 2241000000.0,
+    "Iz": 75120000.0,
+    "Wpl_y": 6724000.0,
+    "Wpl_z": 885200.0,
+    "It": 3430000.0,
+    "Iw": 10400000000000.0
   },
   {
     "id": "UB762x267x197",
@@ -1940,7 +3291,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 268,
     "tw": 15.6,
     "tf": 25.4,
-    "r": 20
+    "r": 20,
+    "A": 25174,
+    "Iy": 2413000000.0,
+    "Iz": 81770000.0,
+    "Wpl_y": 7205000.0,
+    "Wpl_z": 960100.0,
+    "It": 4170000.0,
+    "Iw": 11300000000000.0
   },
   {
     "id": "UB838x292x176",
@@ -1948,9 +3306,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 835,
     "b": 292,
-    "tw": 14,
+    "tw": 14.0,
     "tf": 18.8,
-    "r": 20
+    "r": 20,
+    "A": 22473,
+    "Iy": 2471000000.0,
+    "Iz": 78000000.0,
+    "Wpl_y": 6836000.0,
+    "Wpl_z": 842800.0,
+    "It": 2270000.0,
+    "Iw": 13000000000000.0
   },
   {
     "id": "UB838x292x194",
@@ -1960,7 +3325,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 292,
     "tw": 14.7,
     "tf": 21.7,
-    "r": 20
+    "r": 20,
+    "A": 24754,
+    "Iy": 2803000000.0,
+    "Iz": 90680000.0,
+    "Wpl_y": 7668000.0,
+    "Wpl_z": 974800.0,
+    "It": 3120000.0,
+    "Iw": 15200000000000.0
   },
   {
     "id": "UB838x292x210",
@@ -1970,7 +3342,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 293,
     "tw": 15.4,
     "tf": 24.4,
-    "r": 20
+    "r": 20,
+    "A": 26919,
+    "Iy": 3117000000.0,
+    "Iz": 102600000.0,
+    "Wpl_y": 8456000.0,
+    "Wpl_z": 1099000.0,
+    "It": 4130000.0,
+    "Iw": 17300000000000.0
   },
   {
     "id": "UB838x292x226",
@@ -1980,7 +3359,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 294,
     "tw": 16.1,
     "tf": 26.8,
-    "r": 20
+    "r": 20,
+    "A": 28928,
+    "Iy": 3408000000.0,
+    "Iz": 113600000.0,
+    "Wpl_y": 9183000.0,
+    "Wpl_z": 1213000.0,
+    "It": 5220000.0,
+    "Iw": 19300000000000.0
   },
   {
     "id": "UB914x305x201",
@@ -1990,7 +3376,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 303,
     "tw": 15.1,
     "tf": 20.2,
-    "r": 19
+    "r": 19,
+    "A": 25592,
+    "Iy": 3253000000.0,
+    "Iz": 94230000.0,
+    "Wpl_y": 8351000.0,
+    "Wpl_z": 982000.0,
+    "It": 2910000.0,
+    "Iw": 18400000000000.0
   },
   {
     "id": "UB914x305x224",
@@ -2000,7 +3393,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 304,
     "tw": 15.9,
     "tf": 23.9,
-    "r": 19
+    "r": 19,
+    "A": 28564,
+    "Iy": 3764000000.0,
+    "Iz": 112400000.0,
+    "Wpl_y": 9535000.0,
+    "Wpl_z": 1163000.0,
+    "It": 4220000.0,
+    "Iw": 22100000000000.0
   },
   {
     "id": "UB914x305x239",
@@ -2010,7 +3410,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 305,
     "tw": 16.5,
     "tf": 25.9,
-    "r": 19
+    "r": 19,
+    "A": 30355,
+    "Iy": 4065000000.0,
+    "Iz": 122900000.0,
+    "Wpl_y": 10230000.0,
+    "Wpl_z": 1267000.0,
+    "It": 5150000.0,
+    "Iw": 24300000000000.0
   },
   {
     "id": "UB914x305x253",
@@ -2020,7 +3427,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 306,
     "tw": 17.3,
     "tf": 27.9,
-    "r": 19
+    "r": 19,
+    "A": 32283,
+    "Iy": 4363000000.0,
+    "Iz": 133000000.0,
+    "Wpl_y": 10940000.0,
+    "Wpl_z": 1371000.0,
+    "It": 6260000.0,
+    "Iw": 26400000000000.0
   },
   {
     "id": "UB914x305x271",
@@ -2029,8 +3443,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 923,
     "b": 307,
     "tw": 18.4,
-    "tf": 30,
-    "r": 19
+    "tf": 30.0,
+    "r": 19,
+    "A": 34612,
+    "Iy": 4716000000.0,
+    "Iz": 145200000.0,
+    "Wpl_y": 11780000.0,
+    "Wpl_z": 1491000.0,
+    "It": 7700000.0,
+    "Iw": 28900000000000.0
   },
   {
     "id": "UB914x305x289",
@@ -2039,8 +3460,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 927,
     "b": 308,
     "tw": 19.5,
-    "tf": 32,
-    "r": 19
+    "tf": 32.0,
+    "r": 19,
+    "A": 36827,
+    "Iy": 5042000000.0,
+    "Iz": 156000000.0,
+    "Wpl_y": 12570000.0,
+    "Wpl_z": 1601000.0,
+    "It": 9260000.0,
+    "Iw": 31200000000000.0
   },
   {
     "id": "UB914x305x313",
@@ -2050,7 +3478,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 309,
     "tw": 21.1,
     "tf": 34.5,
-    "r": 19
+    "r": 19,
+    "A": 39843,
+    "Iy": 5483000000.0,
+    "Iz": 170400000.0,
+    "Wpl_y": 13630000.0,
+    "Wpl_z": 1748000.0,
+    "It": 11620000.0,
+    "Iw": 34300000000000.0
   },
   {
     "id": "UB914x419x343",
@@ -2059,8 +3494,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 912,
     "b": 418,
     "tw": 19.4,
-    "tf": 32,
-    "r": 24
+    "tf": 32.0,
+    "r": 24,
+    "A": 43730,
+    "Iy": 6258000000.0,
+    "Iz": 391600000.0,
+    "Wpl_y": 15480000.0,
+    "Wpl_z": 2890000.0,
+    "It": 11930000.0,
+    "Iw": 75800000000000.0
   },
   {
     "id": "UB914x419x365",
@@ -2070,7 +3512,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 419,
     "tw": 20.3,
     "tf": 34.3,
-    "r": 24
+    "r": 24,
+    "A": 46472,
+    "Iy": 6711000000.0,
+    "Iz": 422400000.0,
+    "Wpl_y": 16540000.0,
+    "Wpl_z": 3112000.0,
+    "It": 14420000.0,
+    "Iw": 82100000000000.0
   },
   {
     "id": "UB914x419x388",
@@ -2080,7 +3529,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 420,
     "tw": 21.4,
     "tf": 36.6,
-    "r": 24
+    "r": 24,
+    "A": 49422,
+    "Iy": 7196000000.0,
+    "Iz": 454400000.0,
+    "Wpl_y": 17670000.0,
+    "Wpl_z": 3341000.0,
+    "It": 17340000.0,
+    "Iw": 88900000000000.0
   },
   {
     "id": "UB1016x305x222",
@@ -2088,9 +3544,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 970,
     "b": 300,
-    "tw": 16,
+    "tw": 16.0,
     "tf": 21.1,
-    "r": 30
+    "r": 30,
+    "A": 28282,
+    "Iy": 4080000000.0,
+    "Iz": 95460000.0,
+    "Wpl_y": 9807000.0,
+    "Wpl_z": 1020000.0,
+    "It": 3900000.0,
+    "Iw": 21500000000000.0
   },
   {
     "id": "UB1016x305x249",
@@ -2099,8 +3562,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 980,
     "b": 300,
     "tw": 16.5,
-    "tf": 26,
-    "r": 30
+    "tf": 26.0,
+    "r": 30,
+    "A": 31686,
+    "Iy": 4812000000.0,
+    "Iz": 117500000.0,
+    "Wpl_y": 11350000.0,
+    "Wpl_z": 1245000.0,
+    "It": 5820000.0,
+    "Iw": 26800000000000.0
   },
   {
     "id": "UB1016x305x272",
@@ -2109,8 +3579,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 990,
     "b": 300,
     "tw": 16.5,
-    "tf": 31,
-    "r": 30
+    "tf": 31.0,
+    "r": 30,
+    "A": 34686,
+    "Iy": 5540000000.0,
+    "Iz": 140000000.0,
+    "Wpl_y": 12830000.0,
+    "Wpl_z": 1470000.0,
+    "It": 8350000.0,
+    "Iw": 32200000000000.0
   },
   {
     "id": "UB1016x305x314",
@@ -2120,7 +3597,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 300,
     "tw": 19.1,
     "tf": 35.9,
-    "r": 30
+    "r": 30,
+    "A": 40039,
+    "Iy": 6441000000.0,
+    "Iz": 162300000.0,
+    "Wpl_y": 14850000.0,
+    "Wpl_z": 1713000.0,
+    "It": 12640000.0,
+    "Iw": 37700000000000.0
   },
   {
     "id": "UB1016x305x349",
@@ -2129,8 +3613,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 1008,
     "b": 302,
     "tw": 21.1,
-    "tf": 40,
-    "r": 30
+    "tf": 40.0,
+    "r": 30,
+    "A": 44515,
+    "Iy": 7231000000.0,
+    "Iz": 184600000.0,
+    "Wpl_y": 16590000.0,
+    "Wpl_z": 1941000.0,
+    "It": 17180000.0,
+    "Iw": 43300000000000.0
   },
   {
     "id": "UB1016x305x393",
@@ -2140,7 +3631,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 303,
     "tw": 24.4,
     "tf": 43.9,
-    "r": 30
+    "r": 30,
+    "A": 50022,
+    "Iy": 8075000000.0,
+    "Iz": 205000000.0,
+    "Wpl_y": 18540000.0,
+    "Wpl_z": 2168000.0,
+    "It": 23300000.0,
+    "Iw": 48400000000000.0
   },
   {
     "id": "UB1016x305x437",
@@ -2149,8 +3647,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 1026,
     "b": 305,
     "tw": 26.9,
-    "tf": 49,
-    "r": 30
+    "tf": 49.0,
+    "r": 30,
+    "A": 55668,
+    "Iy": 9103000000.0,
+    "Iz": 234500000.0,
+    "Wpl_y": 20770000.0,
+    "Wpl_z": 2469000.0,
+    "It": 31850000.0,
+    "Iw": 56000000000000.0
   },
   {
     "id": "UB1016x305x487",
@@ -2158,9 +3663,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 1036,
     "b": 308,
-    "tw": 30,
+    "tw": 30.0,
     "tf": 54.1,
-    "r": 30
+    "r": 30,
+    "A": 61995,
+    "Iy": 10220000000.0,
+    "Iz": 267200000.0,
+    "Wpl_y": 23210000.0,
+    "Wpl_z": 2800000.0,
+    "It": 42990000.0,
+    "Iw": 64400000000000.0
   },
   {
     "id": "UC152x152x23",
@@ -2170,7 +3682,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 152,
     "tw": 5.8,
     "tf": 6.8,
-    "r": 8
+    "r": 8,
+    "A": 2925,
+    "Iy": 12500000.0,
+    "Iz": 3999000.0,
+    "Wpl_y": 182000.0,
+    "Wpl_z": 80160.0,
+    "It": 46300.0,
+    "Iw": 21200000000.0
   },
   {
     "id": "UC152x152x30",
@@ -2180,7 +3699,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 153,
     "tw": 6.5,
     "tf": 9.4,
-    "r": 8
+    "r": 8,
+    "A": 3826,
+    "Iy": 17480000.0,
+    "Iz": 5605000.0,
+    "Wpl_y": 247700.0,
+    "Wpl_z": 111600.0,
+    "It": 105000.0,
+    "Iw": 30800000000.0
   },
   {
     "id": "UC152x152x37",
@@ -2188,9 +3714,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 162,
     "b": 154,
-    "tw": 8,
+    "tw": 8.0,
     "tf": 11.5,
-    "r": 8
+    "r": 8,
+    "A": 4711,
+    "Iy": 22100000.0,
+    "Iz": 7062000.0,
+    "Wpl_y": 308800.0,
+    "Wpl_z": 139600.0,
+    "It": 192000.0,
+    "Iw": 39900000000.0
   },
   {
     "id": "UC152x152x44",
@@ -2200,7 +3733,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 156,
     "tw": 9.5,
     "tf": 13.6,
-    "r": 8
+    "r": 8,
+    "A": 5609,
+    "Iy": 27030000.0,
+    "Iz": 8601000.0,
+    "Wpl_y": 372200.0,
+    "Wpl_z": 168700.0,
+    "It": 317000.0,
+    "Iw": 49900000000.0
   },
   {
     "id": "UC152x152x51",
@@ -2208,9 +3748,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 170,
     "b": 157,
-    "tw": 11,
+    "tw": 11.0,
     "tf": 15.7,
-    "r": 8
+    "r": 8,
+    "A": 6519,
+    "Iy": 32270000.000000004,
+    "Iz": 10220000.0,
+    "Wpl_y": 438100.0,
+    "Wpl_z": 199000.0,
+    "It": 488000.0,
+    "Iw": 61000000000.0
   },
   {
     "id": "UC203x203x46",
@@ -2219,8 +3766,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 203,
     "b": 204,
     "tw": 7.2,
-    "tf": 11,
-    "r": 13
+    "tf": 11.0,
+    "r": 13,
+    "A": 5922,
+    "Iy": 46050000.0,
+    "Iz": 15490000.0,
+    "Wpl_y": 501700.0,
+    "Wpl_z": 231200.0,
+    "It": 233000.0,
+    "Iw": 143000000000.0
   },
   {
     "id": "UC203x203x52",
@@ -2230,7 +3784,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 204,
     "tw": 7.9,
     "tf": 12.5,
-    "r": 13
+    "r": 13,
+    "A": 6677,
+    "Iy": 52960000.0,
+    "Iz": 17780000.0,
+    "Wpl_y": 571700.0,
+    "Wpl_z": 264600.0,
+    "It": 332000.0,
+    "Iw": 167000000000.0
   },
   {
     "id": "UC203x203x60",
@@ -2240,7 +3801,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 206,
     "tw": 9.4,
     "tf": 14.2,
-    "r": 13
+    "r": 13,
+    "A": 7686,
+    "Iy": 61620000.0,
+    "Iz": 20650000.0,
+    "Wpl_y": 660300.0,
+    "Wpl_z": 305800.0,
+    "It": 491000.0,
+    "Iw": 197000000000.0
   },
   {
     "id": "UC203x203x71",
@@ -2248,9 +3816,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 216,
     "b": 206,
-    "tw": 10,
+    "tw": 10.0,
     "tf": 17.3,
-    "r": 13
+    "r": 13,
+    "A": 9092,
+    "Iy": 76550000.0,
+    "Iz": 25380000.0,
+    "Wpl_y": 803000.0,
+    "Wpl_z": 374100.0,
+    "It": 827000.0,
+    "Iw": 250000000000.0
   },
   {
     "id": "UC203x203x86",
@@ -2260,7 +3835,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 209,
     "tw": 12.7,
     "tf": 20.5,
-    "r": 13
+    "r": 13,
+    "A": 11013,
+    "Iy": 94860000.0,
+    "Iz": 31280000.0,
+    "Wpl_y": 981000.0,
+    "Wpl_z": 456700.0,
+    "It": 1400000.0,
+    "Iw": 318000000000.0
   },
   {
     "id": "UC203x203x100",
@@ -2270,7 +3852,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 210,
     "tw": 14.5,
     "tf": 23.7,
-    "r": 13
+    "r": 13,
+    "A": 12734,
+    "Iy": 113300000.0,
+    "Iz": 36800000.0,
+    "Wpl_y": 1152000.0,
+    "Wpl_z": 535000.0,
+    "It": 2140000.0,
+    "Iw": 386000000000.0
   },
   {
     "id": "UC203x203x113",
@@ -2280,7 +3869,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 212,
     "tw": 16.3,
     "tf": 26.9,
-    "r": 13
+    "r": 13,
+    "A": 14503,
+    "Iy": 133400000.0,
+    "Iz": 42860000.0,
+    "Wpl_y": 1333000.0,
+    "Wpl_z": 618600.0,
+    "It": 3110000.0,
+    "Iw": 464000000000.0
   },
   {
     "id": "UC203x203x127",
@@ -2290,7 +3886,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 214,
     "tw": 18.1,
     "tf": 30.1,
-    "r": 13
+    "r": 13,
+    "A": 16295,
+    "Iy": 154700000.0,
+    "Iz": 49210000.0,
+    "Wpl_y": 1521000.0,
+    "Wpl_z": 705100.0,
+    "It": 4350000.0,
+    "Iw": 549000000000.0
   },
   {
     "id": "UC254x254x73",
@@ -2300,7 +3903,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 255,
     "tw": 8.6,
     "tf": 14.2,
-    "r": 20
+    "r": 20,
+    "A": 9515,
+    "Iy": 116400000.0,
+    "Iz": 39100000.0,
+    "Wpl_y": 1014000.0,
+    "Wpl_z": 467400.0,
+    "It": 661000.0,
+    "Iw": 563000000000.0
   },
   {
     "id": "UC254x254x81",
@@ -2310,7 +3920,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 255,
     "tw": 9.4,
     "tf": 15.6,
-    "r": 20
+    "r": 20,
+    "A": 10412,
+    "Iy": 128000000.0,
+    "Iz": 43160000.0,
+    "Wpl_y": 1112000.0,
+    "Wpl_z": 515299.99999999994,
+    "It": 854000.0,
+    "Iw": 624000000000.0
   },
   {
     "id": "UC254x254x89",
@@ -2320,7 +3937,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 256,
     "tw": 10.3,
     "tf": 17.3,
-    "r": 20
+    "r": 20,
+    "A": 11536,
+    "Iy": 145000000.0,
+    "Iz": 48600000.0,
+    "Wpl_y": 1246000.0,
+    "Wpl_z": 577500.0,
+    "It": 1140000.0,
+    "Iw": 717000000000.0
   },
   {
     "id": "UC254x254x101",
@@ -2330,7 +3954,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 257,
     "tw": 11.9,
     "tf": 19.6,
-    "r": 20
+    "r": 20,
+    "A": 13093,
+    "Iy": 166000000.0,
+    "Iz": 55520000.0,
+    "Wpl_y": 1418000.0,
+    "Wpl_z": 658800.0,
+    "It": 1630000.0,
+    "Iw": 829000000000.0
   },
   {
     "id": "UC254x254x107",
@@ -2340,7 +3971,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 259,
     "tw": 12.8,
     "tf": 20.5,
-    "r": 20
+    "r": 20,
+    "A": 13843,
+    "Iy": 177500000.0,
+    "Iz": 59310000.0,
+    "Wpl_y": 1506000.0,
+    "Wpl_z": 699500.0,
+    "It": 1880000.0,
+    "Iw": 899000000000.0
   },
   {
     "id": "UC254x254x115",
@@ -2350,7 +3988,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 259,
     "tw": 13.5,
     "tf": 22.1,
-    "r": 20
+    "r": 20,
+    "A": 14826,
+    "Iy": 191700000.0,
+    "Iz": 64090000.0,
+    "Wpl_y": 1621000.0,
+    "Wpl_z": 755300.0,
+    "It": 2310000.0,
+    "Iw": 977000000000.0
   },
   {
     "id": "UC254x254x132",
@@ -2360,7 +4005,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 261,
     "tw": 15.3,
     "tf": 25.3,
-    "r": 20
+    "r": 20,
+    "A": 17018,
+    "Iy": 227600000.0,
+    "Iz": 75350000.0,
+    "Wpl_y": 1891000.0,
+    "Wpl_z": 881100.0,
+    "It": 3410000.0,
+    "Iw": 1190000000000.0
   },
   {
     "id": "UC254x254x149",
@@ -2370,7 +4022,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 263,
     "tw": 17.3,
     "tf": 28.4,
-    "r": 20
+    "r": 20,
+    "A": 19178,
+    "Iy": 261700000.0,
+    "Iz": 86270000.0,
+    "Wpl_y": 2151000.0,
+    "Wpl_z": 1004000.0,
+    "It": 4790000.0,
+    "Iw": 1390000000000.0
   },
   {
     "id": "UC254x254x167",
@@ -2380,7 +4039,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 265,
     "tw": 19.2,
     "tf": 31.7,
-    "r": 20
+    "r": 20,
+    "A": 21490,
+    "Iy": 302300000.0,
+    "Iz": 98750000.0,
+    "Wpl_y": 2446000.0,
+    "Wpl_z": 1140000.0,
+    "It": 6610000.0,
+    "Iw": 1640000000000.0
   },
   {
     "id": "UC305x305x97",
@@ -2390,7 +4056,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 305,
     "tw": 9.9,
     "tf": 15.4,
-    "r": 20
+    "r": 20,
+    "A": 12490,
+    "Iy": 225000000.0,
+    "Iz": 73100000.0,
+    "Wpl_y": 1611000.0,
+    "Wpl_z": 727700.0,
+    "It": 984000.0,
+    "Iw": 1560000000000.0
   },
   {
     "id": "UC305x305x107",
@@ -2399,8 +4072,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 311,
     "b": 306,
     "tw": 10.9,
-    "tf": 17,
-    "r": 20
+    "tf": 17.0,
+    "r": 20,
+    "A": 13767,
+    "Iy": 250500000.0,
+    "Iz": 81250000.0,
+    "Wpl_y": 1784000.0,
+    "Wpl_z": 807500.0,
+    "It": 1300000.0,
+    "Iw": 1760000000000.0
   },
   {
     "id": "UC305x305x118",
@@ -2408,9 +4088,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 314,
     "b": 307,
-    "tw": 12,
+    "tw": 12.0,
     "tf": 18.7,
-    "r": 20
+    "r": 20,
+    "A": 15165,
+    "Iy": 279300000.0,
+    "Iz": 90610000.0,
+    "Wpl_y": 1977000.0,
+    "Wpl_z": 897100.0,
+    "It": 1710000.0,
+    "Iw": 1980000000000.0
   },
   {
     "id": "UC305x305x129",
@@ -2420,7 +4107,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 308,
     "tw": 13.1,
     "tf": 20.6,
-    "r": 20
+    "r": 20,
+    "A": 16659,
+    "Iy": 310400000.0,
+    "Iz": 100400000.0,
+    "Wpl_y": 2184000.0,
+    "Wpl_z": 992800.0,
+    "It": 2240000.0,
+    "Iw": 2220000000000.0
   },
   {
     "id": "UC305x305x137",
@@ -2430,7 +4124,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 309,
     "tw": 13.8,
     "tf": 21.7,
-    "r": 20
+    "r": 20,
+    "A": 17587,
+    "Iy": 330700000.0,
+    "Iz": 107000000.0,
+    "Wpl_y": 2316000.0,
+    "Wpl_z": 1054000.0,
+    "It": 2610000.0,
+    "Iw": 2390000000000.0
   },
   {
     "id": "UC305x305x143",
@@ -2438,9 +4139,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 323,
     "b": 309,
-    "tw": 14,
+    "tw": 14.0,
     "tf": 22.9,
-    "r": 20
+    "r": 20,
+    "A": 18376,
+    "Iy": 350300000.0,
+    "Iz": 112700000.0,
+    "Wpl_y": 2439000.0,
+    "Wpl_z": 1111000.0,
+    "It": 3000000.0,
+    "Iw": 2540000000000.0
   },
   {
     "id": "UC305x305x158",
@@ -2449,8 +4157,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 327,
     "b": 311,
     "tw": 15.8,
-    "tf": 25,
-    "r": 20
+    "tf": 25.0,
+    "r": 20,
+    "A": 20282,
+    "Iy": 390000000.0,
+    "Iz": 125700000.0,
+    "Wpl_y": 2700000.0,
+    "Wpl_z": 1232000.0,
+    "It": 3940000.0,
+    "Iw": 2870000000000.0
   },
   {
     "id": "UC305x305x179",
@@ -2458,9 +4173,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 333,
     "b": 313,
-    "tw": 18,
+    "tw": 18.0,
     "tf": 28.1,
-    "r": 20
+    "r": 20,
+    "A": 22916,
+    "Iy": 448000000.0,
+    "Iz": 143800000.0,
+    "Wpl_y": 3072000.0,
+    "Wpl_z": 1404000.0,
+    "It": 5580000.0,
+    "Iw": 3340000000000.0
   },
   {
     "id": "UC305x305x198",
@@ -2470,7 +4192,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 314,
     "tw": 19.1,
     "tf": 31.4,
-    "r": 20
+    "r": 20,
+    "A": 25387,
+    "Iy": 511600000.0,
+    "Iz": 163000000.0,
+    "Wpl_y": 3459000.0,
+    "Wpl_z": 1583000.0,
+    "It": 7580000.0,
+    "Iw": 3880000000000.0
   },
   {
     "id": "UC305x305x202",
@@ -2480,7 +4209,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 315,
     "tw": 20.1,
     "tf": 31.8,
-    "r": 20
+    "r": 20,
+    "A": 25953,
+    "Iy": 522500000.0,
+    "Iz": 165900000.0,
+    "Wpl_y": 3530000.0,
+    "Wpl_z": 1611000.0,
+    "It": 8000000.0,
+    "Iw": 3970000000000.0
   },
   {
     "id": "UC305x305x226",
@@ -2490,7 +4226,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 317,
     "tw": 22.1,
     "tf": 35.6,
-    "r": 20
+    "r": 20,
+    "A": 29031,
+    "Iy": 598300000.0,
+    "Iz": 189300000.0,
+    "Wpl_y": 3995000.0,
+    "Wpl_z": 1828000.0,
+    "It": 11090000.0,
+    "Iw": 4620000000000.0
   },
   {
     "id": "UC305x305x240",
@@ -2498,9 +4241,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 352,
     "b": 318,
-    "tw": 23,
+    "tw": 23.0,
     "tf": 37.7,
-    "r": 20
+    "r": 20,
+    "A": 30724,
+    "Iy": 644600000.0,
+    "Iz": 203200000.0,
+    "Wpl_y": 4266000.0,
+    "Wpl_z": 1953000.0,
+    "It": 13070000.0,
+    "Iw": 5030000000000.0
   },
   {
     "id": "UC305x305x253",
@@ -2510,7 +4260,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 319,
     "tw": 24.4,
     "tf": 39.6,
-    "r": 20
+    "r": 20,
+    "A": 32362,
+    "Iy": 684900000.0,
+    "Iz": 214700000.0,
+    "Wpl_y": 4510000.0,
+    "Wpl_z": 2062000.0,
+    "It": 15170000.0,
+    "Iw": 5370000000000.0
   },
   {
     "id": "UC305x305x283",
@@ -2520,7 +4277,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 322,
     "tw": 26.8,
     "tf": 44.1,
-    "r": 20
+    "r": 20,
+    "A": 36188,
+    "Iy": 791300000.0,
+    "Iz": 246400000.0,
+    "Wpl_y": 5124000.0,
+    "Wpl_z": 2345000.0,
+    "It": 20840000.0,
+    "Iw": 6360000000000.0
   },
   {
     "id": "UC356x368x129",
@@ -2530,7 +4294,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 369,
     "tw": 10.4,
     "tf": 17.5,
-    "r": 20
+    "r": 20,
+    "A": 16579,
+    "Iy": 405900000.0,
+    "Iz": 146100000.0,
+    "Wpl_y": 2502000.0,
+    "Wpl_z": 1201000.0,
+    "It": 1610000.0,
+    "Iw": 4180000000000.0
   },
   {
     "id": "UC356x368x134",
@@ -2539,8 +4310,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 356,
     "b": 369,
     "tw": 11.2,
-    "tf": 18,
-    "r": 20
+    "tf": 18.0,
+    "r": 20,
+    "A": 17211,
+    "Iy": 418700000.0,
+    "Iz": 150800000.0,
+    "Wpl_y": 2585000.0,
+    "Wpl_z": 1239000.0,
+    "It": 1770000.0,
+    "Iw": 4310000000000.0
   },
   {
     "id": "UC356x368x147",
@@ -2550,7 +4328,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 370,
     "tw": 12.3,
     "tf": 19.8,
-    "r": 20
+    "r": 20,
+    "A": 18936,
+    "Iy": 466500000.0,
+    "Iz": 167200000.0,
+    "Wpl_y": 2861000.0,
+    "Wpl_z": 1371000.0,
+    "It": 2330000.0,
+    "Iw": 4840000000000.0
   },
   {
     "id": "UC356x368x153",
@@ -2560,7 +4345,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 370,
     "tw": 12.3,
     "tf": 20.7,
-    "r": 20
+    "r": 20,
+    "A": 19625,
+    "Iy": 489400000.0,
+    "Iz": 175600000.0,
+    "Wpl_y": 2987000.0,
+    "Wpl_z": 1437000.0,
+    "It": 2610000.0,
+    "Iw": 5110000000000.0
   },
   {
     "id": "UC356x368x162",
@@ -2570,7 +4362,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 371,
     "tw": 13.3,
     "tf": 21.8,
-    "r": 20
+    "r": 20,
+    "A": 20780,
+    "Iy": 519000000.0,
+    "Iz": 185600000.0,
+    "Wpl_y": 3162000.0,
+    "Wpl_z": 1518000.0,
+    "It": 3070000.0,
+    "Iw": 5430000000000.0
   },
   {
     "id": "UC356x368x177",
@@ -2580,7 +4379,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 373,
     "tw": 14.4,
     "tf": 23.8,
-    "r": 20
+    "r": 20,
+    "A": 22696,
+    "Iy": 574600000.0,
+    "Iz": 205300000.0,
+    "Wpl_y": 3478000.0,
+    "Wpl_z": 1673000.0,
+    "It": 3960000.0,
+    "Iw": 6090000000000.0
   },
   {
     "id": "UC356x368x179",
@@ -2588,9 +4394,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 368,
     "b": 374,
-    "tw": 15,
+    "tw": 15.0,
     "tf": 23.9,
-    "r": 20
+    "r": 20,
+    "A": 23024,
+    "Iy": 579400000.0,
+    "Iz": 208500000.0,
+    "Wpl_y": 3514000.0,
+    "Wpl_z": 1694000.0,
+    "It": 4070000.0,
+    "Iw": 6170000000000.0
   },
   {
     "id": "UC356x368x196",
@@ -2600,7 +4413,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 374,
     "tw": 16.4,
     "tf": 26.2,
-    "r": 20
+    "r": 20,
+    "A": 25182,
+    "Iy": 639900000.0,
+    "Iz": 228600000.0,
+    "Wpl_y": 3861000.0,
+    "Wpl_z": 1858000.0,
+    "It": 5310000.0,
+    "Iw": 6830000000000.0
   },
   {
     "id": "UC356x368x202",
@@ -2609,8 +4429,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 375,
     "b": 375,
     "tw": 16.5,
-    "tf": 27,
-    "r": 20
+    "tf": 27.0,
+    "r": 20,
+    "A": 25867,
+    "Iy": 666100000.0,
+    "Iz": 236900000.0,
+    "Wpl_y": 3994000.0,
+    "Wpl_z": 1922000.0,
+    "It": 5760000.0,
+    "Iw": 7160000000000.0
   },
   {
     "id": "UC356x406x216",
@@ -2620,7 +4447,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 394,
     "tw": 17.3,
     "tf": 27.7,
-    "r": 20
+    "r": 20,
+    "A": 27700,
+    "Iy": 714900000.0,
+    "Iz": 282600000.0,
+    "Wpl_y": 4285000.0,
+    "Wpl_z": 2178000.0,
+    "It": 6520000.0,
+    "Iw": 8520000000000.0
   },
   {
     "id": "UC356x406x235",
@@ -2630,7 +4464,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 395,
     "tw": 18.4,
     "tf": 30.2,
-    "r": 20
+    "r": 20,
+    "A": 30088,
+    "Iy": 794300000.0,
+    "Iz": 310000000.0,
+    "Wpl_y": 4709000.0,
+    "Wpl_z": 2385000.0,
+    "It": 8340000.0,
+    "Iw": 9540000000000.0
   },
   {
     "id": "UC356x406x262",
@@ -2640,7 +4481,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 398,
     "tw": 21.1,
     "tf": 33.3,
-    "r": 20
+    "r": 20,
+    "A": 33611,
+    "Iy": 897600000.0,
+    "Iz": 350200000.0,
+    "Wpl_y": 5283000.0,
+    "Wpl_z": 2678000.0,
+    "It": 11340000.0,
+    "Iw": 11000000000000.0
   },
   {
     "id": "UC356x406x287",
@@ -2650,7 +4498,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 399,
     "tw": 22.6,
     "tf": 36.5,
-    "r": 20
+    "r": 20,
+    "A": 36716,
+    "Iy": 1002000000.0,
+    "Iz": 386800000.0,
+    "Wpl_y": 5835000.0,
+    "Wpl_z": 2952000.0,
+    "It": 14740000.0,
+    "Iw": 12300000000000.0
   },
   {
     "id": "UC356x406x314",
@@ -2660,7 +4515,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 401,
     "tw": 24.9,
     "tf": 39.6,
-    "r": 20
+    "r": 20,
+    "A": 40066,
+    "Iy": 1106000000.0,
+    "Iz": 426100000.0,
+    "Wpl_y": 6397000.0,
+    "Wpl_z": 3239000.0,
+    "It": 18910000.0,
+    "Iw": 13800000000000.0
   },
   {
     "id": "UC356x406x340",
@@ -2670,7 +4532,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 403,
     "tw": 26.6,
     "tf": 42.9,
-    "r": 20
+    "r": 20,
+    "A": 43449,
+    "Iy": 1229000000.0,
+    "Iz": 468600000.0,
+    "Wpl_y": 7021000.0,
+    "Wpl_z": 3546000.0,
+    "It": 23910000.0,
+    "Iw": 15500000000000.0
   },
   {
     "id": "UC356x406x347",
@@ -2680,7 +4549,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 404,
     "tw": 27.2,
     "tf": 43.7,
-    "r": 20
+    "r": 20,
+    "A": 44346,
+    "Iy": 1253000000.0,
+    "Iz": 480900000.0,
+    "Wpl_y": 7162000.0,
+    "Wpl_z": 3632000.0,
+    "It": 25320000.0,
+    "Iw": 15900000000000.0
   },
   {
     "id": "UC356x406x382",
@@ -2689,8 +4565,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 416,
     "b": 406,
     "tw": 29.8,
-    "tf": 48,
-    "r": 20
+    "tf": 48.0,
+    "r": 20,
+    "A": 48855,
+    "Iy": 1417000000.0,
+    "Iz": 536200000.00000006,
+    "Wpl_y": 7988000.0,
+    "Wpl_z": 4034000.0,
+    "It": 33480000.0,
+    "Iw": 18200000000000.0
   },
   {
     "id": "UC356x406x393",
@@ -2700,7 +4583,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 407,
     "tw": 30.6,
     "tf": 49.2,
-    "r": 20
+    "r": 20,
+    "A": 50203,
+    "Iy": 1470000000.0,
+    "Iz": 553700000.0,
+    "Wpl_y": 8245000.0,
+    "Wpl_z": 4157000.0,
+    "It": 36110000.0,
+    "Iw": 18900000000000.0
   },
   {
     "id": "UC356x406x421",
@@ -2710,7 +4600,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 409,
     "tw": 32.8,
     "tf": 52.6,
-    "r": 20
+    "r": 20,
+    "A": 53860,
+    "Iy": 1599000000.0,
+    "Iz": 600900000.0,
+    "Wpl_y": 8904000.0,
+    "Wpl_z": 4493000.0,
+    "It": 44170000.0,
+    "Iw": 20800000000000.0
   },
   {
     "id": "UC356x406x467",
@@ -2719,8 +4616,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 437,
     "b": 412,
     "tw": 35.8,
-    "tf": 58,
-    "r": 20
+    "tf": 58.0,
+    "r": 20,
+    "A": 59636,
+    "Iy": 1833000000.0,
+    "Iz": 678400000.0,
+    "Wpl_y": 10020000.0,
+    "Wpl_z": 5038000.0,
+    "It": 59050000.0,
+    "Iw": 24300000000000.0
   },
   {
     "id": "UC356x406x509",
@@ -2730,7 +4634,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 416,
     "tw": 39.1,
     "tf": 62.7,
-    "r": 20
+    "r": 20,
+    "A": 65045,
+    "Iy": 2049000000.0,
+    "Iz": 754100000.0,
+    "Wpl_y": 11060000.0,
+    "Wpl_z": 5556000.0,
+    "It": 75140000.0,
+    "Iw": 27700000000000.0
   },
   {
     "id": "UC356x406x551",
@@ -2740,7 +4651,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 418,
     "tw": 42.1,
     "tf": 67.5,
-    "r": 20
+    "r": 20,
+    "A": 70338,
+    "Iy": 2273000000.0,
+    "Iz": 826800000.0,
+    "Wpl_y": 12100000.0,
+    "Wpl_z": 6062000.0,
+    "It": 93810000.0,
+    "Iw": 31100000000000.0
   },
   {
     "id": "UC356x406x592",
@@ -2748,9 +4666,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 465,
     "b": 421,
-    "tw": 45,
+    "tw": 45.0,
     "tf": 72.3,
-    "r": 20
+    "r": 20,
+    "A": 75638,
+    "Iy": 2505000000.0,
+    "Iz": 901800000.0,
+    "Wpl_y": 13160000.0,
+    "Wpl_z": 6579000.0,
+    "It": 115300000.0,
+    "Iw": 34800000000000.0
   },
   {
     "id": "UC356x406x634",
@@ -2759,8 +4684,15 @@ export const flangedSections: readonly FlangedSection[] = [
     "h": 475,
     "b": 424,
     "tw": 47.6,
-    "tf": 77,
-    "r": 20
+    "tf": 77.0,
+    "r": 20,
+    "A": 80900,
+    "Iy": 2752000000.0,
+    "Iz": 981400000.0,
+    "Wpl_y": 14260000.0,
+    "Wpl_z": 7113000.0,
+    "It": 139200000.0,
+    "Iw": 38800000000000.0
   },
   {
     "id": "UBP203x203x45",
@@ -2770,7 +4702,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 206,
     "tw": 9.5,
     "tf": 9.5,
-    "r": 10
+    "r": 10,
+    "A": 5723,
+    "Iy": 41000000.0,
+    "Iz": 13840000.0,
+    "Wpl_y": 458900.0,
+    "Wpl_z": 206100.0,
+    "It": 192000.0,
+    "Iw": 126000000000.0
   },
   {
     "id": "UBP203x203x54",
@@ -2780,7 +4719,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 208,
     "tw": 11.3,
     "tf": 11.4,
-    "r": 10
+    "r": 10,
+    "A": 6872,
+    "Iy": 50270000.0,
+    "Iz": 17050000.0,
+    "Wpl_y": 556700.0,
+    "Wpl_z": 252400.0,
+    "It": 327000.0,
+    "Iw": 158000000000.0
   },
   {
     "id": "UBP254x254x63",
@@ -2790,7 +4736,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 257,
     "tw": 10.6,
     "tf": 10.7,
-    "r": 20
+    "r": 20,
+    "A": 8227,
+    "Iy": 90970000.0,
+    "Iz": 30190000.0,
+    "Wpl_y": 821300.0,
+    "Wpl_z": 362000.0,
+    "It": 411000.0,
+    "Iw": 422000000000.0
   },
   {
     "id": "UBP254x254x71",
@@ -2798,9 +4751,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 250,
     "b": 258,
-    "tw": 12,
-    "tf": 12,
-    "r": 20
+    "tw": 12.0,
+    "tf": 12.0,
+    "r": 20,
+    "A": 9244,
+    "Iy": 103100000.0,
+    "Iz": 34420000.0,
+    "Wpl_y": 926000.0,
+    "Wpl_z": 411100.0,
+    "It": 565000.0,
+    "Iw": 486000000000.0
   },
   {
     "id": "UBP254x254x85",
@@ -2810,7 +4770,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 260,
     "tw": 14.4,
     "tf": 14.3,
-    "r": 20
+    "r": 20,
+    "A": 11041,
+    "Iy": 125200000.0,
+    "Iz": 42190000.0,
+    "Wpl_y": 1114000.0,
+    "Wpl_z": 500500.0,
+    "It": 926000.0,
+    "Iw": 608000000000.0
   },
   {
     "id": "UBP305x305x79",
@@ -2818,9 +4785,16 @@ export const flangedSections: readonly FlangedSection[] = [
     "shape": "I",
     "h": 299,
     "b": 306,
-    "tw": 11,
+    "tw": 11.0,
     "tf": 11.1,
-    "r": 20
+    "r": 20,
+    "A": 10194,
+    "Iy": 167000000.0,
+    "Iz": 53290000.0,
+    "Wpl_y": 1237000.0,
+    "Wpl_z": 532800.0,
+    "It": 522000.0,
+    "Iw": 1110000000000.0
   },
   {
     "id": "UBP305x305x88",
@@ -2830,7 +4804,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 308,
     "tw": 12.4,
     "tf": 12.3,
-    "r": 20
+    "r": 20,
+    "A": 11351,
+    "Iy": 186800000.0,
+    "Iz": 59870000.0,
+    "Wpl_y": 1380000.0,
+    "Wpl_z": 597000.0,
+    "It": 703000.0,
+    "Iw": 1250000000000.0
   },
   {
     "id": "UBP305x305x95",
@@ -2840,7 +4821,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 309,
     "tw": 13.3,
     "tf": 13.3,
-    "r": 20
+    "r": 20,
+    "A": 12240,
+    "Iy": 203000000.0,
+    "Iz": 65310000.0,
+    "Wpl_y": 1494000.0,
+    "Wpl_z": 649800.0,
+    "It": 869000.0,
+    "Iw": 1380000000000.0
   },
   {
     "id": "UBP305x305x110",
@@ -2850,7 +4838,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 311,
     "tw": 15.3,
     "tf": 15.4,
-    "r": 20
+    "r": 20,
+    "A": 14153,
+    "Iy": 238200000.0,
+    "Iz": 77120000.0,
+    "Wpl_y": 1739000.0,
+    "Wpl_z": 763700.0,
+    "It": 1310000.0,
+    "Iw": 1650000000000.0
   },
   {
     "id": "UBP305x305x126",
@@ -2860,7 +4855,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 313,
     "tw": 17.5,
     "tf": 17.6,
-    "r": 20
+    "r": 20,
+    "A": 16207,
+    "Iy": 276600000.0,
+    "Iz": 90050000.0,
+    "Wpl_y": 2005000.0,
+    "Wpl_z": 887300.0,
+    "It": 1930000.0,
+    "Iw": 1960000000000.0
   },
   {
     "id": "UBP305x305x149",
@@ -2870,7 +4872,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 316,
     "tw": 20.6,
     "tf": 20.7,
-    "r": 20
+    "r": 20,
+    "A": 19134,
+    "Iy": 333200000.0,
+    "Iz": 109100000.0,
+    "Wpl_y": 2389000.0,
+    "Wpl_z": 1068000.0,
+    "It": 3100000.0,
+    "Iw": 2420000000000.0
   },
   {
     "id": "UBP305x305x186",
@@ -2880,7 +4889,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 321,
     "tw": 25.5,
     "tf": 25.6,
-    "r": 2
+    "r": 2,
+    "A": 23500,
+    "Iy": 422500000.0,
+    "Iz": 141400000.0,
+    "Wpl_y": 2977000.0,
+    "Wpl_z": 1363000.0,
+    "It": 5200000.0,
+    "Iw": 3240000000000.0
   },
   {
     "id": "UBP305x305x223",
@@ -2890,7 +4906,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 326,
     "tw": 30.3,
     "tf": 30.4,
-    "r": 20
+    "r": 20,
+    "A": 28542,
+    "Iy": 529500000.0,
+    "Iz": 175800000.0,
+    "Wpl_y": 3672000.0,
+    "Wpl_z": 1683000.0,
+    "It": 9770000.0,
+    "Iw": 4160000000000.0
   },
   {
     "id": "UBP356x368x109",
@@ -2900,7 +4923,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 371,
     "tw": 12.8,
     "tf": 12.9,
-    "r": 20
+    "r": 20,
+    "A": 14019,
+    "Iy": 309800000.0,
+    "Iz": 109900000.0,
+    "Wpl_y": 1979000.0,
+    "Wpl_z": 904600.0,
+    "It": 912000.0,
+    "Iw": 3060000000000.0
   },
   {
     "id": "UBP356x368x133",
@@ -2910,7 +4940,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 374,
     "tw": 15.6,
     "tf": 15.7,
-    "r": 20
+    "r": 20,
+    "A": 17082,
+    "Iy": 383300000.0,
+    "Iz": 136800000.0,
+    "Wpl_y": 2428000.0,
+    "Wpl_z": 1121000.0,
+    "It": 1600000.0,
+    "Iw": 3870000000000.0
   },
   {
     "id": "UBP356x368x152",
@@ -2920,7 +4957,14 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 376,
     "tw": 17.8,
     "tf": 17.9,
-    "r": 20
+    "r": 20,
+    "A": 19511,
+    "Iy": 443200000.0,
+    "Iz": 158800000.0,
+    "Wpl_y": 2789000.0,
+    "Wpl_z": 1295000.0,
+    "It": 2350000.0,
+    "Iw": 4550000000000.0
   },
   {
     "id": "UBP356x368x174",
@@ -2930,6 +4974,13 @@ export const flangedSections: readonly FlangedSection[] = [
     "b": 378,
     "tw": 20.3,
     "tf": 20.4,
-    "r": 20
-  }
+    "r": 20,
+    "A": 22294,
+    "Iy": 513500000.0,
+    "Iz": 184700000.0,
+    "Wpl_y": 3208000.0,
+    "Wpl_z": 1499000.0,
+    "It": 3450000.0,
+    "Iw": 5370000000000.0
+  },
 ] as const;

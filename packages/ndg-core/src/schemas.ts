@@ -1,9 +1,5 @@
 import { z } from "zod";
 
-// ########################################
-//              META
-// ########################################
-
 export const NodeMetaSchema = z.object({
   sectionRef: z.string().optional(),
   paragraphRef: z.string().optional(),
@@ -12,10 +8,6 @@ export const NodeMetaSchema = z.object({
   tableRef: z.string().optional(),
   verificationRef: z.string().optional(),
 });
-
-// ########################################
-//              CONDITION (recursive)
-// ########################################
 
 // Explicit type declaration required for recursive Zod schemas
 export type Condition =
@@ -39,18 +31,10 @@ export const ConditionSchema: z.ZodType<Condition> = z.lazy(() =>
   ]),
 );
 
-// ########################################
-//              CHILD
-// ########################################
-
 export const ChildSchema = z.object({
   nodeId: z.string(),
   when: ConditionSchema.optional(),
 });
-
-// ########################################
-//              BASE NODE
-// ########################################
 
 const BaseNodeSchema = z.object({
   id: z.string(),
@@ -60,20 +44,12 @@ const BaseNodeSchema = z.object({
   children: z.array(ChildSchema),
 });
 
-// ########################################
-//              VALUE TYPE
-// ########################################
-
 const NumericValueType = z.literal("number");
 const AnyValueType = z.enum(["number", "string"]);
 
-// ########################################
-//              NODES
-// ########################################
-
 /**
  * Root node of a verification.
- * Evaluator returns the utilisation ratio; pass = ratio ≤ 1.0.
+ * Evaluator returns the utilisation ratio; pass = ratio <= 1.0.
  */
 export const CheckNodeSchema = BaseNodeSchema.extend({
   type: z.literal("check"),
@@ -122,7 +98,7 @@ export const TableNodeSchema = BaseNodeSchema.extend({
 });
 
 /**
- * Fixed normative factor (e.g. γ_M0). Value comes from the national annex.
+ * Fixed normative factor (e.g. gamma_M0). Value comes from the national annex.
  */
 export const CoefficientNodeSchema = BaseNodeSchema.extend({
   type: z.literal("coefficient"),
@@ -143,14 +119,14 @@ export const UserInputNodeSchema = BaseNodeSchema.extend({
 });
 
 /**
- * Mathematical constant (e.g. π). Value comes from the engine's CONSTANTS map.
+ * Mathematical constant (e.g. pi). Value comes from the engine's CONSTANTS map.
  * symbol is required.
  */
 export const ConstantNodeSchema = BaseNodeSchema.extend({
   type: z.literal("constant"),
   key: z.string(),
   valueType: NumericValueType,
-  symbol: z.string(), // overrides BaseNode's optional symbol — required here
+  symbol: z.string(), // overrides BaseNode's optional symbol -- required here
 });
 
 export const NodeSchema = z.discriminatedUnion("type", [
@@ -164,10 +140,6 @@ export const NodeSchema = z.discriminatedUnion("type", [
 ]);
 
 export const VerificationSchema = z.array(NodeSchema);
-
-// ########################################
-//              DERIVED TYPES
-// ########################################
 
 export type NodeMeta = z.infer<typeof NodeMetaSchema>;
 export type Child = z.infer<typeof ChildSchema>;

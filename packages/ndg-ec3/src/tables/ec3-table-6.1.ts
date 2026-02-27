@@ -1,5 +1,5 @@
 /**
- * EC3 Table 6.1 — Imperfection factors for buckling curves.
+ * EC3 Table 6.1 -- Imperfection factors for buckling curves.
  */
 const IMPERFECTION_FACTORS: Record<string, number> = {
   a0: 0.13,
@@ -9,10 +9,10 @@ const IMPERFECTION_FACTORS: Record<string, number> = {
   d: 0.76,
 };
 
-export function getImperfectionFactor(curve: string): number {
+export const getImperfectionFactor = (curve: string) => {
   const alpha = IMPERFECTION_FACTORS[curve];
   if (alpha === undefined) {
     throw new Error(`Unknown buckling curve: "${curve}"`);
   }
   return alpha;
-}
+};

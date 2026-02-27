@@ -1,19 +1,19 @@
 import type { Condition } from "./schemas";
 
-function assertCacheKey(key: string, cache: Record<string, number | string>): void {
+const assertCacheKey = (key: string, cache: Record<string, number | string>): void => {
   if (cache[key] === undefined) {
     throw new Error(`Condition references undefined cache key: "${key}"`);
   }
-}
+};
 
 /**
  * Evaluate a condition against a cache of resolved values.
  * Conditions reference cache keys for comparison.
  */
-export function evaluateCondition(
+export const evaluateCondition = (
   condition: Condition,
   cache: Record<string, number | string>,
-): boolean {
+): boolean => {
   if ("eq" in condition) {
     const [key, expected] = condition.eq;
     assertCacheKey(key, cache);
@@ -46,4 +46,4 @@ export function evaluateCondition(
     return condition.or.some((c) => evaluateCondition(c, cache));
   }
   throw new Error(`Unknown condition: ${JSON.stringify(condition)}`);
-}
+};
