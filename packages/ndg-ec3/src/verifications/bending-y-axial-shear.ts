@@ -15,6 +15,7 @@ const nodes = [
   input(p, "A", "Cross-sectional area", { unit: "mm²" }),
   input(p, "Wpl_y", "Plastic section modulus y-y", { unit: "mm³" }),
   input(p, "Av_z", "Shear area z", { unit: "mm²" }),
+  input(p, "tw", "Web thickness", { symbol: "t_w", unit: "mm" }),
   input(p, "fy", "Yield strength", { unit: "MPa" }),
   coeff(p, "gamma_M0", "Partial safety factor", { sectionRef: "6.1" }, { symbol: "\\gamma_{M0}" }),
   formula(p, "V_pl_z_Rd", "Plastic shear resistance", ["Av_z", "fy", "gamma_M0"], {
@@ -34,11 +35,11 @@ const nodes = [
   }),
   derived(p, "n", "Axial force ratio", ["N_Ed", "N_pl_Rd"]),
   derived(p, "a_w", "Web area ratio", ["Av_z", "A"]),
-  formula(p, "M_NV_y_Rd", "Reduced bending resistance (axial + shear)", ["Wpl_y", "rho_z", "fy", "gamma_M0", "n", "a_w"], {
+  formula(p, "M_NV_y_Rd", "Reduced bending resistance (axial + shear)", ["Wpl_y", "rho_z", "Av_z", "tw", "fy", "gamma_M0", "n", "a_w"], {
     symbol: "M_{NV,y,Rd}",
-    expression: "W_{pl,y}(1-\\rho) f_y (1-n)/(1-0.5a) / \\gamma_{M0}",
+    expression: "\\frac{\\left(W_{pl,y} - \\rho_z \\dfrac{A_{v,z}^2}{4t_w}\\right) f_y}{\\gamma_{M0}} \\cdot \\min\\!\\left(1,\\,\\frac{1-n}{1-0.5a_w}\\right)",
     unit: "N·mm",
-    meta: { sectionRef: "6.2.10", formulaRef: "(6.2.10)" },
+    meta: { sectionRef: "6.2.10", formulaRef: "(6.30)+(6.36)" },
   }),
   check(p, "bending_y_axial_shear_check", "Bending y + axial + shear check", ["M_y_Ed", "M_NV_y_Rd"], {
     verificationExpression: "\\frac{M_{y,Ed}}{M_{NV,y,Rd}} \\leq 1.0",
@@ -59,10 +60,9 @@ export const ulsBendingYAxialShear: VerificationDefinition<typeof nodes> = {
     N_pl_Rd: ({ A, fy, gamma_M0 }) => (A * fy) / gamma_M0,
     n: ({ N_Ed, N_pl_Rd }) => Math.abs(N_Ed) / N_pl_Rd,
     a_w: ({ Av_z, A }) => Math.min(Av_z / A, 0.5),
-    M_NV_y_Rd: ({ Wpl_y, rho_z, fy, gamma_M0, n, a_w }) => {
-      const Wpl_red = Wpl_y * (1 - rho_z);
-      const axial_red = Math.min(1, (1 - n) / (1 - 0.5 * a_w));
-      return (Wpl_red * fy * axial_red) / gamma_M0;
+    M_NV_y_Rd: ({ Wpl_y, rho_z, Av_z, tw, fy, gamma_M0, n, a_w }) => {
+      const Wpl_red = Wpl_y - rho_z * Av_z ** 2 / (4 * tw);
+      return ((Wpl_red * fy) / gamma_M0) * Math.min(1, (1 - n) / (1 - 0.5 * a_w));
     },
     bending_y_axial_shear_check: ({ M_y_Ed, M_NV_y_Rd }) =>
       Math.abs(M_y_Ed) / M_NV_y_Rd,

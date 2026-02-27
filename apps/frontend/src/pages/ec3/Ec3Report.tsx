@@ -280,7 +280,7 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
 
 const SummaryVerification = ({ result, index }: { result: VerificationRow; index: number }) => {
   const checkEntry = result.trace.find((t) => t.type === "check");
-  const formulas = result.trace.filter((t) => t.type === "formula");
+  const formulas = result.trace.filter((t) => t.type === "formula" || t.type === "derived");
 
   return (
     <div className="mb-3 border rounded p-3">

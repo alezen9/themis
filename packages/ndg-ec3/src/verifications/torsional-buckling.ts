@@ -25,11 +25,11 @@ const nodes = [
   input(p, "Lcr_T", "Torsional buckling length", { symbol: "L_{cr,T}", unit: "mm" }),
   input(p, "alpha_z", "Imperfection factor (weaker axis governs)", { symbol: "\\alpha" }),
   coeff(p, "gamma_M1", "Partial safety factor", { sectionRef: "6.1" }, { symbol: "\\gamma_{M1}" }),
-  formula(p, "N_cr_TF", "Elastic torsional-flexural critical force", ["E", "G", "Iy", "Iz", "It", "Iw", "Lcr_T", "A"], {
+  derived(p, "N_cr_TF", "Elastic torsional-flexural critical force", ["E", "G", "Iy", "Iz", "It", "Iw", "Lcr_T", "A"], {
     symbol: "N_{cr,TF}",
     expression: "\\frac{1}{i_p^2}(G I_t + \\frac{\\pi^2 E I_w}{L_{cr,T}^2})",
     unit: "N",
-    meta: { sectionRef: "6.3.1.4", formulaRef: "(6.3.1.4)" },
+    meta: { sectionRef: "6.3.1.4" },
   }),
   derived(p, "lambda_bar_TF", "Non-dimensional slenderness (torsional-flexural)", ["A", "fy", "N_cr_TF"], {
     symbol: "\\bar{\\lambda}_{TF}",

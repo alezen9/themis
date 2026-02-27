@@ -190,28 +190,62 @@ describe("computeKyzMethod1 / computeKzyMethod1", () => {
 });
 
 describe("computeKzyMethod2", () => {
-  it("returns ≈1 when N_Ed = 0", () => {
+  it("returns ≈1 when N_Ed = 0 (λ̄_z ≥ 0.4 branch)", () => {
     const k = computeKzyMethod2(0.9, 1.0, 0, 1_000_000);
     expect(k).toBeCloseTo(1.0, 10);
   });
 
-  it("decreases with axial force (stabilizing effect)", () => {
+  it("decreases with axial force for λ̄_z ≥ 0.4 (stabilizing effect)", () => {
     const k_low = computeKzyMethod2(0.9, 1.0, 100_000, 1_000_000);
     const k_high = computeKzyMethod2(0.9, 1.0, 500_000, 1_000_000);
     expect(k_high).toBeLessThan(k_low);
   });
 
-  it("uses max of the two terms", () => {
+  it("λ̄_z ≥ 0.4 branch: uses max of two terms with min(λ̄_z,1.0) cap (eq. 133)", () => {
+    // lambda_bar_z = 0.8 (≥ 0.4, ≤ 1.0 so cap has no effect here)
     const Cm_LT = 0.9;
-    const lambda_bar_z = 1.5;
+    const lambda_bar_z = 0.8;
     const N_Ed = 300_000;
     const NbzRd = 1_000_000;
     const n = Math.abs(N_Ed) / NbzRd;
     const CmLT_term = Cm_LT - 0.25;
-    const t1 = 1 - (0.1 * lambda_bar_z) / CmLT_term * n;
-    const t2 = 1 - 0.1 / CmLT_term * n;
-    const expected = Math.max(t1, t2);
-    expect(computeKzyMethod2(Cm_LT, lambda_bar_z, N_Ed, NbzRd)).toBeCloseTo(expected, 10);
+    const t1 = 1 - (0.1 * lambda_bar_z / CmLT_term) * n;
+    const t2 = 1 - (0.1 / CmLT_term) * n;
+    expect(computeKzyMethod2(Cm_LT, lambda_bar_z, N_Ed, NbzRd)).toBeCloseTo(Math.max(t1, t2), 10);
+  });
+
+  it("λ̄_z ≥ 0.4 branch: min(λ̄_z,1.0) cap applied when λ̄_z > 1.0 (eq. 133)", () => {
+    const Cm_LT = 0.9;
+    const N_Ed = 300_000;
+    const NbzRd = 1_000_000;
+    const n = Math.abs(N_Ed) / NbzRd;
+    const CmLT_term = Cm_LT - 0.25;
+    // Both λ̄_z = 1.5 and λ̄_z = 2.0 should give same result (capped at 1.0)
+    const k15 = computeKzyMethod2(Cm_LT, 1.5, N_Ed, NbzRd);
+    const k20 = computeKzyMethod2(Cm_LT, 2.0, N_Ed, NbzRd);
+    expect(k15).toBeCloseTo(k20, 10);
+    // And equals the λ̄_z = 1.0 result
+    const t1 = 1 - (0.1 * 1.0 / CmLT_term) * n;
+    const t2 = 1 - (0.1 / CmLT_term) * n;
+    expect(k15).toBeCloseTo(Math.max(t1, t2), 10);
+  });
+
+  it("λ̄_z < 0.4 branch: lower bound is 0.6 + λ̄_z (eq. 132)", () => {
+    const Cm_LT = 0.9;
+    const lambda_bar_z = 0.2;
+    const N_Ed = 0; // zero axial → formula gives 1.0, but lower bound 0.6+0.2=0.8 → max = 1.0
+    const k = computeKzyMethod2(Cm_LT, lambda_bar_z, N_Ed, 1_000_000);
+    expect(k).toBeGreaterThanOrEqual(0.6 + lambda_bar_z);
+  });
+
+  it("λ̄_z < 0.4 branch: lower bound 0.6+λ̄_z governs under high axial force (eq. 132)", () => {
+    // High axial → formula term goes low → lower bound 0.6+0.3=0.9 governs
+    const Cm_LT = 0.9;
+    const lambda_bar_z = 0.3;
+    const N_Ed = 900_000;
+    const NbzRd = 1_000_000;
+    const k = computeKzyMethod2(Cm_LT, lambda_bar_z, N_Ed, NbzRd);
+    expect(k).toBeGreaterThanOrEqual(0.6 + lambda_bar_z - 1e-10);
   });
 
   it("throws when NbzRd ≤ 0", () => {

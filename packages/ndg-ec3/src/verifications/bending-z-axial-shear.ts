@@ -56,7 +56,8 @@ export const ulsBendingZAxialShear: VerificationDefinition<typeof nodes> = {
     },
     N_pl_Rd: ({ A, fy, gamma_M0 }) => (A * fy) / gamma_M0,
     n: ({ N_Ed, N_pl_Rd }) => Math.abs(N_Ed) / N_pl_Rd,
-    a_f: ({ Av_z, A }) => Math.min((A - Av_z) / A, 0.5),
+    // EC3 §6.2.9.1(5): a = (A-2btf)/A ≈ Av_z/A (web fraction), capped at 0.5
+    a_f: ({ Av_z, A }) => Math.min(Av_z / A, 0.5),
     M_NV_z_Rd: ({ Wpl_z, rho_y, fy, gamma_M0, n, a_f }) => {
       const Wpl_red = Wpl_z * (1 - rho_y);
       const MplRd = (Wpl_red * fy) / gamma_M0;

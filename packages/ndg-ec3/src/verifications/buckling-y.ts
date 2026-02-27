@@ -17,11 +17,11 @@ const nodes = [
   input(p, "Lcr_y", "Buckling length about y-y", { symbol: "L_{cr,y}", unit: "mm" }),
   input(p, "alpha_y", "Imperfection factor y-y", { symbol: "\\alpha_y" }),
   coeff(p, "gamma_M1", "Partial safety factor", { sectionRef: "6.1" }, { symbol: "\\gamma_{M1}" }),
-  formula(p, "N_cr_y", "Elastic critical force y-y", ["E", "Iy", "Lcr_y"], {
+  derived(p, "N_cr_y", "Elastic critical force y-y", ["E", "Iy", "Lcr_y"], {
     symbol: "N_{cr,y}",
     expression: "\\frac{\\pi^2 E I_y}{L_{cr,y}^2}",
     unit: "N",
-    meta: { sectionRef: "6.3.1.2", formulaRef: "(6.49)" },
+    meta: { sectionRef: "6.3.1.2" },
   }),
   derived(p, "lambda_bar_y", "Non-dimensional slenderness y-y", ["A", "fy", "N_cr_y"], {
     symbol: "\\bar{\\lambda}_y",

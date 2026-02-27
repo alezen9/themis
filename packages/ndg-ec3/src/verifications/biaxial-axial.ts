@@ -32,8 +32,8 @@ const nodes = [
   derived(p, "n", "Axial force ratio", ["N_Ed", "N_pl_Rd"], {
     symbol: "n",
   }),
-  derived(p, "a_w", "Web area ratio", ["Av_z", "A"]),
-  derived(p, "a_f", "Flange area ratio", ["Av_z", "A"]),
+  derived(p, "a_w", "Web area ratio a=(A-2bt_f)/A ≈ A_v,z/A", ["Av_z", "A"]),
+  derived(p, "a_f", "Web area ratio a=(A-2bt_f)/A ≈ A_v,z/A (same as a_w for I-sections)", ["Av_z", "A"]),
   formula(p, "M_N_y_Rd", "Reduced bending resistance y-y", ["Wpl_y", "fy", "gamma_M0", "n", "a_w"], {
     symbol: "M_{N,y,Rd}",
     expression: "M_{pl,y,Rd} \\min(1, (1-n)/(1-0.5a_w))",
@@ -66,7 +66,8 @@ export const ulsBiaxialAxial: VerificationDefinition<typeof nodes> = {
     N_pl_Rd: ({ A, fy, gamma_M0 }) => (A * fy) / gamma_M0,
     n: ({ N_Ed, N_pl_Rd }) => Math.abs(N_Ed) / N_pl_Rd,
     a_w: ({ Av_z, A }) => Math.min(Av_z / A, 0.5),
-    a_f: ({ Av_z, A }) => Math.min((A - Av_z) / A, 0.5),
+    // EC3 §6.2.9.1(5): same 'a' (web fraction) for both y-y and z-z reductions
+    a_f: ({ Av_z, A }) => Math.min(Av_z / A, 0.5),
     M_N_y_Rd: ({ Wpl_y, fy, gamma_M0, n, a_w }) => {
       const MplRd = (Wpl_y * fy) / gamma_M0;
       return MplRd * Math.min(1, (1 - n) / (1 - 0.5 * a_w));

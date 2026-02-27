@@ -14,11 +14,11 @@ const nodes = [
     symbol: "N_{c,Rd}",
     expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
     unit: "N",
-    meta: { sectionRef: "6.2.4", formulaRef: "(6.11)" },
+    meta: { sectionRef: "6.2.4", formulaRef: "(6.10)" },
   }),
   check(p, "compression_check", "Cross-section compression resistance", ["N_Ed", "N_c_Rd"], {
     verificationExpression: "\\frac{N_{Ed}}{N_{c,Rd}} \\leq 1.0",
-    meta: { sectionRef: "6.2.4", verificationRef: "(6.10)" },
+    meta: { sectionRef: "6.2.4", verificationRef: "(6.9)" },
   }),
 ] as const;
 

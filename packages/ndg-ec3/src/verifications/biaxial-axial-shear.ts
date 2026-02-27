@@ -95,7 +95,8 @@ export const ulsBiaxialAxialShear: VerificationDefinition<typeof nodes> = {
     N_pl_Rd: ({ A, fy, gamma_M0 }) => (A * fy) / gamma_M0,
     n: ({ N_Ed, N_pl_Rd }) => Math.abs(N_Ed) / N_pl_Rd,
     a_w: ({ Av_z, A }) => Math.min(Av_z / A, 0.5),
-    a_f: ({ Av_z, A }) => Math.min((A - Av_z) / A, 0.5),
+    // EC3 §6.2.9.1(5): same 'a' (web fraction) for both y-y and z-z reductions
+    a_f: ({ Av_z, A }) => Math.min(Av_z / A, 0.5),
     M_NV_y_Rd: ({ Wpl_y, rho_z, Av_z, tw, fy, gamma_M0, n, a_w }) => {
       // §6.2.10(3) + §6.2.8(5) eq (6.30): shear-reduced Wpl,y, then §6.2.9.1(5) eq (6.36)
       const Wpl_red = Wpl_y - rho_z * Av_z ** 2 / (4 * tw);

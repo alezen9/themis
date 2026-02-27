@@ -32,12 +32,12 @@ const nodes = [
   derived(p, "n", "Axial force ratio", ["N_Ed", "N_pl_Rd"], {
     symbol: "n",
   }),
-  derived(p, "a_f", "Flange area ratio", ["Av_z", "A"], {
-    symbol: "a_f",
+  derived(p, "a_f", "Web area ratio a=(A-2bt_f)/A ≈ A_v,z/A", ["Av_z", "A"], {
+    symbol: "a",
   }),
   formula(p, "M_N_z_Rd", "Reduced bending resistance about z-z (axial)", ["M_pl_z_Rd", "n", "a_f"], {
     symbol: "M_{N,z,Rd}",
-    expression: "M_{pl,z,Rd} \\cdot \\left(1 - \\left(\\frac{n-a_f}{1-a_f}\\right)^2\\right)",
+    expression: "M_{pl,z,Rd} \\cdot \\left(1 - \\left(\\frac{n-a}{1-a}\\right)^2\\right)",
     unit: "N·mm",
     meta: { sectionRef: "6.2.9.1", formulaRef: "(6.38)" },
   }),
@@ -54,9 +54,8 @@ export const ulsBendingZAxial: VerificationDefinition<typeof nodes> = {
     M_pl_z_Rd: ({ Wpl_z, fy, gamma_M0 }) => (Wpl_z * fy) / gamma_M0,
     n: ({ N_Ed, N_pl_Rd }) => Math.abs(N_Ed) / N_pl_Rd,
     a_f: ({ Av_z, A }) => {
-      // a = (A - 2btf) / A ≈ (A - Aw) / A where Aw ≈ Av_z
-      // Capped at 0.5
-      return Math.min((A - Av_z) / A, 0.5);
+      // EC3 §6.2.9.1(5): a = (A - 2·b·tf) / A ≈ A_v,z / A (web fraction), capped at 0.5
+      return Math.min(Av_z / A, 0.5);
     },
     M_N_z_Rd: ({ M_pl_z_Rd, n, a_f }) => {
       if (n <= a_f) return M_pl_z_Rd; // no reduction needed
