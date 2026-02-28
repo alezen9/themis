@@ -39,14 +39,14 @@ function getSections(shape: ShapeKey, sectionType: string): Section[] {
 
 const DEFAULT_SHAPE: ShapeKey = "I";
 const DEFAULT_SECTION_TYPE = "IPE";
-const DEFAULT_SECTION = flangedSections.find((s) => s.id === "IPE200")!;
+const DEFAULT_SECTION = flangedSections.find((s) => s.id === "IPE300")!;
 const DEFAULT_GRADE = steelGrades.find(
-  (g) => g.id === "S355" && g.norm === "EN10025-2",
+  (g) => g.id === "S235" && g.norm === "EN10025-2",
 )!;
 const DEFAULT_ANNEX = italianAnnex;
 
 const MOMENT_SHAPE_OPTIONS = ["uniform", "linear", "parabolic", "triangular"] as const;
-const SUPPORT_CONDITION_OPTIONS = ["pinned-pinned", "fixed-pinned", "fixed-fixed"] as const;
+const SUPPORT_CONDITION_OPTIONS = ["pinned-pinned", "pinned-fixed", "fixed-fixed"] as const;
 const LOAD_APPLICATION_LT_OPTIONS = ["top-flange", "centroid", "bottom-flange"] as const;
 
 type EditableNumericKey = {
@@ -101,6 +101,10 @@ function toDisplay(key: string, engineValue: number): number {
 function toEngineValue(key: string, displayValue: number): number {
   const factor = FIELD_MAP[key]?.toEngine;
   return factor ? displayValue * factor : displayValue;
+}
+
+function clampPsi(value: number): number {
+  return Math.max(-1, Math.min(1, value));
 }
 
 const INITIAL_EDITABLE_INPUTS: Ec3EditableInputs = {
@@ -325,6 +329,12 @@ export function PageEc3() {
   const yLinear = editableInputs.moment_shape_y === "linear";
   const zLinear = editableInputs.moment_shape_z === "linear";
   const ltLinear = editableInputs.moment_shape_LT === "linear";
+  const yNeedsSupport =
+    editableInputs.moment_shape_y === "parabolic"
+    || editableInputs.moment_shape_y === "triangular";
+  const zNeedsSupport =
+    editableInputs.moment_shape_z === "parabolic"
+    || editableInputs.moment_shape_z === "triangular";
   const ltNonLinear =
     editableInputs.moment_shape_LT === "parabolic"
     || editableInputs.moment_shape_LT === "triangular";
@@ -451,9 +461,11 @@ export function PageEc3() {
                 <NumberInput
                   label="psi_y"
                   value={editableInputs.psi_y}
-                  onChange={(value) => setInput("psi_y", value)}
+                  onChange={(value) => setInput("psi_y", clampPsi(value))}
+                  unit="[-1,1]"
                 />
-              ) : (
+              ) : null}
+              {yNeedsSupport && (
                 <label className="flex items-center gap-2 text-sm">
                   <span className="w-20 shrink-0">support y</span>
                   <select
@@ -486,9 +498,11 @@ export function PageEc3() {
                 <NumberInput
                   label="psi_z"
                   value={editableInputs.psi_z}
-                  onChange={(value) => setInput("psi_z", value)}
+                  onChange={(value) => setInput("psi_z", clampPsi(value))}
+                  unit="[-1,1]"
                 />
-              ) : (
+              ) : null}
+              {zNeedsSupport && (
                 <label className="flex items-center gap-2 text-sm">
                   <span className="w-20 shrink-0">support z</span>
                   <select
@@ -521,7 +535,8 @@ export function PageEc3() {
                 <NumberInput
                   label="psi_LT"
                   value={editableInputs.psi_LT}
-                  onChange={(value) => setInput("psi_LT", value)}
+                  onChange={(value) => setInput("psi_LT", clampPsi(value))}
+                  unit="[-1,1]"
                 />
               )}
               {ltNonLinear && (

@@ -32,3 +32,5 @@ From repository root:
 
 - Generate benchmark pack: `pnpm --filter @ndg/ndg-ec3 benchmark:generate`
 - Verify matrix + benchmark suites: `pnpm --filter @ndg/ndg-ec3 benchmark:verify`
+- Generate + verify ultra-strict full-check report: `pnpm --filter @ndg/ndg-ec3 benchmark:full-check`
+- Verify ultra-strict full-check gate without regenerating report: `pnpm --filter @ndg/ndg-ec3 benchmark:full-check:verify`

@@ -92,6 +92,30 @@ describe("EC3 frontend input + evaluation contract", () => {
     expect(resolvedKeys).toEqual([...REQUIRED_RUNTIME_INPUT_KEYS]);
   });
 
+  it("normalizes support condition aliases and clamps linear psi values", () => {
+    const resolved = buildResolvedInputs(
+      {
+        ...editableInputs,
+        support_condition_y: "pinned-fixed",
+        support_condition_z: "pinned-fixed",
+        support_condition_LT: "pinned-fixed",
+        moment_shape_LT: "linear",
+        psi_y: 2.5,
+        psi_z: -4.2,
+        psi_LT: 9.1,
+      },
+      section,
+      material,
+    );
+
+    expect(resolved.support_condition_y).toBe("fixed-pinned");
+    expect(resolved.support_condition_z).toBe("fixed-pinned");
+    expect(resolved.support_condition_LT).toBe("fixed-pinned");
+    expect(resolved.psi_y).toBe(1);
+    expect(resolved.psi_z).toBe(-1);
+    expect(resolved.psi_LT).toBe(1);
+  });
+
   it("enforces payload exclusivity for all rows", () => {
     const resolved = buildResolvedInputs(editableInputs, section, material);
     const rows = evaluateEc3Rows(resolved, annex);

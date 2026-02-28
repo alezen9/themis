@@ -56,7 +56,14 @@ Commit: `5378b69`
 - Evaluator purity: `packages/ndg-ec3/tests/no-black-box-evaluator.test.ts`
 - Operation atomization: `packages/ndg-ec3/tests/operation-atomization-contract.test.ts`
 
+## Ultra-Strict Full-Check Evidence
+
+| Corpus | Scope | Ultra-strict raw | Applicability exact | Rounding-only warnings | Status |
+|---|---|---|---|---|---|
+| Matrix benchmark corpus | 264 cells (`22 × 3 × 4`) | pass | pass | see `full-check-ultra-strict-report.*` | closed |
+| Calculator parity corpus | case-01 / 22 checks | pass | pass | see `full-check-ultra-strict-report.*` | closed |
+
 ## Final Statement
 
-All 264 matrix cells are explicitly represented in benchmark scenarios and validated by contract tests for the declared scope.  
-No open rows remain.
+All 264 matrix cells and all 22 calculator-parity checks are audited by the ultra-strict full-check gate.  
+No compute/applicability hard mismatches are open for the declared scope.

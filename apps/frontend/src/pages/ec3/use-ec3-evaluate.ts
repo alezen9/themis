@@ -10,7 +10,7 @@ import type { Ec3VerificationFailure } from "@ndg/ndg-ec3";
 export type SectionShape = "I" | "RHS" | "CHS";
 export type SectionClass = 1 | 2 | 3;
 export type MomentShape = "uniform" | "linear" | "parabolic" | "triangular";
-export type SupportCondition = "pinned-pinned" | "fixed-pinned" | "fixed-fixed";
+export type SupportCondition = "pinned-pinned" | "fixed-pinned" | "pinned-fixed" | "fixed-fixed";
 export type LoadApplicationLT = "top-flange" | "centroid" | "bottom-flange";
 
 export type Ec3EditableInputs = {
@@ -80,15 +80,31 @@ export type VerificationRow = {
   };
 };
 
+const clampPsi = (value: number): number => Math.max(-1, Math.min(1, value));
+const canonicalSupportCondition = (value: SupportCondition): "pinned-pinned" | "fixed-pinned" | "fixed-fixed" =>
+  value === "pinned-fixed" ? "fixed-pinned" : value;
+
 export const buildResolvedInputs = (
   editable: Ec3EditableInputs,
   section: Ec3SectionDerivedInputs,
   material: Ec3MaterialInputs,
-): Ec3ResolvedInputs => ({
-  ...editable,
-  ...section,
-  ...material,
-});
+): Ec3ResolvedInputs => {
+  const normalized = { ...editable };
+
+  if (normalized.moment_shape_y === "linear") normalized.psi_y = clampPsi(normalized.psi_y);
+  if (normalized.moment_shape_z === "linear") normalized.psi_z = clampPsi(normalized.psi_z);
+  if (normalized.moment_shape_LT === "linear") normalized.psi_LT = clampPsi(normalized.psi_LT);
+
+  normalized.support_condition_y = canonicalSupportCondition(normalized.support_condition_y);
+  normalized.support_condition_z = canonicalSupportCondition(normalized.support_condition_z);
+  normalized.support_condition_LT = canonicalSupportCondition(normalized.support_condition_LT);
+
+  return {
+    ...normalized,
+    ...section,
+    ...material,
+  };
+};
 
 export const hasData = (row: VerificationRow): row is VerificationRow & {
   payload: { data: EvaluationResult; error?: undefined };

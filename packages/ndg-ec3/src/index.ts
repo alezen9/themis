@@ -5,6 +5,7 @@ export * from "./verifications";
 export * from "./primitives";
 export * from "./errors";
 export * from "./display";
+export * from "./quality/full-check-audit";
 export { getImperfectionFactor } from "./tables/ec3-table-6.1";
 export { getBucklingCurves } from "./tables/ec3-table-6.2";
 export {

@@ -15,6 +15,8 @@
   "scripts": {
     "build": "vite build",
     "benchmark:generate": "pnpm --filter @ndg/ndg-core build && pnpm --filter @ndg/ndg-ec3 build && node benchmarks/ec3/generate-benchmark-pack.mjs",
+    "benchmark:full-check": "pnpm --filter @ndg/ndg-core build && pnpm --filter @ndg/ndg-ec3 build && node benchmarks/ec3/generate-full-check-report.mjs && pnpm --filter @ndg/ndg-ec3 benchmark:full-check:verify",
+    "benchmark:full-check:verify": "vitest run tests/matrix-integrity.test.ts tests/applicability-contract.test.ts tests/benchmark-conformance.test.ts tests/independent-derivation-conformance.test.ts tests/calculator-parity-conformance.test.ts tests/calculator-parity-applicability.test.ts tests/calculator-parity-display.test.ts tests/calculator-parity-intermediates.test.ts tests/full-check-ultra-strict.test.ts tests/full-check-ultra-strict-display.test.ts tests/full-check-ultra-strict-report.test.ts",
     "benchmark:verify": "vitest run tests/matrix-integrity.test.ts tests/applicability-contract.test.ts tests/benchmark-conformance.test.ts tests/independent-derivation-conformance.test.ts tests/calculator-parity-conformance.test.ts tests/calculator-parity-applicability.test.ts tests/calculator-parity-display.test.ts tests/calculator-parity-intermediates.test.ts",
     "typecheck": "tsc",
     "test": "vitest run"
