@@ -18,8 +18,8 @@ const annex = {
 };
 
 // IPE200-like section, S355, Lcr = 3000mm
-const bucklingInputs: Record<string, number> = {
-  N_Ed: 200_000,
+const bucklingInputs: Record<string, number | string> = {
+  N_Ed: -200_000,
   A: 2848,
   fy: 355,
   E: 210_000,
@@ -28,14 +28,26 @@ const bucklingInputs: Record<string, number> = {
   Iz: 1_424_000,
   It: 69_800,
   Iw: 12_990_000_000,
-  Lcr_y: 3000,
-  Lcr_z: 3000,
-  Lcr_T: 3000,
+  L: 3000,
+  k_y: 1.0,
+  k_z: 1.0,
+  k_LT: 1.0,
+  psi_y: 0.1,
+  psi_z: -0.2,
+  psi_LT: 1.0,
+  moment_shape_y: "linear",
+  support_condition_y: "pinned-pinned",
+  moment_shape_z: "linear",
+  support_condition_z: "pinned-pinned",
+  moment_shape_LT: "uniform",
+  support_condition_LT: "pinned-pinned",
+  load_application_LT: "centroid",
   alpha_y: 0.21, // curve a
   alpha_z: 0.34, // curve b
   alpha_LT: 0.34,
+  section_shape: "I",
+  section_class: 2,
   M_y_Ed: 20_000_000,
-  M_cr: 100_000_000,
   Wpl_y: 220_600,
 };
 
@@ -53,7 +65,8 @@ describe("§6.3.1 ulsBucklingY", () => {
 describe("§6.3.1 ulsBucklingZ", () => {
   it("computes correct ratio (z is weaker)", () => {
     const r = evaluate(ulsBucklingZ, { inputs: bucklingInputs, annex });
-    expect(r.cache.N_cr_z).toBeLessThan(r.cache.N_cr_z + 1); // sanity
+    const NcrZ = (Math.PI ** 2 * 210_000 * 1_424_000) / 3000 ** 2;
+    expect(r.cache.N_cr_z).toBeCloseTo(NcrZ, 0);
     expect(r.ratio).toBeGreaterThan(0);
   });
 });

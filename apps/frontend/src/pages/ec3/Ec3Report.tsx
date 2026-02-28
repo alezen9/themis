@@ -1,5 +1,6 @@
 import katex from "katex";
 import "katex/dist/katex.min.css";
+import { hasData, hasError, isNotApplicable } from "./use-ec3-evaluate";
 import type { VerificationRow } from "./use-ec3-evaluate";
 import type { TraceEntry } from "@ndg/ndg-ec3";
 
@@ -61,18 +62,50 @@ const SectionHeading = ({ children }: { children: React.ReactNode }) => (
   <p className="text-xs text-gray-500 mb-1.5 pl-2 border-l-2 border-gray-300">{children}</p>
 );
 
+const ErrorBlock = ({
+  type,
+  message,
+  details,
+  notApplicable,
+}: {
+  type?: string;
+  message?: string;
+  details?: Record<string, unknown>;
+  notApplicable: boolean;
+}) => {
+  if (notApplicable) {
+    return <div className="px-4 py-3 text-sm text-gray-600">N/A{message ? ` - ${message}` : ""}</div>;
+  }
+  return (
+    <div className="px-4 py-3 text-sm text-red-700">
+      <div className="rounded border border-red-200 bg-red-50 px-3 py-2 space-y-1">
+        <p className="font-mono text-xs">{type ?? "EVALUATION_ERROR"}</p>
+        <p>{message ?? "Unexpected evaluation error."}</p>
+        {details && Object.keys(details).length > 0 && (
+          <pre className="text-[11px] text-red-800/90 whitespace-pre-wrap break-words">
+            {JSON.stringify(details, null, 2)}
+          </pre>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // -- Verbose layout --
 
 const VerboseVerification = ({ result }: { result: VerificationRow }) => {
-  const checkEntry = result.trace.find((t) => t.type === "check");
-  const traceMap = buildTraceMap(result.trace);
+  const data = result.payload.data;
+  const failure = result.payload.error;
+  const trace = data?.trace ?? [];
+  const checkEntry = trace.find((t) => t.type === "check");
+  const traceMap = buildTraceMap(trace);
   const checkMeta = checkEntry?.meta as Record<string, unknown> | undefined;
 
   // Separate inputs (user-input, coefficient, constant) from calculated (formula, derived)
-  const inputs = result.trace.filter(
+  const inputs = trace.filter(
     (t) => t.type === "user-input" || t.type === "coefficient" || t.type === "constant",
   );
-  const calculated = result.trace.filter(
+  const calculated = trace.filter(
     (t) => t.type === "formula" || t.type === "derived",
   );
 
@@ -92,15 +125,19 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
   }
   const relevantInputs = inputs.filter((t) => checkInputKeys.has(t.key));
 
-  const headerBg = result.error
+  const headerBg = isNotApplicable(result)
+    ? "bg-gray-50 border-gray-200"
+    : hasError(result)
     ? "bg-red-50 border-red-200"
-    : result.passed
+    : hasData(result) && result.payload.data.passed
       ? "bg-green-50 border-green-200"
       : "bg-red-50 border-red-200";
 
-  const headerText = result.error
+  const headerText = isNotApplicable(result)
+    ? "text-gray-700"
+    : hasError(result)
     ? "text-red-800"
-    : result.passed
+    : hasData(result) && result.payload.data.passed
       ? "text-green-800"
       : "text-red-800";
 
@@ -110,11 +147,17 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
       <div className={`px-4 py-2 flex items-center justify-between ${headerBg} border-b`}>
         <div className="flex items-center gap-3">
           <span className={`font-bold text-sm ${headerText}`}>
-            {result.error ? "ERROR" : result.passed ? "PASS" : "FAIL"}
+            {isNotApplicable(result)
+              ? "N/A"
+              : hasError(result)
+              ? "ERROR"
+              : hasData(result) && result.payload.data.passed
+              ? "PASS"
+              : "FAIL"}
           </span>
-          {!result.error && (
+          {hasData(result) && !isNotApplicable(result) && (
             <span className={`text-sm font-mono tabular-nums ${headerText}`}>
-              {pct(result.ratio)}
+              {pct(result.payload.data.ratio)}
             </span>
           )}
           <span className="font-medium text-sm text-gray-800">{result.name}</span>
@@ -122,8 +165,13 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
         </div>
       </div>
 
-      {result.error ? (
-        <div className="px-4 py-3 text-sm text-red-600">{result.error}</div>
+      {hasError(result) ? (
+        <ErrorBlock
+          type={failure?.type}
+          message={failure?.message}
+          details={failure?.details}
+          notApplicable={isNotApplicable(result)}
+        />
       ) : (
         <div className="px-4 py-3 space-y-4">
           {/* Verification rule */}
@@ -257,16 +305,16 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
               <p className="font-mono text-sm">
                 <span className="text-gray-500">ratio</span>
                 {" = "}
-                <span className="font-medium">{result.ratio.toFixed(4)}</span>
+                <span className="font-medium">{data?.ratio.toFixed(4)}</span>
                 {" "}
-                <span className={result.passed ? "text-green-700" : "text-red-600"}>
-                  {result.passed ? "\u2264" : ">"} 1.0
+                <span className={data?.passed ? "text-green-700" : "text-red-600"}>
+                  {data?.passed ? "\u2264" : ">"} 1.0
                 </span>
                 {"  "}
-                <span className={`font-semibold ${result.passed ? "text-green-700" : "text-red-600"}`}>
-                  {result.passed ? "\u2713 PASS" : "\u2717 FAIL"}
+                <span className={`font-semibold ${data?.passed ? "text-green-700" : "text-red-600"}`}>
+                  {data?.passed ? "\u2713 PASS" : "\u2717 FAIL"}
                 </span>
-                <span className="text-gray-400 ml-2">({pct(result.ratio)})</span>
+                <span className="text-gray-400 ml-2">{data ? `(${pct(data.ratio)})` : ""}</span>
               </p>
             </div>
           </div>
@@ -279,8 +327,40 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
 // -- Summary layout --
 
 const SummaryVerification = ({ result, index }: { result: VerificationRow; index: number }) => {
-  const checkEntry = result.trace.find((t) => t.type === "check");
-  const formulas = result.trace.filter((t) => t.type === "formula" || t.type === "derived");
+  const data = result.payload.data;
+  const failure = result.payload.error;
+  const trace = data?.trace ?? [];
+  const checkEntry = trace.find((t) => t.type === "check");
+  const traceMap = buildTraceMap(trace);
+
+  const checkInputKeys = new Set<string>();
+  if (checkEntry?.evaluatorInputs) {
+    const queue = Object.keys(checkEntry.evaluatorInputs);
+    while (queue.length > 0) {
+      const key = queue.pop()!;
+      if (checkInputKeys.has(key)) continue;
+      checkInputKeys.add(key);
+      const entry = traceMap.get(key);
+      if (entry?.evaluatorInputs) {
+        queue.push(...Object.keys(entry.evaluatorInputs));
+      }
+    }
+  }
+
+  const relevantInputs = trace.filter(
+    (t) =>
+      checkInputKeys.has(t.key) &&
+      (t.type === "user-input" || t.type === "coefficient" || t.type === "constant"),
+  );
+  const relevantCalculated = trace.filter(
+    (t) => checkInputKeys.has(t.key) && (t.type === "formula" || t.type === "derived"),
+  );
+  const formulaResults = relevantCalculated.filter((t) => t.type === "formula");
+  const derivedResults = relevantCalculated.filter((t) => t.type === "derived");
+
+  const displayedInputs = relevantInputs.slice(0, 6);
+  const displayedFormulas = formulaResults.slice(0, 8);
+  const displayedDerived = derivedResults.slice(0, 6);
 
   return (
     <div className="mb-3 border rounded p-3">
@@ -295,27 +375,140 @@ const SummaryVerification = ({ result, index }: { result: VerificationRow; index
           )}
         </span>
         <span className={`text-xs font-mono tabular-nums px-2 py-0.5 rounded ${
-          result.error
+          isNotApplicable(result)
+            ? "bg-gray-100 text-gray-700"
+            : hasError(result)
             ? "bg-red-100 text-red-800"
-            : result.passed
+            : hasData(result) && result.payload.data.passed
               ? "bg-green-100 text-green-800"
               : "bg-red-100 text-red-800"
         }`}>
-          {result.error ? "ERROR" : `${result.passed ? "PASS" : "FAIL"} ${pct(result.ratio)}`}
+          {isNotApplicable(result)
+            ? "N/A"
+            : hasError(result)
+              ? "ERROR"
+              : hasData(result)
+              ? `${result.payload.data.passed ? "PASS" : "FAIL"} ${pct(result.payload.data.ratio)}`
+              : "ERROR"}
         </span>
       </div>
 
-      {!result.error && formulas.length > 0 && (
-        <div className="mt-1 text-xs text-gray-500 font-mono flex flex-wrap gap-x-4">
-          {formulas.map((f) => {
-            const { value: dv, unit: du } = convertUnit(f.value as number, f.unit);
-            return (
-              <span key={f.nodeId}>
-                {f.symbol ? <Formula tex={f.symbol} /> : f.key} = {formatValue(dv)}
-                {du && <span className="text-gray-300 ml-0.5">{du}</span>}
-              </span>
-            );
-          })}
+      {hasError(result) ? (
+        <div className="mt-2">
+          <ErrorBlock
+            type={failure?.type}
+            message={failure?.message}
+            details={failure?.details}
+            notApplicable={isNotApplicable(result)}
+          />
+        </div>
+      ) : (
+        <div className="mt-2 space-y-2">
+          {checkEntry?.verificationExpression && (
+            <div className="bg-gray-50 rounded px-2 py-1.5">
+              <p className="text-[11px] text-gray-400 mb-1">Verification rule</p>
+              <div className="text-sm text-center">
+                <Formula tex={checkEntry.verificationExpression} display />
+              </div>
+            </div>
+          )}
+
+          {checkEntry?.evaluatorInputs && Object.keys(checkEntry.evaluatorInputs).length > 0 && (
+            <div className="bg-gray-50 rounded px-2 py-1.5">
+              <p className="text-[11px] text-gray-400 mb-1">Check terms</p>
+              <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs font-mono">
+                {Object.entries(checkEntry.evaluatorInputs).map(([k, v]) => {
+                  const entry = traceMap.get(k);
+                  const numericValue = typeof v === "number" ? v : 0;
+                  const { value: dv, unit: du } = convertUnit(numericValue, entry?.unit);
+                  return (
+                    <span key={k} className="text-gray-600">
+                      {entry?.symbol ? <Formula tex={entry.symbol} /> : k}
+                      {" = "}
+                      {typeof v === "number" ? formatValue(dv) : v}
+                      {typeof v === "number" && du && <span className="text-gray-400 ml-0.5">{du}</span>}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {(displayedFormulas.length > 0 || displayedDerived.length > 0 || displayedInputs.length > 0) && (
+            <div className="bg-gray-50 rounded px-2 py-1.5 space-y-1.5">
+              {displayedInputs.length > 0 && (
+                <div>
+                  <p className="text-[11px] text-gray-400 mb-0.5">Key inputs</p>
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs font-mono">
+                    {displayedInputs.map((entry) => {
+                      const { value: dv, unit: du } = convertUnit(entry.value as number, entry.unit);
+                      return (
+                        <span key={entry.nodeId} className="text-gray-600">
+                          {entry.symbol ? <Formula tex={entry.symbol} /> : entry.key}
+                          {" = "}
+                          {formatValue(dv)}
+                          {du && <span className="text-gray-400 ml-0.5">{du}</span>}
+                        </span>
+                      );
+                    })}
+                    {relevantInputs.length > displayedInputs.length && (
+                      <span className="text-gray-400">
+                        +{relevantInputs.length - displayedInputs.length} more
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {displayedFormulas.length > 0 && (
+                <div>
+                  <p className="text-[11px] text-gray-400 mb-0.5">Formula results</p>
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs font-mono">
+                    {displayedFormulas.map((entry) => {
+                      const { value: dv, unit: du } = convertUnit(entry.value as number, entry.unit);
+                      return (
+                        <span key={entry.nodeId} className="text-gray-600">
+                          {entry.symbol ? <Formula tex={entry.symbol} /> : entry.key}
+                          {" = "}
+                          {formatValue(dv)}
+                          {du && <span className="text-gray-400 ml-0.5">{du}</span>}
+                        </span>
+                      );
+                    })}
+                    {formulaResults.length > displayedFormulas.length && (
+                      <span className="text-gray-400">
+                        +{formulaResults.length - displayedFormulas.length} more
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {displayedDerived.length > 0 && (
+                <div>
+                  <p className="text-[11px] text-gray-400 mb-0.5">Derived/support values</p>
+                  <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs font-mono">
+                    {displayedDerived.map((entry) => {
+                      const { value: dv, unit: du } = convertUnit(entry.value as number, entry.unit);
+                      return (
+                        <span key={entry.nodeId} className="text-gray-600">
+                          {entry.symbol ? <Formula tex={entry.symbol} /> : entry.key}
+                          {" = "}
+                          {formatValue(dv)}
+                          {du && <span className="text-gray-400 ml-0.5">{du}</span>}
+                        </span>
+                      );
+                    })}
+                    {derivedResults.length > displayedDerived.length && (
+                      <span className="text-gray-400">
+                        +{derivedResults.length - displayedDerived.length} more
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -325,9 +518,10 @@ const SummaryVerification = ({ result, index }: { result: VerificationRow; index
 // -- Main report --
 
 export const Ec3Report = ({ results, mode }: Ec3ReportProps) => {
-  const passed = results.filter((r) => r.passed).length;
-  const failed = results.filter((r) => !r.passed && !r.error).length;
-  const errors = results.filter((r) => r.error).length;
+  const passed = results.filter((r) => hasData(r) && r.payload.data.passed).length;
+  const notApplicable = results.filter((r) => isNotApplicable(r)).length;
+  const failed = results.filter((r) => hasData(r) && !r.payload.data.passed).length;
+  const errors = results.filter((r) => hasError(r) && !isNotApplicable(r)).length;
 
   return (
     <div>
@@ -340,6 +534,7 @@ export const Ec3Report = ({ results, mode }: Ec3ReportProps) => {
           <span className="text-green-700">{passed} passed</span>
           {failed > 0 && <span className="text-red-600">{failed} failed</span>}
           {errors > 0 && <span className="text-red-600">{errors} errors</span>}
+          {notApplicable > 0 && <span className="text-gray-600">{notApplicable} n/a</span>}
           <span className="text-gray-400">{results.length} total</span>
         </div>
       </div>

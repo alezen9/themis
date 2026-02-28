@@ -16,7 +16,7 @@ const annex = { id: "eurocode", coefficients: { gamma_M0: 1.0 } };
 describe("§6.2.3 ulsTension", () => {
   it("passes for low tensile force", () => {
     const ctx: EvaluationContext = {
-      inputs: { N_Ed: 100_000, A: 1032, fy: 355 },
+      inputs: { N_Ed: 100_000, section_class: 2, A: 1032, fy: 355 },
       annex,
     };
     const r = evaluate(ulsTension, ctx);
@@ -26,7 +26,7 @@ describe("§6.2.3 ulsTension", () => {
 
   it("fails when force exceeds resistance", () => {
     const r = evaluate(ulsTension, {
-      inputs: { N_Ed: 500_000, A: 1032, fy: 355 },
+      inputs: { N_Ed: 500_000, section_class: 2, A: 1032, fy: 355 },
       annex,
     });
     expect(r.passed).toBe(false);
@@ -36,7 +36,7 @@ describe("§6.2.3 ulsTension", () => {
 describe("§6.2.4 ulsCompression", () => {
   it("computes correct ratio", () => {
     const r = evaluate(ulsCompression, {
-      inputs: { N_Ed: 200_000, A: 1032, fy: 355 },
+      inputs: { N_Ed: -200_000, section_class: 2, A: 1032, fy: 355 },
       annex,
     });
     expect(r.ratio).toBeCloseTo(200_000 / (1032 * 355), 6);
@@ -47,7 +47,7 @@ describe("§6.2.4 ulsCompression", () => {
 describe("§6.2.5 ulsBendingY", () => {
   it("computes correct ratio", () => {
     const r = evaluate(ulsBendingY, {
-      inputs: { M_y_Ed: 5_000_000, Wpl_y: 39410, fy: 355 },
+      inputs: { M_y_Ed: 5_000_000, section_class: 2, Wel_y: 39410, Wpl_y: 39410, fy: 355 },
       annex,
     });
     const McRd = 39410 * 355;
@@ -59,7 +59,7 @@ describe("§6.2.5 ulsBendingY", () => {
 describe("§6.2.5 ulsBendingZ", () => {
   it("computes correct ratio", () => {
     const r = evaluate(ulsBendingZ, {
-      inputs: { M_z_Ed: 1_000_000, Wpl_z: 9146000, fy: 355 },
+      inputs: { M_z_Ed: 1_000_000, section_class: 2, Wel_z: 9146000, Wpl_z: 9146000, fy: 355 },
       annex,
     });
     const McRd = 9146000 * 355;
@@ -71,7 +71,7 @@ describe("§6.2.5 ulsBendingZ", () => {
 describe("§6.2.6 ulsShearZ", () => {
   it("computes correct ratio", () => {
     const r = evaluate(ulsShearZ, {
-      inputs: { V_z_Ed: 50_000, Av_z: 508, fy: 355 },
+      inputs: { V_z_Ed: 50_000, section_class: 2, Av_z: 508, fy: 355 },
       annex,
     });
     const VplRd = 508 * (355 / Math.sqrt(3));
@@ -83,7 +83,7 @@ describe("§6.2.6 ulsShearZ", () => {
 describe("§6.2.6 ulsShearY", () => {
   it("computes correct ratio", () => {
     const r = evaluate(ulsShearY, {
-      inputs: { V_y_Ed: 30_000, Av_y: 627, fy: 355 },
+      inputs: { V_y_Ed: 30_000, section_class: 2, Av_y: 627, fy: 355 },
       annex,
     });
     const VplRd = 627 * (355 / Math.sqrt(3));
@@ -99,11 +99,14 @@ describe("basicVerifications array", () => {
 
   it("all evaluate successfully with valid inputs", () => {
     const inputs: Record<string, number> = {
-      N_Ed: 100_000,
+      N_Ed: -100_000,
+      section_class: 2,
       A: 1032,
       fy: 355,
       M_y_Ed: 1_000_000,
       M_z_Ed: 500_000,
+      Wel_y: 39410,
+      Wel_z: 9146000,
       Wpl_y: 39410,
       Wpl_z: 9146000,
       V_z_Ed: 20_000,

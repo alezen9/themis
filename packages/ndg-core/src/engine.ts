@@ -10,6 +10,8 @@ export type NationalAnnex = {
  */
 export const CONSTANTS: Readonly<Record<string, number>> = {
   pi: Math.PI,
+  piSq: Math.PI ** 2,
+  sqrt3: Math.sqrt(3),
   e: Math.E,
 };
 

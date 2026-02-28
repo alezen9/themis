@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { hasData, hasError, isNotApplicable } from "./use-ec3-evaluate";
 import type { VerificationRow } from "./use-ec3-evaluate";
 import { Ec3Report } from "./Ec3Report";
 
@@ -44,14 +45,24 @@ export const Ec3Results = ({ results }: Ec3ResultsProps) => {
                 <td className="py-1 pr-4 tabular-nums">{i + 1}</td>
                 <td className="py-1 pr-4">{r.name}</td>
                 <td className="py-1 pr-4 tabular-nums">
-                  {r.error ? "ERR" : r.ratio.toFixed(3)}
+                  {isNotApplicable(r)
+                    ? "N/A"
+                    : hasError(r)
+                    ? "ERR"
+                    : hasData(r)
+                    ? r.payload.data.ratio.toFixed(3)
+                    : "ERR"}
                 </td>
                 <td className="py-1 pr-4">
-                  {r.error ? (
-                    <span className="text-red-600" title={r.error}>
+                  {isNotApplicable(r) ? (
+                    <span className="text-gray-600" title={r.payload.error?.message}>
+                      N/A
+                    </span>
+                  ) : hasError(r) ? (
+                    <span className="text-red-600" title={r.payload.error.message}>
                       Error
                     </span>
-                  ) : r.passed ? (
+                  ) : hasData(r) && r.payload.data.passed ? (
                     <span className="text-green-700">OK</span>
                   ) : (
                     <span className="text-red-600">FAIL</span>

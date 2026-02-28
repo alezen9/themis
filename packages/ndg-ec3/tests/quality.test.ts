@@ -6,6 +6,8 @@ import {
   ulsBucklingZ,
   ulsBendingY,
   ulsBendingYShear,
+  ulsBendingZAxialShear,
+  ulsBiaxialAxialShear,
   ulsBeamColumn61M1,
   ulsBeamColumn62M1,
   ulsBeamColumn61M2,
@@ -17,12 +19,14 @@ import { computeChi, computeChiLT } from "../src/helpers/reduction-factors";
 // ── Shared test fixtures ──
 
 const inputs: Record<string, number | string> = {
-  N_Ed: 200_000,
+  N_Ed: -200_000,
   M_y_Ed: 20_000_000,
   M_z_Ed: 5_000_000,
   V_y_Ed: 10_000,
   V_z_Ed: 50_000,
   A: 2848,
+  Wel_y: 220_600,
+  Wel_z: 57_700,
   Wpl_y: 220_600,
   Wpl_z: 57_700,
   Av_y: 2848,
@@ -30,6 +34,7 @@ const inputs: Record<string, number | string> = {
   tw: 5.6,
   hw: 181.2,
   section_shape: "I",
+  section_class: 2,
   fy: 355,
   E: 210_000,
   G: 81_000,
@@ -37,16 +42,23 @@ const inputs: Record<string, number | string> = {
   Iz: 1_424_000,
   It: 69_800,
   Iw: 12_990_000_000,
-  Lcr_y: 3000,
-  Lcr_z: 3000,
-  Lcr_T: 3000,
+  L: 3000,
+  k_y: 1.0,
+  k_z: 1.0,
+  k_LT: 1.0,
+  psi_y: 0.1,
+  psi_z: -0.2,
+  psi_LT: 1,
+    moment_shape_y: "linear",
+    support_condition_y: "pinned-pinned",
+    moment_shape_z: "linear",
+    support_condition_z: "pinned-pinned",
+    moment_shape_LT: "uniform",
+    support_condition_LT: "pinned-pinned",
+    load_application_LT: "centroid",
   alpha_y: 0.21,
   alpha_z: 0.34,
   alpha_LT: 0.34,
-  M_cr: 100_000_000,
-  Cm_y: 0.9,
-  Cm_z: 0.9,
-  Cm_LT: 0.9,
 };
 
 const annex = {
@@ -64,13 +76,11 @@ const annex = {
 // ── 1. Cross-verification sanity ──
 
 describe("cross-verification sanity", () => {
-  it("Eq.6.61 M1 and M2 share k_yy/k_yz (differ only in Eq.6.62)", () => {
-    // Per Eurocode, M1 and M2 differ only in k_zy (Eq.6.62), not k_yy/k_yz (Eq.6.61)
+  it("Eq.6.61 M1 and M2 keep method-specific interaction factors", () => {
     const r1 = evaluate(ulsBeamColumn61M1, { inputs, annex });
     const r2 = evaluate(ulsBeamColumn61M2, { inputs, annex });
-    expect(r1.cache.k_yy).toBeCloseTo(r2.cache.k_yy as number, 10);
-    expect(r1.cache.k_yz).toBeCloseTo(r2.cache.k_yz as number, 10);
-    // But Eq.6.62 k_zy differs (tested in separate test above)
+    expect(r1.cache.k_yy).not.toBeCloseTo(r2.cache.k_yy as number, 6);
+    expect(r1.cache.k_yz).not.toBeCloseTo(r2.cache.k_yz as number, 6);
   });
 
   it("Eq.6.62 M1 and M2 produce different ratios", () => {
@@ -98,11 +108,40 @@ describe("cross-verification sanity", () => {
     expect(rCombined.ratio).toBeGreaterThanOrEqual(rPure.ratio - 1e-10);
   });
 
-  it("all 22 verifications produce finite positive ratios", () => {
+  it("all 22 verifications produce finite non-negative ratios", () => {
     for (const v of ec3Verifications) {
       const r = evaluate(v, { inputs, annex });
-      expect(r.ratio).toBeGreaterThan(0);
+      expect(r.ratio).toBeGreaterThanOrEqual(0);
       expect(isFinite(r.ratio)).toBe(true);
+    }
+  });
+
+  it("keeps z-axial shear boundary branch at n = a_f without extra reduction", () => {
+    const NplRd = (inputs.A as number) * (inputs.fy as number) / (annex.coefficients.gamma_M0 as number);
+    const boundaryInputs = { ...inputs, N_Ed: -0.5 * NplRd };
+    const r = evaluate(ulsBendingZAxialShear, { inputs: boundaryInputs, annex });
+    expect(r.cache.n).toBeCloseTo(r.cache.a_f as number, 10);
+    expect(r.cache.M_NV_z_Rd).toBeCloseTo(r.cache.M_z_V_Rd as number, 8);
+  });
+
+  it("keeps biaxial-axial-shear z-branch boundary at n = a_f", () => {
+    const NplRd = (inputs.A as number) * (inputs.fy as number) / (annex.coefficients.gamma_M0 as number);
+    const boundaryInputs = { ...inputs, N_Ed: -0.5 * NplRd };
+    const r = evaluate(ulsBiaxialAxialShear, { inputs: boundaryInputs, annex });
+    expect(r.cache.n).toBeCloseTo(r.cache.a_f as number, 10);
+    expect(r.cache.M_NV_z_Rd).toBeCloseTo(r.cache.M_z_V_Rd as number, 8);
+  });
+
+  it("keeps literal formulaRef only on formula nodes", () => {
+    for (const v of ec3Verifications) {
+      for (const node of v.nodes) {
+        if (node.type === "formula") {
+          expect(node.meta.formulaRef).toMatch(/^\(\d+\.\d+\)$/);
+        }
+        if (node.type === "derived") {
+          expect(node.meta?.formulaRef).toBeUndefined();
+        }
+      }
     }
   });
 });
@@ -112,7 +151,7 @@ describe("cross-verification sanity", () => {
 describe("golden-value snapshot", () => {
   it("uls-tension with Italian annex gamma_M0=1.05", () => {
     const r = evaluate(ulsTension, {
-      inputs: { N_Ed: 100_000, A: 2848, fy: 355 },
+      inputs: { N_Ed: 100_000, section_class: 2, A: 2848, fy: 355 },
       annex: { id: "italian", coefficients: { gamma_M0: 1.05 } },
     });
 
@@ -193,15 +232,17 @@ describe("property-based invariants", () => {
     }
   });
 
-  it("all verifications produce finite positive ratio for randomized valid inputs (10 samples)", () => {
+  it("all verifications return finite ratio or explicit domain error on randomized inputs (10 samples)", () => {
     for (let i = 0; i < 10; i++) {
       const randomInputs: Record<string, number | string> = {
-        N_Ed: rand(1000, 500_000),
+        N_Ed: -rand(1000, 120_000),
         M_y_Ed: rand(100_000, 50_000_000),
         M_z_Ed: rand(100_000, 10_000_000),
         V_y_Ed: rand(1000, 100_000),
         V_z_Ed: rand(1000, 200_000),
         A: rand(1000, 30_000),
+        Wel_y: rand(50_000, 3_000_000),
+        Wel_z: rand(10_000, 500_000),
         Wpl_y: rand(50_000, 3_000_000),
         Wpl_z: rand(10_000, 500_000),
         Av_y: rand(500, 15_000),
@@ -209,6 +250,7 @@ describe("property-based invariants", () => {
         tw: rand(3, 20),
         hw: rand(100, 800),
         section_shape: "I",
+        section_class: 2,
         fy: rand(235, 460),
         E: 210_000,
         G: 81_000,
@@ -216,22 +258,37 @@ describe("property-based invariants", () => {
         Iz: rand(100_000, 50_000_000),
         It: rand(10_000, 5_000_000),
         Iw: rand(1_000_000_000, 100_000_000_000),
-        Lcr_y: rand(1000, 10_000),
-        Lcr_z: rand(1000, 10_000),
-        Lcr_T: rand(1000, 10_000),
+        L: rand(1500, 6000),
+        k_y: rand(0.8, 1.2),
+        k_z: rand(0.8, 1.2),
+        k_LT: rand(0.8, 1.2),
+        moment_shape_y: "linear",
+        support_condition_y: "pinned-pinned",
+        moment_shape_z: "linear",
+        support_condition_z: "pinned-pinned",
+        moment_shape_LT: "uniform",
+        support_condition_LT: "pinned-pinned",
+        load_application_LT: "centroid",
+        psi_y: rand(-1, 1),
+        psi_z: rand(-1, 1),
+        psi_LT: rand(-1, 1),
         alpha_y: rand(0.13, 0.76),
         alpha_z: rand(0.13, 0.76),
         alpha_LT: rand(0.21, 0.76),
-        M_cr: rand(10_000_000, 500_000_000),
-        Cm_y: rand(0.4, 1.0),
-        Cm_z: rand(0.4, 1.0),
-        Cm_LT: rand(0.4, 1.0),
       };
 
       for (const v of ec3Verifications) {
-        const r = evaluate(v, { inputs: randomInputs, annex });
-        expect(r.ratio, `verification failed on random sample ${i}`).toBeGreaterThan(0);
-        expect(isFinite(r.ratio), `non-finite ratio on random sample ${i}`).toBe(true);
+        try {
+          const r = evaluate(v, { inputs: randomInputs, annex });
+          expect(r.ratio, `verification failed on random sample ${i}`).toBeGreaterThanOrEqual(0);
+          expect(isFinite(r.ratio), `non-finite ratio on random sample ${i}`).toBe(true);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          expect(
+            message,
+            `${v.id} must fail with deterministic explicit applicability/domain error on sample ${i}`,
+          ).toMatch(/unsupported|invalid|must be > 0|must be positive|out of scope|not applicable|only applicable/i);
+        }
       }
     }
   });

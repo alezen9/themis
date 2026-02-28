@@ -79,6 +79,24 @@ export const coeff = <K extends string>(
   };
 };
 
+export const constant = <K extends string>(
+  prefix: string,
+  key: K,
+  name: string,
+  opts: { symbol: string; description?: string },
+) => {
+  return {
+    type: "constant" as const,
+    key,
+    valueType: "number" as const,
+    id: toId(prefix, key),
+    name,
+    symbol: opts.symbol,
+    description: opts.description,
+    children: [] as Child[],
+  };
+};
+
 // -- Computed nodes (have dependencies) --
 
 export const formula = <K extends string>(
@@ -133,6 +151,35 @@ export const derived = <K extends string>(
     expression: opts?.expression,
     unit: opts?.unit,
     meta: opts?.meta,
+    children: depsToChildren(prefix, deps),
+  };
+};
+
+export const table = <K extends string, V extends "number" | "string" = "number">(
+  prefix: string,
+  key: K,
+  name: string,
+  deps: readonly Dep[],
+  opts: {
+    source: string;
+    meta?: NodeMeta;
+    unit?: string;
+    symbol?: string;
+    description?: string;
+    valueType?: V;
+  },
+) => {
+  return {
+    type: "table" as const,
+    key,
+    valueType: (opts.valueType ?? "number") as V,
+    id: toId(prefix, key),
+    name,
+    symbol: opts.symbol,
+    description: opts.description,
+    source: opts.source,
+    unit: opts.unit,
+    meta: opts.meta,
     children: depsToChildren(prefix, deps),
   };
 };

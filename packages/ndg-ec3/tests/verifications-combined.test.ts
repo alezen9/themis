@@ -8,10 +8,12 @@ const annex = { id: "eurocode", coefficients: { gamma_M0: 1.0 } };
 const inputs: Record<string, number | string> = {
   M_y_Ed: 2_000_000,
   M_z_Ed: 500_000,
-  N_Ed: 50_000,
+  N_Ed: -50_000,
   V_z_Ed: 10_000,
   V_y_Ed: 5_000,
   A: 1032,
+  Wel_y: 39_410,
+  Wel_z: 9_146,
   Wpl_y: 39_410,
   Wpl_z: 9_146,
   Av_z: 508,
@@ -19,6 +21,7 @@ const inputs: Record<string, number | string> = {
   tw: 4.1,
   hw: 88.6,
   section_shape: "I",
+  section_class: 2,
   fy: 355,
 };
 

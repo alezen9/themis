@@ -1,0 +1,2343 @@
+{
+  "generatedAt": "2026-02-28T19:11:23.574Z",
+  "normativeBaseline": "resources/ec3-part1-1.pdf",
+  "shapes": [
+    "I",
+    "RHS",
+    "CHS"
+  ],
+  "classes": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "checks": [
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "sectionRef": "6.2.3"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "sectionRef": "6.2.4"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "sectionRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "sectionRef": "6.2.5"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "sectionRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "sectionRef": "6.2.6"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "sectionRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "sectionRef": "6.2.8"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "sectionRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "sectionRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "sectionRef": "6.2.9.1"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "sectionRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "sectionRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "sectionRef": "6.2.10"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "sectionRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "sectionRef": "6.3.1.2"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "sectionRef": "6.3.1.4"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "sectionRef": "6.3.2.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "sectionRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "sectionRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "sectionRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "sectionRef": "6.3.3"
+    }
+  ],
+  "cells": [
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.3"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.4"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.5"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.6"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.8"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.9.1"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.2.10"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.1.2"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.1.4"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.2.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "I",
+      "sectionClass": 1,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "I",
+      "sectionClass": 2,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "I",
+      "sectionClass": 3,
+      "outcome": "compute",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "I",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "RHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "RHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "RHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "RHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "CHS",
+      "sectionClass": 1,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "CHS",
+      "sectionClass": 2,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "CHS",
+      "sectionClass": 3,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_SHAPE",
+      "clauseRef": "6.3.3"
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "shape": "CHS",
+      "sectionClass": 4,
+      "outcome": "not_applicable",
+      "failureType": "NOT_APPLICABLE_SECTION_CLASS",
+      "clauseRef": "6.3.3"
+    }
+  ]
+}

@@ -6,6 +6,8 @@ export type ComputedSectionProperties = {
   A: number;
   Iy: number;
   Iz: number;
+  Wel_y: number;
+  Wel_z: number;
   Wpl_y: number;
   Wpl_z: number;
   Av_y: number;
@@ -45,6 +47,8 @@ const computeFromDimensions = (section: Section): ComputedSectionProperties => {
 const fromPrecomputed = (section: Section): ComputedSectionProperties => {
   if (section.shape === "I") {
     const { h, b, tw, tf, r, A, Iy, Iz, Wpl_y, Wpl_z, It, Iw } = section;
+    const Wel_y = Iy / (h / 2);
+    const Wel_z = Iz / (b / 2);
     const hw = h - 2 * tf;
     const Av_z = A - 2 * b * tf + (tw + 2 * r) * tf;
     const Av_y = 2 * b * tf;
@@ -53,7 +57,7 @@ const fromPrecomputed = (section: Section): ComputedSectionProperties => {
     const curves = getBucklingCurves("I", isRolled ? "rolled" : "welded", h_over_b, tf);
     const bucklingLT = h_over_b > 2 ? "a" : "b";
     return {
-      A, Iy, Iz, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw,
+      A, Iy, Iz, Wel_y, Wel_z, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw,
       tw, hw,
       section_shape: "I",
       bucklingY: curves.y, bucklingZ: curves.z, bucklingLT,
@@ -65,11 +69,12 @@ const fromPrecomputed = (section: Section): ComputedSectionProperties => {
   if (section.shape === "CHS") {
     const { d, t, A, Iy, Wpl_y, It } = section;
     const Iz = Iy;
+    const Wel = Iy / (d / 2);
     const Wpl_z = Wpl_y;
     const Av = (2 * A) / Math.PI;
     const curves = getBucklingCurves("CHS", "rolled", 1, t);
     return {
-      A, Iy, Iz, Wpl_y, Wpl_z, Av_y: Av, Av_z: Av, It, Iw: 0,
+      A, Iy, Iz, Wel_y: Wel, Wel_z: Wel, Wpl_y, Wpl_z, Av_y: Av, Av_z: Av, It, Iw: 0,
       tw: t, hw: d - 2 * t,
       section_shape: "CHS",
       bucklingY: curves.y, bucklingZ: curves.z, bucklingLT: "a",
@@ -80,11 +85,13 @@ const fromPrecomputed = (section: Section): ComputedSectionProperties => {
   }
   // RHS/SHS
   const { h, b, tw, A, Iy, Iz, Wpl_y, Wpl_z, It } = section;
+  const Wel_y = Iy / (h / 2);
+  const Wel_z = Iz / (b / 2);
   const Av_z = A * h / (b + h);
   const Av_y = A * b / (b + h);
   const curves = getBucklingCurves("RHS", "rolled", h / b, tw);
   return {
-    A, Iy, Iz, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw: 0,
+    A, Iy, Iz, Wel_y, Wel_z, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw: 0,
     tw, hw: h - 2 * tw,
     section_shape: "RHS",
     bucklingY: curves.y, bucklingZ: curves.z, bucklingLT: "a",
@@ -113,6 +120,8 @@ const computeFlanged = (s: {
   // Second moments of area (rectangular approximation, no fillet)
   const Iy = (b * h ** 3 - (b - tw) * hw ** 3) / 12;
   const Iz = (2 * tf * b ** 3 + hw * tw ** 3) / 12;
+  const Wel_y = Iy / (h / 2);
+  const Wel_z = Iz / (b / 2);
 
   // Plastic section moduli
   const Wpl_y = b * tf * (h - tf) + (tw * hw ** 2) / 4;
@@ -137,7 +146,7 @@ const computeFlanged = (s: {
   const bucklingLT = h_over_b > 2 ? "a" : "b";
 
   return {
-    A, Iy, Iz, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw,
+    A, Iy, Iz, Wel_y, Wel_z, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw,
     tw, hw,
     section_shape: "I",
     bucklingY: curves.y,
@@ -164,6 +173,8 @@ const computeRHS = (s: {
   const A = 2 * tw * (h + b - 2 * tw);
   const Iy = (b * h ** 3 - bi * hi ** 3) / 12;
   const Iz = (h * b ** 3 - hi * bi ** 3) / 12;
+  const Wel_y = Iy / (h / 2);
+  const Wel_z = Iz / (b / 2);
   const Wpl_y = (b * h ** 2) / 4 - (bi * hi ** 2) / 4;
   const Wpl_z = (h * b ** 2) / 4 - (hi * bi ** 2) / 4;
 
@@ -185,7 +196,7 @@ const computeRHS = (s: {
   const bucklingLT = "a";
 
   return {
-    A, Iy, Iz, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw,
+    A, Iy, Iz, Wel_y, Wel_z, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw,
     tw, hw: h - 2 * tw,
     section_shape: "RHS",
     bucklingY: curves.y,
@@ -209,6 +220,7 @@ const computeCHS = (s: {
 
   const A = (Math.PI / 4) * (d ** 2 - di ** 2);
   const I = (Math.PI / 64) * (d ** 4 - di ** 4);
+  const Wel = I / (d / 2);
   const Iy = I;
   const Iz = I;
   const Wpl = (d ** 3 - di ** 3) / 6;
@@ -228,7 +240,7 @@ const computeCHS = (s: {
   const bucklingLT = "a";
 
   return {
-    A, Iy, Iz, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw,
+    A, Iy, Iz, Wel_y: Wel, Wel_z: Wel, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw,
     tw: t, hw: d - 2 * t,
     section_shape: "CHS",
     bucklingY: curves.y,

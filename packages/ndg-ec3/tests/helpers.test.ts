@@ -1,12 +1,15 @@
 import { describe, it, expect } from "vitest";
-import { computeChi, computeChiLT } from "../src/helpers/reduction-factors";
+import { computeChi, computeChiLT, computeNcrT, computeMcrSn003b } from "../src/helpers/reduction-factors";
 import {
   computeKyy,
   computeKzz,
+  computeKyyMethod1,
+  computeKzzMethod1,
   computeKyzMethod1,
   computeKzyMethod1,
   computeKzyMethod2,
 } from "../src/helpers/interaction-factors";
+import { getCmMethod1, getCmMethod2, resolveCmMethod1 } from "../src/tables/c-m-factors";
 
 // ── computeChi (§6.3.1.2) ──
 
@@ -117,6 +120,69 @@ describe("computeChiLT", () => {
   });
 });
 
+describe("computeNcrT / computeMcrSn003b", () => {
+  it("computeNcrT returns positive value for valid open-section inputs", () => {
+    const val = computeNcrT(210_000, 81_000, 19_430_000, 1_424_000, 69_800, 12_990_000_000, 3000, 2848);
+    expect(val).toBeGreaterThan(0);
+  });
+
+  it("computeNcrT throws on invalid length", () => {
+    expect(() => computeNcrT(210_000, 81_000, 19_430_000, 1_424_000, 69_800, 12_990_000_000, 0, 2848)).toThrow(
+      "LcrT must be > 0",
+    );
+  });
+
+  it("computeMcrSn003b returns positive value for valid inputs", () => {
+    const val = computeMcrSn003b(210_000, 81_000, 1_424_000, 69_800, 12_990_000_000, 3000, 1.0);
+    expect(val).toBeGreaterThan(0);
+  });
+});
+
+describe("C_m helpers", () => {
+  it("Method 2 C_m applies Table B.3 lower bound", () => {
+    expect(getCmMethod2(-1.0)).toBeCloseTo(0.4, 10);
+    expect(getCmMethod2(0.5)).toBeCloseTo(0.8, 10);
+  });
+
+  it("Method 1 base C_m,0 follows Annex A linear branch", () => {
+    const cm = getCmMethod1(0.2, 100_000, 1_000_000);
+    const expected = 0.79 + 0.21 * 0.2 + 0.36 * (0.2 - 0.33) * 0.1;
+    expect(cm).toBeCloseTo(expected, 10);
+  });
+
+  it("resolveCmMethod1 returns C_m,LT = 1 in the first Annex A branch", () => {
+    const res = resolveCmMethod1({
+      Cmy0: 0.9,
+      Cmz0: 0.85,
+      lambda_bar_0: 0.15,
+      N_Ed: -100_000,
+      Ncr_z: 1_000_000,
+      Ncr_TF: 1_100_000,
+      a_LT: 0.9,
+      eta_y: 0.3,
+    });
+    expect(res.Cm_y).toBeCloseTo(0.9, 10);
+    expect(res.Cm_z).toBeCloseTo(0.85, 10);
+    expect(res.Cm_LT).toBe(1);
+  });
+
+  it("resolveCmMethod1 computes amplified C_m,y and C_m,LT in second branch", () => {
+    const res = resolveCmMethod1({
+      Cmy0: 0.85,
+      Cmz0: 0.8,
+      lambda_bar_0: 0.5,
+      N_Ed: -100_000,
+      Ncr_z: 1_000_000,
+      Ncr_TF: 1_200_000,
+      a_LT: 0.9,
+      eta_y: 0.5,
+    });
+    expect(res.Cm_y).toBeGreaterThan(0.85);
+    expect(res.Cm_z).toBeCloseTo(0.8, 10);
+    expect(res.Cm_LT).toBeGreaterThan(0);
+  });
+});
+
 // ── k-factor helpers (§6.3.3, Annex B Table B.1) ──
 
 describe("computeKyy", () => {
@@ -176,6 +242,18 @@ describe("computeKzz", () => {
 
   it("throws when NbzRd ≤ 0", () => {
     expect(() => computeKzz(0.9, 1.0, 100_000, 0)).toThrow("NbzRd must be > 0");
+  });
+});
+
+describe("computeKyyMethod1 / computeKzzMethod1", () => {
+  it("returns finite values for valid N_Ed/N_cr ratios", () => {
+    expect(computeKyyMethod1(0.9, 1.0, 100_000, 1_000_000)).toBeGreaterThan(0);
+    expect(computeKzzMethod1(0.85, 100_000, 1_000_000)).toBeGreaterThan(0);
+  });
+
+  it("throws when denominator becomes non-positive", () => {
+    expect(() => computeKyyMethod1(0.9, 1.0, 1_000_000, 1_000_000)).toThrow("denominator");
+    expect(() => computeKzzMethod1(0.85, 1_000_000, 1_000_000)).toThrow("denominator");
   });
 });
 

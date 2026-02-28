@@ -1,0 +1,396 @@
+{
+  "id": "case-01-eurocodeapplied-ipe200",
+  "source": {
+    "pdf": "resources/ULS design of steel beam_column (IPE,HEA,HEB,HEM,UB,UC) - Eurocode 3.pdf",
+    "extractedAt": "2026-02-28",
+    "notes": [
+      "Source sign convention: compression negative.",
+      "Engine sign convention: compression negative (same as source).",
+      "Mapping applied: N_Ed_engine = N_source."
+    ]
+  },
+  "sourceInputs": {
+    "N_kN": 100,
+    "V_y_kN": 10,
+    "V_z_kN": 50,
+    "M_y_kNm": 20,
+    "M_z_kNm": 5,
+    "L_m": 5,
+    "section_shape": "I",
+    "section": "IPE200",
+    "section_class": 1
+  },
+  "engineInputs": {
+    "N_Ed": -100000,
+    "M_y_Ed": 20000000,
+    "M_z_Ed": 5000000,
+    "V_y_Ed": 10000,
+    "V_z_Ed": 50000,
+    "A": 2848,
+    "Wel_y": 194317,
+    "Wel_z": 28474,
+    "Wpl_y": 220639,
+    "Wpl_z": 44612,
+    "Av_y": 1700,
+    "Av_z": 1400,
+    "tw": 5.6,
+    "hw": 183,
+    "section_shape": "I",
+    "fy": 355,
+    "E": 210000,
+    "G": 80769,
+    "Iy": 19431683,
+    "Iz": 1423683,
+    "It": 68460,
+    "Iw": 12746000000,
+    "L": 5000,
+    "k_y": 1,
+    "k_z": 1,
+    "k_LT": 1,
+    "psi_y": 1,
+    "psi_z": 1,
+    "psi_LT": 1,
+    "alpha_y": 0.21,
+    "alpha_z": 0.34,
+    "alpha_LT": 0.34,
+    "section_class": 1,
+    "moment_shape_y": "uniform",
+    "support_condition_y": "pinned-pinned",
+    "moment_shape_z": "uniform",
+    "support_condition_z": "pinned-pinned",
+    "moment_shape_LT": "uniform",
+    "support_condition_LT": "pinned-pinned",
+    "load_application_LT": "centroid"
+  },
+  "annexCoefficients": {
+    "gamma_M0": 1.05,
+    "gamma_M1": 1.05,
+    "gamma_M2": 1.25,
+    "eta": 1.2,
+    "lambda_LT_0": 0.4,
+    "beta_LT": 0.75
+  },
+  "checks": [
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0,
+        "display": "0.000",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 6,
+        "clause": "6.2.3"
+      }
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.10385345782560532,
+        "display": "0.104",
+        "tolerance": 0.000001
+      },
+      "sourceAnchor": {
+        "page": 6,
+        "clause": "6.2.4"
+      }
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.2681073136547246,
+        "display": "0.268",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 6,
+        "clause": "6.2.5"
+      }
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.33149673617784897,
+        "display": "0.331",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 6,
+        "clause": "6.2.5"
+      }
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.1829631134755856,
+        "display": "0.183",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 7,
+        "clause": "6.2.6"
+      }
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.030135101043037633,
+        "display": "0.030",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 7,
+        "clause": "6.2.6"
+      }
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.2681073136547246,
+        "display": "0.268",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 7,
+        "clause": "6.2.8"
+      }
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.33149673617784897,
+        "display": "0.331",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 7,
+        "clause": "6.2.8"
+      }
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.2681073136547246,
+        "display": "0.268",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 8,
+        "clause": "6.2.9"
+      }
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.33149673617784897,
+        "display": "0.331",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 8,
+        "clause": "6.2.9"
+      }
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.40337826781300185,
+        "display": "0.403",
+        "tolerance": 0.01
+      },
+      "sourceAnchor": {
+        "page": 4,
+        "clause": "6.2.9"
+      }
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.2681073136547246,
+        "display": "0.268",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 8,
+        "clause": "6.2.10"
+      }
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.33149673617784897,
+        "display": "0.331",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 8,
+        "clause": "6.2.10"
+      }
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.40337826781300185,
+        "display": "0.403",
+        "tolerance": 0.01
+      },
+      "sourceAnchor": {
+        "page": 4,
+        "clause": "6.2.10"
+      }
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.12979644230861562,
+        "display": "0.130",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 9,
+        "clause": "6.3.1.3"
+      }
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.9970816228271112,
+        "display": "0.997",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 9,
+        "clause": "6.3.1.3"
+      }
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.9970816228271112,
+        "display": "0.997",
+        "tolerance": 0.001
+      },
+      "sourceAnchor": {
+        "page": 9,
+        "clause": "6.3.1.4"
+      }
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 0.7531948844936055,
+        "display": "0.753",
+        "tolerance": 0.001,
+        "intermediates": {
+          "M_cr": 27881230.253069103,
+          "chi_LT": 0.355960083073295,
+          "M_b_Rd": 26553552.62197057
+        }
+      },
+      "sourceAnchor": {
+        "page": 10,
+        "clause": "6.3.2"
+      }
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 4.617929226940529,
+        "display": "4.618",
+        "tolerance": 0.0015,
+        "intermediates": {
+          "k_yy": 1.2287319268204142,
+          "k_yz": 10.747189320818622
+        }
+      },
+      "sourceAnchor": {
+        "page": 13,
+        "clause": "6.3.3 / Annex A"
+      }
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 4.099671606500476,
+        "display": "4.100",
+        "tolerance": 0.0015,
+        "intermediates": {
+          "k_zy": 0.6492873023100062,
+          "k_zz": 7.88409001892748
+        }
+      },
+      "sourceAnchor": {
+        "page": 13,
+        "clause": "6.3.3 / Annex A"
+      }
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 1.4174294712037694,
+        "display": "1.417",
+        "tolerance": 0.0015
+      },
+      "sourceAnchor": {
+        "page": 14,
+        "clause": "6.3.3 / Annex B"
+      }
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "expected": {
+        "outcome": "ok",
+        "ratio": 2.4443813649385775,
+        "display": "2.444",
+        "tolerance": 0.0015
+      },
+      "sourceAnchor": {
+        "page": 14,
+        "clause": "6.3.3 / Annex B"
+      }
+    }
+  ]
+}

@@ -28,6 +28,7 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @ndg/ndg-ec3 benchmark:verify
       - run: pnpm test
 
   build:

@@ -1,0 +1,138 @@
+{
+  "date": "2026-02-28",
+  "source": "benchmark-fixtures",
+  "checks": [
+    {
+      "checkId": 1,
+      "verification": "ulsTension",
+      "ratio": 0.19781611014401013,
+      "intermediateCount": 6
+    },
+    {
+      "checkId": 2,
+      "verification": "ulsCompression",
+      "ratio": 0.19781611014401013,
+      "intermediateCount": 6
+    },
+    {
+      "checkId": 3,
+      "verification": "ulsBendingY",
+      "ratio": 0.25538544047603845,
+      "intermediateCount": 6
+    },
+    {
+      "checkId": 4,
+      "verification": "ulsBendingZ",
+      "ratio": 0.24409890887787733,
+      "intermediateCount": 6
+    },
+    {
+      "checkId": 5,
+      "verification": "ulsShearZ",
+      "ratio": 0.17131377666253336,
+      "intermediateCount": 6
+    },
+    {
+      "checkId": 6,
+      "verification": "ulsShearY",
+      "ratio": 0.017131377666253337,
+      "intermediateCount": 6
+    },
+    {
+      "checkId": 7,
+      "verification": "ulsBendingYShear",
+      "ratio": 0.25538544047603845,
+      "intermediateCount": 11
+    },
+    {
+      "checkId": 8,
+      "verification": "ulsBendingZShear",
+      "ratio": 0.24409890887787733,
+      "intermediateCount": 13
+    },
+    {
+      "checkId": 9,
+      "verification": "ulsBendingYAxial",
+      "ratio": 0.25538544047603845,
+      "intermediateCount": 13
+    },
+    {
+      "checkId": 10,
+      "verification": "ulsBendingZAxial",
+      "ratio": 0.24409890887787733,
+      "intermediateCount": 13
+    },
+    {
+      "checkId": 11,
+      "verification": "ulsBiaxialAxial",
+      "ratio": 0.3093206320850175,
+      "intermediateCount": 18
+    },
+    {
+      "checkId": 12,
+      "verification": "ulsBendingYAxialShear",
+      "ratio": 0.25538544047603845,
+      "intermediateCount": 17
+    },
+    {
+      "checkId": 13,
+      "verification": "ulsBendingZAxialShear",
+      "ratio": 0.24409890887787733,
+      "intermediateCount": 19
+    },
+    {
+      "checkId": 14,
+      "verification": "ulsBiaxialAxialShear",
+      "ratio": 0.3093206320850175,
+      "intermediateCount": 29
+    },
+    {
+      "checkId": 15,
+      "verification": "ulsBucklingY",
+      "ratio": 0.2123046761077887,
+      "intermediateCount": 16
+    },
+    {
+      "checkId": 16,
+      "verification": "ulsBucklingZ",
+      "ratio": 0.7518826506556789,
+      "intermediateCount": 16
+    },
+    {
+      "checkId": 17,
+      "verification": "ulsTorsionalBuckling",
+      "ratio": 0.7518826506556789,
+      "intermediateCount": 23
+    },
+    {
+      "checkId": 18,
+      "verification": "ulsLtb",
+      "ratio": 0.44656252271157887,
+      "intermediateCount": 22
+    },
+    {
+      "checkId": 19,
+      "verification": "ulsBeamColumn61M1",
+      "ratio": 1.3426507129106033,
+      "intermediateCount": 75
+    },
+    {
+      "checkId": 20,
+      "verification": "ulsBeamColumn62M1",
+      "ratio": 1.3735231277180233,
+      "intermediateCount": 52
+    },
+    {
+      "checkId": 21,
+      "verification": "ulsBeamColumn61M2",
+      "ratio": 0.6711381438950287,
+      "intermediateCount": 45
+    },
+    {
+      "checkId": 22,
+      "verification": "ulsBeamColumn62M2",
+      "ratio": 1.3630569895767481,
+      "intermediateCount": 44
+    }
+  ]
+}
