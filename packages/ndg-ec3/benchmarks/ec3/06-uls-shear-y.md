@@ -39,8 +39,8 @@
 4. `fy` (user-input) = 355
 5. `gamma_M0` (coefficient) = 1
 6. `sqrt3` (constant) = 1.732050808
-7. `V_pl_y_num` (derived) = 1.011040e+6
-8. `V_pl_y_den` (derived) = 1.732050808
+7. `V_pl_yProduct` (derived) = 1.011040e+6
+8. `V_pl_yFactor` (derived) = 1.732050808
 9. `V_pl_y_Rd` (formula) = 583724.216161479
 10. `abs_V_y_Ed` (derived) = 10000
 11. `class_guard` (derived) = 1
@@ -58,9 +58,9 @@
   "section_class": 1,
   "shear_y_check": 0.017131377666253337,
   "sqrt3": 1.7320508075688772,
-  "V_pl_y_den": 1.7320508075688772,
-  "V_pl_y_num": 1011040,
   "V_pl_y_Rd": 583724.2161614792,
+  "V_pl_yFactor": 1.7320508075688772,
+  "V_pl_yProduct": 1011040,
   "V_y_Ed": 10000
 }
 ```
@@ -79,8 +79,8 @@
 4. `fy` (user-input) = 355
 5. `gamma_M0` (coefficient) = 1
 6. `sqrt3` (constant) = 1.732050808
-7. `V_pl_y_num` (derived) = 1.011040e+6
-8. `V_pl_y_den` (derived) = 1.732050808
+7. `V_pl_yProduct` (derived) = 1.011040e+6
+8. `V_pl_yFactor` (derived) = 1.732050808
 9. `V_pl_y_Rd` (formula) = 583724.216161479
 10. `abs_V_y_Ed` (derived) = 10000
 11. `class_guard` (derived) = 1
@@ -98,9 +98,9 @@
   "section_class": 2,
   "shear_y_check": 0.017131377666253337,
   "sqrt3": 1.7320508075688772,
-  "V_pl_y_den": 1.7320508075688772,
-  "V_pl_y_num": 1011040,
   "V_pl_y_Rd": 583724.2161614792,
+  "V_pl_yFactor": 1.7320508075688772,
+  "V_pl_yProduct": 1011040,
   "V_y_Ed": 10000
 }
 ```
@@ -119,8 +119,8 @@
 4. `fy` (user-input) = 355
 5. `gamma_M0` (coefficient) = 1
 6. `sqrt3` (constant) = 1.732050808
-7. `V_pl_y_num` (derived) = 1.011040e+6
-8. `V_pl_y_den` (derived) = 1.732050808
+7. `V_pl_yProduct` (derived) = 1.011040e+6
+8. `V_pl_yFactor` (derived) = 1.732050808
 9. `V_pl_y_Rd` (formula) = 583724.216161479
 10. `abs_V_y_Ed` (derived) = 10000
 11. `class_guard` (derived) = 1
@@ -138,9 +138,9 @@
   "section_class": 3,
   "shear_y_check": 0.017131377666253337,
   "sqrt3": 1.7320508075688772,
-  "V_pl_y_den": 1.7320508075688772,
-  "V_pl_y_num": 1011040,
   "V_pl_y_Rd": 583724.2161614792,
+  "V_pl_yFactor": 1.7320508075688772,
+  "V_pl_yProduct": 1011040,
   "V_y_Ed": 10000
 }
 ```
@@ -166,8 +166,8 @@
 4. `fy` (user-input) = 355
 5. `gamma_M0` (coefficient) = 1
 6. `sqrt3` (constant) = 1.732050808
-7. `V_pl_y_num` (derived) = 1.011040e+6
-8. `V_pl_y_den` (derived) = 1.732050808
+7. `V_pl_yProduct` (derived) = 1.011040e+6
+8. `V_pl_yFactor` (derived) = 1.732050808
 9. `V_pl_y_Rd` (formula) = 583724.216161479
 10. `abs_V_y_Ed` (derived) = 10000
 11. `class_guard` (derived) = 1
@@ -185,9 +185,9 @@
   "section_class": 1,
   "shear_y_check": 0.017131377666253337,
   "sqrt3": 1.7320508075688772,
-  "V_pl_y_den": 1.7320508075688772,
-  "V_pl_y_num": 1011040,
   "V_pl_y_Rd": 583724.2161614792,
+  "V_pl_yFactor": 1.7320508075688772,
+  "V_pl_yProduct": 1011040,
   "V_y_Ed": 10000
 }
 ```
@@ -206,8 +206,8 @@
 4. `fy` (user-input) = 355
 5. `gamma_M0` (coefficient) = 1
 6. `sqrt3` (constant) = 1.732050808
-7. `V_pl_y_num` (derived) = 1.011040e+6
-8. `V_pl_y_den` (derived) = 1.732050808
+7. `V_pl_yProduct` (derived) = 1.011040e+6
+8. `V_pl_yFactor` (derived) = 1.732050808
 9. `V_pl_y_Rd` (formula) = 583724.216161479
 10. `abs_V_y_Ed` (derived) = 10000
 11. `class_guard` (derived) = 1
@@ -225,9 +225,9 @@
   "section_class": 2,
   "shear_y_check": 0.017131377666253337,
   "sqrt3": 1.7320508075688772,
-  "V_pl_y_den": 1.7320508075688772,
-  "V_pl_y_num": 1011040,
   "V_pl_y_Rd": 583724.2161614792,
+  "V_pl_yFactor": 1.7320508075688772,
+  "V_pl_yProduct": 1011040,
   "V_y_Ed": 10000
 }
 ```
@@ -246,8 +246,8 @@
 4. `fy` (user-input) = 355
 5. `gamma_M0` (coefficient) = 1
 6. `sqrt3` (constant) = 1.732050808
-7. `V_pl_y_num` (derived) = 1.011040e+6
-8. `V_pl_y_den` (derived) = 1.732050808
+7. `V_pl_yProduct` (derived) = 1.011040e+6
+8. `V_pl_yFactor` (derived) = 1.732050808
 9. `V_pl_y_Rd` (formula) = 583724.216161479
 10. `abs_V_y_Ed` (derived) = 10000
 11. `class_guard` (derived) = 1
@@ -265,9 +265,9 @@
   "section_class": 3,
   "shear_y_check": 0.017131377666253337,
   "sqrt3": 1.7320508075688772,
-  "V_pl_y_den": 1.7320508075688772,
-  "V_pl_y_num": 1011040,
   "V_pl_y_Rd": 583724.2161614792,
+  "V_pl_yFactor": 1.7320508075688772,
+  "V_pl_yProduct": 1011040,
   "V_y_Ed": 10000
 }
 ```
@@ -293,8 +293,8 @@
 4. `fy` (user-input) = 355
 5. `gamma_M0` (coefficient) = 1
 6. `sqrt3` (constant) = 1.732050808
-7. `V_pl_y_num` (derived) = 1.011040e+6
-8. `V_pl_y_den` (derived) = 1.732050808
+7. `V_pl_yProduct` (derived) = 1.011040e+6
+8. `V_pl_yFactor` (derived) = 1.732050808
 9. `V_pl_y_Rd` (formula) = 583724.216161479
 10. `abs_V_y_Ed` (derived) = 10000
 11. `class_guard` (derived) = 1
@@ -312,9 +312,9 @@
   "section_class": 1,
   "shear_y_check": 0.017131377666253337,
   "sqrt3": 1.7320508075688772,
-  "V_pl_y_den": 1.7320508075688772,
-  "V_pl_y_num": 1011040,
   "V_pl_y_Rd": 583724.2161614792,
+  "V_pl_yFactor": 1.7320508075688772,
+  "V_pl_yProduct": 1011040,
   "V_y_Ed": 10000
 }
 ```
@@ -333,8 +333,8 @@
 4. `fy` (user-input) = 355
 5. `gamma_M0` (coefficient) = 1
 6. `sqrt3` (constant) = 1.732050808
-7. `V_pl_y_num` (derived) = 1.011040e+6
-8. `V_pl_y_den` (derived) = 1.732050808
+7. `V_pl_yProduct` (derived) = 1.011040e+6
+8. `V_pl_yFactor` (derived) = 1.732050808
 9. `V_pl_y_Rd` (formula) = 583724.216161479
 10. `abs_V_y_Ed` (derived) = 10000
 11. `class_guard` (derived) = 1
@@ -352,9 +352,9 @@
   "section_class": 2,
   "shear_y_check": 0.017131377666253337,
   "sqrt3": 1.7320508075688772,
-  "V_pl_y_den": 1.7320508075688772,
-  "V_pl_y_num": 1011040,
   "V_pl_y_Rd": 583724.2161614792,
+  "V_pl_yFactor": 1.7320508075688772,
+  "V_pl_yProduct": 1011040,
   "V_y_Ed": 10000
 }
 ```
@@ -373,8 +373,8 @@
 4. `fy` (user-input) = 355
 5. `gamma_M0` (coefficient) = 1
 6. `sqrt3` (constant) = 1.732050808
-7. `V_pl_y_num` (derived) = 1.011040e+6
-8. `V_pl_y_den` (derived) = 1.732050808
+7. `V_pl_yProduct` (derived) = 1.011040e+6
+8. `V_pl_yFactor` (derived) = 1.732050808
 9. `V_pl_y_Rd` (formula) = 583724.216161479
 10. `abs_V_y_Ed` (derived) = 10000
 11. `class_guard` (derived) = 1
@@ -392,9 +392,9 @@
   "section_class": 3,
   "shear_y_check": 0.017131377666253337,
   "sqrt3": 1.7320508075688772,
-  "V_pl_y_den": 1.7320508075688772,
-  "V_pl_y_num": 1011040,
   "V_pl_y_Rd": 583724.2161614792,
+  "V_pl_yFactor": 1.7320508075688772,
+  "V_pl_yProduct": 1011040,
   "V_y_Ed": 10000
 }
 ```

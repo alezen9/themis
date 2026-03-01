@@ -21,14 +21,14 @@ const nodes = [
   input(p, "fy", "Yield strength", { symbol: "f_y", unit: "MPa" }),
   coeff(p, "gamma_M0", "Partial safety factor", { sectionRef: "6.1" }, { symbol: "\\gamma_{M0}" }),
   constant(p, "sqrt3", "Square root of three", { symbol: "\\sqrt{3}" }),
-  derived(p, "V_pl_z_num", "Numerator of V_pl,z,Rd", ["Av_z", "fy"], {
+  derived(p, "V_pl_zProduct", "Numerator of V_pl,z,Rd", ["Av_z", "fy"], {
     expression: "A_{v,z}f_y",
     unit: "N",
   }),
-  derived(p, "V_pl_z_den", "Denominator of V_pl,z,Rd", ["sqrt3", "gamma_M0"], {
+  derived(p, "V_pl_zFactor", "Denominator of V_pl,z,Rd", ["sqrt3", "gamma_M0"], {
     expression: "\\sqrt{3}\\gamma_{M0}",
   }),
-  formula(p, "V_pl_z_Rd", "Plastic shear resistance in z", ["V_pl_z_num", "V_pl_z_den"], {
+  formula(p, "V_pl_z_Rd", "Plastic shear resistance in z", ["V_pl_zProduct", "V_pl_zFactor"], {
     symbol: "V_{pl,z,Rd}",
     expression: "\\frac{A_{v,z} f_y / \\sqrt{3}}{\\gamma_{M0}}",
     unit: "N",
@@ -72,11 +72,11 @@ const nodes = [
     expression: "W_{res,y}-\\rho\\frac{A_{v,z}^2}{4t_w}",
     unit: "mm³",
   }),
-  derived(p, "M_y_V_num", "Numerator of M_y,V,Rd", ["Wpl_y_eff", "fy"], {
+  derived(p, "M_y_VProduct", "Numerator of M_y,V,Rd", ["Wpl_y_eff", "fy"], {
     expression: "\\left(W_{pl,y}-\\rho\\frac{A_{v,z}^2}{4t_w}\\right)f_y",
     unit: "N·mm",
   }),
-  formula(p, "M_y_V_Rd", "Reduced plastic resistance moment about y-y allowing for shear", ["class_guard", "M_y_V_num", "gamma_M0"], {
+  formula(p, "M_y_V_Rd", "Reduced plastic resistance moment about y-y allowing for shear", ["class_guard", "M_y_VProduct", "gamma_M0"], {
     symbol: "M_{y,V,Rd}",
     expression: "\\frac{\\left(W_{res,y} - \\rho \\dfrac{A_{v,z}^2}{4 t_w}\\right) f_y}{\\gamma_{M0}}",
     unit: "N·mm",
@@ -94,9 +94,9 @@ const nodes = [
 export const ulsBendingYShear: VerificationDefinition<typeof nodes> = {
   nodes,
   evaluate: {
-    V_pl_z_num: ({ Av_z, fy }) => Av_z * fy,
-    V_pl_z_den: ({ sqrt3, gamma_M0 }) => sqrt3 * gamma_M0,
-    V_pl_z_Rd: ({ V_pl_z_num, V_pl_z_den }) => V_pl_z_num / V_pl_z_den,
+    V_pl_zProduct: ({ Av_z, fy }) => Av_z * fy,
+    V_pl_zFactor: ({ sqrt3, gamma_M0 }) => sqrt3 * gamma_M0,
+    V_pl_z_Rd: ({ V_pl_zProduct, V_pl_zFactor }) => V_pl_zProduct / V_pl_zFactor,
     abs_V_z_Ed: ({ V_z_Ed }) => Math.abs(V_z_Ed),
     rho_ratio: ({ abs_V_z_Ed, V_pl_z_Rd }) => abs_V_z_Ed / V_pl_z_Rd,
     rho_linear: ({ rho_ratio }) => 2 * rho_ratio - 1,
@@ -116,8 +116,8 @@ export const ulsBendingYShear: VerificationDefinition<typeof nodes> = {
     },
     W_y_res: ({ section_class, Wpl_y, Wel_y }) => (section_class === 3 ? Wel_y : Wpl_y),
     Wpl_y_eff: ({ W_y_res, rho_mod_reduction }) => W_y_res - rho_mod_reduction,
-    M_y_V_num: ({ Wpl_y_eff, fy }) => Wpl_y_eff * fy,
-    M_y_V_Rd: ({ class_guard, M_y_V_num, gamma_M0 }) => class_guard * (M_y_V_num / gamma_M0),
+    M_y_VProduct: ({ Wpl_y_eff, fy }) => Wpl_y_eff * fy,
+    M_y_V_Rd: ({ class_guard, M_y_VProduct, gamma_M0 }) => class_guard * (M_y_VProduct / gamma_M0),
     abs_M_y_Ed: ({ M_y_Ed }) => Math.abs(M_y_Ed),
     bending_y_shear_check: ({ abs_M_y_Ed, M_y_V_Rd }) => abs_M_y_Ed / M_y_V_Rd,
   },

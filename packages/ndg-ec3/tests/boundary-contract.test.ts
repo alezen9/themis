@@ -75,8 +75,9 @@ describe("boundary contract", () => {
 
   it("keeps axial factor = 1 at n = a_f boundary in bending-z-axial", () => {
     const Npl = (Number(baseInputs.A) * Number(baseInputs.fy)) / Number(annex.coefficients.gamma_M0);
+    const af = (Number(baseInputs.A) - Number(baseInputs.Av_y)) / Number(baseInputs.A);
     const result = evaluate(ulsBendingZAxial, {
-      inputs: { ...baseInputs, N_Ed: -0.5 * Npl },
+      inputs: { ...baseInputs, N_Ed: -af * Npl },
       annex,
     });
     expect(result.cache.n).toBeCloseTo(result.cache.a_f as number, 10);

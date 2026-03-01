@@ -54,17 +54,17 @@
 19. `C1` (derived) = 1
 20. `Lcr_LT` (derived) = 3000
 21. `Lcr_LT_sq` (derived) = 9.000000e+6
-22. `euler_num` (derived) = 2.951407e+12
+22. `eulerProduct` (derived) = 2.951407e+12
 23. `euler_term` (derived) = 327934.055566862
 24. `torsion_ratio` (derived) = 9122.191011236
-25. `torsion_num` (derived) = 5.088420e+16
-26. `torsion_den` (derived) = 2.951407e+12
+25. `torsionProduct` (derived) = 5.088420e+16
+26. `torsionFactor` (derived) = 2.951407e+12
 27. `torsion_add` (derived) = 17240.661358659
 28. `torsion_sum` (derived) = 26362.852369895
 29. `torsion_root` (derived) = 162.366413922
 30. `M_cr_prefactor` (derived) = 327934.055566862
 31. `M_cr` (derived) = 5.324548e+7
-32. `lambda_LT_num` (derived) = 7.831300e+7
+32. `lambda_LTProduct` (derived) = 7.831300e+7
 33. `lambda_bar_LT_sq` (derived) = 1.470791605
 34. `lambda_bar_LT` (derived) = 1.212761974
 35. `lambda_LT_delta` (derived) = 0.812761974
@@ -76,13 +76,13 @@
 41. `phi_LT_sq` (derived) = 1.415425083
 42. `chi_LT_radicand` (derived) = 0.312331379
 43. `chi_LT_root` (derived) = 0.558866155
-44. `chi_LT_den` (derived) = 1.748582542
+44. `chi_LTFactor` (derived) = 1.748582542
 45. `chi_LT_base` (formula) = 0.57189179
 46. `chi_LT_cap` (derived) = 0.679905975
 47. `chi_LT` (derived) = 0.57189179
 48. `f_LT` (derived) = 1
 49. `chi_LT_mod` (formula) = 0.57189179
-50. `M_b_num` (derived) = 4.478656e+7
+50. `M_bProduct` (derived) = 4.478656e+7
 51. `M_b_Rd` (formula) = 4.478656e+7
 52. `abs_M_y_Ed` (derived) = 2.000000e+7
 53. `ltb_check` (check) = 0.446562523
@@ -99,13 +99,13 @@
   "chi_LT": 0.571891790034929,
   "chi_LT_base": 0.571891790034929,
   "chi_LT_cap": 0.6799059748099839,
-  "chi_LT_den": 1.7485825420555938,
   "chi_LT_mod": 0.571891790034929,
   "chi_LT_radicand": 0.312331378759521,
   "chi_LT_root": 0.5588661546019056,
+  "chi_LTFactor": 1.7485825420555938,
   "E": 210000,
-  "euler_num": 2951406500101.761,
   "euler_term": 327934.05556686234,
+  "eulerProduct": 2951406500101.761,
   "f_LT": 1,
   "fy": 355,
   "G": 81000,
@@ -120,12 +120,12 @@
   "lambda_bar_LT_sq": 1.4707916050884449,
   "lambda_LT_0": 0.4,
   "lambda_LT_delta": 0.8127619737971853,
-  "lambda_LT_num": 78313000,
+  "lambda_LTProduct": 78313000,
   "Lcr_LT": 3000,
   "Lcr_LT_sq": 9000000,
   "ltb_check": 0.44656252271157887,
-  "M_b_num": 44786561.75300539,
   "M_b_Rd": 44786561.75300539,
+  "M_bProduct": 44786561.75300539,
   "M_cr": 53245476.60529427,
   "M_cr_prefactor": 327934.05556686234,
   "M_y_Ed": 20000000,
@@ -138,11 +138,11 @@
   "psi_LT": 1,
   "section_class": 1,
   "torsion_add": 17240.661358659192,
-  "torsion_den": 2951406500101.761,
-  "torsion_num": 50884200000000000,
   "torsion_ratio": 9122.191011235955,
   "torsion_root": 162.3664139220151,
   "torsion_sum": 26362.852369895147,
+  "torsionFactor": 2951406500101.761,
+  "torsionProduct": 50884200000000000,
   "Wpl_y": 220600
 }
 ```
@@ -176,17 +176,17 @@
 19. `C1` (derived) = 1
 20. `Lcr_LT` (derived) = 3000
 21. `Lcr_LT_sq` (derived) = 9.000000e+6
-22. `euler_num` (derived) = 2.951407e+12
+22. `eulerProduct` (derived) = 2.951407e+12
 23. `euler_term` (derived) = 327934.055566862
 24. `torsion_ratio` (derived) = 9122.191011236
-25. `torsion_num` (derived) = 5.088420e+16
-26. `torsion_den` (derived) = 2.951407e+12
+25. `torsionProduct` (derived) = 5.088420e+16
+26. `torsionFactor` (derived) = 2.951407e+12
 27. `torsion_add` (derived) = 17240.661358659
 28. `torsion_sum` (derived) = 26362.852369895
 29. `torsion_root` (derived) = 162.366413922
 30. `M_cr_prefactor` (derived) = 327934.055566862
 31. `M_cr` (derived) = 5.324548e+7
-32. `lambda_LT_num` (derived) = 7.831300e+7
+32. `lambda_LTProduct` (derived) = 7.831300e+7
 33. `lambda_bar_LT_sq` (derived) = 1.470791605
 34. `lambda_bar_LT` (derived) = 1.212761974
 35. `lambda_LT_delta` (derived) = 0.812761974
@@ -198,13 +198,13 @@
 41. `phi_LT_sq` (derived) = 1.415425083
 42. `chi_LT_radicand` (derived) = 0.312331379
 43. `chi_LT_root` (derived) = 0.558866155
-44. `chi_LT_den` (derived) = 1.748582542
+44. `chi_LTFactor` (derived) = 1.748582542
 45. `chi_LT_base` (formula) = 0.57189179
 46. `chi_LT_cap` (derived) = 0.679905975
 47. `chi_LT` (derived) = 0.57189179
 48. `f_LT` (derived) = 1
 49. `chi_LT_mod` (formula) = 0.57189179
-50. `M_b_num` (derived) = 4.478656e+7
+50. `M_bProduct` (derived) = 4.478656e+7
 51. `M_b_Rd` (formula) = 4.478656e+7
 52. `abs_M_y_Ed` (derived) = 2.000000e+7
 53. `ltb_check` (check) = 0.446562523
@@ -221,13 +221,13 @@
   "chi_LT": 0.571891790034929,
   "chi_LT_base": 0.571891790034929,
   "chi_LT_cap": 0.6799059748099839,
-  "chi_LT_den": 1.7485825420555938,
   "chi_LT_mod": 0.571891790034929,
   "chi_LT_radicand": 0.312331378759521,
   "chi_LT_root": 0.5588661546019056,
+  "chi_LTFactor": 1.7485825420555938,
   "E": 210000,
-  "euler_num": 2951406500101.761,
   "euler_term": 327934.05556686234,
+  "eulerProduct": 2951406500101.761,
   "f_LT": 1,
   "fy": 355,
   "G": 81000,
@@ -242,12 +242,12 @@
   "lambda_bar_LT_sq": 1.4707916050884449,
   "lambda_LT_0": 0.4,
   "lambda_LT_delta": 0.8127619737971853,
-  "lambda_LT_num": 78313000,
+  "lambda_LTProduct": 78313000,
   "Lcr_LT": 3000,
   "Lcr_LT_sq": 9000000,
   "ltb_check": 0.44656252271157887,
-  "M_b_num": 44786561.75300539,
   "M_b_Rd": 44786561.75300539,
+  "M_bProduct": 44786561.75300539,
   "M_cr": 53245476.60529427,
   "M_cr_prefactor": 327934.05556686234,
   "M_y_Ed": 20000000,
@@ -260,11 +260,11 @@
   "psi_LT": 1,
   "section_class": 2,
   "torsion_add": 17240.661358659192,
-  "torsion_den": 2951406500101.761,
-  "torsion_num": 50884200000000000,
   "torsion_ratio": 9122.191011235955,
   "torsion_root": 162.3664139220151,
   "torsion_sum": 26362.852369895147,
+  "torsionFactor": 2951406500101.761,
+  "torsionProduct": 50884200000000000,
   "Wpl_y": 220600
 }
 ```
@@ -298,17 +298,17 @@
 19. `C1` (derived) = 1
 20. `Lcr_LT` (derived) = 3000
 21. `Lcr_LT_sq` (derived) = 9.000000e+6
-22. `euler_num` (derived) = 2.951407e+12
+22. `eulerProduct` (derived) = 2.951407e+12
 23. `euler_term` (derived) = 327934.055566862
 24. `torsion_ratio` (derived) = 9122.191011236
-25. `torsion_num` (derived) = 5.088420e+16
-26. `torsion_den` (derived) = 2.951407e+12
+25. `torsionProduct` (derived) = 5.088420e+16
+26. `torsionFactor` (derived) = 2.951407e+12
 27. `torsion_add` (derived) = 17240.661358659
 28. `torsion_sum` (derived) = 26362.852369895
 29. `torsion_root` (derived) = 162.366413922
 30. `M_cr_prefactor` (derived) = 327934.055566862
 31. `M_cr` (derived) = 5.324548e+7
-32. `lambda_LT_num` (derived) = 7.831300e+7
+32. `lambda_LTProduct` (derived) = 7.831300e+7
 33. `lambda_bar_LT_sq` (derived) = 1.470791605
 34. `lambda_bar_LT` (derived) = 1.212761974
 35. `lambda_LT_delta` (derived) = 0.812761974
@@ -320,13 +320,13 @@
 41. `phi_LT_sq` (derived) = 1.415425083
 42. `chi_LT_radicand` (derived) = 0.312331379
 43. `chi_LT_root` (derived) = 0.558866155
-44. `chi_LT_den` (derived) = 1.748582542
+44. `chi_LTFactor` (derived) = 1.748582542
 45. `chi_LT_base` (formula) = 0.57189179
 46. `chi_LT_cap` (derived) = 0.679905975
 47. `chi_LT` (derived) = 0.57189179
 48. `f_LT` (derived) = 1
 49. `chi_LT_mod` (formula) = 0.57189179
-50. `M_b_num` (derived) = 4.478656e+7
+50. `M_bProduct` (derived) = 4.478656e+7
 51. `M_b_Rd` (formula) = 4.478656e+7
 52. `abs_M_y_Ed` (derived) = 2.000000e+7
 53. `ltb_check` (check) = 0.446562523
@@ -343,13 +343,13 @@
   "chi_LT": 0.571891790034929,
   "chi_LT_base": 0.571891790034929,
   "chi_LT_cap": 0.6799059748099839,
-  "chi_LT_den": 1.7485825420555938,
   "chi_LT_mod": 0.571891790034929,
   "chi_LT_radicand": 0.312331378759521,
   "chi_LT_root": 0.5588661546019056,
+  "chi_LTFactor": 1.7485825420555938,
   "E": 210000,
-  "euler_num": 2951406500101.761,
   "euler_term": 327934.05556686234,
+  "eulerProduct": 2951406500101.761,
   "f_LT": 1,
   "fy": 355,
   "G": 81000,
@@ -364,12 +364,12 @@
   "lambda_bar_LT_sq": 1.4707916050884449,
   "lambda_LT_0": 0.4,
   "lambda_LT_delta": 0.8127619737971853,
-  "lambda_LT_num": 78313000,
+  "lambda_LTProduct": 78313000,
   "Lcr_LT": 3000,
   "Lcr_LT_sq": 9000000,
   "ltb_check": 0.44656252271157887,
-  "M_b_num": 44786561.75300539,
   "M_b_Rd": 44786561.75300539,
+  "M_bProduct": 44786561.75300539,
   "M_cr": 53245476.60529427,
   "M_cr_prefactor": 327934.05556686234,
   "M_y_Ed": 20000000,
@@ -382,11 +382,11 @@
   "psi_LT": 1,
   "section_class": 3,
   "torsion_add": 17240.661358659192,
-  "torsion_den": 2951406500101.761,
-  "torsion_num": 50884200000000000,
   "torsion_ratio": 9122.191011235955,
   "torsion_root": 162.3664139220151,
   "torsion_sum": 26362.852369895147,
+  "torsionFactor": 2951406500101.761,
+  "torsionProduct": 50884200000000000,
   "Wpl_y": 220600
 }
 ```

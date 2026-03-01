@@ -75,11 +75,11 @@
 40. `Cm_y` (table) = 0.64
 41. `Cm_z` (table) = 0.52
 42. `Cm_LT` (table) = 1
-43. `euler_num` (derived) = 2.951407e+12
+43. `eulerProduct` (derived) = 2.951407e+12
 44. `euler_term` (derived) = 327934.055566862
 45. `torsion_ratio` (derived) = 9122.191011236
-46. `torsion_num` (derived) = 5.088420e+16
-47. `torsion_den` (derived) = 2.951407e+12
+46. `torsionProduct` (derived) = 5.088420e+16
+47. `torsionFactor` (derived) = 2.951407e+12
 48. `torsion_add` (derived) = 17240.661358659
 49. `torsion_sum` (derived) = 26362.852369895
 50. `torsion_root` (derived) = 162.366413922
@@ -88,9 +88,9 @@
 53. `N_Rk` (derived) = 1.011040e+6
 54. `M_y_Rk` (derived) = 7.831300e+7
 55. `M_z_Rk` (derived) = 2.048350e+7
-56. `N_cr_y_num` (derived) = 4.027095e+13
+56. `N_cr_yProduct` (derived) = 4.027095e+13
 57. `N_cr_y` (derived) = 4.474550e+6
-58. `N_cr_z_num` (derived) = 2.951407e+12
+58. `N_cr_zProduct` (derived) = 2.951407e+12
 59. `N_cr_z` (derived) = 327934.055566862
 60. `lambda_bar_z_sq` (derived) = 3.083058874
 61. `lambda_bar_z` (derived) = 1.755864139
@@ -100,7 +100,7 @@
 65. `phi_y_sq` (derived) = 0.412020235
 66. `chi_y_radicand` (derived) = 0.186066769
 67. `chi_y_root` (derived) = 0.431354575
-68. `chi_y_den` (derived) = 1.073242599
+68. `chi_yFactor` (derived) = 1.073242599
 69. `chi_y_base` (derived) = 0.931755785
 70. `chi_y` (derived) = 0.931755785
 71. `phi_z_alpha` (derived) = 0.528993807
@@ -109,7 +109,7 @@
 74. `phi_z_sq` (derived) = 5.317757483
 75. `chi_z_radicand` (derived) = 2.234698609
 76. `chi_z_root` (derived) = 1.494890835
-77. `chi_z_den` (derived) = 3.800917176
+77. `chi_zFactor` (derived) = 3.800917176
 78. `chi_z_base` (derived) = 0.263094394
 79. `chi_z` (derived) = 0.263094394
 80. `lambda_LT_sq` (derived) = 1.470791605
@@ -122,7 +122,7 @@
 87. `phi_LT_sq` (derived) = 1.415425083
 88. `chi_LT_radicand` (derived) = 0.312331379
 89. `chi_LT_root` (derived) = 0.558866155
-90. `chi_LT_den` (derived) = 1.748582542
+90. `chi_LTFactor` (derived) = 1.748582542
 91. `chi_LT_base` (derived) = 0.57189179
 92. `chi_LT_cap` (derived) = 0.679905975
 93. `chi_LT` (derived) = 0.57189179
@@ -135,7 +135,7 @@
 100. `k_zz_branch1` (derived) = 1.06737057
 101. `k_zz_branch2` (derived) = 1.06737057
 102. `k_zz` (table) = 1.06737057
-103. `k_zy_cm_denom` (derived) = 0.75
+103. `k_zy_cmReserve` (derived) = 0.75
 104. `k_zy_lambda_ratio` (derived) = 0.234115218
 105. `k_zy_n_factor` (derived) = 0.176027171
 106. `k_zy_low_a` (derived) = 2.355864139
@@ -167,26 +167,26 @@
   "chi_LT": 0.571891790034929,
   "chi_LT_base": 0.571891790034929,
   "chi_LT_cap": 0.6799059748099839,
-  "chi_LT_den": 1.7485825420555938,
   "chi_LT_mod": 0.571891790034929,
   "chi_LT_radicand": 0.312331378759521,
   "chi_LT_root": 0.5588661546019056,
+  "chi_LTFactor": 1.7485825420555938,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_radicand": 0.18606676936110092,
   "chi_y_root": 0.4313545749857082,
+  "chi_yFactor": 1.0732425986600935,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_radicand": 2.234698609062864,
   "chi_z_root": 1.4948908351658539,
+  "chi_zFactor": 3.8009171755945887,
   "Cm_LT": 1,
   "Cm_y": 0.64,
   "Cm_z": 0.52,
   "E": 210000,
-  "euler_num": 2951406500101.761,
   "euler_term": 327934.05556686234,
+  "eulerProduct": 2951406500101.761,
   "f_LT": 1,
   "fy": 355,
   "G": 81000,
@@ -200,7 +200,7 @@
   "k_y": 1,
   "k_z": 1,
   "k_zy": 0.8997489799125762,
-  "k_zy_cm_denom": 0.75,
+  "k_zy_cmReserve": 0.75,
   "k_zy_high_a": 0.8997489799125762,
   "k_zy_high_b": 0.8997489799125762,
   "k_zy_high_lambda_cap": 1,
@@ -233,9 +233,9 @@
   "M_z_Rk": 20483500,
   "N_b_z_Rd": 265998.95585513255,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "N_Rk": 1011040,
   "n_z": 0.7518826506556789,
@@ -261,11 +261,11 @@
   "psi_z_eff": -0.2,
   "section_class": 1,
   "torsion_add": 17240.661358659192,
-  "torsion_den": 2951406500101.761,
-  "torsion_num": 50884200000000000,
   "torsion_ratio": 9122.191011235955,
   "torsion_root": 162.3664139220151,
   "torsion_sum": 26362.852369895147,
+  "torsionFactor": 2951406500101.761,
+  "torsionProduct": 50884200000000000,
   "Wpl_y": 220600,
   "Wpl_z": 57700
 }
@@ -321,11 +321,11 @@
 40. `Cm_y` (table) = 0.64
 41. `Cm_z` (table) = 0.52
 42. `Cm_LT` (table) = 1
-43. `euler_num` (derived) = 2.951407e+12
+43. `eulerProduct` (derived) = 2.951407e+12
 44. `euler_term` (derived) = 327934.055566862
 45. `torsion_ratio` (derived) = 9122.191011236
-46. `torsion_num` (derived) = 5.088420e+16
-47. `torsion_den` (derived) = 2.951407e+12
+46. `torsionProduct` (derived) = 5.088420e+16
+47. `torsionFactor` (derived) = 2.951407e+12
 48. `torsion_add` (derived) = 17240.661358659
 49. `torsion_sum` (derived) = 26362.852369895
 50. `torsion_root` (derived) = 162.366413922
@@ -334,9 +334,9 @@
 53. `N_Rk` (derived) = 1.011040e+6
 54. `M_y_Rk` (derived) = 7.831300e+7
 55. `M_z_Rk` (derived) = 2.048350e+7
-56. `N_cr_y_num` (derived) = 4.027095e+13
+56. `N_cr_yProduct` (derived) = 4.027095e+13
 57. `N_cr_y` (derived) = 4.474550e+6
-58. `N_cr_z_num` (derived) = 2.951407e+12
+58. `N_cr_zProduct` (derived) = 2.951407e+12
 59. `N_cr_z` (derived) = 327934.055566862
 60. `lambda_bar_z_sq` (derived) = 3.083058874
 61. `lambda_bar_z` (derived) = 1.755864139
@@ -346,7 +346,7 @@
 65. `phi_y_sq` (derived) = 0.412020235
 66. `chi_y_radicand` (derived) = 0.186066769
 67. `chi_y_root` (derived) = 0.431354575
-68. `chi_y_den` (derived) = 1.073242599
+68. `chi_yFactor` (derived) = 1.073242599
 69. `chi_y_base` (derived) = 0.931755785
 70. `chi_y` (derived) = 0.931755785
 71. `phi_z_alpha` (derived) = 0.528993807
@@ -355,7 +355,7 @@
 74. `phi_z_sq` (derived) = 5.317757483
 75. `chi_z_radicand` (derived) = 2.234698609
 76. `chi_z_root` (derived) = 1.494890835
-77. `chi_z_den` (derived) = 3.800917176
+77. `chi_zFactor` (derived) = 3.800917176
 78. `chi_z_base` (derived) = 0.263094394
 79. `chi_z` (derived) = 0.263094394
 80. `lambda_LT_sq` (derived) = 1.470791605
@@ -368,7 +368,7 @@
 87. `phi_LT_sq` (derived) = 1.415425083
 88. `chi_LT_radicand` (derived) = 0.312331379
 89. `chi_LT_root` (derived) = 0.558866155
-90. `chi_LT_den` (derived) = 1.748582542
+90. `chi_LTFactor` (derived) = 1.748582542
 91. `chi_LT_base` (derived) = 0.57189179
 92. `chi_LT_cap` (derived) = 0.679905975
 93. `chi_LT` (derived) = 0.57189179
@@ -381,7 +381,7 @@
 100. `k_zz_branch1` (derived) = 1.06737057
 101. `k_zz_branch2` (derived) = 1.06737057
 102. `k_zz` (table) = 1.06737057
-103. `k_zy_cm_denom` (derived) = 0.75
+103. `k_zy_cmReserve` (derived) = 0.75
 104. `k_zy_lambda_ratio` (derived) = 0.234115218
 105. `k_zy_n_factor` (derived) = 0.176027171
 106. `k_zy_low_a` (derived) = 2.355864139
@@ -413,26 +413,26 @@
   "chi_LT": 0.571891790034929,
   "chi_LT_base": 0.571891790034929,
   "chi_LT_cap": 0.6799059748099839,
-  "chi_LT_den": 1.7485825420555938,
   "chi_LT_mod": 0.571891790034929,
   "chi_LT_radicand": 0.312331378759521,
   "chi_LT_root": 0.5588661546019056,
+  "chi_LTFactor": 1.7485825420555938,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_radicand": 0.18606676936110092,
   "chi_y_root": 0.4313545749857082,
+  "chi_yFactor": 1.0732425986600935,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_radicand": 2.234698609062864,
   "chi_z_root": 1.4948908351658539,
+  "chi_zFactor": 3.8009171755945887,
   "Cm_LT": 1,
   "Cm_y": 0.64,
   "Cm_z": 0.52,
   "E": 210000,
-  "euler_num": 2951406500101.761,
   "euler_term": 327934.05556686234,
+  "eulerProduct": 2951406500101.761,
   "f_LT": 1,
   "fy": 355,
   "G": 81000,
@@ -446,7 +446,7 @@
   "k_y": 1,
   "k_z": 1,
   "k_zy": 0.8997489799125762,
-  "k_zy_cm_denom": 0.75,
+  "k_zy_cmReserve": 0.75,
   "k_zy_high_a": 0.8997489799125762,
   "k_zy_high_b": 0.8997489799125762,
   "k_zy_high_lambda_cap": 1,
@@ -479,9 +479,9 @@
   "M_z_Rk": 20483500,
   "N_b_z_Rd": 265998.95585513255,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "N_Rk": 1011040,
   "n_z": 0.7518826506556789,
@@ -507,11 +507,11 @@
   "psi_z_eff": -0.2,
   "section_class": 2,
   "torsion_add": 17240.661358659192,
-  "torsion_den": 2951406500101.761,
-  "torsion_num": 50884200000000000,
   "torsion_ratio": 9122.191011235955,
   "torsion_root": 162.3664139220151,
   "torsion_sum": 26362.852369895147,
+  "torsionFactor": 2951406500101.761,
+  "torsionProduct": 50884200000000000,
   "Wpl_y": 220600,
   "Wpl_z": 57700
 }
@@ -567,11 +567,11 @@
 40. `Cm_y` (table) = 0.64
 41. `Cm_z` (table) = 0.52
 42. `Cm_LT` (table) = 1
-43. `euler_num` (derived) = 2.951407e+12
+43. `eulerProduct` (derived) = 2.951407e+12
 44. `euler_term` (derived) = 327934.055566862
 45. `torsion_ratio` (derived) = 9122.191011236
-46. `torsion_num` (derived) = 5.088420e+16
-47. `torsion_den` (derived) = 2.951407e+12
+46. `torsionProduct` (derived) = 5.088420e+16
+47. `torsionFactor` (derived) = 2.951407e+12
 48. `torsion_add` (derived) = 17240.661358659
 49. `torsion_sum` (derived) = 26362.852369895
 50. `torsion_root` (derived) = 162.366413922
@@ -580,9 +580,9 @@
 53. `N_Rk` (derived) = 1.011040e+6
 54. `M_y_Rk` (derived) = 7.831300e+7
 55. `M_z_Rk` (derived) = 2.048350e+7
-56. `N_cr_y_num` (derived) = 4.027095e+13
+56. `N_cr_yProduct` (derived) = 4.027095e+13
 57. `N_cr_y` (derived) = 4.474550e+6
-58. `N_cr_z_num` (derived) = 2.951407e+12
+58. `N_cr_zProduct` (derived) = 2.951407e+12
 59. `N_cr_z` (derived) = 327934.055566862
 60. `lambda_bar_z_sq` (derived) = 3.083058874
 61. `lambda_bar_z` (derived) = 1.755864139
@@ -592,7 +592,7 @@
 65. `phi_y_sq` (derived) = 0.412020235
 66. `chi_y_radicand` (derived) = 0.186066769
 67. `chi_y_root` (derived) = 0.431354575
-68. `chi_y_den` (derived) = 1.073242599
+68. `chi_yFactor` (derived) = 1.073242599
 69. `chi_y_base` (derived) = 0.931755785
 70. `chi_y` (derived) = 0.931755785
 71. `phi_z_alpha` (derived) = 0.528993807
@@ -601,7 +601,7 @@
 74. `phi_z_sq` (derived) = 5.317757483
 75. `chi_z_radicand` (derived) = 2.234698609
 76. `chi_z_root` (derived) = 1.494890835
-77. `chi_z_den` (derived) = 3.800917176
+77. `chi_zFactor` (derived) = 3.800917176
 78. `chi_z_base` (derived) = 0.263094394
 79. `chi_z` (derived) = 0.263094394
 80. `lambda_LT_sq` (derived) = 1.470791605
@@ -614,7 +614,7 @@
 87. `phi_LT_sq` (derived) = 1.415425083
 88. `chi_LT_radicand` (derived) = 0.312331379
 89. `chi_LT_root` (derived) = 0.558866155
-90. `chi_LT_den` (derived) = 1.748582542
+90. `chi_LTFactor` (derived) = 1.748582542
 91. `chi_LT_base` (derived) = 0.57189179
 92. `chi_LT_cap` (derived) = 0.679905975
 93. `chi_LT` (derived) = 0.57189179
@@ -627,7 +627,7 @@
 100. `k_zz_branch1` (derived) = 1.06737057
 101. `k_zz_branch2` (derived) = 1.06737057
 102. `k_zz` (table) = 1.06737057
-103. `k_zy_cm_denom` (derived) = 0.75
+103. `k_zy_cmReserve` (derived) = 0.75
 104. `k_zy_lambda_ratio` (derived) = 0.234115218
 105. `k_zy_n_factor` (derived) = 0.176027171
 106. `k_zy_low_a` (derived) = 2.355864139
@@ -659,26 +659,26 @@
   "chi_LT": 0.571891790034929,
   "chi_LT_base": 0.571891790034929,
   "chi_LT_cap": 0.6799059748099839,
-  "chi_LT_den": 1.7485825420555938,
   "chi_LT_mod": 0.571891790034929,
   "chi_LT_radicand": 0.312331378759521,
   "chi_LT_root": 0.5588661546019056,
+  "chi_LTFactor": 1.7485825420555938,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_radicand": 0.18606676936110092,
   "chi_y_root": 0.4313545749857082,
+  "chi_yFactor": 1.0732425986600935,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_radicand": 2.234698609062864,
   "chi_z_root": 1.4948908351658539,
+  "chi_zFactor": 3.8009171755945887,
   "Cm_LT": 1,
   "Cm_y": 0.64,
   "Cm_z": 0.52,
   "E": 210000,
-  "euler_num": 2951406500101.761,
   "euler_term": 327934.05556686234,
+  "eulerProduct": 2951406500101.761,
   "f_LT": 1,
   "fy": 355,
   "G": 81000,
@@ -692,7 +692,7 @@
   "k_y": 1,
   "k_z": 1,
   "k_zy": 0.8997489799125762,
-  "k_zy_cm_denom": 0.75,
+  "k_zy_cmReserve": 0.75,
   "k_zy_high_a": 0.8997489799125762,
   "k_zy_high_b": 0.8997489799125762,
   "k_zy_high_lambda_cap": 1,
@@ -725,9 +725,9 @@
   "M_z_Rk": 20483500,
   "N_b_z_Rd": 265998.95585513255,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "N_Rk": 1011040,
   "n_z": 0.7518826506556789,
@@ -753,11 +753,11 @@
   "psi_z_eff": -0.2,
   "section_class": 3,
   "torsion_add": 17240.661358659192,
-  "torsion_den": 2951406500101.761,
-  "torsion_num": 50884200000000000,
   "torsion_ratio": 9122.191011235955,
   "torsion_root": 162.3664139220151,
   "torsion_sum": 26362.852369895147,
+  "torsionFactor": 2951406500101.761,
+  "torsionProduct": 50884200000000000,
   "Wpl_y": 220600,
   "Wpl_z": 57700
 }

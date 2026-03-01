@@ -10,9 +10,9 @@
 
 | Scenario | Shape | Class | Expected |
 |---|---|---:|---|
-| i-c1 | I | 1 | ok (0.244098909) |
-| i-c2 | I | 2 | ok (0.244098909) |
-| i-c3 | I | 3 | ok (0.281690141) |
+| i-c1 | I | 1 | ok (0.254039794) |
+| i-c2 | I | 2 | ok (0.254039794) |
+| i-c3 | I | 3 | ok (0.293161923) |
 | i-c4 | I | 4 | not_applicable (NOT_APPLICABLE_SECTION_CLASS) |
 | rhs-c1 | RHS | 1 | ok (0.244098909) |
 | rhs-c2 | RHS | 2 | ok (0.244098909) |
@@ -29,7 +29,7 @@
 
 - Branch decision: shape=`I`, class=`1` -> `compute`
 - Clause: `undefined`
-- Expected ratio: `0.244098909`
+- Expected ratio: `0.254039794`
 
 #### Derivation Steps (evaluation trace)
 
@@ -37,55 +37,57 @@
 2. `N_Ed` (user-input) = -200000
 3. `section_class` (user-input) = 1
 4. `A` (user-input) = 2848
-5. `Wel_z` (user-input) = 50000
-6. `Wpl_z` (user-input) = 57700
-7. `Av_z` (user-input) = 1424
-8. `fy` (user-input) = 355
-9. `gamma_M0` (coefficient) = 1
-10. `N_pl_Rd` (formula) = 1.011040e+6
-11. `abs_N_Ed` (derived) = 200000
-12. `class_guard` (derived) = 1
-13. `W_z_res` (derived) = 57700
-14. `M_pl_z_num` (derived) = 2.048350e+7
-15. `M_pl_z_Rd` (formula) = 2.048350e+7
-16. `n` (derived) = 0.19781611
-17. `a_f_raw` (derived) = 0.5
-18. `a_f` (derived) = 0.5
-19. `n_minus_af` (derived) = -0.30218389
-20. `one_minus_af` (derived) = 0.5
-21. `axial_ratio` (derived) = -0.60436778
-22. `axial_ratio_sq` (derived) = 0.365260413
-23. `axial_factor` (derived) = 1
-24. `M_N_z_Rd` (formula) = 2.048350e+7
-25. `abs_M_z_Ed` (derived) = 5.000000e+6
-26. `bending_z_axial_check` (check) = 0.244098909
+5. `Av_y` (user-input) = 2848
+6. `Wel_z` (user-input) = 50000
+7. `Wpl_z` (user-input) = 57700
+8. `Av_z` (user-input) = 1424
+9. `fy` (user-input) = 355
+10. `gamma_M0` (coefficient) = 1
+11. `N_pl_Rd` (formula) = 1.011040e+6
+12. `abs_N_Ed` (derived) = 200000
+13. `class_guard` (derived) = 1
+14. `W_z_res` (derived) = 57700
+15. `M_pl_zProduct` (derived) = 2.048350e+7
+16. `M_pl_z_Rd` (formula) = 2.048350e+7
+17. `n` (derived) = 0.19781611
+18. `a_f_raw` (derived) = 0
+19. `a_f` (derived) = 0
+20. `n_minus_af` (derived) = 0.19781611
+21. `one_minus_af` (derived) = 1
+22. `axial_ratio` (derived) = 0.19781611
+23. `axial_ratio_sq` (derived) = 0.039131213
+24. `axial_factor` (derived) = 0.960868787
+25. `M_N_z_Rd` (formula) = 1.968196e+7
+26. `abs_M_z_Ed` (derived) = 5.000000e+6
+27. `bending_z_axial_check` (check) = 0.254039794
 
 #### Expected Intermediates
 
 ```json
 {
   "A": 2848,
-  "a_f": 0.5,
-  "a_f_raw": 0.5,
+  "a_f": 0,
+  "a_f_raw": 0,
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
+  "Av_y": 2848,
   "Av_z": 1424,
-  "axial_factor": 1,
-  "axial_ratio": -0.6043677797119797,
-  "axial_ratio_sq": 0.36526041315398805,
-  "bending_z_axial_check": 0.24409890887787733,
+  "axial_factor": 0.9608687865674929,
+  "axial_ratio": 0.19781611014401013,
+  "axial_ratio_sq": 0.039131213432507146,
+  "bending_z_axial_check": 0.2540397942885321,
   "class_guard": 1,
   "fy": 355,
   "gamma_M0": 1,
-  "M_N_z_Rd": 20483500,
-  "M_pl_z_num": 20483500,
+  "M_N_z_Rd": 19681955.78965524,
   "M_pl_z_Rd": 20483500,
+  "M_pl_zProduct": 20483500,
   "M_z_Ed": 5000000,
   "n": 0.19781611014401013,
   "N_Ed": -200000,
-  "n_minus_af": -0.3021838898559899,
+  "n_minus_af": 0.19781611014401013,
   "N_pl_Rd": 1011040,
-  "one_minus_af": 0.5,
+  "one_minus_af": 1,
   "section_class": 1,
   "W_z_res": 57700,
   "Wel_z": 50000,
@@ -97,7 +99,7 @@
 
 - Branch decision: shape=`I`, class=`2` -> `compute`
 - Clause: `undefined`
-- Expected ratio: `0.244098909`
+- Expected ratio: `0.254039794`
 
 #### Derivation Steps (evaluation trace)
 
@@ -105,55 +107,57 @@
 2. `N_Ed` (user-input) = -200000
 3. `section_class` (user-input) = 2
 4. `A` (user-input) = 2848
-5. `Wel_z` (user-input) = 50000
-6. `Wpl_z` (user-input) = 57700
-7. `Av_z` (user-input) = 1424
-8. `fy` (user-input) = 355
-9. `gamma_M0` (coefficient) = 1
-10. `N_pl_Rd` (formula) = 1.011040e+6
-11. `abs_N_Ed` (derived) = 200000
-12. `class_guard` (derived) = 1
-13. `W_z_res` (derived) = 57700
-14. `M_pl_z_num` (derived) = 2.048350e+7
-15. `M_pl_z_Rd` (formula) = 2.048350e+7
-16. `n` (derived) = 0.19781611
-17. `a_f_raw` (derived) = 0.5
-18. `a_f` (derived) = 0.5
-19. `n_minus_af` (derived) = -0.30218389
-20. `one_minus_af` (derived) = 0.5
-21. `axial_ratio` (derived) = -0.60436778
-22. `axial_ratio_sq` (derived) = 0.365260413
-23. `axial_factor` (derived) = 1
-24. `M_N_z_Rd` (formula) = 2.048350e+7
-25. `abs_M_z_Ed` (derived) = 5.000000e+6
-26. `bending_z_axial_check` (check) = 0.244098909
+5. `Av_y` (user-input) = 2848
+6. `Wel_z` (user-input) = 50000
+7. `Wpl_z` (user-input) = 57700
+8. `Av_z` (user-input) = 1424
+9. `fy` (user-input) = 355
+10. `gamma_M0` (coefficient) = 1
+11. `N_pl_Rd` (formula) = 1.011040e+6
+12. `abs_N_Ed` (derived) = 200000
+13. `class_guard` (derived) = 1
+14. `W_z_res` (derived) = 57700
+15. `M_pl_zProduct` (derived) = 2.048350e+7
+16. `M_pl_z_Rd` (formula) = 2.048350e+7
+17. `n` (derived) = 0.19781611
+18. `a_f_raw` (derived) = 0
+19. `a_f` (derived) = 0
+20. `n_minus_af` (derived) = 0.19781611
+21. `one_minus_af` (derived) = 1
+22. `axial_ratio` (derived) = 0.19781611
+23. `axial_ratio_sq` (derived) = 0.039131213
+24. `axial_factor` (derived) = 0.960868787
+25. `M_N_z_Rd` (formula) = 1.968196e+7
+26. `abs_M_z_Ed` (derived) = 5.000000e+6
+27. `bending_z_axial_check` (check) = 0.254039794
 
 #### Expected Intermediates
 
 ```json
 {
   "A": 2848,
-  "a_f": 0.5,
-  "a_f_raw": 0.5,
+  "a_f": 0,
+  "a_f_raw": 0,
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
+  "Av_y": 2848,
   "Av_z": 1424,
-  "axial_factor": 1,
-  "axial_ratio": -0.6043677797119797,
-  "axial_ratio_sq": 0.36526041315398805,
-  "bending_z_axial_check": 0.24409890887787733,
+  "axial_factor": 0.9608687865674929,
+  "axial_ratio": 0.19781611014401013,
+  "axial_ratio_sq": 0.039131213432507146,
+  "bending_z_axial_check": 0.2540397942885321,
   "class_guard": 1,
   "fy": 355,
   "gamma_M0": 1,
-  "M_N_z_Rd": 20483500,
-  "M_pl_z_num": 20483500,
+  "M_N_z_Rd": 19681955.78965524,
   "M_pl_z_Rd": 20483500,
+  "M_pl_zProduct": 20483500,
   "M_z_Ed": 5000000,
   "n": 0.19781611014401013,
   "N_Ed": -200000,
-  "n_minus_af": -0.3021838898559899,
+  "n_minus_af": 0.19781611014401013,
   "N_pl_Rd": 1011040,
-  "one_minus_af": 0.5,
+  "one_minus_af": 1,
   "section_class": 2,
   "W_z_res": 57700,
   "Wel_z": 50000,
@@ -165,7 +169,7 @@
 
 - Branch decision: shape=`I`, class=`3` -> `compute`
 - Clause: `undefined`
-- Expected ratio: `0.281690141`
+- Expected ratio: `0.293161923`
 
 #### Derivation Steps (evaluation trace)
 
@@ -173,55 +177,57 @@
 2. `N_Ed` (user-input) = -200000
 3. `section_class` (user-input) = 3
 4. `A` (user-input) = 2848
-5. `Wel_z` (user-input) = 50000
-6. `Wpl_z` (user-input) = 57700
-7. `Av_z` (user-input) = 1424
-8. `fy` (user-input) = 355
-9. `gamma_M0` (coefficient) = 1
-10. `N_pl_Rd` (formula) = 1.011040e+6
-11. `abs_N_Ed` (derived) = 200000
-12. `class_guard` (derived) = 1
-13. `W_z_res` (derived) = 50000
-14. `M_pl_z_num` (derived) = 1.775000e+7
-15. `M_pl_z_Rd` (formula) = 1.775000e+7
-16. `n` (derived) = 0.19781611
-17. `a_f_raw` (derived) = 0.5
-18. `a_f` (derived) = 0.5
-19. `n_minus_af` (derived) = -0.30218389
-20. `one_minus_af` (derived) = 0.5
-21. `axial_ratio` (derived) = -0.60436778
-22. `axial_ratio_sq` (derived) = 0.365260413
-23. `axial_factor` (derived) = 1
-24. `M_N_z_Rd` (formula) = 1.775000e+7
-25. `abs_M_z_Ed` (derived) = 5.000000e+6
-26. `bending_z_axial_check` (check) = 0.281690141
+5. `Av_y` (user-input) = 2848
+6. `Wel_z` (user-input) = 50000
+7. `Wpl_z` (user-input) = 57700
+8. `Av_z` (user-input) = 1424
+9. `fy` (user-input) = 355
+10. `gamma_M0` (coefficient) = 1
+11. `N_pl_Rd` (formula) = 1.011040e+6
+12. `abs_N_Ed` (derived) = 200000
+13. `class_guard` (derived) = 1
+14. `W_z_res` (derived) = 50000
+15. `M_pl_zProduct` (derived) = 1.775000e+7
+16. `M_pl_z_Rd` (formula) = 1.775000e+7
+17. `n` (derived) = 0.19781611
+18. `a_f_raw` (derived) = 0
+19. `a_f` (derived) = 0
+20. `n_minus_af` (derived) = 0.19781611
+21. `one_minus_af` (derived) = 1
+22. `axial_ratio` (derived) = 0.19781611
+23. `axial_ratio_sq` (derived) = 0.039131213
+24. `axial_factor` (derived) = 0.960868787
+25. `M_N_z_Rd` (formula) = 1.705542e+7
+26. `abs_M_z_Ed` (derived) = 5.000000e+6
+27. `bending_z_axial_check` (check) = 0.293161923
 
 #### Expected Intermediates
 
 ```json
 {
   "A": 2848,
-  "a_f": 0.5,
-  "a_f_raw": 0.5,
+  "a_f": 0,
+  "a_f_raw": 0,
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
+  "Av_y": 2848,
   "Av_z": 1424,
-  "axial_factor": 1,
-  "axial_ratio": -0.6043677797119797,
-  "axial_ratio_sq": 0.36526041315398805,
-  "bending_z_axial_check": 0.28169014084507044,
+  "axial_factor": 0.9608687865674929,
+  "axial_ratio": 0.19781611014401013,
+  "axial_ratio_sq": 0.039131213432507146,
+  "bending_z_axial_check": 0.293161922608966,
   "class_guard": 1,
   "fy": 355,
   "gamma_M0": 1,
-  "M_N_z_Rd": 17750000,
-  "M_pl_z_num": 17750000,
+  "M_N_z_Rd": 17055420.961572997,
   "M_pl_z_Rd": 17750000,
+  "M_pl_zProduct": 17750000,
   "M_z_Ed": 5000000,
   "n": 0.19781611014401013,
   "N_Ed": -200000,
-  "n_minus_af": -0.3021838898559899,
+  "n_minus_af": 0.19781611014401013,
   "N_pl_Rd": 1011040,
-  "one_minus_af": 0.5,
+  "one_minus_af": 1,
   "section_class": 3,
   "W_z_res": 50000,
   "Wel_z": 50000,
@@ -248,28 +254,29 @@
 2. `N_Ed` (user-input) = -200000
 3. `section_class` (user-input) = 1
 4. `A` (user-input) = 2848
-5. `Wel_z` (user-input) = 50000
-6. `Wpl_z` (user-input) = 57700
-7. `Av_z` (user-input) = 1424
-8. `fy` (user-input) = 355
-9. `gamma_M0` (coefficient) = 1
-10. `N_pl_Rd` (formula) = 1.011040e+6
-11. `abs_N_Ed` (derived) = 200000
-12. `class_guard` (derived) = 1
-13. `W_z_res` (derived) = 57700
-14. `M_pl_z_num` (derived) = 2.048350e+7
-15. `M_pl_z_Rd` (formula) = 2.048350e+7
-16. `n` (derived) = 0.19781611
-17. `a_f_raw` (derived) = 0.5
-18. `a_f` (derived) = 0.5
-19. `n_minus_af` (derived) = -0.30218389
-20. `one_minus_af` (derived) = 0.5
-21. `axial_ratio` (derived) = -0.60436778
-22. `axial_ratio_sq` (derived) = 0.365260413
-23. `axial_factor` (derived) = 1
-24. `M_N_z_Rd` (formula) = 2.048350e+7
-25. `abs_M_z_Ed` (derived) = 5.000000e+6
-26. `bending_z_axial_check` (check) = 0.244098909
+5. `Av_y` (user-input) = 2848
+6. `Wel_z` (user-input) = 50000
+7. `Wpl_z` (user-input) = 57700
+8. `Av_z` (user-input) = 1424
+9. `fy` (user-input) = 355
+10. `gamma_M0` (coefficient) = 1
+11. `N_pl_Rd` (formula) = 1.011040e+6
+12. `abs_N_Ed` (derived) = 200000
+13. `class_guard` (derived) = 1
+14. `W_z_res` (derived) = 57700
+15. `M_pl_zProduct` (derived) = 2.048350e+7
+16. `M_pl_z_Rd` (formula) = 2.048350e+7
+17. `n` (derived) = 0.19781611
+18. `a_f_raw` (derived) = 0.5
+19. `a_f` (derived) = 0.5
+20. `n_minus_af` (derived) = -0.30218389
+21. `one_minus_af` (derived) = 0.5
+22. `axial_ratio` (derived) = -0.60436778
+23. `axial_ratio_sq` (derived) = 0.365260413
+24. `axial_factor` (derived) = 1
+25. `M_N_z_Rd` (formula) = 2.048350e+7
+26. `abs_M_z_Ed` (derived) = 5.000000e+6
+27. `bending_z_axial_check` (check) = 0.244098909
 
 #### Expected Intermediates
 
@@ -280,6 +287,7 @@
   "a_f_raw": 0.5,
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
+  "Av_y": 2848,
   "Av_z": 1424,
   "axial_factor": 1,
   "axial_ratio": -0.6043677797119797,
@@ -289,8 +297,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_N_z_Rd": 20483500,
-  "M_pl_z_num": 20483500,
   "M_pl_z_Rd": 20483500,
+  "M_pl_zProduct": 20483500,
   "M_z_Ed": 5000000,
   "n": 0.19781611014401013,
   "N_Ed": -200000,
@@ -316,28 +324,29 @@
 2. `N_Ed` (user-input) = -200000
 3. `section_class` (user-input) = 2
 4. `A` (user-input) = 2848
-5. `Wel_z` (user-input) = 50000
-6. `Wpl_z` (user-input) = 57700
-7. `Av_z` (user-input) = 1424
-8. `fy` (user-input) = 355
-9. `gamma_M0` (coefficient) = 1
-10. `N_pl_Rd` (formula) = 1.011040e+6
-11. `abs_N_Ed` (derived) = 200000
-12. `class_guard` (derived) = 1
-13. `W_z_res` (derived) = 57700
-14. `M_pl_z_num` (derived) = 2.048350e+7
-15. `M_pl_z_Rd` (formula) = 2.048350e+7
-16. `n` (derived) = 0.19781611
-17. `a_f_raw` (derived) = 0.5
-18. `a_f` (derived) = 0.5
-19. `n_minus_af` (derived) = -0.30218389
-20. `one_minus_af` (derived) = 0.5
-21. `axial_ratio` (derived) = -0.60436778
-22. `axial_ratio_sq` (derived) = 0.365260413
-23. `axial_factor` (derived) = 1
-24. `M_N_z_Rd` (formula) = 2.048350e+7
-25. `abs_M_z_Ed` (derived) = 5.000000e+6
-26. `bending_z_axial_check` (check) = 0.244098909
+5. `Av_y` (user-input) = 2848
+6. `Wel_z` (user-input) = 50000
+7. `Wpl_z` (user-input) = 57700
+8. `Av_z` (user-input) = 1424
+9. `fy` (user-input) = 355
+10. `gamma_M0` (coefficient) = 1
+11. `N_pl_Rd` (formula) = 1.011040e+6
+12. `abs_N_Ed` (derived) = 200000
+13. `class_guard` (derived) = 1
+14. `W_z_res` (derived) = 57700
+15. `M_pl_zProduct` (derived) = 2.048350e+7
+16. `M_pl_z_Rd` (formula) = 2.048350e+7
+17. `n` (derived) = 0.19781611
+18. `a_f_raw` (derived) = 0.5
+19. `a_f` (derived) = 0.5
+20. `n_minus_af` (derived) = -0.30218389
+21. `one_minus_af` (derived) = 0.5
+22. `axial_ratio` (derived) = -0.60436778
+23. `axial_ratio_sq` (derived) = 0.365260413
+24. `axial_factor` (derived) = 1
+25. `M_N_z_Rd` (formula) = 2.048350e+7
+26. `abs_M_z_Ed` (derived) = 5.000000e+6
+27. `bending_z_axial_check` (check) = 0.244098909
 
 #### Expected Intermediates
 
@@ -348,6 +357,7 @@
   "a_f_raw": 0.5,
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
+  "Av_y": 2848,
   "Av_z": 1424,
   "axial_factor": 1,
   "axial_ratio": -0.6043677797119797,
@@ -357,8 +367,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_N_z_Rd": 20483500,
-  "M_pl_z_num": 20483500,
   "M_pl_z_Rd": 20483500,
+  "M_pl_zProduct": 20483500,
   "M_z_Ed": 5000000,
   "n": 0.19781611014401013,
   "N_Ed": -200000,
@@ -384,28 +394,29 @@
 2. `N_Ed` (user-input) = -200000
 3. `section_class` (user-input) = 3
 4. `A` (user-input) = 2848
-5. `Wel_z` (user-input) = 50000
-6. `Wpl_z` (user-input) = 57700
-7. `Av_z` (user-input) = 1424
-8. `fy` (user-input) = 355
-9. `gamma_M0` (coefficient) = 1
-10. `N_pl_Rd` (formula) = 1.011040e+6
-11. `abs_N_Ed` (derived) = 200000
-12. `class_guard` (derived) = 1
-13. `W_z_res` (derived) = 50000
-14. `M_pl_z_num` (derived) = 1.775000e+7
-15. `M_pl_z_Rd` (formula) = 1.775000e+7
-16. `n` (derived) = 0.19781611
-17. `a_f_raw` (derived) = 0.5
-18. `a_f` (derived) = 0.5
-19. `n_minus_af` (derived) = -0.30218389
-20. `one_minus_af` (derived) = 0.5
-21. `axial_ratio` (derived) = -0.60436778
-22. `axial_ratio_sq` (derived) = 0.365260413
-23. `axial_factor` (derived) = 1
-24. `M_N_z_Rd` (formula) = 1.775000e+7
-25. `abs_M_z_Ed` (derived) = 5.000000e+6
-26. `bending_z_axial_check` (check) = 0.281690141
+5. `Av_y` (user-input) = 2848
+6. `Wel_z` (user-input) = 50000
+7. `Wpl_z` (user-input) = 57700
+8. `Av_z` (user-input) = 1424
+9. `fy` (user-input) = 355
+10. `gamma_M0` (coefficient) = 1
+11. `N_pl_Rd` (formula) = 1.011040e+6
+12. `abs_N_Ed` (derived) = 200000
+13. `class_guard` (derived) = 1
+14. `W_z_res` (derived) = 50000
+15. `M_pl_zProduct` (derived) = 1.775000e+7
+16. `M_pl_z_Rd` (formula) = 1.775000e+7
+17. `n` (derived) = 0.19781611
+18. `a_f_raw` (derived) = 0.5
+19. `a_f` (derived) = 0.5
+20. `n_minus_af` (derived) = -0.30218389
+21. `one_minus_af` (derived) = 0.5
+22. `axial_ratio` (derived) = -0.60436778
+23. `axial_ratio_sq` (derived) = 0.365260413
+24. `axial_factor` (derived) = 1
+25. `M_N_z_Rd` (formula) = 1.775000e+7
+26. `abs_M_z_Ed` (derived) = 5.000000e+6
+27. `bending_z_axial_check` (check) = 0.281690141
 
 #### Expected Intermediates
 
@@ -416,6 +427,7 @@
   "a_f_raw": 0.5,
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
+  "Av_y": 2848,
   "Av_z": 1424,
   "axial_factor": 1,
   "axial_ratio": -0.6043677797119797,
@@ -425,8 +437,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_N_z_Rd": 17750000,
-  "M_pl_z_num": 17750000,
   "M_pl_z_Rd": 17750000,
+  "M_pl_zProduct": 17750000,
   "M_z_Ed": 5000000,
   "n": 0.19781611014401013,
   "N_Ed": -200000,
@@ -459,28 +471,29 @@
 2. `N_Ed` (user-input) = -200000
 3. `section_class` (user-input) = 1
 4. `A` (user-input) = 2848
-5. `Wel_z` (user-input) = 50000
-6. `Wpl_z` (user-input) = 57700
-7. `Av_z` (user-input) = 1424
-8. `fy` (user-input) = 355
-9. `gamma_M0` (coefficient) = 1
-10. `N_pl_Rd` (formula) = 1.011040e+6
-11. `abs_N_Ed` (derived) = 200000
-12. `class_guard` (derived) = 1
-13. `W_z_res` (derived) = 57700
-14. `M_pl_z_num` (derived) = 2.048350e+7
-15. `M_pl_z_Rd` (formula) = 2.048350e+7
-16. `n` (derived) = 0.19781611
-17. `a_f_raw` (derived) = 0.5
-18. `a_f` (derived) = 0.5
-19. `n_minus_af` (derived) = -0.30218389
-20. `one_minus_af` (derived) = 0.5
-21. `axial_ratio` (derived) = -0.60436778
-22. `axial_ratio_sq` (derived) = 0.365260413
-23. `axial_factor` (derived) = 1
-24. `M_N_z_Rd` (formula) = 2.048350e+7
-25. `abs_M_z_Ed` (derived) = 5.000000e+6
-26. `bending_z_axial_check` (check) = 0.244098909
+5. `Av_y` (user-input) = 2848
+6. `Wel_z` (user-input) = 50000
+7. `Wpl_z` (user-input) = 57700
+8. `Av_z` (user-input) = 1424
+9. `fy` (user-input) = 355
+10. `gamma_M0` (coefficient) = 1
+11. `N_pl_Rd` (formula) = 1.011040e+6
+12. `abs_N_Ed` (derived) = 200000
+13. `class_guard` (derived) = 1
+14. `W_z_res` (derived) = 57700
+15. `M_pl_zProduct` (derived) = 2.048350e+7
+16. `M_pl_z_Rd` (formula) = 2.048350e+7
+17. `n` (derived) = 0.19781611
+18. `a_f_raw` (derived) = 0.5
+19. `a_f` (derived) = 0.5
+20. `n_minus_af` (derived) = -0.30218389
+21. `one_minus_af` (derived) = 0.5
+22. `axial_ratio` (derived) = -0.60436778
+23. `axial_ratio_sq` (derived) = 0.365260413
+24. `axial_factor` (derived) = 1
+25. `M_N_z_Rd` (formula) = 2.048350e+7
+26. `abs_M_z_Ed` (derived) = 5.000000e+6
+27. `bending_z_axial_check` (check) = 0.244098909
 
 #### Expected Intermediates
 
@@ -491,6 +504,7 @@
   "a_f_raw": 0.5,
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
+  "Av_y": 2848,
   "Av_z": 1424,
   "axial_factor": 1,
   "axial_ratio": -0.6043677797119797,
@@ -500,8 +514,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_N_z_Rd": 20483500,
-  "M_pl_z_num": 20483500,
   "M_pl_z_Rd": 20483500,
+  "M_pl_zProduct": 20483500,
   "M_z_Ed": 5000000,
   "n": 0.19781611014401013,
   "N_Ed": -200000,
@@ -527,28 +541,29 @@
 2. `N_Ed` (user-input) = -200000
 3. `section_class` (user-input) = 2
 4. `A` (user-input) = 2848
-5. `Wel_z` (user-input) = 50000
-6. `Wpl_z` (user-input) = 57700
-7. `Av_z` (user-input) = 1424
-8. `fy` (user-input) = 355
-9. `gamma_M0` (coefficient) = 1
-10. `N_pl_Rd` (formula) = 1.011040e+6
-11. `abs_N_Ed` (derived) = 200000
-12. `class_guard` (derived) = 1
-13. `W_z_res` (derived) = 57700
-14. `M_pl_z_num` (derived) = 2.048350e+7
-15. `M_pl_z_Rd` (formula) = 2.048350e+7
-16. `n` (derived) = 0.19781611
-17. `a_f_raw` (derived) = 0.5
-18. `a_f` (derived) = 0.5
-19. `n_minus_af` (derived) = -0.30218389
-20. `one_minus_af` (derived) = 0.5
-21. `axial_ratio` (derived) = -0.60436778
-22. `axial_ratio_sq` (derived) = 0.365260413
-23. `axial_factor` (derived) = 1
-24. `M_N_z_Rd` (formula) = 2.048350e+7
-25. `abs_M_z_Ed` (derived) = 5.000000e+6
-26. `bending_z_axial_check` (check) = 0.244098909
+5. `Av_y` (user-input) = 2848
+6. `Wel_z` (user-input) = 50000
+7. `Wpl_z` (user-input) = 57700
+8. `Av_z` (user-input) = 1424
+9. `fy` (user-input) = 355
+10. `gamma_M0` (coefficient) = 1
+11. `N_pl_Rd` (formula) = 1.011040e+6
+12. `abs_N_Ed` (derived) = 200000
+13. `class_guard` (derived) = 1
+14. `W_z_res` (derived) = 57700
+15. `M_pl_zProduct` (derived) = 2.048350e+7
+16. `M_pl_z_Rd` (formula) = 2.048350e+7
+17. `n` (derived) = 0.19781611
+18. `a_f_raw` (derived) = 0.5
+19. `a_f` (derived) = 0.5
+20. `n_minus_af` (derived) = -0.30218389
+21. `one_minus_af` (derived) = 0.5
+22. `axial_ratio` (derived) = -0.60436778
+23. `axial_ratio_sq` (derived) = 0.365260413
+24. `axial_factor` (derived) = 1
+25. `M_N_z_Rd` (formula) = 2.048350e+7
+26. `abs_M_z_Ed` (derived) = 5.000000e+6
+27. `bending_z_axial_check` (check) = 0.244098909
 
 #### Expected Intermediates
 
@@ -559,6 +574,7 @@
   "a_f_raw": 0.5,
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
+  "Av_y": 2848,
   "Av_z": 1424,
   "axial_factor": 1,
   "axial_ratio": -0.6043677797119797,
@@ -568,8 +584,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_N_z_Rd": 20483500,
-  "M_pl_z_num": 20483500,
   "M_pl_z_Rd": 20483500,
+  "M_pl_zProduct": 20483500,
   "M_z_Ed": 5000000,
   "n": 0.19781611014401013,
   "N_Ed": -200000,
@@ -595,28 +611,29 @@
 2. `N_Ed` (user-input) = -200000
 3. `section_class` (user-input) = 3
 4. `A` (user-input) = 2848
-5. `Wel_z` (user-input) = 50000
-6. `Wpl_z` (user-input) = 57700
-7. `Av_z` (user-input) = 1424
-8. `fy` (user-input) = 355
-9. `gamma_M0` (coefficient) = 1
-10. `N_pl_Rd` (formula) = 1.011040e+6
-11. `abs_N_Ed` (derived) = 200000
-12. `class_guard` (derived) = 1
-13. `W_z_res` (derived) = 50000
-14. `M_pl_z_num` (derived) = 1.775000e+7
-15. `M_pl_z_Rd` (formula) = 1.775000e+7
-16. `n` (derived) = 0.19781611
-17. `a_f_raw` (derived) = 0.5
-18. `a_f` (derived) = 0.5
-19. `n_minus_af` (derived) = -0.30218389
-20. `one_minus_af` (derived) = 0.5
-21. `axial_ratio` (derived) = -0.60436778
-22. `axial_ratio_sq` (derived) = 0.365260413
-23. `axial_factor` (derived) = 1
-24. `M_N_z_Rd` (formula) = 1.775000e+7
-25. `abs_M_z_Ed` (derived) = 5.000000e+6
-26. `bending_z_axial_check` (check) = 0.281690141
+5. `Av_y` (user-input) = 2848
+6. `Wel_z` (user-input) = 50000
+7. `Wpl_z` (user-input) = 57700
+8. `Av_z` (user-input) = 1424
+9. `fy` (user-input) = 355
+10. `gamma_M0` (coefficient) = 1
+11. `N_pl_Rd` (formula) = 1.011040e+6
+12. `abs_N_Ed` (derived) = 200000
+13. `class_guard` (derived) = 1
+14. `W_z_res` (derived) = 50000
+15. `M_pl_zProduct` (derived) = 1.775000e+7
+16. `M_pl_z_Rd` (formula) = 1.775000e+7
+17. `n` (derived) = 0.19781611
+18. `a_f_raw` (derived) = 0.5
+19. `a_f` (derived) = 0.5
+20. `n_minus_af` (derived) = -0.30218389
+21. `one_minus_af` (derived) = 0.5
+22. `axial_ratio` (derived) = -0.60436778
+23. `axial_ratio_sq` (derived) = 0.365260413
+24. `axial_factor` (derived) = 1
+25. `M_N_z_Rd` (formula) = 1.775000e+7
+26. `abs_M_z_Ed` (derived) = 5.000000e+6
+27. `bending_z_axial_check` (check) = 0.281690141
 
 #### Expected Intermediates
 
@@ -627,6 +644,7 @@
   "a_f_raw": 0.5,
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
+  "Av_y": 2848,
   "Av_z": 1424,
   "axial_factor": 1,
   "axial_ratio": -0.6043677797119797,
@@ -636,8 +654,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_N_z_Rd": 17750000,
-  "M_pl_z_num": 17750000,
   "M_pl_z_Rd": 17750000,
+  "M_pl_zProduct": 17750000,
   "M_z_Ed": 5000000,
   "n": 0.19781611014401013,
   "N_Ed": -200000,

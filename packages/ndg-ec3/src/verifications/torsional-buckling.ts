@@ -36,34 +36,34 @@ const nodes = [
     expression: "L_{cr,T}^2",
     unit: "mm²",
   }),
-  derived(p, "ip2_num", "Polar radius numerator", ["Iy", "Iz"], {
+  derived(p, "ip2Product", "Polar radius numerator", ["Iy", "Iz"], {
     expression: "I_y + I_z",
   }),
-  derived(p, "ip2", "Polar radius term", ["ip2_num", "A"], {
+  derived(p, "ip2", "Polar radius term", ["ip2Product", "A"], {
     expression: "\\frac{I_y+I_z}{A}",
   }),
   derived(p, "ncr_t_left", "Left summand in N_cr,T numerator", ["G", "It"], {
     expression: "GI_t",
   }),
-  derived(p, "ncr_t_right_num", "Right numerator in N_cr,T", ["piSq", "E", "Iw"], {
+  derived(p, "ncr_t_rightProduct", "Right numerator in N_cr,T", ["piSq", "E", "Iw"], {
     expression: "\\pi^2 E I_w",
   }),
-  derived(p, "ncr_t_right", "Right summand in N_cr,T numerator", ["ncr_t_right_num", "Lcr_T_sq"], {
+  derived(p, "ncr_t_right", "Right summand in N_cr,T numerator", ["ncr_t_rightProduct", "Lcr_T_sq"], {
     expression: "\\frac{\\pi^2 E I_w}{L_{cr,T}^2}",
   }),
-  derived(p, "N_cr_T_num", "N_cr,T numerator", ["ncr_t_left", "ncr_t_right"], {
+  derived(p, "N_cr_TProduct", "N_cr,T numerator", ["ncr_t_left", "ncr_t_right"], {
     expression: "GI_t + \\frac{\\pi^2 E I_w}{L_{cr,T}^2}",
   }),
-  derived(p, "N_cr_T", "Elastic torsional critical force", ["section_shape", "A", "Lcr_T", "Iy", "Iz", "It", "Iw", "N_cr_T_num", "ip2"], {
+  derived(p, "N_cr_T", "Elastic torsional critical force", ["section_shape", "A", "Lcr_T", "Iy", "Iz", "It", "Iw", "N_cr_TProduct", "ip2"], {
     symbol: "N_{cr,T}",
     expression: "\\frac{1}{i_p^2}\\left(G I_t + \\frac{\\pi^2 E I_w}{L_{cr,T}^2}\\right)",
     unit: "N",
     meta: { sectionRef: "6.3.1.4", paragraphRef: "(2)" },
   }),
-  derived(p, "N_cr_z_num", "N_cr,z numerator", ["piSq", "E", "Iz"], {
+  derived(p, "N_cr_zProduct", "N_cr,z numerator", ["piSq", "E", "Iz"], {
     expression: "\\pi^2 E I_z",
   }),
-  derived(p, "N_cr_z", "Elastic flexural critical force about z-z", ["N_cr_z_num", "Lcr_T_sq"], {
+  derived(p, "N_cr_z", "Elastic flexural critical force about z-z", ["N_cr_zProduct", "Lcr_T_sq"], {
     symbol: "N_{cr,z}",
     expression: "\\frac{\\pi^2 E I_z}{L_{cr,T}^2}",
     unit: "N",
@@ -81,10 +81,10 @@ const nodes = [
     unit: "N",
     meta: { sectionRef: "6.3.1.4", paragraphRef: "(2)" },
   }),
-  derived(p, "lambda_bar_TF_num", "Slenderness numerator", ["A", "fy"], {
+  derived(p, "lambda_bar_TFProduct", "Slenderness numerator", ["A", "fy"], {
     expression: "Af_y",
   }),
-  derived(p, "lambda_bar_TF_sq", "Squared torsional-flexural slenderness", ["lambda_bar_TF_num", "N_cr_governing"], {
+  derived(p, "lambda_bar_TF_sq", "Squared torsional-flexural slenderness", ["lambda_bar_TFProduct", "N_cr_governing"], {
     expression: "\\frac{Af_y}{N_{cr}}",
   }),
   derived(p, "lambda_bar_TF", "Non-dimensional slenderness (torsional-flexural)", ["lambda_bar_TF_sq"], {
@@ -114,10 +114,10 @@ const nodes = [
   derived(p, "chi_TF_root", "Square-root radicand term", ["chi_TF_radicand"], {
     expression: "\\sqrt{\\Phi_{TF}^2 - \\bar{\\lambda}_{TF}^2}",
   }),
-  derived(p, "chi_TF_den", "χ_TF denominator", ["phi_TF", "chi_TF_root"], {
+  derived(p, "chi_TFFactor", "χ_TF denominator", ["phi_TF", "chi_TF_root"], {
     expression: "\\Phi_{TF} + \\sqrt{\\Phi_{TF}^2 - \\bar{\\lambda}_{TF}^2}",
   }),
-  formula(p, "chi_TF_base", "Base torsional-flexural reduction factor", ["chi_TF_den"], {
+  formula(p, "chi_TF_base", "Base torsional-flexural reduction factor", ["chi_TFFactor"], {
     symbol: "\\chi_{TF,base}",
     expression: "\\frac{1}{\\Phi_{TF} + \\sqrt{\\Phi_{TF}^2 - \\bar{\\lambda}_{TF}^2}}",
     meta: { sectionRef: "6.3.1.2", formulaRef: "(6.49)" },
@@ -125,10 +125,10 @@ const nodes = [
   derived(p, "chi_TF", "Capped torsional-flexural reduction factor", ["chi_TF_base"], {
     expression: "\\min(1,\\chi_{TF,base})",
   }),
-  derived(p, "N_b_TF_num", "Numerator of N_b,TF,Rd", ["chi_TF", "A", "fy"], {
+  derived(p, "N_b_TFProduct", "Numerator of N_b,TF,Rd", ["chi_TF", "A", "fy"], {
     expression: "\\chi_{TF}Af_y",
   }),
-  formula(p, "N_b_TF_Rd", "Torsional-flexural buckling resistance", ["N_b_TF_num", "gamma_M1"], {
+  formula(p, "N_b_TF_Rd", "Torsional-flexural buckling resistance", ["N_b_TFProduct", "gamma_M1"], {
     symbol: "N_{b,TF,Rd}",
     expression: "\\frac{\\chi_{TF} A f_y}{\\gamma_{M1}}",
     unit: "N",
@@ -151,16 +151,16 @@ export const ulsTorsionalBuckling: VerificationDefinition<typeof nodes> = {
       if (Lcr_T <= 0) throwInvalidInput("torsional-buckling: Lcr_T must be > 0");
       return Lcr_T ** 2;
     },
-    ip2_num: ({ Iy, Iz }) => Iy + Iz,
-    ip2: ({ ip2_num, A }) => {
+    ip2Product: ({ Iy, Iz }) => Iy + Iz,
+    ip2: ({ ip2Product, A }) => {
       if (A <= 0) throwInvalidInput("torsional-buckling: A must be > 0");
-      return ip2_num / A;
+      return ip2Product / A;
     },
     ncr_t_left: ({ G, It }) => G * It,
-    ncr_t_right_num: ({ piSq, E, Iw }) => piSq * E * Iw,
-    ncr_t_right: ({ ncr_t_right_num, Lcr_T_sq }) => ncr_t_right_num / Lcr_T_sq,
-    N_cr_T_num: ({ ncr_t_left, ncr_t_right }) => ncr_t_left + ncr_t_right,
-    N_cr_T: ({ section_shape, section_class, Iy, Iz, It, Iw, Lcr_T, ip2, N_cr_T_num }) => {
+    ncr_t_rightProduct: ({ piSq, E, Iw }) => piSq * E * Iw,
+    ncr_t_right: ({ ncr_t_rightProduct, Lcr_T_sq }) => ncr_t_rightProduct / Lcr_T_sq,
+    N_cr_TProduct: ({ ncr_t_left, ncr_t_right }) => ncr_t_left + ncr_t_right,
+    N_cr_T: ({ section_shape, section_class, Iy, Iz, It, Iw, Lcr_T, ip2, N_cr_TProduct }) => {
       if (section_class === 4) {
         throwEc3VerificationError({
           type: "NOT_APPLICABLE_SECTION_CLASS",
@@ -180,17 +180,17 @@ export const ulsTorsionalBuckling: VerificationDefinition<typeof nodes> = {
         throwInvalidInput("torsional-buckling: Iy, Iz, It and Iw must be > 0");
       }
       if (ip2 <= 0) throwInvalidInput("torsional-buckling: invalid polar radius of gyration term");
-      return N_cr_T_num / ip2;
+      return N_cr_TProduct / ip2;
     },
-    N_cr_z_num: ({ piSq, E, Iz }) => piSq * E * Iz,
-    N_cr_z: ({ N_cr_z_num, Lcr_T_sq }) => N_cr_z_num / Lcr_T_sq,
+    N_cr_zProduct: ({ piSq, E, Iz }) => piSq * E * Iz,
+    N_cr_z: ({ N_cr_zProduct, Lcr_T_sq }) => N_cr_zProduct / Lcr_T_sq,
     N_cr_TF: ({ N_cr_T, N_cr_z }) => Math.min(N_cr_T, N_cr_z),
     N_cr_governing: ({ N_cr_T }) => {
       if (N_cr_T <= 0) throwInvalidInput("torsional-buckling: invalid governing critical force");
       return N_cr_T;
     },
-    lambda_bar_TF_num: ({ A, fy }) => A * fy,
-    lambda_bar_TF_sq: ({ lambda_bar_TF_num, N_cr_governing }) => lambda_bar_TF_num / N_cr_governing,
+    lambda_bar_TFProduct: ({ A, fy }) => A * fy,
+    lambda_bar_TF_sq: ({ lambda_bar_TFProduct, N_cr_governing }) => lambda_bar_TFProduct / N_cr_governing,
     lambda_bar_TF: ({ lambda_bar_TF_sq }) => Math.sqrt(lambda_bar_TF_sq),
     lambda_delta: ({ lambda_bar_TF }) => lambda_bar_TF - 0.2,
     phi_alpha_term: ({ alpha_z, lambda_delta }) => alpha_z * lambda_delta,
@@ -199,11 +199,11 @@ export const ulsTorsionalBuckling: VerificationDefinition<typeof nodes> = {
     phi_TF_sq: ({ phi_TF }) => phi_TF ** 2,
     chi_TF_radicand: ({ phi_TF_sq, lambda_bar_TF_sq }) => phi_TF_sq - lambda_bar_TF_sq,
     chi_TF_root: ({ chi_TF_radicand }) => Math.sqrt(chi_TF_radicand),
-    chi_TF_den: ({ phi_TF, chi_TF_root }) => phi_TF + chi_TF_root,
-    chi_TF_base: ({ chi_TF_den }) => 1 / chi_TF_den,
+    chi_TFFactor: ({ phi_TF, chi_TF_root }) => phi_TF + chi_TF_root,
+    chi_TF_base: ({ chi_TFFactor }) => 1 / chi_TFFactor,
     chi_TF: ({ chi_TF_base }) => Math.min(1, chi_TF_base),
-    N_b_TF_num: ({ chi_TF, A, fy }) => chi_TF * A * fy,
-    N_b_TF_Rd: ({ N_b_TF_num, gamma_M1 }) => N_b_TF_num / gamma_M1,
+    N_b_TFProduct: ({ chi_TF, A, fy }) => chi_TF * A * fy,
+    N_b_TF_Rd: ({ N_b_TFProduct, gamma_M1 }) => N_b_TFProduct / gamma_M1,
     abs_N_Ed: ({ N_Ed, torsional_deformations }) => {
       if ((torsional_deformations ?? "yes") !== "yes") {
         throwNotApplicableLoadCase("torsional-buckling: torsional deformations are disabled", {

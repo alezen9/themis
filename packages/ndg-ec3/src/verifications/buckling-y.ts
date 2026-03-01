@@ -30,21 +30,21 @@ const nodes = [
     expression: "L_{cr,y}^2",
     unit: "mm^2",
   }),
-  derived(p, "N_cr_y_num", "Numerator of N_cr,y", ["piSq", "E", "Iy"], {
+  derived(p, "N_cr_yProduct", "Numerator of N_cr,y", ["piSq", "E", "Iy"], {
     expression: "\\pi^2EI_y",
     unit: "N·mm^2",
   }),
-  derived(p, "N_cr_y", "Elastic critical force y-y", ["N_cr_y_num", "Lcr_y_sq"], {
+  derived(p, "N_cr_y", "Elastic critical force y-y", ["N_cr_yProduct", "Lcr_y_sq"], {
     symbol: "N_{cr,y}",
     expression: "\\frac{\\pi^2EI_y}{L_{cr,y}^2}",
     unit: "N",
     meta: { sectionRef: "6.3.1.2" },
   }),
-  derived(p, "lambda_bar_y_num", "Numerator of slenderness square", ["A", "fy"], {
+  derived(p, "lambda_bar_yProduct", "Numerator of slenderness square", ["A", "fy"], {
     expression: "Af_y",
     unit: "N",
   }),
-  derived(p, "lambda_bar_y_sq", "Squared non-dimensional slenderness y-y", ["lambda_bar_y_num", "N_cr_y"], {
+  derived(p, "lambda_bar_y_sq", "Squared non-dimensional slenderness y-y", ["lambda_bar_yProduct", "N_cr_y"], {
     expression: "\\frac{Af_y}{N_{cr,y}}",
   }),
   derived(p, "lambda_bar_y", "Non-dimensional slenderness y-y", ["lambda_bar_y_sq"], {
@@ -73,10 +73,10 @@ const nodes = [
   derived(p, "chi_y_root", "Square-root term in χ_y denominator", ["chi_y_root_arg"], {
     expression: "\\sqrt{\\Phi_y^2-\\bar{\\lambda}_y^2}",
   }),
-  derived(p, "chi_y_den", "Denominator of χ_y", ["phi_y", "chi_y_root"], {
+  derived(p, "chi_yFactor", "Denominator of χ_y", ["phi_y", "chi_y_root"], {
     expression: "\\Phi_y+\\sqrt{\\Phi_y^2-\\bar{\\lambda}_y^2}",
   }),
-  derived(p, "chi_y_base", "Uncapped reduction factor χ_y", ["chi_y_den"], {
+  derived(p, "chi_y_base", "Uncapped reduction factor χ_y", ["chi_yFactor"], {
     expression: "\\left(\\Phi_y+\\sqrt{\\Phi_y^2-\\bar{\\lambda}_y^2}\\right)^{-1}",
   }),
   formula(p, "chi_y", "Reduction factor y-y", ["chi_y_base"], {
@@ -84,11 +84,11 @@ const nodes = [
     expression: "\\frac{1}{\\Phi_y + \\sqrt{\\Phi_y^2 - \\bar{\\lambda}_y^2}}",
     meta: { sectionRef: "6.3.1.2", formulaRef: "(6.49)" },
   }),
-  derived(p, "N_b_y_num", "Numerator of N_b,y,Rd", ["chi_y", "A", "fy"], {
+  derived(p, "N_b_yProduct", "Numerator of N_b,y,Rd", ["chi_y", "A", "fy"], {
     expression: "\\chi_yAf_y",
     unit: "N",
   }),
-  formula(p, "N_b_y_Rd", "Buckling resistance y-y", ["N_b_y_num", "gamma_M1"], {
+  formula(p, "N_b_y_Rd", "Buckling resistance y-y", ["N_b_yProduct", "gamma_M1"], {
     symbol: "N_{b,y,Rd}",
     expression: "\\frac{\\chi_y A f_y}{\\gamma_{M1}}",
     unit: "N",
@@ -112,10 +112,10 @@ export const ulsBucklingY: VerificationDefinition<typeof nodes> = {
   evaluate: {
     Lcr_y: ({ L, k_y }) => L * k_y,
     Lcr_y_sq: ({ Lcr_y }) => Lcr_y ** 2,
-    N_cr_y_num: ({ piSq, E, Iy }) => piSq * E * Iy,
-    N_cr_y: ({ N_cr_y_num, Lcr_y_sq }) => N_cr_y_num / Lcr_y_sq,
-    lambda_bar_y_num: ({ A, fy }) => A * fy,
-    lambda_bar_y_sq: ({ lambda_bar_y_num, N_cr_y }) => lambda_bar_y_num / N_cr_y,
+    N_cr_yProduct: ({ piSq, E, Iy }) => piSq * E * Iy,
+    N_cr_y: ({ N_cr_yProduct, Lcr_y_sq }) => N_cr_yProduct / Lcr_y_sq,
+    lambda_bar_yProduct: ({ A, fy }) => A * fy,
+    lambda_bar_y_sq: ({ lambda_bar_yProduct, N_cr_y }) => lambda_bar_yProduct / N_cr_y,
     lambda_bar_y: ({ lambda_bar_y_sq }) => Math.sqrt(lambda_bar_y_sq),
     lambda_bar_y_minus_02: ({ lambda_bar_y }) => lambda_bar_y - 0.2,
     phi_y_alpha_term: ({ alpha_y, lambda_bar_y_minus_02 }) => alpha_y * lambda_bar_y_minus_02,
@@ -124,11 +124,11 @@ export const ulsBucklingY: VerificationDefinition<typeof nodes> = {
     phi_y_sq: ({ phi_y }) => phi_y ** 2,
     chi_y_root_arg: ({ phi_y_sq, lambda_bar_y_sq }) => phi_y_sq - lambda_bar_y_sq,
     chi_y_root: ({ chi_y_root_arg }) => Math.sqrt(chi_y_root_arg),
-    chi_y_den: ({ phi_y, chi_y_root }) => phi_y + chi_y_root,
-    chi_y_base: ({ chi_y_den }) => 1 / chi_y_den,
+    chi_yFactor: ({ phi_y, chi_y_root }) => phi_y + chi_y_root,
+    chi_y_base: ({ chi_yFactor }) => 1 / chi_yFactor,
     chi_y: ({ chi_y_base }) => Math.min(1, chi_y_base),
-    N_b_y_num: ({ chi_y, A, fy }) => chi_y * A * fy,
-    N_b_y_Rd: ({ N_b_y_num, gamma_M1 }) => N_b_y_num / gamma_M1,
+    N_b_yProduct: ({ chi_y, A, fy }) => chi_y * A * fy,
+    N_b_y_Rd: ({ N_b_yProduct, gamma_M1 }) => N_b_yProduct / gamma_M1,
     abs_N_Ed: ({ N_Ed }) => {
       if (N_Ed >= 0) {
         throwNotApplicableLoadCase("buckling-y: verification is only applicable for compression (N_Ed < 0)", {

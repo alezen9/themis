@@ -4,7 +4,7 @@ Date: 2026-03-01
 Normative baseline: `resources/ec3-part1-1.pdf`  
 Scope: deterministic `compute` vs `not_applicable` for checks `01..22`.
 
-MatrixSourceHash: `46f594cfdb5413c2c7f05bf7b34cd4f168301b754c33fc5dde696549853fc751`
+MatrixSourceHash: `0fca850786dcd4cbfe7ca7b5be9eb3da5c6c1b988fab8ff9d4577aa31a58360b`
 
 ## Failure type mapping
 

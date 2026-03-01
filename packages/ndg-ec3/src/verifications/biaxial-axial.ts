@@ -1,6 +1,6 @@
 import type { VerificationDefinition } from "@ndg/ndg-core";
 import { input, stringInput, coeff, formula, derived, check } from "@ndg/ndg-core";
-import { throwNotApplicableSectionClass } from "../errors";
+import { throwInvalidInput, throwNotApplicableSectionClass } from "../errors";
 
 /**
  * §6.2.9.1(6) -- Biaxial bending and axial force, eq (6.41).
@@ -20,6 +20,7 @@ const nodes = [
   input(p, "N_Ed", "Design axial force", { symbol: "N_{Ed}", unit: "N" }),
   input(p, "section_class", "Section class (1, 2, 3, 4)"),
   input(p, "A", "Cross-sectional area", { unit: "mm²" }),
+  input(p, "Av_y", "Shear area y (flange area for I sections)", { unit: "mm²" }),
   input(p, "Wel_y", "Elastic section modulus y-y", { unit: "mm³" }),
   input(p, "Wel_z", "Elastic section modulus z-z", { unit: "mm³" }),
   input(p, "Wpl_y", "Plastic section modulus y-y", { unit: "mm³" }),
@@ -42,14 +43,14 @@ const nodes = [
     symbol: "n",
     expression: "\\left|N_{Ed}\\right|/N_{pl,Rd}",
   }),
-  derived(p, "a_w_raw", "Raw web ratio for y-axis reduction", ["Av_z", "A"], {
-    expression: "A_{v,z}/A",
+  derived(p, "a_w_raw", "Raw reduction parameter a_y", ["section_shape", "A", "Av_y", "Av_z"], {
+    expression: "\\text{I}: (A-A_{v,y})/A,\\; \\text{else}: A_{v,z}/A",
   }),
   derived(p, "a_w", "Web ratio for y-axis reduction", ["a_w_raw"], {
     expression: "\\min\\left(A_{v,z}/A,0.5\\right)",
   }),
-  derived(p, "a_f_raw", "Raw web ratio for z-axis reduction", ["Av_z", "A"], {
-    expression: "A_{v,z}/A",
+  derived(p, "a_f_raw", "Raw reduction parameter a_z", ["section_shape", "A", "Av_y", "Av_z"], {
+    expression: "\\text{I}: (A-A_{v,y})/A,\\; \\text{else}: A_{v,z}/A",
   }),
   derived(p, "a_f", "Web ratio for z-axis reduction", ["a_f_raw"], {
     expression: "\\min\\left(A_{v,z}/A,0.5\\right)",
@@ -63,33 +64,33 @@ const nodes = [
   derived(p, "W_z_res", "Class-dependent section modulus z-z", ["section_class", "Wpl_z", "Wel_z"], {
     expression: "c=3?W_{el,z}:W_{pl,z}",
   }),
-  derived(p, "M_pl_y_num", "Numerator of M_pl,y,Rd", ["W_y_res", "fy"], {
+  derived(p, "M_pl_yProduct", "Numerator of M_pl,y,Rd", ["W_y_res", "fy"], {
     expression: "W_{res,y}f_y",
     unit: "N·mm",
   }),
-  formula(p, "M_pl_y_Rd", "Plastic bending resistance about y-y", ["class_guard", "M_pl_y_num", "gamma_M0"], {
+  formula(p, "M_pl_y_Rd", "Plastic bending resistance about y-y", ["class_guard", "M_pl_yProduct", "gamma_M0"], {
     symbol: "M_{pl,y,Rd}",
     expression: "\\frac{W_{res,y} f_y}{\\gamma_{M0}}",
     unit: "N·mm",
     meta: { sectionRef: "6.2.5", formulaRef: "(6.13)" },
   }),
-  derived(p, "M_pl_z_num", "Numerator of M_pl,z,Rd", ["W_z_res", "fy"], {
+  derived(p, "M_pl_zProduct", "Numerator of M_pl,z,Rd", ["W_z_res", "fy"], {
     expression: "W_{res,z}f_y",
     unit: "N·mm",
   }),
-  formula(p, "M_pl_z_Rd", "Plastic bending resistance about z-z", ["class_guard", "M_pl_z_num", "gamma_M0"], {
+  formula(p, "M_pl_z_Rd", "Plastic bending resistance about z-z", ["class_guard", "M_pl_zProduct", "gamma_M0"], {
     symbol: "M_{pl,z,Rd}",
     expression: "\\frac{W_{res,z} f_y}{\\gamma_{M0}}",
     unit: "N·mm",
     meta: { sectionRef: "6.2.5", formulaRef: "(6.13)" },
   }),
-  derived(p, "axial_y_num", "Numerator of y-axis axial reduction ratio", ["n"], {
+  derived(p, "axial_yProduct", "Numerator of y-axis axial reduction ratio", ["n"], {
     expression: "1-n",
   }),
-  derived(p, "axial_y_den", "Denominator of y-axis axial reduction ratio", ["a_w"], {
+  derived(p, "axial_yFactor", "Denominator of y-axis axial reduction ratio", ["a_w"], {
     expression: "1-0.5a_w",
   }),
-  derived(p, "axial_y_ratio", "y-axis axial reduction ratio", ["axial_y_num", "axial_y_den"], {
+  derived(p, "axial_y_ratio", "y-axis axial reduction ratio", ["axial_yProduct", "axial_yFactor"], {
     expression: "(1-n)/(1-0.5a_w)",
   }),
   derived(p, "axial_y_factor", "y-axis axial reduction factor", ["axial_y_ratio"], {
@@ -101,13 +102,13 @@ const nodes = [
     unit: "N·mm",
     meta: { sectionRef: "6.2.9.1", formulaRef: "(6.36)" },
   }),
-  derived(p, "axial_z_num", "Numerator of z-axis axial reduction ratio", ["n", "a_f"], {
+  derived(p, "axial_zProduct", "Numerator of z-axis axial reduction ratio", ["n", "a_f"], {
     expression: "n-a_f",
   }),
-  derived(p, "axial_z_den", "Denominator of z-axis axial reduction ratio", ["a_f"], {
+  derived(p, "axial_zFactor", "Denominator of z-axis axial reduction ratio", ["a_f"], {
     expression: "1-a_f",
   }),
-  derived(p, "axial_z_ratio", "z-axis axial reduction ratio", ["axial_z_num", "axial_z_den"], {
+  derived(p, "axial_z_ratio", "z-axis axial reduction ratio", ["axial_zProduct", "axial_zFactor"], {
     expression: "(n-a_f)/(1-a_f)",
   }),
   derived(p, "axial_z_ratio_sq", "Squared z-axis axial reduction ratio", ["axial_z_ratio"], {
@@ -125,10 +126,10 @@ const nodes = [
   derived(p, "n_sq", "Squared axial ratio", ["n"], {
     expression: "n^2",
   }),
-  derived(p, "rhs_exp_den", "RHS exponent denominator", ["n_sq"], {
+  derived(p, "rhs_expFactor", "RHS exponent denominator", ["n_sq"], {
     expression: "1-1.13n^2",
   }),
-  derived(p, "rhs_exp_raw", "Raw RHS exponent", ["rhs_exp_den"], {
+  derived(p, "rhs_exp_raw", "Raw RHS exponent", ["rhs_expFactor"], {
     expression: "1.66/(1-1.13n^2)",
   }),
   derived(p, "rhs_exp", "RHS exponent capped at 6", ["rhs_exp_raw"], {
@@ -173,9 +174,15 @@ export const ulsBiaxialAxial: VerificationDefinition<typeof nodes> = {
     N_pl_Rd: ({ A, fy, gamma_M0 }) => (A * fy) / gamma_M0,
     abs_N_Ed: ({ N_Ed }) => Math.abs(N_Ed),
     n: ({ abs_N_Ed, N_pl_Rd }) => abs_N_Ed / N_pl_Rd,
-    a_w_raw: ({ Av_z, A }) => Av_z / A,
+    a_w_raw: ({ section_shape, A, Av_y, Av_z }) => {
+      if (A <= 0) throwInvalidInput("biaxial-axial: A must be > 0");
+      return section_shape === "I" ? (A - Av_y) / A : Av_z / A;
+    },
     a_w: ({ a_w_raw }) => Math.min(a_w_raw, 0.5),
-    a_f_raw: ({ Av_z, A }) => Av_z / A,
+    a_f_raw: ({ section_shape, A, Av_y, Av_z }) => {
+      if (A <= 0) throwInvalidInput("biaxial-axial: A must be > 0");
+      return section_shape === "I" ? (A - Av_y) / A : Av_z / A;
+    },
     a_f: ({ a_f_raw }) => Math.min(a_f_raw, 0.5),
     class_guard: ({ section_class }) => {
       if (section_class === 4) {
@@ -188,24 +195,24 @@ export const ulsBiaxialAxial: VerificationDefinition<typeof nodes> = {
     },
     W_y_res: ({ section_class, Wpl_y, Wel_y }) => (section_class === 3 ? Wel_y : Wpl_y),
     W_z_res: ({ section_class, Wpl_z, Wel_z }) => (section_class === 3 ? Wel_z : Wpl_z),
-    M_pl_y_num: ({ W_y_res, fy }) => W_y_res * fy,
-    M_pl_y_Rd: ({ class_guard, M_pl_y_num, gamma_M0 }) => class_guard * (M_pl_y_num / gamma_M0),
-    M_pl_z_num: ({ W_z_res, fy }) => W_z_res * fy,
-    M_pl_z_Rd: ({ class_guard, M_pl_z_num, gamma_M0 }) => class_guard * (M_pl_z_num / gamma_M0),
-    axial_y_num: ({ n }) => 1 - n,
-    axial_y_den: ({ a_w }) => 1 - 0.5 * a_w,
-    axial_y_ratio: ({ axial_y_num, axial_y_den }) => axial_y_num / axial_y_den,
+    M_pl_yProduct: ({ W_y_res, fy }) => W_y_res * fy,
+    M_pl_y_Rd: ({ class_guard, M_pl_yProduct, gamma_M0 }) => class_guard * (M_pl_yProduct / gamma_M0),
+    M_pl_zProduct: ({ W_z_res, fy }) => W_z_res * fy,
+    M_pl_z_Rd: ({ class_guard, M_pl_zProduct, gamma_M0 }) => class_guard * (M_pl_zProduct / gamma_M0),
+    axial_yProduct: ({ n }) => 1 - n,
+    axial_yFactor: ({ a_w }) => 1 - 0.5 * a_w,
+    axial_y_ratio: ({ axial_yProduct, axial_yFactor }) => axial_yProduct / axial_yFactor,
     axial_y_factor: ({ axial_y_ratio }) => Math.min(1, axial_y_ratio),
     M_N_y_Rd: ({ M_pl_y_Rd, axial_y_factor }) => M_pl_y_Rd * axial_y_factor,
-    axial_z_num: ({ n, a_f }) => n - a_f,
-    axial_z_den: ({ a_f }) => 1 - a_f,
-    axial_z_ratio: ({ axial_z_num, axial_z_den }) => axial_z_num / axial_z_den,
+    axial_zProduct: ({ n, a_f }) => n - a_f,
+    axial_zFactor: ({ a_f }) => 1 - a_f,
+    axial_z_ratio: ({ axial_zProduct, axial_zFactor }) => axial_zProduct / axial_zFactor,
     axial_z_ratio_sq: ({ axial_z_ratio }) => axial_z_ratio ** 2,
     axial_z_factor: ({ n, a_f, axial_z_ratio_sq }) => (n <= a_f ? 1 : 1 - axial_z_ratio_sq),
     M_N_z_Rd: ({ M_pl_z_Rd, axial_z_factor }) => M_pl_z_Rd * axial_z_factor,
     n_sq: ({ n }) => n ** 2,
-    rhs_exp_den: ({ n_sq }) => 1 - 1.13 * n_sq,
-    rhs_exp_raw: ({ rhs_exp_den }) => 1.66 / rhs_exp_den,
+    rhs_expFactor: ({ n_sq }) => 1 - 1.13 * n_sq,
+    rhs_exp_raw: ({ rhs_expFactor }) => 1.66 / rhs_expFactor,
     rhs_exp: ({ rhs_exp_raw }) => Math.min(rhs_exp_raw, 6),
     alpha_biax: ({ section_shape, rhs_exp }) => (section_shape === "RHS" ? rhs_exp : 2),
     beta_biax: ({ section_shape, n, rhs_exp }) => {

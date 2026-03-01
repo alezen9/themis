@@ -46,9 +46,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_y` (derived) = 3000
 13. `Lcr_y_sq` (derived) = 9.000000e+6
-14. `N_cr_y_num` (derived) = 4.027095e+13
+14. `N_cr_yProduct` (derived) = 4.027095e+13
 15. `N_cr_y` (derived) = 4.474550e+6
-16. `lambda_bar_y_num` (derived) = 1.011040e+6
+16. `lambda_bar_yProduct` (derived) = 1.011040e+6
 17. `lambda_bar_y_sq` (derived) = 0.225953466
 18. `lambda_bar_y` (derived) = 0.475345627
 19. `lambda_bar_y_minus_02` (derived) = 0.275345627
@@ -58,10 +58,10 @@
 23. `phi_y_sq` (derived) = 0.412020235
 24. `chi_y_root_arg` (derived) = 0.186066769
 25. `chi_y_root` (derived) = 0.431354575
-26. `chi_y_den` (derived) = 1.073242599
+26. `chi_yFactor` (derived) = 1.073242599
 27. `chi_y_base` (derived) = 0.931755785
 28. `chi_y` (formula) = 0.931755785
-29. `N_b_y_num` (derived) = 942042.368857003
+29. `N_b_yProduct` (derived) = 942042.368857003
 30. `N_b_y_Rd` (formula) = 942042.368857003
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -77,9 +77,9 @@
   "buckling_y_check": 0.2123046761077887,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_root": 0.4313545749857082,
   "chi_y_root_arg": 0.18606676936110092,
+  "chi_yFactor": 1.0732425986600935,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -89,14 +89,14 @@
   "L": 3000,
   "lambda_bar_y": 0.47534562749173087,
   "lambda_bar_y_minus_02": 0.27534562749173086,
-  "lambda_bar_y_num": 1011040,
   "lambda_bar_y_sq": 0.22595346557550736,
+  "lambda_bar_yProduct": 1011040,
   "Lcr_y": 3000,
   "Lcr_y_sq": 9000000,
-  "N_b_y_num": 942042.3688570028,
   "N_b_y_Rd": 942042.3688570028,
+  "N_b_yProduct": 942042.3688570028,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_Ed": -200000,
   "phi_y": 0.6418880236743854,
   "phi_y_alpha_term": 0.05782258177326348,
@@ -128,9 +128,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_y` (derived) = 3000
 13. `Lcr_y_sq` (derived) = 9.000000e+6
-14. `N_cr_y_num` (derived) = 4.027095e+13
+14. `N_cr_yProduct` (derived) = 4.027095e+13
 15. `N_cr_y` (derived) = 4.474550e+6
-16. `lambda_bar_y_num` (derived) = 1.011040e+6
+16. `lambda_bar_yProduct` (derived) = 1.011040e+6
 17. `lambda_bar_y_sq` (derived) = 0.225953466
 18. `lambda_bar_y` (derived) = 0.475345627
 19. `lambda_bar_y_minus_02` (derived) = 0.275345627
@@ -140,10 +140,10 @@
 23. `phi_y_sq` (derived) = 0.412020235
 24. `chi_y_root_arg` (derived) = 0.186066769
 25. `chi_y_root` (derived) = 0.431354575
-26. `chi_y_den` (derived) = 1.073242599
+26. `chi_yFactor` (derived) = 1.073242599
 27. `chi_y_base` (derived) = 0.931755785
 28. `chi_y` (formula) = 0.931755785
-29. `N_b_y_num` (derived) = 942042.368857003
+29. `N_b_yProduct` (derived) = 942042.368857003
 30. `N_b_y_Rd` (formula) = 942042.368857003
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -159,9 +159,9 @@
   "buckling_y_check": 0.2123046761077887,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_root": 0.4313545749857082,
   "chi_y_root_arg": 0.18606676936110092,
+  "chi_yFactor": 1.0732425986600935,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -171,14 +171,14 @@
   "L": 3000,
   "lambda_bar_y": 0.47534562749173087,
   "lambda_bar_y_minus_02": 0.27534562749173086,
-  "lambda_bar_y_num": 1011040,
   "lambda_bar_y_sq": 0.22595346557550736,
+  "lambda_bar_yProduct": 1011040,
   "Lcr_y": 3000,
   "Lcr_y_sq": 9000000,
-  "N_b_y_num": 942042.3688570028,
   "N_b_y_Rd": 942042.3688570028,
+  "N_b_yProduct": 942042.3688570028,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_Ed": -200000,
   "phi_y": 0.6418880236743854,
   "phi_y_alpha_term": 0.05782258177326348,
@@ -210,9 +210,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_y` (derived) = 3000
 13. `Lcr_y_sq` (derived) = 9.000000e+6
-14. `N_cr_y_num` (derived) = 4.027095e+13
+14. `N_cr_yProduct` (derived) = 4.027095e+13
 15. `N_cr_y` (derived) = 4.474550e+6
-16. `lambda_bar_y_num` (derived) = 1.011040e+6
+16. `lambda_bar_yProduct` (derived) = 1.011040e+6
 17. `lambda_bar_y_sq` (derived) = 0.225953466
 18. `lambda_bar_y` (derived) = 0.475345627
 19. `lambda_bar_y_minus_02` (derived) = 0.275345627
@@ -222,10 +222,10 @@
 23. `phi_y_sq` (derived) = 0.412020235
 24. `chi_y_root_arg` (derived) = 0.186066769
 25. `chi_y_root` (derived) = 0.431354575
-26. `chi_y_den` (derived) = 1.073242599
+26. `chi_yFactor` (derived) = 1.073242599
 27. `chi_y_base` (derived) = 0.931755785
 28. `chi_y` (formula) = 0.931755785
-29. `N_b_y_num` (derived) = 942042.368857003
+29. `N_b_yProduct` (derived) = 942042.368857003
 30. `N_b_y_Rd` (formula) = 942042.368857003
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -241,9 +241,9 @@
   "buckling_y_check": 0.2123046761077887,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_root": 0.4313545749857082,
   "chi_y_root_arg": 0.18606676936110092,
+  "chi_yFactor": 1.0732425986600935,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -253,14 +253,14 @@
   "L": 3000,
   "lambda_bar_y": 0.47534562749173087,
   "lambda_bar_y_minus_02": 0.27534562749173086,
-  "lambda_bar_y_num": 1011040,
   "lambda_bar_y_sq": 0.22595346557550736,
+  "lambda_bar_yProduct": 1011040,
   "Lcr_y": 3000,
   "Lcr_y_sq": 9000000,
-  "N_b_y_num": 942042.3688570028,
   "N_b_y_Rd": 942042.3688570028,
+  "N_b_yProduct": 942042.3688570028,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_Ed": -200000,
   "phi_y": 0.6418880236743854,
   "phi_y_alpha_term": 0.05782258177326348,
@@ -299,9 +299,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_y` (derived) = 3000
 13. `Lcr_y_sq` (derived) = 9.000000e+6
-14. `N_cr_y_num` (derived) = 4.027095e+13
+14. `N_cr_yProduct` (derived) = 4.027095e+13
 15. `N_cr_y` (derived) = 4.474550e+6
-16. `lambda_bar_y_num` (derived) = 1.011040e+6
+16. `lambda_bar_yProduct` (derived) = 1.011040e+6
 17. `lambda_bar_y_sq` (derived) = 0.225953466
 18. `lambda_bar_y` (derived) = 0.475345627
 19. `lambda_bar_y_minus_02` (derived) = 0.275345627
@@ -311,10 +311,10 @@
 23. `phi_y_sq` (derived) = 0.412020235
 24. `chi_y_root_arg` (derived) = 0.186066769
 25. `chi_y_root` (derived) = 0.431354575
-26. `chi_y_den` (derived) = 1.073242599
+26. `chi_yFactor` (derived) = 1.073242599
 27. `chi_y_base` (derived) = 0.931755785
 28. `chi_y` (formula) = 0.931755785
-29. `N_b_y_num` (derived) = 942042.368857003
+29. `N_b_yProduct` (derived) = 942042.368857003
 30. `N_b_y_Rd` (formula) = 942042.368857003
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -330,9 +330,9 @@
   "buckling_y_check": 0.2123046761077887,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_root": 0.4313545749857082,
   "chi_y_root_arg": 0.18606676936110092,
+  "chi_yFactor": 1.0732425986600935,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -342,14 +342,14 @@
   "L": 3000,
   "lambda_bar_y": 0.47534562749173087,
   "lambda_bar_y_minus_02": 0.27534562749173086,
-  "lambda_bar_y_num": 1011040,
   "lambda_bar_y_sq": 0.22595346557550736,
+  "lambda_bar_yProduct": 1011040,
   "Lcr_y": 3000,
   "Lcr_y_sq": 9000000,
-  "N_b_y_num": 942042.3688570028,
   "N_b_y_Rd": 942042.3688570028,
+  "N_b_yProduct": 942042.3688570028,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_Ed": -200000,
   "phi_y": 0.6418880236743854,
   "phi_y_alpha_term": 0.05782258177326348,
@@ -381,9 +381,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_y` (derived) = 3000
 13. `Lcr_y_sq` (derived) = 9.000000e+6
-14. `N_cr_y_num` (derived) = 4.027095e+13
+14. `N_cr_yProduct` (derived) = 4.027095e+13
 15. `N_cr_y` (derived) = 4.474550e+6
-16. `lambda_bar_y_num` (derived) = 1.011040e+6
+16. `lambda_bar_yProduct` (derived) = 1.011040e+6
 17. `lambda_bar_y_sq` (derived) = 0.225953466
 18. `lambda_bar_y` (derived) = 0.475345627
 19. `lambda_bar_y_minus_02` (derived) = 0.275345627
@@ -393,10 +393,10 @@
 23. `phi_y_sq` (derived) = 0.412020235
 24. `chi_y_root_arg` (derived) = 0.186066769
 25. `chi_y_root` (derived) = 0.431354575
-26. `chi_y_den` (derived) = 1.073242599
+26. `chi_yFactor` (derived) = 1.073242599
 27. `chi_y_base` (derived) = 0.931755785
 28. `chi_y` (formula) = 0.931755785
-29. `N_b_y_num` (derived) = 942042.368857003
+29. `N_b_yProduct` (derived) = 942042.368857003
 30. `N_b_y_Rd` (formula) = 942042.368857003
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -412,9 +412,9 @@
   "buckling_y_check": 0.2123046761077887,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_root": 0.4313545749857082,
   "chi_y_root_arg": 0.18606676936110092,
+  "chi_yFactor": 1.0732425986600935,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -424,14 +424,14 @@
   "L": 3000,
   "lambda_bar_y": 0.47534562749173087,
   "lambda_bar_y_minus_02": 0.27534562749173086,
-  "lambda_bar_y_num": 1011040,
   "lambda_bar_y_sq": 0.22595346557550736,
+  "lambda_bar_yProduct": 1011040,
   "Lcr_y": 3000,
   "Lcr_y_sq": 9000000,
-  "N_b_y_num": 942042.3688570028,
   "N_b_y_Rd": 942042.3688570028,
+  "N_b_yProduct": 942042.3688570028,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_Ed": -200000,
   "phi_y": 0.6418880236743854,
   "phi_y_alpha_term": 0.05782258177326348,
@@ -463,9 +463,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_y` (derived) = 3000
 13. `Lcr_y_sq` (derived) = 9.000000e+6
-14. `N_cr_y_num` (derived) = 4.027095e+13
+14. `N_cr_yProduct` (derived) = 4.027095e+13
 15. `N_cr_y` (derived) = 4.474550e+6
-16. `lambda_bar_y_num` (derived) = 1.011040e+6
+16. `lambda_bar_yProduct` (derived) = 1.011040e+6
 17. `lambda_bar_y_sq` (derived) = 0.225953466
 18. `lambda_bar_y` (derived) = 0.475345627
 19. `lambda_bar_y_minus_02` (derived) = 0.275345627
@@ -475,10 +475,10 @@
 23. `phi_y_sq` (derived) = 0.412020235
 24. `chi_y_root_arg` (derived) = 0.186066769
 25. `chi_y_root` (derived) = 0.431354575
-26. `chi_y_den` (derived) = 1.073242599
+26. `chi_yFactor` (derived) = 1.073242599
 27. `chi_y_base` (derived) = 0.931755785
 28. `chi_y` (formula) = 0.931755785
-29. `N_b_y_num` (derived) = 942042.368857003
+29. `N_b_yProduct` (derived) = 942042.368857003
 30. `N_b_y_Rd` (formula) = 942042.368857003
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -494,9 +494,9 @@
   "buckling_y_check": 0.2123046761077887,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_root": 0.4313545749857082,
   "chi_y_root_arg": 0.18606676936110092,
+  "chi_yFactor": 1.0732425986600935,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -506,14 +506,14 @@
   "L": 3000,
   "lambda_bar_y": 0.47534562749173087,
   "lambda_bar_y_minus_02": 0.27534562749173086,
-  "lambda_bar_y_num": 1011040,
   "lambda_bar_y_sq": 0.22595346557550736,
+  "lambda_bar_yProduct": 1011040,
   "Lcr_y": 3000,
   "Lcr_y_sq": 9000000,
-  "N_b_y_num": 942042.3688570028,
   "N_b_y_Rd": 942042.3688570028,
+  "N_b_yProduct": 942042.3688570028,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_Ed": -200000,
   "phi_y": 0.6418880236743854,
   "phi_y_alpha_term": 0.05782258177326348,
@@ -552,9 +552,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_y` (derived) = 3000
 13. `Lcr_y_sq` (derived) = 9.000000e+6
-14. `N_cr_y_num` (derived) = 4.027095e+13
+14. `N_cr_yProduct` (derived) = 4.027095e+13
 15. `N_cr_y` (derived) = 4.474550e+6
-16. `lambda_bar_y_num` (derived) = 1.011040e+6
+16. `lambda_bar_yProduct` (derived) = 1.011040e+6
 17. `lambda_bar_y_sq` (derived) = 0.225953466
 18. `lambda_bar_y` (derived) = 0.475345627
 19. `lambda_bar_y_minus_02` (derived) = 0.275345627
@@ -564,10 +564,10 @@
 23. `phi_y_sq` (derived) = 0.412020235
 24. `chi_y_root_arg` (derived) = 0.186066769
 25. `chi_y_root` (derived) = 0.431354575
-26. `chi_y_den` (derived) = 1.073242599
+26. `chi_yFactor` (derived) = 1.073242599
 27. `chi_y_base` (derived) = 0.931755785
 28. `chi_y` (formula) = 0.931755785
-29. `N_b_y_num` (derived) = 942042.368857003
+29. `N_b_yProduct` (derived) = 942042.368857003
 30. `N_b_y_Rd` (formula) = 942042.368857003
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -583,9 +583,9 @@
   "buckling_y_check": 0.2123046761077887,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_root": 0.4313545749857082,
   "chi_y_root_arg": 0.18606676936110092,
+  "chi_yFactor": 1.0732425986600935,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -595,14 +595,14 @@
   "L": 3000,
   "lambda_bar_y": 0.47534562749173087,
   "lambda_bar_y_minus_02": 0.27534562749173086,
-  "lambda_bar_y_num": 1011040,
   "lambda_bar_y_sq": 0.22595346557550736,
+  "lambda_bar_yProduct": 1011040,
   "Lcr_y": 3000,
   "Lcr_y_sq": 9000000,
-  "N_b_y_num": 942042.3688570028,
   "N_b_y_Rd": 942042.3688570028,
+  "N_b_yProduct": 942042.3688570028,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_Ed": -200000,
   "phi_y": 0.6418880236743854,
   "phi_y_alpha_term": 0.05782258177326348,
@@ -634,9 +634,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_y` (derived) = 3000
 13. `Lcr_y_sq` (derived) = 9.000000e+6
-14. `N_cr_y_num` (derived) = 4.027095e+13
+14. `N_cr_yProduct` (derived) = 4.027095e+13
 15. `N_cr_y` (derived) = 4.474550e+6
-16. `lambda_bar_y_num` (derived) = 1.011040e+6
+16. `lambda_bar_yProduct` (derived) = 1.011040e+6
 17. `lambda_bar_y_sq` (derived) = 0.225953466
 18. `lambda_bar_y` (derived) = 0.475345627
 19. `lambda_bar_y_minus_02` (derived) = 0.275345627
@@ -646,10 +646,10 @@
 23. `phi_y_sq` (derived) = 0.412020235
 24. `chi_y_root_arg` (derived) = 0.186066769
 25. `chi_y_root` (derived) = 0.431354575
-26. `chi_y_den` (derived) = 1.073242599
+26. `chi_yFactor` (derived) = 1.073242599
 27. `chi_y_base` (derived) = 0.931755785
 28. `chi_y` (formula) = 0.931755785
-29. `N_b_y_num` (derived) = 942042.368857003
+29. `N_b_yProduct` (derived) = 942042.368857003
 30. `N_b_y_Rd` (formula) = 942042.368857003
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -665,9 +665,9 @@
   "buckling_y_check": 0.2123046761077887,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_root": 0.4313545749857082,
   "chi_y_root_arg": 0.18606676936110092,
+  "chi_yFactor": 1.0732425986600935,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -677,14 +677,14 @@
   "L": 3000,
   "lambda_bar_y": 0.47534562749173087,
   "lambda_bar_y_minus_02": 0.27534562749173086,
-  "lambda_bar_y_num": 1011040,
   "lambda_bar_y_sq": 0.22595346557550736,
+  "lambda_bar_yProduct": 1011040,
   "Lcr_y": 3000,
   "Lcr_y_sq": 9000000,
-  "N_b_y_num": 942042.3688570028,
   "N_b_y_Rd": 942042.3688570028,
+  "N_b_yProduct": 942042.3688570028,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_Ed": -200000,
   "phi_y": 0.6418880236743854,
   "phi_y_alpha_term": 0.05782258177326348,
@@ -716,9 +716,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_y` (derived) = 3000
 13. `Lcr_y_sq` (derived) = 9.000000e+6
-14. `N_cr_y_num` (derived) = 4.027095e+13
+14. `N_cr_yProduct` (derived) = 4.027095e+13
 15. `N_cr_y` (derived) = 4.474550e+6
-16. `lambda_bar_y_num` (derived) = 1.011040e+6
+16. `lambda_bar_yProduct` (derived) = 1.011040e+6
 17. `lambda_bar_y_sq` (derived) = 0.225953466
 18. `lambda_bar_y` (derived) = 0.475345627
 19. `lambda_bar_y_minus_02` (derived) = 0.275345627
@@ -728,10 +728,10 @@
 23. `phi_y_sq` (derived) = 0.412020235
 24. `chi_y_root_arg` (derived) = 0.186066769
 25. `chi_y_root` (derived) = 0.431354575
-26. `chi_y_den` (derived) = 1.073242599
+26. `chi_yFactor` (derived) = 1.073242599
 27. `chi_y_base` (derived) = 0.931755785
 28. `chi_y` (formula) = 0.931755785
-29. `N_b_y_num` (derived) = 942042.368857003
+29. `N_b_yProduct` (derived) = 942042.368857003
 30. `N_b_y_Rd` (formula) = 942042.368857003
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -747,9 +747,9 @@
   "buckling_y_check": 0.2123046761077887,
   "chi_y": 0.9317557849907053,
   "chi_y_base": 0.9317557849907053,
-  "chi_y_den": 1.0732425986600935,
   "chi_y_root": 0.4313545749857082,
   "chi_y_root_arg": 0.18606676936110092,
+  "chi_yFactor": 1.0732425986600935,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -759,14 +759,14 @@
   "L": 3000,
   "lambda_bar_y": 0.47534562749173087,
   "lambda_bar_y_minus_02": 0.27534562749173086,
-  "lambda_bar_y_num": 1011040,
   "lambda_bar_y_sq": 0.22595346557550736,
+  "lambda_bar_yProduct": 1011040,
   "Lcr_y": 3000,
   "Lcr_y_sq": 9000000,
-  "N_b_y_num": 942042.3688570028,
   "N_b_y_Rd": 942042.3688570028,
+  "N_b_yProduct": 942042.3688570028,
   "N_cr_y": 4474549.648640545,
-  "N_cr_y_num": 40270946837764.91,
+  "N_cr_yProduct": 40270946837764.91,
   "N_Ed": -200000,
   "phi_y": 0.6418880236743854,
   "phi_y_alpha_term": 0.05782258177326348,

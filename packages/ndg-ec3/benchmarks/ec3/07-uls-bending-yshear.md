@@ -43,8 +43,8 @@
 8. `fy` (user-input) = 355
 9. `gamma_M0` (coefficient) = 1
 10. `sqrt3` (constant) = 1.732050808
-11. `V_pl_z_num` (derived) = 505520
-12. `V_pl_z_den` (derived) = 1.732050808
+11. `V_pl_zProduct` (derived) = 505520
+12. `V_pl_zFactor` (derived) = 1.732050808
 13. `V_pl_z_Rd` (formula) = 291862.10808074
 14. `abs_V_z_Ed` (derived) = 50000
 15. `rho_ratio` (derived) = 0.171313777
@@ -57,7 +57,7 @@
 22. `class_guard` (derived) = 1
 23. `W_y_res` (derived) = 220600
 24. `Wpl_y_eff` (derived) = 220600
-25. `M_y_V_num` (derived) = 7.831300e+7
+25. `M_y_VProduct` (derived) = 7.831300e+7
 26. `M_y_V_Rd` (formula) = 7.831300e+7
 27. `abs_M_y_Ed` (derived) = 2.000000e+7
 28. `bending_y_shear_check` (check) = 0.25538544
@@ -75,8 +75,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_y_Ed": 20000000,
-  "M_y_V_num": 78313000,
   "M_y_V_Rd": 78313000,
+  "M_y_VProduct": 78313000,
   "rho_linear": -0.6573724466749333,
   "rho_mod_reduction": 0,
   "rho_ratio": 0.17131377666253336,
@@ -86,9 +86,9 @@
   "shear_mod_reduction": 90525.71428571429,
   "sqrt3": 1.7320508075688772,
   "tw": 5.6,
-  "V_pl_z_den": 1.7320508075688772,
-  "V_pl_z_num": 505520,
   "V_pl_z_Rd": 291862.1080807396,
+  "V_pl_zFactor": 1.7320508075688772,
+  "V_pl_zProduct": 505520,
   "V_z_Ed": 50000,
   "W_y_res": 220600,
   "Wel_y": 200000,
@@ -115,8 +115,8 @@
 8. `fy` (user-input) = 355
 9. `gamma_M0` (coefficient) = 1
 10. `sqrt3` (constant) = 1.732050808
-11. `V_pl_z_num` (derived) = 505520
-12. `V_pl_z_den` (derived) = 1.732050808
+11. `V_pl_zProduct` (derived) = 505520
+12. `V_pl_zFactor` (derived) = 1.732050808
 13. `V_pl_z_Rd` (formula) = 291862.10808074
 14. `abs_V_z_Ed` (derived) = 50000
 15. `rho_ratio` (derived) = 0.171313777
@@ -129,7 +129,7 @@
 22. `class_guard` (derived) = 1
 23. `W_y_res` (derived) = 220600
 24. `Wpl_y_eff` (derived) = 220600
-25. `M_y_V_num` (derived) = 7.831300e+7
+25. `M_y_VProduct` (derived) = 7.831300e+7
 26. `M_y_V_Rd` (formula) = 7.831300e+7
 27. `abs_M_y_Ed` (derived) = 2.000000e+7
 28. `bending_y_shear_check` (check) = 0.25538544
@@ -147,8 +147,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_y_Ed": 20000000,
-  "M_y_V_num": 78313000,
   "M_y_V_Rd": 78313000,
+  "M_y_VProduct": 78313000,
   "rho_linear": -0.6573724466749333,
   "rho_mod_reduction": 0,
   "rho_ratio": 0.17131377666253336,
@@ -158,9 +158,9 @@
   "shear_mod_reduction": 90525.71428571429,
   "sqrt3": 1.7320508075688772,
   "tw": 5.6,
-  "V_pl_z_den": 1.7320508075688772,
-  "V_pl_z_num": 505520,
   "V_pl_z_Rd": 291862.1080807396,
+  "V_pl_zFactor": 1.7320508075688772,
+  "V_pl_zProduct": 505520,
   "V_z_Ed": 50000,
   "W_y_res": 220600,
   "Wel_y": 200000,
@@ -187,8 +187,8 @@
 8. `fy` (user-input) = 355
 9. `gamma_M0` (coefficient) = 1
 10. `sqrt3` (constant) = 1.732050808
-11. `V_pl_z_num` (derived) = 505520
-12. `V_pl_z_den` (derived) = 1.732050808
+11. `V_pl_zProduct` (derived) = 505520
+12. `V_pl_zFactor` (derived) = 1.732050808
 13. `V_pl_z_Rd` (formula) = 291862.10808074
 14. `abs_V_z_Ed` (derived) = 50000
 15. `rho_ratio` (derived) = 0.171313777
@@ -201,7 +201,7 @@
 22. `class_guard` (derived) = 1
 23. `W_y_res` (derived) = 200000
 24. `Wpl_y_eff` (derived) = 200000
-25. `M_y_V_num` (derived) = 7.100000e+7
+25. `M_y_VProduct` (derived) = 7.100000e+7
 26. `M_y_V_Rd` (formula) = 7.100000e+7
 27. `abs_M_y_Ed` (derived) = 2.000000e+7
 28. `bending_y_shear_check` (check) = 0.281690141
@@ -219,8 +219,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_y_Ed": 20000000,
-  "M_y_V_num": 71000000,
   "M_y_V_Rd": 71000000,
+  "M_y_VProduct": 71000000,
   "rho_linear": -0.6573724466749333,
   "rho_mod_reduction": 0,
   "rho_ratio": 0.17131377666253336,
@@ -230,9 +230,9 @@
   "shear_mod_reduction": 90525.71428571429,
   "sqrt3": 1.7320508075688772,
   "tw": 5.6,
-  "V_pl_z_den": 1.7320508075688772,
-  "V_pl_z_num": 505520,
   "V_pl_z_Rd": 291862.1080807396,
+  "V_pl_zFactor": 1.7320508075688772,
+  "V_pl_zProduct": 505520,
   "V_z_Ed": 50000,
   "W_y_res": 200000,
   "Wel_y": 200000,
@@ -266,8 +266,8 @@
 8. `fy` (user-input) = 355
 9. `gamma_M0` (coefficient) = 1
 10. `sqrt3` (constant) = 1.732050808
-11. `V_pl_z_num` (derived) = 505520
-12. `V_pl_z_den` (derived) = 1.732050808
+11. `V_pl_zProduct` (derived) = 505520
+12. `V_pl_zFactor` (derived) = 1.732050808
 13. `V_pl_z_Rd` (formula) = 291862.10808074
 14. `abs_V_z_Ed` (derived) = 50000
 15. `rho_ratio` (derived) = 0.171313777
@@ -280,7 +280,7 @@
 22. `class_guard` (derived) = 1
 23. `W_y_res` (derived) = 220600
 24. `Wpl_y_eff` (derived) = 220600
-25. `M_y_V_num` (derived) = 7.831300e+7
+25. `M_y_VProduct` (derived) = 7.831300e+7
 26. `M_y_V_Rd` (formula) = 7.831300e+7
 27. `abs_M_y_Ed` (derived) = 2.000000e+7
 28. `bending_y_shear_check` (check) = 0.25538544
@@ -298,8 +298,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_y_Ed": 20000000,
-  "M_y_V_num": 78313000,
   "M_y_V_Rd": 78313000,
+  "M_y_VProduct": 78313000,
   "rho_linear": -0.6573724466749333,
   "rho_mod_reduction": 0,
   "rho_ratio": 0.17131377666253336,
@@ -309,9 +309,9 @@
   "shear_mod_reduction": 90525.71428571429,
   "sqrt3": 1.7320508075688772,
   "tw": 5.6,
-  "V_pl_z_den": 1.7320508075688772,
-  "V_pl_z_num": 505520,
   "V_pl_z_Rd": 291862.1080807396,
+  "V_pl_zFactor": 1.7320508075688772,
+  "V_pl_zProduct": 505520,
   "V_z_Ed": 50000,
   "W_y_res": 220600,
   "Wel_y": 200000,
@@ -338,8 +338,8 @@
 8. `fy` (user-input) = 355
 9. `gamma_M0` (coefficient) = 1
 10. `sqrt3` (constant) = 1.732050808
-11. `V_pl_z_num` (derived) = 505520
-12. `V_pl_z_den` (derived) = 1.732050808
+11. `V_pl_zProduct` (derived) = 505520
+12. `V_pl_zFactor` (derived) = 1.732050808
 13. `V_pl_z_Rd` (formula) = 291862.10808074
 14. `abs_V_z_Ed` (derived) = 50000
 15. `rho_ratio` (derived) = 0.171313777
@@ -352,7 +352,7 @@
 22. `class_guard` (derived) = 1
 23. `W_y_res` (derived) = 220600
 24. `Wpl_y_eff` (derived) = 220600
-25. `M_y_V_num` (derived) = 7.831300e+7
+25. `M_y_VProduct` (derived) = 7.831300e+7
 26. `M_y_V_Rd` (formula) = 7.831300e+7
 27. `abs_M_y_Ed` (derived) = 2.000000e+7
 28. `bending_y_shear_check` (check) = 0.25538544
@@ -370,8 +370,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_y_Ed": 20000000,
-  "M_y_V_num": 78313000,
   "M_y_V_Rd": 78313000,
+  "M_y_VProduct": 78313000,
   "rho_linear": -0.6573724466749333,
   "rho_mod_reduction": 0,
   "rho_ratio": 0.17131377666253336,
@@ -381,9 +381,9 @@
   "shear_mod_reduction": 90525.71428571429,
   "sqrt3": 1.7320508075688772,
   "tw": 5.6,
-  "V_pl_z_den": 1.7320508075688772,
-  "V_pl_z_num": 505520,
   "V_pl_z_Rd": 291862.1080807396,
+  "V_pl_zFactor": 1.7320508075688772,
+  "V_pl_zProduct": 505520,
   "V_z_Ed": 50000,
   "W_y_res": 220600,
   "Wel_y": 200000,
@@ -410,8 +410,8 @@
 8. `fy` (user-input) = 355
 9. `gamma_M0` (coefficient) = 1
 10. `sqrt3` (constant) = 1.732050808
-11. `V_pl_z_num` (derived) = 505520
-12. `V_pl_z_den` (derived) = 1.732050808
+11. `V_pl_zProduct` (derived) = 505520
+12. `V_pl_zFactor` (derived) = 1.732050808
 13. `V_pl_z_Rd` (formula) = 291862.10808074
 14. `abs_V_z_Ed` (derived) = 50000
 15. `rho_ratio` (derived) = 0.171313777
@@ -424,7 +424,7 @@
 22. `class_guard` (derived) = 1
 23. `W_y_res` (derived) = 200000
 24. `Wpl_y_eff` (derived) = 200000
-25. `M_y_V_num` (derived) = 7.100000e+7
+25. `M_y_VProduct` (derived) = 7.100000e+7
 26. `M_y_V_Rd` (formula) = 7.100000e+7
 27. `abs_M_y_Ed` (derived) = 2.000000e+7
 28. `bending_y_shear_check` (check) = 0.281690141
@@ -442,8 +442,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_y_Ed": 20000000,
-  "M_y_V_num": 71000000,
   "M_y_V_Rd": 71000000,
+  "M_y_VProduct": 71000000,
   "rho_linear": -0.6573724466749333,
   "rho_mod_reduction": 0,
   "rho_ratio": 0.17131377666253336,
@@ -453,9 +453,9 @@
   "shear_mod_reduction": 90525.71428571429,
   "sqrt3": 1.7320508075688772,
   "tw": 5.6,
-  "V_pl_z_den": 1.7320508075688772,
-  "V_pl_z_num": 505520,
   "V_pl_z_Rd": 291862.1080807396,
+  "V_pl_zFactor": 1.7320508075688772,
+  "V_pl_zProduct": 505520,
   "V_z_Ed": 50000,
   "W_y_res": 200000,
   "Wel_y": 200000,
@@ -489,8 +489,8 @@
 8. `fy` (user-input) = 355
 9. `gamma_M0` (coefficient) = 1
 10. `sqrt3` (constant) = 1.732050808
-11. `V_pl_z_num` (derived) = 505520
-12. `V_pl_z_den` (derived) = 1.732050808
+11. `V_pl_zProduct` (derived) = 505520
+12. `V_pl_zFactor` (derived) = 1.732050808
 13. `V_pl_z_Rd` (formula) = 291862.10808074
 14. `abs_V_z_Ed` (derived) = 50000
 15. `rho_ratio` (derived) = 0.171313777
@@ -503,7 +503,7 @@
 22. `class_guard` (derived) = 1
 23. `W_y_res` (derived) = 220600
 24. `Wpl_y_eff` (derived) = 220600
-25. `M_y_V_num` (derived) = 7.831300e+7
+25. `M_y_VProduct` (derived) = 7.831300e+7
 26. `M_y_V_Rd` (formula) = 7.831300e+7
 27. `abs_M_y_Ed` (derived) = 2.000000e+7
 28. `bending_y_shear_check` (check) = 0.25538544
@@ -521,8 +521,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_y_Ed": 20000000,
-  "M_y_V_num": 78313000,
   "M_y_V_Rd": 78313000,
+  "M_y_VProduct": 78313000,
   "rho_linear": -0.6573724466749333,
   "rho_mod_reduction": 0,
   "rho_ratio": 0.17131377666253336,
@@ -532,9 +532,9 @@
   "shear_mod_reduction": 90525.71428571429,
   "sqrt3": 1.7320508075688772,
   "tw": 5.6,
-  "V_pl_z_den": 1.7320508075688772,
-  "V_pl_z_num": 505520,
   "V_pl_z_Rd": 291862.1080807396,
+  "V_pl_zFactor": 1.7320508075688772,
+  "V_pl_zProduct": 505520,
   "V_z_Ed": 50000,
   "W_y_res": 220600,
   "Wel_y": 200000,
@@ -561,8 +561,8 @@
 8. `fy` (user-input) = 355
 9. `gamma_M0` (coefficient) = 1
 10. `sqrt3` (constant) = 1.732050808
-11. `V_pl_z_num` (derived) = 505520
-12. `V_pl_z_den` (derived) = 1.732050808
+11. `V_pl_zProduct` (derived) = 505520
+12. `V_pl_zFactor` (derived) = 1.732050808
 13. `V_pl_z_Rd` (formula) = 291862.10808074
 14. `abs_V_z_Ed` (derived) = 50000
 15. `rho_ratio` (derived) = 0.171313777
@@ -575,7 +575,7 @@
 22. `class_guard` (derived) = 1
 23. `W_y_res` (derived) = 220600
 24. `Wpl_y_eff` (derived) = 220600
-25. `M_y_V_num` (derived) = 7.831300e+7
+25. `M_y_VProduct` (derived) = 7.831300e+7
 26. `M_y_V_Rd` (formula) = 7.831300e+7
 27. `abs_M_y_Ed` (derived) = 2.000000e+7
 28. `bending_y_shear_check` (check) = 0.25538544
@@ -593,8 +593,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_y_Ed": 20000000,
-  "M_y_V_num": 78313000,
   "M_y_V_Rd": 78313000,
+  "M_y_VProduct": 78313000,
   "rho_linear": -0.6573724466749333,
   "rho_mod_reduction": 0,
   "rho_ratio": 0.17131377666253336,
@@ -604,9 +604,9 @@
   "shear_mod_reduction": 90525.71428571429,
   "sqrt3": 1.7320508075688772,
   "tw": 5.6,
-  "V_pl_z_den": 1.7320508075688772,
-  "V_pl_z_num": 505520,
   "V_pl_z_Rd": 291862.1080807396,
+  "V_pl_zFactor": 1.7320508075688772,
+  "V_pl_zProduct": 505520,
   "V_z_Ed": 50000,
   "W_y_res": 220600,
   "Wel_y": 200000,
@@ -633,8 +633,8 @@
 8. `fy` (user-input) = 355
 9. `gamma_M0` (coefficient) = 1
 10. `sqrt3` (constant) = 1.732050808
-11. `V_pl_z_num` (derived) = 505520
-12. `V_pl_z_den` (derived) = 1.732050808
+11. `V_pl_zProduct` (derived) = 505520
+12. `V_pl_zFactor` (derived) = 1.732050808
 13. `V_pl_z_Rd` (formula) = 291862.10808074
 14. `abs_V_z_Ed` (derived) = 50000
 15. `rho_ratio` (derived) = 0.171313777
@@ -647,7 +647,7 @@
 22. `class_guard` (derived) = 1
 23. `W_y_res` (derived) = 200000
 24. `Wpl_y_eff` (derived) = 200000
-25. `M_y_V_num` (derived) = 7.100000e+7
+25. `M_y_VProduct` (derived) = 7.100000e+7
 26. `M_y_V_Rd` (formula) = 7.100000e+7
 27. `abs_M_y_Ed` (derived) = 2.000000e+7
 28. `bending_y_shear_check` (check) = 0.281690141
@@ -665,8 +665,8 @@
   "fy": 355,
   "gamma_M0": 1,
   "M_y_Ed": 20000000,
-  "M_y_V_num": 71000000,
   "M_y_V_Rd": 71000000,
+  "M_y_VProduct": 71000000,
   "rho_linear": -0.6573724466749333,
   "rho_mod_reduction": 0,
   "rho_ratio": 0.17131377666253336,
@@ -676,9 +676,9 @@
   "shear_mod_reduction": 90525.71428571429,
   "sqrt3": 1.7320508075688772,
   "tw": 5.6,
-  "V_pl_z_den": 1.7320508075688772,
-  "V_pl_z_num": 505520,
   "V_pl_z_Rd": 291862.1080807396,
+  "V_pl_zFactor": 1.7320508075688772,
+  "V_pl_zProduct": 505520,
   "V_z_Ed": 50000,
   "W_y_res": 200000,
   "Wel_y": 200000,

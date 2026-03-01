@@ -123,7 +123,8 @@ describe("cross-verification sanity", () => {
 
   it("keeps z-axial shear boundary branch at n = a_f without extra reduction", () => {
     const NplRd = (inputs.A as number) * (inputs.fy as number) / (annex.coefficients.gamma_M0 as number);
-    const boundaryInputs = { ...inputs, N_Ed: -0.5 * NplRd };
+    const af = ((inputs.A as number) - (inputs.Av_y as number)) / (inputs.A as number);
+    const boundaryInputs = { ...inputs, N_Ed: -af * NplRd };
     const r = evaluate(ulsBendingZAxialShear, { inputs: boundaryInputs, annex });
     expect(r.cache.n).toBeCloseTo(r.cache.a_f as number, 10);
     expect(r.cache.M_NV_z_Rd).toBeCloseTo(r.cache.M_z_V_Rd as number, 8);
@@ -131,7 +132,8 @@ describe("cross-verification sanity", () => {
 
   it("keeps biaxial-axial-shear z-branch boundary at n = a_f", () => {
     const NplRd = (inputs.A as number) * (inputs.fy as number) / (annex.coefficients.gamma_M0 as number);
-    const boundaryInputs = { ...inputs, N_Ed: -0.5 * NplRd };
+    const af = ((inputs.A as number) - (inputs.Av_y as number)) / (inputs.A as number);
+    const boundaryInputs = { ...inputs, N_Ed: -af * NplRd };
     const r = evaluate(ulsBiaxialAxialShear, { inputs: boundaryInputs, annex });
     expect(r.cache.n).toBeCloseTo(r.cache.a_f as number, 10);
     expect(r.cache.M_NV_z_Rd).toBeCloseTo(r.cache.M_z_V_Rd as number, 8);

@@ -69,24 +69,24 @@ const nodes = [
   derived(p, "Lcr_y_sq", "Squared buckling length y", ["Lcr_y"], { expression: "L_{cr,y}^2", unit: "mm²" }),
   derived(p, "Lcr_z_sq", "Squared buckling length z", ["Lcr_z"], { expression: "L_{cr,z}^2", unit: "mm²" }),
   derived(p, "Lcr_LT_sq", "Squared LT buckling length", ["Lcr_LT"], { expression: "L_{cr,LT}^2", unit: "mm²" }),
-  derived(p, "N_cr_y_num", "Ncr,y numerator", ["piSq", "E", "Iy"], { expression: "\\pi^2EI_y" }),
-  derived(p, "N_cr_y", "Elastic critical force y", ["N_cr_y_num", "Lcr_y_sq"], {
+  derived(p, "N_cr_yProduct", "Ncr,y numerator", ["piSq", "E", "Iy"], { expression: "\\pi^2EI_y" }),
+  derived(p, "N_cr_y", "Elastic critical force y", ["N_cr_yProduct", "Lcr_y_sq"], {
     unit: "N",
     expression: "\\pi^2 E I_y / L_{cr,y}^2",
     meta: { sectionRef: "6.3.1.2" },
   }),
-  derived(p, "N_cr_z_num", "Ncr,z numerator", ["piSq", "E", "Iz"], { expression: "\\pi^2EI_z" }),
-  derived(p, "N_cr_z", "Elastic critical force z", ["N_cr_z_num", "Lcr_z_sq"], {
+  derived(p, "N_cr_zProduct", "Ncr,z numerator", ["piSq", "E", "Iz"], { expression: "\\pi^2EI_z" }),
+  derived(p, "N_cr_z", "Elastic critical force z", ["N_cr_zProduct", "Lcr_z_sq"], {
     unit: "N",
     expression: "\\pi^2 E I_z / L_{cr,z}^2",
     meta: { sectionRef: "6.3.1.2" },
   }),
-  derived(p, "ip2_num", "Polar radius numerator", ["Iy", "Iz"], { expression: "I_y+I_z" }),
-  derived(p, "ip2", "Polar radius denominator term", ["ip2_num", "A"], { expression: "(I_y+I_z)/A" }),
-  derived(p, "ncr_t_warp_num", "Warping term numerator", ["piSq", "E", "Iw"], { expression: "\\pi^2EI_w" }),
-  derived(p, "ncr_t_warp", "Warping term in Ncr,T", ["ncr_t_warp_num", "Lcr_z_sq"], { expression: "\\pi^2EI_w/L_{cr,z}^2" }),
-  derived(p, "ncr_t_num", "Numerator of Ncr,T", ["G", "It", "ncr_t_warp"], { expression: "GI_t+\\pi^2EI_w/L_{cr,z}^2" }),
-  derived(p, "N_cr_T", "Elastic torsional critical force", ["ncr_t_num", "ip2"], {
+  derived(p, "ip2Product", "Polar radius numerator", ["Iy", "Iz"], { expression: "I_y+I_z" }),
+  derived(p, "ip2", "Polar radius denominator term", ["ip2Product", "A"], { expression: "(I_y+I_z)/A" }),
+  derived(p, "ncr_t_warpProduct", "Warping term numerator", ["piSq", "E", "Iw"], { expression: "\\pi^2EI_w" }),
+  derived(p, "ncr_t_warp", "Warping term in Ncr,T", ["ncr_t_warpProduct", "Lcr_z_sq"], { expression: "\\pi^2EI_w/L_{cr,z}^2" }),
+  derived(p, "ncr_tProduct", "Numerator of Ncr,T", ["G", "It", "ncr_t_warp"], { expression: "GI_t+\\pi^2EI_w/L_{cr,z}^2" }),
+  derived(p, "N_cr_T", "Elastic torsional critical force", ["ncr_tProduct", "ip2"], {
     unit: "N",
     meta: { sectionRef: "6.3.1.4", paragraphRef: "(2)" },
   }),
@@ -95,12 +95,12 @@ const nodes = [
     expression: "\\min(N_{cr,T}, N_{cr,z})",
     meta: { sectionRef: "6.3.1.4", paragraphRef: "(2)" },
   }),
-  derived(p, "euler_num", "Euler numerator in Mcr", ["piSq", "E", "Iz"], { expression: "\\pi^2EI_z" }),
-  derived(p, "euler_term", "Euler term in Mcr", ["euler_num", "Lcr_LT_sq"], { expression: "\\pi^2EI_z/L_{cr,LT}^2" }),
+  derived(p, "eulerProduct", "Euler numerator in Mcr", ["piSq", "E", "Iz"], { expression: "\\pi^2EI_z" }),
+  derived(p, "euler_term", "Euler term in Mcr", ["eulerProduct", "Lcr_LT_sq"], { expression: "\\pi^2EI_z/L_{cr,LT}^2" }),
   derived(p, "torsion_ratio", "Warping ratio in Mcr", ["Iw", "Iz"], { expression: "I_w/I_z" }),
-  derived(p, "torsion_num", "Torsion additive numerator in Mcr", ["Lcr_LT_sq", "G", "It"], { expression: "L_{cr,LT}^2GI_t" }),
-  derived(p, "torsion_den", "Torsion additive denominator in Mcr", ["piSq", "E", "Iz"], { expression: "\\pi^2EI_z" }),
-  derived(p, "torsion_term", "Torsion additive term in Mcr", ["torsion_num", "torsion_den"], { expression: "\\frac{L_{cr,LT}^2GI_t}{\\pi^2EI_z}" }),
+  derived(p, "torsionProduct", "Torsion additive numerator in Mcr", ["Lcr_LT_sq", "G", "It"], { expression: "L_{cr,LT}^2GI_t" }),
+  derived(p, "torsionFactor", "Torsion additive denominator in Mcr", ["piSq", "E", "Iz"], { expression: "\\pi^2EI_z" }),
+  derived(p, "torsion_term", "Torsion additive term in Mcr", ["torsionProduct", "torsionFactor"], { expression: "\\frac{L_{cr,LT}^2GI_t}{\\pi^2EI_z}" }),
   derived(p, "torsion_sum", "Root term in Mcr", ["torsion_ratio", "torsion_term"], { expression: "\\frac{I_w}{I_z}+\\frac{L_{cr,LT}^2GI_t}{\\pi^2EI_z}" }),
   derived(p, "torsion_root", "Square-root term in Mcr", ["torsion_sum"], { expression: "\\sqrt{\\frac{I_w}{I_z}+\\frac{L_{cr,LT}^2GI_t}{\\pi^2EI_z}}" }),
   derived(p, "M_cr_prefactor", "Mcr prefactor", ["C1", "euler_term"], { expression: "C_1\\pi^2EI_z/L_{cr,LT}^2" }),
@@ -108,8 +108,8 @@ const nodes = [
     unit: "N·mm",
     meta: { sectionRef: "6.3.2.2", paragraphRef: "(2)" },
   }),
-  derived(p, "lambda_bar_0_num", "Reference LT slenderness numerator", ["Wpl_y", "fy", "C1"], { expression: "W_{pl,y}f_yC_1" }),
-  derived(p, "lambda_bar_0", "Reference LT slenderness for uniform moment", ["lambda_bar_0_num", "M_cr"], {
+  derived(p, "lambda_bar_0Product", "Reference LT slenderness numerator", ["Wpl_y", "fy", "C1"], { expression: "W_{pl,y}f_yC_1" }),
+  derived(p, "lambda_bar_0", "Reference LT slenderness for uniform moment", ["lambda_bar_0Product", "M_cr"], {
     expression: "\\sqrt{W_{pl,y} f_y C_1 / M_{cr}}",
     meta: { sectionRef: "Annex A" },
   }),
@@ -152,11 +152,11 @@ const nodes = [
   derived(p, "cm_branch_active", "Annex A branch selector for Cm adjustments", ["lambda_bar_0", "C1", "cm_branch_limit"], {
     expression: "\\bar{\\lambda}_0>0.2\\land C_1<\\text{limit}",
   }),
-  derived(p, "cm_amp_num", "Annex A amplification numerator", ["eta_y", "a_LT"], { expression: "\\eta_ya_{LT}" }),
-  derived(p, "cm_amp_den", "Annex A amplification denominator", ["cm_amp_num"], { expression: "1+\\eta_ya_{LT}" }),
-  derived(p, "cm_amp", "Annex A amplification factor", ["cm_amp_num", "cm_amp_den"], { expression: "\\eta_ya_{LT}/(1+\\eta_ya_{LT})" }),
-  derived(p, "cm_denom", "Annex A denominator term", ["ncr_z_ratio", "ncr_t_ratio"], { expression: "(1-n_{cr,z})(1-n_{cr,T})" }),
-  table(p, "Cm_y", "Equivalent moment factor y", ["Cmy_0", "cm_branch_active", "cm_amp", "cm_denom"], {
+  derived(p, "cm_ampProduct", "Annex A amplification numerator", ["eta_y", "a_LT"], { expression: "\\eta_ya_{LT}" }),
+  derived(p, "cm_ampFactor", "Annex A amplification denominator", ["cm_ampProduct"], { expression: "1+\\eta_ya_{LT}" }),
+  derived(p, "cm_amp", "Annex A amplification factor", ["cm_ampProduct", "cm_ampFactor"], { expression: "\\eta_ya_{LT}/(1+\\eta_ya_{LT})" }),
+  derived(p, "cmReserve", "Annex A denominator term", ["ncr_z_ratio", "ncr_t_ratio"], { expression: "(1-n_{cr,z})(1-n_{cr,T})" }),
+  table(p, "Cm_y", "Equivalent moment factor y", ["Cmy_0", "cm_branch_active", "cm_amp", "cmReserve"], {
     source: "EC3-A.1",
     meta: { sectionRef: "Annex A", tableRef: "A.1" },
   }),
@@ -165,8 +165,8 @@ const nodes = [
     meta: { sectionRef: "Annex A", tableRef: "A.1" },
   }),
   derived(p, "Cm_y_aug", "Augmented Cm_y for LT branch", ["Cmy_0", "cm_amp"], { expression: "C_{m,y,0}+(1-C_{m,y,0})\\,\\text{amp}" }),
-  derived(p, "cm_lt_num", "Numerator in Cm_LT branch", ["Cm_y_aug", "a_LT"], { expression: "C_{m,y}^2a_{LT}" }),
-  derived(p, "cm_lt_raw", "Raw Cm_LT branch value", ["cm_lt_num", "cm_denom"], { expression: "C_{m,y}^2a_{LT}/\\text{denom}" }),
+  derived(p, "cm_ltProduct", "Numerator in Cm_LT branch", ["Cm_y_aug", "a_LT"], { expression: "C_{m,y}^2a_{LT}" }),
+  derived(p, "cm_lt_raw", "Raw Cm_LT branch value", ["cm_ltProduct", "cmReserve"], { expression: "C_{m,y}^2a_{LT}/\\text{denom}" }),
   table(p, "Cm_LT", "Equivalent moment factor LT", ["cm_branch_active", "cm_lt_raw"], {
     source: "EC3-A.1",
     meta: { sectionRef: "Annex A", tableRef: "A.1" },
@@ -190,24 +190,35 @@ const nodes = [
     expression: "\\min\\left(1,\\frac{\\chi_{LT}}{f}\\right)",
     meta: { sectionRef: "6.3.2.3" },
   }),
+  derived(p, "lambda_bar_y", "Non-dimensional slenderness y", ["A", "fy", "N_cr_y"]),
+  derived(p, "lambda_bar_z", "Non-dimensional slenderness z", ["A", "fy", "N_cr_z"]),
+  derived(p, "n_pl", "Annex A axial ratio n_pl", ["abs_N_Ed", "N_Rk", "gamma_M1"]),
+  derived(p, "lambda_bar_max", "Annex A λ_max", ["lambda_bar_y", "lambda_bar_z"]),
+  derived(p, "b_LT", "Annex A auxiliary b_LT", ["a_LT", "lambda_bar_0", "abs_M_y_Ed", "abs_M_z_Ed", "chi_LT", "M_y_Rk", "M_z_Rk"]),
+  derived(p, "c_LT", "Annex A auxiliary c_LT", ["a_LT", "lambda_bar_0", "abs_M_y_Ed", "lambda_bar_z", "Cm_y", "chi_LT", "M_y_Rk"]),
+  derived(p, "d_LT", "Annex A auxiliary d_LT", ["a_LT", "lambda_bar_0", "abs_M_y_Ed", "abs_M_z_Ed", "lambda_bar_z", "Cm_y", "Cm_z", "chi_LT", "M_y_Rk", "M_z_Rk"]),
+  derived(p, "e_LT", "Annex A auxiliary e_LT", ["a_LT", "lambda_bar_0", "abs_M_y_Ed", "lambda_bar_z", "Cm_y", "chi_LT", "M_y_Rk"]),
+  derived(p, "C_yy", "Annex A interaction coefficient C_yy", ["Cm_y", "n_pl", "lambda_bar_y", "lambda_bar_z", "wy", "b_LT", "Wel_y", "Wpl_y"]),
+  derived(p, "C_yz", "Annex A interaction coefficient C_yz", ["Cm_z", "n_pl", "lambda_bar_y", "lambda_bar_z", "wz", "c_LT", "Wel_z", "wy", "Wpl_z"]),
   derived(p, "C_zy", "Method 1 interaction coefficient C_zy", ["abs_N_Ed"]),
-  derived(p, "k_yy_denom", "Denominator of k_yy", ["ncr_y_ratio"], { expression: "1-n_{cr,y}" }),
-  derived(p, "k_yy", "Interaction factor k_yy", ["Cm_y", "Cm_LT", "k_yy_denom"]),
-  derived(p, "k_zz_denom", "Denominator of k_zz", ["ncr_z_ratio"], { expression: "1-n_{cr,z}" }),
-  derived(p, "k_zz", "Interaction factor k_zz", ["Cm_z", "k_zz_denom"]),
-  derived(p, "k_zy", "Interaction factor k_zy", ["abs_N_Ed", "Cm_y", "Cm_LT", "k_yy_denom", "C_zy", "wy", "wz", "k_yy"]),
-  derived(p, "bc_62_term1_den", "Denominator of Eq.6.62 term 1", ["chi_z", "N_Rk", "gamma_M1"], {
+  derived(p, "C_zz", "Annex A interaction coefficient C_zz", ["Cm_z", "n_pl", "lambda_bar_y", "lambda_bar_z", "wz", "e_LT", "Wel_z", "Wpl_z"]),
+  derived(p, "k_yyReserve", "Denominator of k_yy", ["ncr_y_ratio"], { expression: "1-n_{cr,y}" }),
+  derived(p, "k_yy", "Interaction factor k_yy", ["Cm_y", "Cm_LT", "k_yyReserve"]),
+  derived(p, "k_zzReserve", "Denominator of k_zz", ["ncr_z_ratio"], { expression: "1-n_{cr,z}" }),
+  derived(p, "k_zz", "Interaction factor k_zz", ["Cm_z", "k_zzReserve"]),
+  derived(p, "k_zy", "Interaction factor k_zy", ["abs_N_Ed", "Cm_y", "Cm_LT", "k_yyReserve", "C_zy", "wy", "wz", "k_yy"]),
+  derived(p, "bc_62_term1Factor", "Denominator of Eq.6.62 term 1", ["chi_z", "N_Rk", "gamma_M1"], {
     expression: "\\chi_zN_{Rk}/\\gamma_{M1}",
   }),
-  derived(p, "bc_62_term1", "Eq.6.62 term 1", ["abs_N_Ed", "bc_62_term1_den"]),
-  derived(p, "bc_62_term2_den", "Denominator of Eq.6.62 term 2", ["chi_LT_mod", "M_y_Rk", "gamma_M1"], {
+  derived(p, "bc_62_term1", "Eq.6.62 term 1", ["abs_N_Ed", "bc_62_term1Factor"]),
+  derived(p, "bc_62_term2Factor", "Denominator of Eq.6.62 term 2", ["chi_LT_mod", "M_y_Rk", "gamma_M1"], {
     expression: "\\chi_{LT}M_{y,Rk}/\\gamma_{M1}",
   }),
-  derived(p, "bc_62_term2", "Eq.6.62 term 2", ["k_zy", "abs_M_y_Ed", "bc_62_term2_den"]),
-  derived(p, "bc_62_term3_den", "Denominator of Eq.6.62 term 3", ["M_z_Rk", "gamma_M1"], {
+  derived(p, "bc_62_term2", "Eq.6.62 term 2", ["k_zy", "abs_M_y_Ed", "bc_62_term2Factor"]),
+  derived(p, "bc_62_term3Factor", "Denominator of Eq.6.62 term 3", ["M_z_Rk", "gamma_M1"], {
     expression: "M_{z,Rk}/\\gamma_{M1}",
   }),
-  derived(p, "bc_62_term3", "Eq.6.62 term 3", ["k_zz", "abs_M_z_Ed", "bc_62_term3_den"]),
+  derived(p, "bc_62_term3", "Eq.6.62 term 3", ["k_zz", "abs_M_z_Ed", "bc_62_term3Factor"]),
   check(p, "bc_62_m1_check", "Beam-column Eq.6.62 Method 1", ["bc_62_term1", "bc_62_term2", "bc_62_term3"], {
     verificationExpression: "\\frac{N_{Ed}}{\\chi_z N_{Rk}/\\gamma_{M1}} + k_{zy}\\frac{M_{y,Ed}}{\\chi_{LT} M_{y,Rk}/\\gamma_{M1}} + k_{zz}\\frac{M_{z,Ed}}{M_{z,Rk}/\\gamma_{M1}} \\leq 1.0",
     meta: { sectionRef: "6.3.3", verificationRef: "(6.62)" },
@@ -264,39 +275,39 @@ export const ulsBeamColumn62M1: VerificationDefinition<typeof nodes> = {
       if (Lcr_LT <= 0) throwInvalidInput("beam-column-62-m1: Lcr_LT must be > 0");
       return Lcr_LT ** 2;
     },
-    N_cr_y_num: ({ piSq, E, Iy }) => piSq * E * Iy,
-    N_cr_y: ({ N_cr_y_num, Lcr_y_sq }) => N_cr_y_num / Lcr_y_sq,
-    N_cr_z_num: ({ piSq, E, Iz }) => piSq * E * Iz,
-    N_cr_z: ({ N_cr_z_num, Lcr_z_sq }) => N_cr_z_num / Lcr_z_sq,
-    ip2_num: ({ Iy, Iz }) => Iy + Iz,
-    ip2: ({ ip2_num, A }) => {
+    N_cr_yProduct: ({ piSq, E, Iy }) => piSq * E * Iy,
+    N_cr_y: ({ N_cr_yProduct, Lcr_y_sq }) => N_cr_yProduct / Lcr_y_sq,
+    N_cr_zProduct: ({ piSq, E, Iz }) => piSq * E * Iz,
+    N_cr_z: ({ N_cr_zProduct, Lcr_z_sq }) => N_cr_zProduct / Lcr_z_sq,
+    ip2Product: ({ Iy, Iz }) => Iy + Iz,
+    ip2: ({ ip2Product, A }) => {
       if (A <= 0) throwInvalidInput("beam-column-62-m1: A must be > 0");
-      const value = ip2_num / A;
+      const value = ip2Product / A;
       if (value <= 0) throwInvalidInput("beam-column-62-m1: invalid polar radius term");
       return value;
     },
-    ncr_t_warp_num: ({ piSq, E, Iw }) => piSq * E * Iw,
-    ncr_t_warp: ({ ncr_t_warp_num, Lcr_z_sq }) => ncr_t_warp_num / Lcr_z_sq,
-    ncr_t_num: ({ G, It, ncr_t_warp }) => G * It + ncr_t_warp,
-    N_cr_T: ({ Iy, Iz, It, Iw, ncr_t_num, ip2 }) => {
+    ncr_t_warpProduct: ({ piSq, E, Iw }) => piSq * E * Iw,
+    ncr_t_warp: ({ ncr_t_warpProduct, Lcr_z_sq }) => ncr_t_warpProduct / Lcr_z_sq,
+    ncr_tProduct: ({ G, It, ncr_t_warp }) => G * It + ncr_t_warp,
+    N_cr_T: ({ Iy, Iz, It, Iw, ncr_tProduct, ip2 }) => {
       if (Iy <= 0 || Iz <= 0 || It <= 0 || Iw <= 0) {
         throwInvalidInput("beam-column-62-m1: Iy, Iz, It and Iw must be > 0");
       }
-      return ncr_t_num / ip2;
+      return ncr_tProduct / ip2;
     },
     N_cr_TF: ({ N_cr_T, N_cr_z }) => Math.min(N_cr_T, N_cr_z),
-    euler_num: ({ piSq, E, Iz }) => piSq * E * Iz,
-    euler_term: ({ euler_num, Lcr_LT_sq }) => euler_num / Lcr_LT_sq,
+    eulerProduct: ({ piSq, E, Iz }) => piSq * E * Iz,
+    euler_term: ({ eulerProduct, Lcr_LT_sq }) => eulerProduct / Lcr_LT_sq,
     torsion_ratio: ({ Iw, Iz }) => {
       if (Iz <= 0) throwInvalidInput("beam-column-62-m1: Iz must be > 0");
       return Iw / Iz;
     },
-    torsion_num: ({ Lcr_LT_sq, G, It }) => Lcr_LT_sq * G * It,
-    torsion_den: ({ piSq, E, Iz }) => {
+    torsionProduct: ({ Lcr_LT_sq, G, It }) => Lcr_LT_sq * G * It,
+    torsionFactor: ({ piSq, E, Iz }) => {
       if (Iz <= 0) throwInvalidInput("beam-column-62-m1: Iz must be > 0");
       return piSq * E * Iz;
     },
-    torsion_term: ({ torsion_num, torsion_den }) => torsion_num / torsion_den,
+    torsion_term: ({ torsionProduct, torsionFactor }) => torsionProduct / torsionFactor,
     torsion_sum: ({ torsion_ratio, torsion_term }) => torsion_ratio + torsion_term,
     torsion_root: ({ torsion_sum }) => {
       if (torsion_sum <= 0) throwInvalidInput("beam-column-62-m1: invalid torsion term");
@@ -322,10 +333,10 @@ export const ulsBeamColumn62M1: VerificationDefinition<typeof nodes> = {
       if (Iz <= 0 || It <= 0 || Iw <= 0) throwInvalidInput("beam-column-62-m1: Iz, It and Iw must be > 0");
       return M_cr_prefactor * torsion_root;
     },
-    lambda_bar_0_num: ({ Wpl_y, fy, C1 }) => Wpl_y * fy * C1,
-    lambda_bar_0: ({ lambda_bar_0_num, M_cr, C1 }) => {
+    lambda_bar_0Product: ({ Wpl_y, fy, C1 }) => Wpl_y * fy * C1,
+    lambda_bar_0: ({ lambda_bar_0Product, M_cr, C1 }) => {
       if (C1 <= 0) throwInvalidInput("beam-column-62-m1: C1 must be > 0");
-      return Math.sqrt(lambda_bar_0_num / M_cr);
+      return Math.sqrt(lambda_bar_0Product / M_cr);
     },
     it_over_iy: ({ It, Iy }) => It / Iy,
     a_LT: ({ it_over_iy }) => Math.max(1 - it_over_iy, 0),
@@ -406,21 +417,21 @@ export const ulsBeamColumn62M1: VerificationDefinition<typeof nodes> = {
     cm_branch_limit: ({ ncr_z_ratio, ncr_tf_ratio }) => 0.4 * (1 - ncr_z_ratio) * (1 - ncr_tf_ratio),
     cm_branch_active: ({ lambda_bar_0, C1, cm_branch_limit }) =>
       lambda_bar_0 > 0.2 && C1 < cm_branch_limit ? 1 : 0,
-    cm_amp_num: ({ eta_y, a_LT }) => eta_y * a_LT,
-    cm_amp_den: ({ cm_amp_num }) => 1 + cm_amp_num,
-    cm_amp: ({ cm_amp_num, cm_amp_den }) => cm_amp_num / cm_amp_den,
-    cm_denom: ({ ncr_z_ratio, ncr_t_ratio }) => (1 - ncr_z_ratio) * (1 - ncr_t_ratio),
-    Cm_y: ({ Cmy_0, cm_branch_active, cm_amp, cm_denom }) => {
+    cm_ampProduct: ({ eta_y, a_LT }) => eta_y * a_LT,
+    cm_ampFactor: ({ cm_ampProduct }) => 1 + cm_ampProduct,
+    cm_amp: ({ cm_ampProduct, cm_ampFactor }) => cm_ampProduct / cm_ampFactor,
+    cmReserve: ({ ncr_z_ratio, ncr_t_ratio }) => (1 - ncr_z_ratio) * (1 - ncr_t_ratio),
+    Cm_y: ({ Cmy_0, cm_branch_active, cm_amp, cmReserve }) => {
       if (cm_branch_active === 0) return Cmy_0;
-      if (cm_denom <= 0) throwInvalidInput("beam-column-62-m1: invalid C_m denominator");
+      if (cmReserve <= 0) throwInvalidInput("beam-column-62-m1: invalid C_m denominator");
       return Cmy_0 + (1 - Cmy_0) * cm_amp;
     },
     Cm_z: ({ Cmz_0 }) => Cmz_0,
     Cm_y_aug: ({ Cmy_0, cm_amp }) => Cmy_0 + (1 - Cmy_0) * cm_amp,
-    cm_lt_num: ({ Cm_y_aug, a_LT }) => Cm_y_aug ** 2 * a_LT,
-    cm_lt_raw: ({ cm_lt_num, cm_denom }) => {
-      if (cm_denom <= 0) throwInvalidInput("beam-column-62-m1: invalid denominator for C_m,LT");
-      return cm_lt_num / cm_denom;
+    cm_ltProduct: ({ Cm_y_aug, a_LT }) => Cm_y_aug ** 2 * a_LT,
+    cm_lt_raw: ({ cm_ltProduct, cmReserve }) => {
+      if (cmReserve <= 0) throwInvalidInput("beam-column-62-m1: invalid denominator for C_m,LT");
+      return cm_ltProduct / cmReserve;
     },
     Cm_LT: ({ cm_branch_active, cm_lt_raw }) => (cm_branch_active === 0 ? 1 : Math.min(cm_lt_raw, 1)),
     N_Rk: ({ A, fy }) => A * fy,
@@ -463,31 +474,78 @@ export const ulsBeamColumn62M1: VerificationDefinition<typeof nodes> = {
       if (f_LT <= 0) throwInvalidInput("beam-column-62-m1: f_LT must be > 0");
       return Math.min(1, chi_LT / f_LT);
     },
+    lambda_bar_y: ({ A, fy, N_cr_y }) => Math.sqrt((A * fy) / N_cr_y),
+    lambda_bar_z: ({ A, fy, N_cr_z }) => Math.sqrt((A * fy) / N_cr_z),
+    n_pl: ({ abs_N_Ed, N_Rk, gamma_M1 }) => abs_N_Ed / (N_Rk / gamma_M1),
+    lambda_bar_max: ({ lambda_bar_y, lambda_bar_z }) => Math.max(lambda_bar_y, lambda_bar_z),
+    b_LT: ({ a_LT, lambda_bar_0, abs_M_y_Ed, abs_M_z_Ed, chi_LT, M_y_Rk, M_z_Rk }) => {
+      if (chi_LT <= 0 || M_y_Rk <= 0 || M_z_Rk <= 0) throwInvalidInput("beam-column-62-m1: invalid b_LT denominator");
+      return (0.5 * a_LT * lambda_bar_0 ** 2 * abs_M_y_Ed * abs_M_z_Ed) / (chi_LT * M_y_Rk * M_z_Rk);
+    },
+    c_LT: ({ a_LT, lambda_bar_0, abs_M_y_Ed, lambda_bar_z, Cm_y, chi_LT, M_y_Rk }) => {
+      const denom = (5 + lambda_bar_z * Cm_y) * chi_LT * M_y_Rk;
+      if (denom <= 0) throwInvalidInput("beam-column-62-m1: invalid c_LT denominator");
+      return (10 * a_LT * lambda_bar_0 ** 2 * abs_M_y_Ed) / denom;
+    },
+    d_LT: ({ a_LT, lambda_bar_0, abs_M_y_Ed, abs_M_z_Ed, lambda_bar_z, Cm_y, Cm_z, chi_LT, M_y_Rk, M_z_Rk }) => {
+      const denom = (0.1 + lambda_bar_z * Cm_y) * chi_LT * M_y_Rk * Cm_z * M_z_Rk;
+      if (denom <= 0) throwInvalidInput("beam-column-62-m1: invalid d_LT denominator");
+      return (2 * a_LT * lambda_bar_0 ** 2 * abs_M_y_Ed * abs_M_z_Ed) / denom;
+    },
+    e_LT: ({ a_LT, lambda_bar_0, abs_M_y_Ed, lambda_bar_z, Cm_y, chi_LT, M_y_Rk }) => {
+      const denom = (0.1 + lambda_bar_z * Cm_y) * chi_LT * M_y_Rk;
+      if (denom <= 0) throwInvalidInput("beam-column-62-m1: invalid e_LT denominator");
+      return (1.7 * a_LT * lambda_bar_0 ** 2 * abs_M_y_Ed) / denom;
+    },
+    C_yy: ({ Cm_y, n_pl, lambda_bar_y, lambda_bar_z, wy, b_LT, Wel_y, Wpl_y }) => {
+      if (n_pl <= 1e-12) return 0.953;
+      const lambda_bar_max = Math.max(lambda_bar_y, lambda_bar_z);
+      const raw = 1 + (wy - 1) * (
+        2 - (1.6 / wy) * Cm_y * lambda_bar_max - ((1.6 / wy) ** 2) * (Cm_y ** 2) * (lambda_bar_max ** 2) * n_pl - b_LT
+      );
+      return Math.max(raw, Wel_y / Wpl_y);
+    },
+    C_yz: ({ Cm_z, n_pl, lambda_bar_y, lambda_bar_z, wz, c_LT, Wel_z, wy, Wpl_z }) => {
+      if (n_pl <= 1e-12) return 0.866;
+      const lambda_bar_max = Math.max(lambda_bar_y, lambda_bar_z);
+      const raw = 1 + (wz - 1) * (
+        2 - (14 / wz ** 5) * (Cm_z ** 2) * (lambda_bar_max ** 2) * n_pl - c_LT
+      );
+      return Math.max(raw, (0.6 * wz * Wel_z) / (wy * Wpl_z));
+    },
     C_zy: ({ abs_N_Ed }) => (abs_N_Ed <= 1e-12 ? 0.998 : 1),
-    k_yy_denom: ({ ncr_y_ratio }) => {
+    C_zz: ({ Cm_z, n_pl, lambda_bar_y, lambda_bar_z, wz, e_LT, Wel_z, Wpl_z }) => {
+      if (n_pl <= 1e-12) return 1;
+      const lambda_bar_max = Math.max(lambda_bar_y, lambda_bar_z);
+      const raw = 1 + (wz - 1) * (
+        2 - (1.6 / wz) * Cm_z * lambda_bar_max - ((1.6 / wz) ** 2) * (Cm_z ** 2) * (lambda_bar_max ** 2) * n_pl - e_LT
+      );
+      return Math.max(raw, Wel_z / Wpl_z);
+    },
+    k_yyReserve: ({ ncr_y_ratio }) => {
       const denom = 1 - ncr_y_ratio;
       if (denom <= 0) throwInvalidInput("beam-column-62-m1: invalid k_yy denominator");
       return denom;
     },
-    k_yy: ({ Cm_y, Cm_LT, k_yy_denom }) => (Cm_y * Cm_LT) / k_yy_denom,
-    k_zz_denom: ({ ncr_z_ratio }) => {
+    k_yy: ({ Cm_y, Cm_LT, k_yyReserve }) => (Cm_y * Cm_LT) / k_yyReserve,
+    k_zzReserve: ({ ncr_z_ratio }) => {
       const denom = 1 - ncr_z_ratio;
       if (denom <= 0) throwInvalidInput("beam-column-62-m1: invalid k_zz denominator");
       return denom;
     },
-    k_zz: ({ Cm_z, k_zz_denom }) => Cm_z / k_zz_denom,
-    k_zy: ({ abs_N_Ed, Cm_y, Cm_LT, k_yy_denom, C_zy, wy, wz, k_yy }) => {
+    k_zz: ({ Cm_z, k_zzReserve }) => Cm_z / k_zzReserve,
+    k_zy: ({ abs_N_Ed, Cm_y, Cm_LT, k_yyReserve, C_zy, wy, wz, k_yy }) => {
       if (abs_N_Ed <= 1e-12) {
-        return (Cm_y * Cm_LT * (1 / C_zy) * 0.6 * Math.sqrt(wy / wz)) / k_yy_denom;
+        return (Cm_y * Cm_LT * (1 / C_zy) * 0.6 * Math.sqrt(wy / wz)) / k_yyReserve;
       }
       return 0.6 * k_yy;
     },
-    bc_62_term1_den: ({ chi_z, N_Rk, gamma_M1 }) => (chi_z * N_Rk) / gamma_M1,
-    bc_62_term1: ({ abs_N_Ed, bc_62_term1_den }) => abs_N_Ed / bc_62_term1_den,
-    bc_62_term2_den: ({ chi_LT_mod, M_y_Rk, gamma_M1 }) => (chi_LT_mod * M_y_Rk) / gamma_M1,
-    bc_62_term2: ({ k_zy, abs_M_y_Ed, bc_62_term2_den }) => k_zy * (abs_M_y_Ed / bc_62_term2_den),
-    bc_62_term3_den: ({ M_z_Rk, gamma_M1 }) => M_z_Rk / gamma_M1,
-    bc_62_term3: ({ k_zz, abs_M_z_Ed, bc_62_term3_den }) => k_zz * (abs_M_z_Ed / bc_62_term3_den),
+    bc_62_term1Factor: ({ chi_z, N_Rk, gamma_M1 }) => (chi_z * N_Rk) / gamma_M1,
+    bc_62_term1: ({ abs_N_Ed, bc_62_term1Factor }) => abs_N_Ed / bc_62_term1Factor,
+    bc_62_term2Factor: ({ chi_LT_mod, M_y_Rk, gamma_M1 }) => (chi_LT_mod * M_y_Rk) / gamma_M1,
+    bc_62_term2: ({ k_zy, abs_M_y_Ed, bc_62_term2Factor }) => k_zy * (abs_M_y_Ed / bc_62_term2Factor),
+    bc_62_term3Factor: ({ M_z_Rk, gamma_M1 }) => M_z_Rk / gamma_M1,
+    bc_62_term3: ({ k_zz, abs_M_z_Ed, bc_62_term3Factor }) => k_zz * (abs_M_z_Ed / bc_62_term3Factor),
     bc_62_m1_check: ({ bc_62_term1, bc_62_term2, bc_62_term3 }) => bc_62_term1 + bc_62_term2 + bc_62_term3,
   },
 };

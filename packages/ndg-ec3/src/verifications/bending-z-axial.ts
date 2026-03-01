@@ -1,6 +1,6 @@
 import type { VerificationDefinition } from "@ndg/ndg-core";
-import { input, coeff, formula, derived, check } from "@ndg/ndg-core";
-import { throwNotApplicableSectionClass } from "../errors";
+import { input, stringInput, coeff, formula, derived, check } from "@ndg/ndg-core";
+import { throwInvalidInput, throwNotApplicableSectionClass } from "../errors";
 
 /**
  * §6.2.9.1 -- Bending about z-z and axial force (Class 1 & 2 I-sections).
@@ -13,8 +13,10 @@ const p = "bending-z-axial";
 const nodes = [
   input(p, "M_z_Ed", "Design bending moment about z-z", { symbol: "M_{z,Ed}", unit: "N·mm" }),
   input(p, "N_Ed", "Design axial force", { symbol: "N_{Ed}", unit: "N" }),
+  stringInput(p, "section_shape", "Section shape family (I, RHS, CHS)"),
   input(p, "section_class", "Section class (1, 2, 3, 4)"),
   input(p, "A", "Cross-sectional area", { symbol: "A", unit: "mm²" }),
+  input(p, "Av_y", "Shear area y (flange area for I sections)", { symbol: "A_{v,y}", unit: "mm²" }),
   input(p, "Wel_z", "Elastic section modulus about z-z", { symbol: "W_{el,z}", unit: "mm³" }),
   input(p, "Wpl_z", "Plastic section modulus about z-z", { symbol: "W_{pl,z}", unit: "mm³" }),
   input(p, "Av_z", "Web area", { symbol: "A_{v,z}", unit: "mm²" }),
@@ -36,11 +38,11 @@ const nodes = [
   derived(p, "W_z_res", "Class-dependent section modulus for z bending", ["section_class", "Wpl_z", "Wel_z"], {
     expression: "c=3?W_{el,z}:W_{pl,z}",
   }),
-  derived(p, "M_pl_z_num", "Numerator of M_pl,z,Rd", ["W_z_res", "fy"], {
+  derived(p, "M_pl_zProduct", "Numerator of M_pl,z,Rd", ["W_z_res", "fy"], {
     expression: "W_{res,z}f_y",
     unit: "N·mm",
   }),
-  formula(p, "M_pl_z_Rd", "Plastic bending resistance about z-z", ["class_guard", "M_pl_z_num", "gamma_M0"], {
+  formula(p, "M_pl_z_Rd", "Plastic bending resistance about z-z", ["class_guard", "M_pl_zProduct", "gamma_M0"], {
     symbol: "M_{pl,z,Rd}",
     expression: "\\frac{W_{res,z} \\cdot f_y}{\\gamma_{M0}}",
     unit: "N·mm",
@@ -49,10 +51,10 @@ const nodes = [
   derived(p, "n", "Axial force ratio", ["abs_N_Ed", "N_pl_Rd"], {
     symbol: "n",
   }),
-  derived(p, "a_f_raw", "Raw web area ratio", ["Av_z", "A"], {
-    expression: "A_{v,z}/A",
+  derived(p, "a_f_raw", "Raw reduction parameter a", ["section_shape", "A", "Av_y", "Av_z"], {
+    expression: "\\text{I}: (A-A_{v,y})/A,\\; \\text{else}: A_{v,z}/A",
   }),
-  derived(p, "a_f", "Web area ratio a=(A-2bt_f)/A ≈ A_v,z/A", ["a_f_raw"], {
+  derived(p, "a_f", "Reduction parameter a", ["a_f_raw"], {
     symbol: "a",
     expression: "\\min\\left(A_{v,z}/A,0.5\\right)",
   }),
@@ -102,10 +104,13 @@ export const ulsBendingZAxial: VerificationDefinition<typeof nodes> = {
       return 1;
     },
     W_z_res: ({ section_class, Wpl_z, Wel_z }) => (section_class === 3 ? Wel_z : Wpl_z),
-    M_pl_z_num: ({ W_z_res, fy }) => W_z_res * fy,
-    M_pl_z_Rd: ({ class_guard, M_pl_z_num, gamma_M0 }) => class_guard * (M_pl_z_num / gamma_M0),
+    M_pl_zProduct: ({ W_z_res, fy }) => W_z_res * fy,
+    M_pl_z_Rd: ({ class_guard, M_pl_zProduct, gamma_M0 }) => class_guard * (M_pl_zProduct / gamma_M0),
     n: ({ abs_N_Ed, N_pl_Rd }) => abs_N_Ed / N_pl_Rd,
-    a_f_raw: ({ Av_z, A }) => Av_z / A,
+    a_f_raw: ({ section_shape, A, Av_y, Av_z }) => {
+      if (A <= 0) throwInvalidInput("bending-z-axial: A must be > 0");
+      return section_shape === "I" ? (A - Av_y) / A : Av_z / A;
+    },
     a_f: ({ a_f_raw }) => Math.min(a_f_raw, 0.5),
     n_minus_af: ({ n, a_f }) => n - a_f,
     one_minus_af: ({ a_f }) => 1 - a_f,

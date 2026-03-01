@@ -46,9 +46,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_z` (derived) = 3000
 13. `Lcr_z_sq` (derived) = 9.000000e+6
-14. `N_cr_z_num` (derived) = 2.951407e+12
+14. `N_cr_zProduct` (derived) = 2.951407e+12
 15. `N_cr_z` (derived) = 327934.055566862
-16. `lambda_bar_z_num` (derived) = 1.011040e+6
+16. `lambda_bar_zProduct` (derived) = 1.011040e+6
 17. `lambda_bar_z_sq` (derived) = 3.083058874
 18. `lambda_bar_z` (derived) = 1.755864139
 19. `lambda_bar_z_minus_02` (derived) = 1.555864139
@@ -58,10 +58,10 @@
 23. `phi_z_sq` (derived) = 5.317757483
 24. `chi_z_root_arg` (derived) = 2.234698609
 25. `chi_z_root` (derived) = 1.494890835
-26. `chi_z_den` (derived) = 3.800917176
+26. `chi_zFactor` (derived) = 3.800917176
 27. `chi_z_base` (derived) = 0.263094394
 28. `chi_z` (formula) = 0.263094394
-29. `N_b_z_num` (derived) = 265998.955855133
+29. `N_b_zProduct` (derived) = 265998.955855133
 30. `N_b_z_Rd` (formula) = 265998.955855133
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -77,9 +77,9 @@
   "buckling_z_check": 0.7518826506556789,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_root": 1.4948908351658539,
   "chi_z_root_arg": 2.234698609062864,
+  "chi_zFactor": 3.8009171755945887,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -89,14 +89,14 @@
   "L": 3000,
   "lambda_bar_z": 1.7558641387329141,
   "lambda_bar_z_minus_02": 1.5558641387329142,
-  "lambda_bar_z_num": 1011040,
   "lambda_bar_z_sq": 3.0830588736882785,
+  "lambda_bar_zProduct": 1011040,
   "Lcr_z": 3000,
   "Lcr_z_sq": 9000000,
-  "N_b_z_num": 265998.95585513255,
   "N_b_z_Rd": 265998.95585513255,
+  "N_b_zProduct": 265998.95585513255,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "phi_z": 2.3060263404287347,
   "phi_z_alpha_term": 0.5289938071691909,
@@ -128,9 +128,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_z` (derived) = 3000
 13. `Lcr_z_sq` (derived) = 9.000000e+6
-14. `N_cr_z_num` (derived) = 2.951407e+12
+14. `N_cr_zProduct` (derived) = 2.951407e+12
 15. `N_cr_z` (derived) = 327934.055566862
-16. `lambda_bar_z_num` (derived) = 1.011040e+6
+16. `lambda_bar_zProduct` (derived) = 1.011040e+6
 17. `lambda_bar_z_sq` (derived) = 3.083058874
 18. `lambda_bar_z` (derived) = 1.755864139
 19. `lambda_bar_z_minus_02` (derived) = 1.555864139
@@ -140,10 +140,10 @@
 23. `phi_z_sq` (derived) = 5.317757483
 24. `chi_z_root_arg` (derived) = 2.234698609
 25. `chi_z_root` (derived) = 1.494890835
-26. `chi_z_den` (derived) = 3.800917176
+26. `chi_zFactor` (derived) = 3.800917176
 27. `chi_z_base` (derived) = 0.263094394
 28. `chi_z` (formula) = 0.263094394
-29. `N_b_z_num` (derived) = 265998.955855133
+29. `N_b_zProduct` (derived) = 265998.955855133
 30. `N_b_z_Rd` (formula) = 265998.955855133
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -159,9 +159,9 @@
   "buckling_z_check": 0.7518826506556789,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_root": 1.4948908351658539,
   "chi_z_root_arg": 2.234698609062864,
+  "chi_zFactor": 3.8009171755945887,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -171,14 +171,14 @@
   "L": 3000,
   "lambda_bar_z": 1.7558641387329141,
   "lambda_bar_z_minus_02": 1.5558641387329142,
-  "lambda_bar_z_num": 1011040,
   "lambda_bar_z_sq": 3.0830588736882785,
+  "lambda_bar_zProduct": 1011040,
   "Lcr_z": 3000,
   "Lcr_z_sq": 9000000,
-  "N_b_z_num": 265998.95585513255,
   "N_b_z_Rd": 265998.95585513255,
+  "N_b_zProduct": 265998.95585513255,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "phi_z": 2.3060263404287347,
   "phi_z_alpha_term": 0.5289938071691909,
@@ -210,9 +210,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_z` (derived) = 3000
 13. `Lcr_z_sq` (derived) = 9.000000e+6
-14. `N_cr_z_num` (derived) = 2.951407e+12
+14. `N_cr_zProduct` (derived) = 2.951407e+12
 15. `N_cr_z` (derived) = 327934.055566862
-16. `lambda_bar_z_num` (derived) = 1.011040e+6
+16. `lambda_bar_zProduct` (derived) = 1.011040e+6
 17. `lambda_bar_z_sq` (derived) = 3.083058874
 18. `lambda_bar_z` (derived) = 1.755864139
 19. `lambda_bar_z_minus_02` (derived) = 1.555864139
@@ -222,10 +222,10 @@
 23. `phi_z_sq` (derived) = 5.317757483
 24. `chi_z_root_arg` (derived) = 2.234698609
 25. `chi_z_root` (derived) = 1.494890835
-26. `chi_z_den` (derived) = 3.800917176
+26. `chi_zFactor` (derived) = 3.800917176
 27. `chi_z_base` (derived) = 0.263094394
 28. `chi_z` (formula) = 0.263094394
-29. `N_b_z_num` (derived) = 265998.955855133
+29. `N_b_zProduct` (derived) = 265998.955855133
 30. `N_b_z_Rd` (formula) = 265998.955855133
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -241,9 +241,9 @@
   "buckling_z_check": 0.7518826506556789,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_root": 1.4948908351658539,
   "chi_z_root_arg": 2.234698609062864,
+  "chi_zFactor": 3.8009171755945887,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -253,14 +253,14 @@
   "L": 3000,
   "lambda_bar_z": 1.7558641387329141,
   "lambda_bar_z_minus_02": 1.5558641387329142,
-  "lambda_bar_z_num": 1011040,
   "lambda_bar_z_sq": 3.0830588736882785,
+  "lambda_bar_zProduct": 1011040,
   "Lcr_z": 3000,
   "Lcr_z_sq": 9000000,
-  "N_b_z_num": 265998.95585513255,
   "N_b_z_Rd": 265998.95585513255,
+  "N_b_zProduct": 265998.95585513255,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "phi_z": 2.3060263404287347,
   "phi_z_alpha_term": 0.5289938071691909,
@@ -299,9 +299,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_z` (derived) = 3000
 13. `Lcr_z_sq` (derived) = 9.000000e+6
-14. `N_cr_z_num` (derived) = 2.951407e+12
+14. `N_cr_zProduct` (derived) = 2.951407e+12
 15. `N_cr_z` (derived) = 327934.055566862
-16. `lambda_bar_z_num` (derived) = 1.011040e+6
+16. `lambda_bar_zProduct` (derived) = 1.011040e+6
 17. `lambda_bar_z_sq` (derived) = 3.083058874
 18. `lambda_bar_z` (derived) = 1.755864139
 19. `lambda_bar_z_minus_02` (derived) = 1.555864139
@@ -311,10 +311,10 @@
 23. `phi_z_sq` (derived) = 5.317757483
 24. `chi_z_root_arg` (derived) = 2.234698609
 25. `chi_z_root` (derived) = 1.494890835
-26. `chi_z_den` (derived) = 3.800917176
+26. `chi_zFactor` (derived) = 3.800917176
 27. `chi_z_base` (derived) = 0.263094394
 28. `chi_z` (formula) = 0.263094394
-29. `N_b_z_num` (derived) = 265998.955855133
+29. `N_b_zProduct` (derived) = 265998.955855133
 30. `N_b_z_Rd` (formula) = 265998.955855133
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -330,9 +330,9 @@
   "buckling_z_check": 0.7518826506556789,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_root": 1.4948908351658539,
   "chi_z_root_arg": 2.234698609062864,
+  "chi_zFactor": 3.8009171755945887,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -342,14 +342,14 @@
   "L": 3000,
   "lambda_bar_z": 1.7558641387329141,
   "lambda_bar_z_minus_02": 1.5558641387329142,
-  "lambda_bar_z_num": 1011040,
   "lambda_bar_z_sq": 3.0830588736882785,
+  "lambda_bar_zProduct": 1011040,
   "Lcr_z": 3000,
   "Lcr_z_sq": 9000000,
-  "N_b_z_num": 265998.95585513255,
   "N_b_z_Rd": 265998.95585513255,
+  "N_b_zProduct": 265998.95585513255,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "phi_z": 2.3060263404287347,
   "phi_z_alpha_term": 0.5289938071691909,
@@ -381,9 +381,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_z` (derived) = 3000
 13. `Lcr_z_sq` (derived) = 9.000000e+6
-14. `N_cr_z_num` (derived) = 2.951407e+12
+14. `N_cr_zProduct` (derived) = 2.951407e+12
 15. `N_cr_z` (derived) = 327934.055566862
-16. `lambda_bar_z_num` (derived) = 1.011040e+6
+16. `lambda_bar_zProduct` (derived) = 1.011040e+6
 17. `lambda_bar_z_sq` (derived) = 3.083058874
 18. `lambda_bar_z` (derived) = 1.755864139
 19. `lambda_bar_z_minus_02` (derived) = 1.555864139
@@ -393,10 +393,10 @@
 23. `phi_z_sq` (derived) = 5.317757483
 24. `chi_z_root_arg` (derived) = 2.234698609
 25. `chi_z_root` (derived) = 1.494890835
-26. `chi_z_den` (derived) = 3.800917176
+26. `chi_zFactor` (derived) = 3.800917176
 27. `chi_z_base` (derived) = 0.263094394
 28. `chi_z` (formula) = 0.263094394
-29. `N_b_z_num` (derived) = 265998.955855133
+29. `N_b_zProduct` (derived) = 265998.955855133
 30. `N_b_z_Rd` (formula) = 265998.955855133
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -412,9 +412,9 @@
   "buckling_z_check": 0.7518826506556789,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_root": 1.4948908351658539,
   "chi_z_root_arg": 2.234698609062864,
+  "chi_zFactor": 3.8009171755945887,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -424,14 +424,14 @@
   "L": 3000,
   "lambda_bar_z": 1.7558641387329141,
   "lambda_bar_z_minus_02": 1.5558641387329142,
-  "lambda_bar_z_num": 1011040,
   "lambda_bar_z_sq": 3.0830588736882785,
+  "lambda_bar_zProduct": 1011040,
   "Lcr_z": 3000,
   "Lcr_z_sq": 9000000,
-  "N_b_z_num": 265998.95585513255,
   "N_b_z_Rd": 265998.95585513255,
+  "N_b_zProduct": 265998.95585513255,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "phi_z": 2.3060263404287347,
   "phi_z_alpha_term": 0.5289938071691909,
@@ -463,9 +463,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_z` (derived) = 3000
 13. `Lcr_z_sq` (derived) = 9.000000e+6
-14. `N_cr_z_num` (derived) = 2.951407e+12
+14. `N_cr_zProduct` (derived) = 2.951407e+12
 15. `N_cr_z` (derived) = 327934.055566862
-16. `lambda_bar_z_num` (derived) = 1.011040e+6
+16. `lambda_bar_zProduct` (derived) = 1.011040e+6
 17. `lambda_bar_z_sq` (derived) = 3.083058874
 18. `lambda_bar_z` (derived) = 1.755864139
 19. `lambda_bar_z_minus_02` (derived) = 1.555864139
@@ -475,10 +475,10 @@
 23. `phi_z_sq` (derived) = 5.317757483
 24. `chi_z_root_arg` (derived) = 2.234698609
 25. `chi_z_root` (derived) = 1.494890835
-26. `chi_z_den` (derived) = 3.800917176
+26. `chi_zFactor` (derived) = 3.800917176
 27. `chi_z_base` (derived) = 0.263094394
 28. `chi_z` (formula) = 0.263094394
-29. `N_b_z_num` (derived) = 265998.955855133
+29. `N_b_zProduct` (derived) = 265998.955855133
 30. `N_b_z_Rd` (formula) = 265998.955855133
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -494,9 +494,9 @@
   "buckling_z_check": 0.7518826506556789,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_root": 1.4948908351658539,
   "chi_z_root_arg": 2.234698609062864,
+  "chi_zFactor": 3.8009171755945887,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -506,14 +506,14 @@
   "L": 3000,
   "lambda_bar_z": 1.7558641387329141,
   "lambda_bar_z_minus_02": 1.5558641387329142,
-  "lambda_bar_z_num": 1011040,
   "lambda_bar_z_sq": 3.0830588736882785,
+  "lambda_bar_zProduct": 1011040,
   "Lcr_z": 3000,
   "Lcr_z_sq": 9000000,
-  "N_b_z_num": 265998.95585513255,
   "N_b_z_Rd": 265998.95585513255,
+  "N_b_zProduct": 265998.95585513255,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "phi_z": 2.3060263404287347,
   "phi_z_alpha_term": 0.5289938071691909,
@@ -552,9 +552,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_z` (derived) = 3000
 13. `Lcr_z_sq` (derived) = 9.000000e+6
-14. `N_cr_z_num` (derived) = 2.951407e+12
+14. `N_cr_zProduct` (derived) = 2.951407e+12
 15. `N_cr_z` (derived) = 327934.055566862
-16. `lambda_bar_z_num` (derived) = 1.011040e+6
+16. `lambda_bar_zProduct` (derived) = 1.011040e+6
 17. `lambda_bar_z_sq` (derived) = 3.083058874
 18. `lambda_bar_z` (derived) = 1.755864139
 19. `lambda_bar_z_minus_02` (derived) = 1.555864139
@@ -564,10 +564,10 @@
 23. `phi_z_sq` (derived) = 5.317757483
 24. `chi_z_root_arg` (derived) = 2.234698609
 25. `chi_z_root` (derived) = 1.494890835
-26. `chi_z_den` (derived) = 3.800917176
+26. `chi_zFactor` (derived) = 3.800917176
 27. `chi_z_base` (derived) = 0.263094394
 28. `chi_z` (formula) = 0.263094394
-29. `N_b_z_num` (derived) = 265998.955855133
+29. `N_b_zProduct` (derived) = 265998.955855133
 30. `N_b_z_Rd` (formula) = 265998.955855133
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -583,9 +583,9 @@
   "buckling_z_check": 0.7518826506556789,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_root": 1.4948908351658539,
   "chi_z_root_arg": 2.234698609062864,
+  "chi_zFactor": 3.8009171755945887,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -595,14 +595,14 @@
   "L": 3000,
   "lambda_bar_z": 1.7558641387329141,
   "lambda_bar_z_minus_02": 1.5558641387329142,
-  "lambda_bar_z_num": 1011040,
   "lambda_bar_z_sq": 3.0830588736882785,
+  "lambda_bar_zProduct": 1011040,
   "Lcr_z": 3000,
   "Lcr_z_sq": 9000000,
-  "N_b_z_num": 265998.95585513255,
   "N_b_z_Rd": 265998.95585513255,
+  "N_b_zProduct": 265998.95585513255,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "phi_z": 2.3060263404287347,
   "phi_z_alpha_term": 0.5289938071691909,
@@ -634,9 +634,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_z` (derived) = 3000
 13. `Lcr_z_sq` (derived) = 9.000000e+6
-14. `N_cr_z_num` (derived) = 2.951407e+12
+14. `N_cr_zProduct` (derived) = 2.951407e+12
 15. `N_cr_z` (derived) = 327934.055566862
-16. `lambda_bar_z_num` (derived) = 1.011040e+6
+16. `lambda_bar_zProduct` (derived) = 1.011040e+6
 17. `lambda_bar_z_sq` (derived) = 3.083058874
 18. `lambda_bar_z` (derived) = 1.755864139
 19. `lambda_bar_z_minus_02` (derived) = 1.555864139
@@ -646,10 +646,10 @@
 23. `phi_z_sq` (derived) = 5.317757483
 24. `chi_z_root_arg` (derived) = 2.234698609
 25. `chi_z_root` (derived) = 1.494890835
-26. `chi_z_den` (derived) = 3.800917176
+26. `chi_zFactor` (derived) = 3.800917176
 27. `chi_z_base` (derived) = 0.263094394
 28. `chi_z` (formula) = 0.263094394
-29. `N_b_z_num` (derived) = 265998.955855133
+29. `N_b_zProduct` (derived) = 265998.955855133
 30. `N_b_z_Rd` (formula) = 265998.955855133
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -665,9 +665,9 @@
   "buckling_z_check": 0.7518826506556789,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_root": 1.4948908351658539,
   "chi_z_root_arg": 2.234698609062864,
+  "chi_zFactor": 3.8009171755945887,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -677,14 +677,14 @@
   "L": 3000,
   "lambda_bar_z": 1.7558641387329141,
   "lambda_bar_z_minus_02": 1.5558641387329142,
-  "lambda_bar_z_num": 1011040,
   "lambda_bar_z_sq": 3.0830588736882785,
+  "lambda_bar_zProduct": 1011040,
   "Lcr_z": 3000,
   "Lcr_z_sq": 9000000,
-  "N_b_z_num": 265998.95585513255,
   "N_b_z_Rd": 265998.95585513255,
+  "N_b_zProduct": 265998.95585513255,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "phi_z": 2.3060263404287347,
   "phi_z_alpha_term": 0.5289938071691909,
@@ -716,9 +716,9 @@
 11. `piSq` (constant) = 9.869604401
 12. `Lcr_z` (derived) = 3000
 13. `Lcr_z_sq` (derived) = 9.000000e+6
-14. `N_cr_z_num` (derived) = 2.951407e+12
+14. `N_cr_zProduct` (derived) = 2.951407e+12
 15. `N_cr_z` (derived) = 327934.055566862
-16. `lambda_bar_z_num` (derived) = 1.011040e+6
+16. `lambda_bar_zProduct` (derived) = 1.011040e+6
 17. `lambda_bar_z_sq` (derived) = 3.083058874
 18. `lambda_bar_z` (derived) = 1.755864139
 19. `lambda_bar_z_minus_02` (derived) = 1.555864139
@@ -728,10 +728,10 @@
 23. `phi_z_sq` (derived) = 5.317757483
 24. `chi_z_root_arg` (derived) = 2.234698609
 25. `chi_z_root` (derived) = 1.494890835
-26. `chi_z_den` (derived) = 3.800917176
+26. `chi_zFactor` (derived) = 3.800917176
 27. `chi_z_base` (derived) = 0.263094394
 28. `chi_z` (formula) = 0.263094394
-29. `N_b_z_num` (derived) = 265998.955855133
+29. `N_b_zProduct` (derived) = 265998.955855133
 30. `N_b_z_Rd` (formula) = 265998.955855133
 31. `abs_N_Ed` (derived) = 200000
 32. `class_guard` (derived) = 1
@@ -747,9 +747,9 @@
   "buckling_z_check": 0.7518826506556789,
   "chi_z": 0.2630943937481529,
   "chi_z_base": 0.2630943937481529,
-  "chi_z_den": 3.8009171755945887,
   "chi_z_root": 1.4948908351658539,
   "chi_z_root_arg": 2.234698609062864,
+  "chi_zFactor": 3.8009171755945887,
   "class_guard": 1,
   "E": 210000,
   "fy": 355,
@@ -759,14 +759,14 @@
   "L": 3000,
   "lambda_bar_z": 1.7558641387329141,
   "lambda_bar_z_minus_02": 1.5558641387329142,
-  "lambda_bar_z_num": 1011040,
   "lambda_bar_z_sq": 3.0830588736882785,
+  "lambda_bar_zProduct": 1011040,
   "Lcr_z": 3000,
   "Lcr_z_sq": 9000000,
-  "N_b_z_num": 265998.95585513255,
   "N_b_z_Rd": 265998.95585513255,
+  "N_b_zProduct": 265998.95585513255,
   "N_cr_z": 327934.05556686234,
-  "N_cr_z_num": 2951406500101.761,
+  "N_cr_zProduct": 2951406500101.761,
   "N_Ed": -200000,
   "phi_z": 2.3060263404287347,
   "phi_z_alpha_term": 0.5289938071691909,

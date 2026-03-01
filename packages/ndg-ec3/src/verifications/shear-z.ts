@@ -13,14 +13,14 @@ const nodes = [
   input(p, "fy", "Yield strength", { symbol: "f_y", unit: "MPa" }),
   coeff(p, "gamma_M0", "Partial safety factor", { sectionRef: "6.1" }, { symbol: "\\gamma_{M0}" }),
   constant(p, "sqrt3", "Square root of three", { symbol: "\\sqrt{3}" }),
-  derived(p, "V_pl_z_num", "Numerator of V_pl,z,Rd", ["Av_z", "fy"], {
+  derived(p, "V_pl_zProduct", "Numerator of V_pl,z,Rd", ["Av_z", "fy"], {
     expression: "A_{v,z} f_y",
     unit: "N",
   }),
-  derived(p, "V_pl_z_den", "Denominator of V_pl,z,Rd", ["sqrt3", "gamma_M0"], {
+  derived(p, "V_pl_zFactor", "Denominator of V_pl,z,Rd", ["sqrt3", "gamma_M0"], {
     expression: "\\sqrt{3}\\gamma_{M0}",
   }),
-  formula(p, "V_pl_z_Rd", "Plastic shear resistance in z", ["V_pl_z_num", "V_pl_z_den"], {
+  formula(p, "V_pl_z_Rd", "Plastic shear resistance in z", ["V_pl_zProduct", "V_pl_zFactor"], {
     symbol: "V_{pl,z,Rd}",
     expression: "\\frac{A_{v,z} \\cdot f_y / \\sqrt{3}}{\\gamma_{M0}}",
     unit: "N",
@@ -42,9 +42,9 @@ const nodes = [
 export const ulsShearZ: VerificationDefinition<typeof nodes> = {
   nodes,
   evaluate: {
-    V_pl_z_num: ({ Av_z, fy }) => Av_z * fy,
-    V_pl_z_den: ({ sqrt3, gamma_M0 }) => sqrt3 * gamma_M0,
-    V_pl_z_Rd: ({ V_pl_z_num, V_pl_z_den }) => V_pl_z_num / V_pl_z_den,
+    V_pl_zProduct: ({ Av_z, fy }) => Av_z * fy,
+    V_pl_zFactor: ({ sqrt3, gamma_M0 }) => sqrt3 * gamma_M0,
+    V_pl_z_Rd: ({ V_pl_zProduct, V_pl_zFactor }) => V_pl_zProduct / V_pl_zFactor,
     abs_V_z_Ed: ({ V_z_Ed }) => Math.abs(V_z_Ed),
     class_guard: ({ section_class }) => {
       if (section_class === 4) {

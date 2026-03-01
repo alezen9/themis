@@ -52,22 +52,22 @@ const nodes = [
     expression: "L_{cr,LT}^2",
     unit: "mm²",
   }),
-  derived(p, "euler_num", "Euler numerator for M_cr", ["piSq", "E", "Iz"], {
+  derived(p, "eulerProduct", "Euler numerator for M_cr", ["piSq", "E", "Iz"], {
     expression: "\\pi^2 E I_z",
   }),
-  derived(p, "euler_term", "Euler term for M_cr", ["euler_num", "Lcr_LT_sq"], {
+  derived(p, "euler_term", "Euler term for M_cr", ["eulerProduct", "Lcr_LT_sq"], {
     expression: "\\frac{\\pi^2 E I_z}{L_{cr,LT}^2}",
   }),
   derived(p, "torsion_ratio", "Warping to inertia ratio", ["Iw", "Iz"], {
     expression: "\\frac{I_w}{I_z}",
   }),
-  derived(p, "torsion_num", "Torsion additive numerator", ["Lcr_LT_sq", "G", "It"], {
+  derived(p, "torsionProduct", "Torsion additive numerator", ["Lcr_LT_sq", "G", "It"], {
     expression: "L_{cr,LT}^2 G I_t",
   }),
-  derived(p, "torsion_den", "Torsion additive denominator", ["piSq", "E", "Iz"], {
+  derived(p, "torsionFactor", "Torsion additive denominator", ["piSq", "E", "Iz"], {
     expression: "\\pi^2 E I_z",
   }),
-  derived(p, "torsion_add", "Torsion additive term", ["torsion_num", "torsion_den"], {
+  derived(p, "torsion_add", "Torsion additive term", ["torsionProduct", "torsionFactor"], {
     expression: "\\frac{L_{cr,LT}^2 G I_t}{\\pi^2 E I_z}",
   }),
   derived(p, "torsion_sum", "Torsion sum under square root", ["torsion_ratio", "torsion_add"], {
@@ -85,10 +85,10 @@ const nodes = [
     unit: "N·mm",
     meta: { sectionRef: "6.3.2.2", paragraphRef: "(2)" },
   }),
-  derived(p, "lambda_LT_num", "LT slenderness numerator", ["Wpl_y", "fy"], {
+  derived(p, "lambda_LTProduct", "LT slenderness numerator", ["Wpl_y", "fy"], {
     expression: "W_{pl,y}f_y",
   }),
-  derived(p, "lambda_bar_LT_sq", "Squared LT slenderness", ["lambda_LT_num", "M_cr"], {
+  derived(p, "lambda_bar_LT_sq", "Squared LT slenderness", ["lambda_LTProduct", "M_cr"], {
     expression: "\\frac{W_{pl,y} f_y}{M_{cr}}",
   }),
   derived(p, "lambda_bar_LT", "Non-dimensional slenderness for LTB", ["lambda_bar_LT_sq"], {
@@ -123,10 +123,10 @@ const nodes = [
   derived(p, "chi_LT_root", "Square-root radicand term", ["chi_LT_radicand"], {
     expression: "\\sqrt{\\Phi_{LT}^2 - \\beta\\bar{\\lambda}_{LT}^2}",
   }),
-  derived(p, "chi_LT_den", "χ_LT denominator", ["phi_LT", "chi_LT_root"], {
+  derived(p, "chi_LTFactor", "χ_LT denominator", ["phi_LT", "chi_LT_root"], {
     expression: "\\Phi_{LT} + \\sqrt{\\Phi_{LT}^2 - \\beta\\bar{\\lambda}_{LT}^2}",
   }),
-  formula(p, "chi_LT_base", "Base LTB reduction factor from Eq.6.57", ["chi_LT_den"], {
+  formula(p, "chi_LT_base", "Base LTB reduction factor from Eq.6.57", ["chi_LTFactor"], {
     symbol: "\\chi_{LT,base}",
     expression: "\\frac{1}{\\Phi_{LT} + \\sqrt{\\Phi_{LT}^2 - \\beta \\bar{\\lambda}_{LT}^2}}",
     meta: { sectionRef: "6.3.2.3", formulaRef: "(6.57)" },
@@ -148,10 +148,10 @@ const nodes = [
     expression: "\\min\\left(1,\\frac{\\chi_{LT}}{f}\\right)",
     meta: { sectionRef: "6.3.2.3", formulaRef: "(6.58)" },
   }),
-  derived(p, "M_b_num", "Numerator of M_b,Rd", ["chi_LT_mod", "Wpl_y", "fy"], {
+  derived(p, "M_bProduct", "Numerator of M_b,Rd", ["chi_LT_mod", "Wpl_y", "fy"], {
     expression: "\\chi_{LT,mod}W_{pl,y}f_y",
   }),
-  formula(p, "M_b_Rd", "LTB resistance", ["M_b_num", "gamma_M1"], {
+  formula(p, "M_b_Rd", "LTB resistance", ["M_bProduct", "gamma_M1"], {
     symbol: "M_{b,Rd}",
     expression: "\\frac{\\chi_{LT,mod} W_{pl,y} f_y}{\\gamma_{M1}}",
     unit: "N·mm",
@@ -183,18 +183,18 @@ export const ulsLtb: VerificationDefinition<typeof nodes> = {
       if (Lcr_LT <= 0) throwInvalidInput("ltb: Lcr_LT must be > 0");
       return Lcr_LT ** 2;
     },
-    euler_num: ({ piSq, E, Iz }) => piSq * E * Iz,
-    euler_term: ({ euler_num, Lcr_LT_sq }) => euler_num / Lcr_LT_sq,
+    eulerProduct: ({ piSq, E, Iz }) => piSq * E * Iz,
+    euler_term: ({ eulerProduct, Lcr_LT_sq }) => eulerProduct / Lcr_LT_sq,
     torsion_ratio: ({ Iw, Iz }) => {
       if (Iz <= 0) throwInvalidInput("ltb: Iz must be > 0");
       return Iw / Iz;
     },
-    torsion_num: ({ Lcr_LT_sq, G, It }) => Lcr_LT_sq * G * It,
-    torsion_den: ({ piSq, E, Iz }) => {
+    torsionProduct: ({ Lcr_LT_sq, G, It }) => Lcr_LT_sq * G * It,
+    torsionFactor: ({ piSq, E, Iz }) => {
       if (Iz <= 0) throwInvalidInput("ltb: Iz must be > 0");
       return piSq * E * Iz;
     },
-    torsion_add: ({ torsion_num, torsion_den }) => torsion_num / torsion_den,
+    torsion_add: ({ torsionProduct, torsionFactor }) => torsionProduct / torsionFactor,
     torsion_sum: ({ torsion_ratio, torsion_add }) => torsion_ratio + torsion_add,
     torsion_root: ({ torsion_sum }) => {
       if (torsion_sum <= 0) throwInvalidInput("ltb: invalid torsion term");
@@ -226,10 +226,10 @@ export const ulsLtb: VerificationDefinition<typeof nodes> = {
       if (Iz <= 0 || It <= 0 || Iw <= 0) throwInvalidInput("ltb: Iz, It and Iw must be > 0");
       return M_cr_prefactor * torsion_root;
     },
-    lambda_LT_num: ({ Wpl_y, fy }) => Wpl_y * fy,
-    lambda_bar_LT_sq: ({ lambda_LT_num, M_cr }) => {
+    lambda_LTProduct: ({ Wpl_y, fy }) => Wpl_y * fy,
+    lambda_bar_LT_sq: ({ lambda_LTProduct, M_cr }) => {
       if (M_cr <= 0) throwInvalidInput("ltb: M_cr must be > 0");
-      return lambda_LT_num / M_cr;
+      return lambda_LTProduct / M_cr;
     },
     lambda_bar_LT: ({ lambda_bar_LT_sq }) => Math.sqrt(lambda_bar_LT_sq),
     lambda_LT_delta: ({ lambda_bar_LT, lambda_LT_0 }) => lambda_bar_LT - lambda_LT_0,
@@ -242,8 +242,8 @@ export const ulsLtb: VerificationDefinition<typeof nodes> = {
     phi_LT_sq: ({ phi_LT }) => phi_LT ** 2,
     chi_LT_radicand: ({ phi_LT_sq, phi_beta_term }) => phi_LT_sq - phi_beta_term,
     chi_LT_root: ({ chi_LT_radicand }) => Math.sqrt(chi_LT_radicand),
-    chi_LT_den: ({ phi_LT, chi_LT_root }) => phi_LT + chi_LT_root,
-    chi_LT_base: ({ chi_LT_den }) => 1 / chi_LT_den,
+    chi_LTFactor: ({ phi_LT, chi_LT_root }) => phi_LT + chi_LT_root,
+    chi_LT_base: ({ chi_LTFactor }) => 1 / chi_LTFactor,
     chi_LT_cap: ({ lambda_bar_LT_sq }) => 1 / lambda_bar_LT_sq,
     chi_LT: ({ chi_LT_base, chi_LT_cap }) => Math.min(1, Math.min(chi_LT_base, chi_LT_cap)),
     f_LT: ({ coefficient_f_method, lambda_bar_LT, k_c }) =>
@@ -254,8 +254,8 @@ export const ulsLtb: VerificationDefinition<typeof nodes> = {
       if (f_LT <= 0) throwInvalidInput("ltb: f_LT must be > 0");
       return Math.min(1, chi_LT / f_LT);
     },
-    M_b_num: ({ chi_LT_mod, Wpl_y, fy }) => chi_LT_mod * Wpl_y * fy,
-    M_b_Rd: ({ M_b_num, gamma_M1 }) => M_b_num / gamma_M1,
+    M_bProduct: ({ chi_LT_mod, Wpl_y, fy }) => chi_LT_mod * Wpl_y * fy,
+    M_b_Rd: ({ M_bProduct, gamma_M1 }) => M_bProduct / gamma_M1,
     abs_M_y_Ed: ({ M_y_Ed }) => Math.abs(M_y_Ed),
     ltb_check: ({ abs_M_y_Ed, M_b_Rd }) => abs_M_y_Ed / M_b_Rd,
   },

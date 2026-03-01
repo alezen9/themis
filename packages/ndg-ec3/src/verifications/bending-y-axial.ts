@@ -1,6 +1,6 @@
 import type { VerificationDefinition } from "@ndg/ndg-core";
-import { input, coeff, formula, derived, check } from "@ndg/ndg-core";
-import { throwNotApplicableSectionClass } from "../errors";
+import { input, stringInput, coeff, formula, derived, check } from "@ndg/ndg-core";
+import { throwInvalidInput, throwNotApplicableSectionClass } from "../errors";
 
 /**
  * §6.2.9.1 -- Bending about y-y and axial force (Class 1 & 2 I-sections).
@@ -14,8 +14,10 @@ const p = "bending-y-axial";
 const nodes = [
   input(p, "M_y_Ed", "Design bending moment about y-y", { symbol: "M_{y,Ed}", unit: "N·mm" }),
   input(p, "N_Ed", "Design axial force", { symbol: "N_{Ed}", unit: "N" }),
+  stringInput(p, "section_shape", "Section shape family (I, RHS, CHS)"),
   input(p, "section_class", "Section class (1, 2, 3, 4)"),
   input(p, "A", "Cross-sectional area", { symbol: "A", unit: "mm²" }),
+  input(p, "Av_y", "Shear area y (flange area for I sections)", { symbol: "A_{v,y}", unit: "mm²" }),
   input(p, "Wel_y", "Elastic section modulus about y-y", { symbol: "W_{el,y}", unit: "mm³" }),
   input(p, "Wpl_y", "Plastic section modulus about y-y", { symbol: "W_{pl,y}", unit: "mm³" }),
   input(p, "Av_z", "Web area (shear area z)", { symbol: "A_{v,z}", unit: "mm²" }),
@@ -37,11 +39,11 @@ const nodes = [
   derived(p, "W_y_res", "Class-dependent section modulus for y bending", ["section_class", "Wpl_y", "Wel_y"], {
     expression: "c=3?W_{el,y}:W_{pl,y}",
   }),
-  derived(p, "M_pl_y_num", "Numerator of M_pl,y,Rd", ["W_y_res", "fy"], {
+  derived(p, "M_pl_yProduct", "Numerator of M_pl,y,Rd", ["W_y_res", "fy"], {
     expression: "W_{res,y}f_y",
     unit: "N·mm",
   }),
-  formula(p, "M_pl_y_Rd", "Plastic bending resistance about y-y", ["class_guard", "M_pl_y_num", "gamma_M0"], {
+  formula(p, "M_pl_y_Rd", "Plastic bending resistance about y-y", ["class_guard", "M_pl_yProduct", "gamma_M0"], {
     symbol: "M_{pl,y,Rd}",
     expression: "\\frac{W_{res,y} \\cdot f_y}{\\gamma_{M0}}",
     unit: "N·mm",
@@ -51,20 +53,20 @@ const nodes = [
     symbol: "n",
     expression: "N_{Ed} / N_{pl,Rd}",
   }),
-  derived(p, "a_w_raw", "Raw web area ratio", ["Av_z", "A"], {
-    expression: "A_w/A",
+  derived(p, "a_w_raw", "Raw reduction parameter a", ["section_shape", "A", "Av_y", "Av_z"], {
+    expression: "\\text{I}: (A-A_{v,y})/A,\\; \\text{else}: A_{v,z}/A",
   }),
   derived(p, "a_w", "Web area ratio", ["a_w_raw"], {
     symbol: "a",
     expression: "\\min(A_w / A, 0.5)",
   }),
-  derived(p, "axial_num", "Numerator of axial reduction ratio", ["n"], {
+  derived(p, "axialProduct", "Numerator of axial reduction ratio", ["n"], {
     expression: "1-n",
   }),
-  derived(p, "axial_den", "Denominator of axial reduction ratio", ["a_w"], {
+  derived(p, "axialFactor", "Denominator of axial reduction ratio", ["a_w"], {
     expression: "1-0.5a",
   }),
-  derived(p, "axial_ratio", "Axial reduction ratio", ["axial_num", "axial_den"], {
+  derived(p, "axial_ratio", "Axial reduction ratio", ["axialProduct", "axialFactor"], {
     expression: "\\frac{1-n}{1-0.5a}",
   }),
   derived(p, "axial_factor", "Axial reduction factor", ["axial_ratio"], {
@@ -101,14 +103,18 @@ export const ulsBendingYAxial: VerificationDefinition<typeof nodes> = {
       return 1;
     },
     W_y_res: ({ section_class, Wpl_y, Wel_y }) => (section_class === 3 ? Wel_y : Wpl_y),
-    M_pl_y_num: ({ W_y_res, fy }) => W_y_res * fy,
-    M_pl_y_Rd: ({ class_guard, M_pl_y_num, gamma_M0 }) => class_guard * (M_pl_y_num / gamma_M0),
+    M_pl_yProduct: ({ W_y_res, fy }) => W_y_res * fy,
+    M_pl_y_Rd: ({ class_guard, M_pl_yProduct, gamma_M0 }) => class_guard * (M_pl_yProduct / gamma_M0),
     n: ({ abs_N_Ed, N_pl_Rd }) => abs_N_Ed / N_pl_Rd,
-    a_w_raw: ({ Av_z, A }) => Av_z / A,
+    a_w_raw: ({ section_shape, A, Av_y, Av_z }) => {
+      if (A <= 0) throwInvalidInput("bending-y-axial: A must be > 0");
+      const a = section_shape === "I" ? (A - Av_y) / A : Av_z / A;
+      return a;
+    },
     a_w: ({ a_w_raw }) => Math.min(a_w_raw, 0.5),
-    axial_num: ({ n }) => 1 - n,
-    axial_den: ({ a_w }) => 1 - 0.5 * a_w,
-    axial_ratio: ({ axial_num, axial_den }) => axial_num / axial_den,
+    axialProduct: ({ n }) => 1 - n,
+    axialFactor: ({ a_w }) => 1 - 0.5 * a_w,
+    axial_ratio: ({ axialProduct, axialFactor }) => axialProduct / axialFactor,
     axial_factor: ({ axial_ratio }) => Math.min(1, axial_ratio),
     M_N_y_Rd: ({ M_pl_y_Rd, axial_factor }) => M_pl_y_Rd * axial_factor,
     abs_M_y_Ed: ({ M_y_Ed }) => Math.abs(M_y_Ed),

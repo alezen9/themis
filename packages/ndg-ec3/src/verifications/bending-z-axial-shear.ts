@@ -1,6 +1,6 @@
 import type { VerificationDefinition } from "@ndg/ndg-core";
-import { input, coeff, constant, formula, derived, check } from "@ndg/ndg-core";
-import { throwNotApplicableSectionClass } from "../errors";
+import { input, stringInput, coeff, constant, formula, derived, check } from "@ndg/ndg-core";
+import { throwInvalidInput, throwNotApplicableSectionClass } from "../errors";
 
 /**
  * §6.2.10 -- Bending about z-z, axial force, and shear.
@@ -12,6 +12,7 @@ const nodes = [
   input(p, "M_z_Ed", "Design bending moment about z-z", { symbol: "M_{z,Ed}", unit: "N·mm" }),
   input(p, "N_Ed", "Design axial force", { unit: "N" }),
   input(p, "V_y_Ed", "Design shear force in y", { unit: "N" }),
+  stringInput(p, "section_shape", "Section shape family (I, RHS, CHS)"),
   input(p, "section_class", "Section class (1, 2, 3, 4)"),
   input(p, "A", "Cross-sectional area", { unit: "mm²" }),
   input(p, "Wel_z", "Elastic section modulus z-z", { unit: "mm³" }),
@@ -22,13 +23,13 @@ const nodes = [
   input(p, "fy", "Yield strength", { unit: "MPa" }),
   coeff(p, "gamma_M0", "Partial safety factor", { sectionRef: "6.1" }, { symbol: "\\gamma_{M0}" }),
   constant(p, "sqrt3", "Square root of three", { symbol: "\\sqrt{3}" }),
-  derived(p, "V_pl_y_num", "Numerator of V_pl,y,Rd", ["Av_y", "fy"], {
+  derived(p, "V_pl_yProduct", "Numerator of V_pl,y,Rd", ["Av_y", "fy"], {
     expression: "A_{v,y}f_y",
   }),
-  derived(p, "V_pl_y_den", "Denominator of V_pl,y,Rd", ["sqrt3", "gamma_M0"], {
+  derived(p, "V_pl_yFactor", "Denominator of V_pl,y,Rd", ["sqrt3", "gamma_M0"], {
     expression: "\\sqrt{3}\\gamma_{M0}",
   }),
-  formula(p, "V_pl_y_Rd", "Plastic shear resistance y", ["V_pl_y_num", "V_pl_y_den"], {
+  formula(p, "V_pl_y_Rd", "Plastic shear resistance y", ["V_pl_yProduct", "V_pl_yFactor"], {
     symbol: "V_{pl,y,Rd}",
     expression: "A_{v,y} f_y / (\\sqrt{3} \\gamma_{M0})",
     unit: "N",
@@ -50,10 +51,10 @@ const nodes = [
     symbol: "\\rho",
     expression: "\\left(2V_{y,Ed}/V_{pl,y,Rd} - 1\\right)^2",
   }),
-  derived(p, "N_pl_num", "Numerator of N_pl,Rd", ["A", "fy"], {
+  derived(p, "N_plProduct", "Numerator of N_pl,Rd", ["A", "fy"], {
     expression: "Af_y",
   }),
-  formula(p, "N_pl_Rd", "Plastic resistance", ["N_pl_num", "gamma_M0"], {
+  formula(p, "N_pl_Rd", "Plastic resistance", ["N_plProduct", "gamma_M0"], {
     symbol: "N_{pl,Rd}",
     expression: "A f_y / \\gamma_{M0}",
     unit: "N",
@@ -63,8 +64,8 @@ const nodes = [
     expression: "\\left|N_{Ed}\\right|",
   }),
   derived(p, "n", "Axial force ratio", ["abs_N_Ed", "N_pl_Rd"]),
-  derived(p, "a_f_raw", "Raw flange area ratio", ["Av_z", "A"], {
-    expression: "A_{v,z}/A",
+  derived(p, "a_f_raw", "Raw reduction parameter a", ["section_shape", "A", "Av_y", "Av_z"], {
+    expression: "\\text{I}: (A-A_{v,y})/A,\\; \\text{else}: A_{v,z}/A",
   }),
   derived(p, "a_f", "Flange area ratio", ["a_f_raw"]),
   derived(p, "Wpl_z_web", "Web contribution to plastic modulus about z-z", ["Av_z", "tw"], {
@@ -90,11 +91,11 @@ const nodes = [
     expression: "W_{res,z}-\\rho\\left(W_{res,z}-W_{pl,z,web}\\right)",
     unit: "mm³",
   }),
-  derived(p, "M_z_V_num", "Numerator of M_z,V,Rd", ["Wpl_z_eff", "fy"], {
+  derived(p, "M_z_VProduct", "Numerator of M_z,V,Rd", ["Wpl_z_eff", "fy"], {
     expression: "\\left[W_{pl,z}-\\rho\\left(W_{pl,z}-W_{pl,z,web}\\right)\\right]f_y",
     unit: "N·mm",
   }),
-  derived(p, "M_z_V_Rd", "Reduced bending resistance z-z allowing for shear", ["class_guard", "M_z_V_num", "gamma_M0"], {
+  derived(p, "M_z_V_Rd", "Reduced bending resistance z-z allowing for shear", ["class_guard", "M_z_VProduct", "gamma_M0"], {
     symbol: "M_{z,V,Rd}",
     expression: "\\frac{\\left[W_{res,z} - \\rho_y\\left(W_{res,z} - W_{pl,z,web}\\right)\\right]f_y}{\\gamma_{M0}}",
     unit: "N·mm",
@@ -136,19 +137,22 @@ const nodes = [
 export const ulsBendingZAxialShear: VerificationDefinition<typeof nodes> = {
   nodes,
   evaluate: {
-    V_pl_y_num: ({ Av_y, fy }) => Av_y * fy,
-    V_pl_y_den: ({ sqrt3, gamma_M0 }) => sqrt3 * gamma_M0,
-    V_pl_y_Rd: ({ V_pl_y_num, V_pl_y_den }) => V_pl_y_num / V_pl_y_den,
+    V_pl_yProduct: ({ Av_y, fy }) => Av_y * fy,
+    V_pl_yFactor: ({ sqrt3, gamma_M0 }) => sqrt3 * gamma_M0,
+    V_pl_y_Rd: ({ V_pl_yProduct, V_pl_yFactor }) => V_pl_yProduct / V_pl_yFactor,
     abs_V_y_Ed: ({ V_y_Ed }) => Math.abs(V_y_Ed),
     rho_ratio: ({ abs_V_y_Ed, V_pl_y_Rd }) => abs_V_y_Ed / V_pl_y_Rd,
     rho_linear: ({ rho_ratio }) => 2 * rho_ratio - 1,
     rho_sq: ({ rho_linear }) => rho_linear ** 2,
     rho_y: ({ rho_ratio, rho_sq }) => (rho_ratio <= 0.5 ? 0 : rho_sq),
-    N_pl_num: ({ A, fy }) => A * fy,
-    N_pl_Rd: ({ N_pl_num, gamma_M0 }) => N_pl_num / gamma_M0,
+    N_plProduct: ({ A, fy }) => A * fy,
+    N_pl_Rd: ({ N_plProduct, gamma_M0 }) => N_plProduct / gamma_M0,
     abs_N_Ed: ({ N_Ed }) => Math.abs(N_Ed),
     n: ({ abs_N_Ed, N_pl_Rd }) => abs_N_Ed / N_pl_Rd,
-    a_f_raw: ({ Av_z, A }) => Av_z / A,
+    a_f_raw: ({ section_shape, A, Av_y, Av_z }) => {
+      if (A <= 0) throwInvalidInput("bending-z-axial-shear: A must be > 0");
+      return section_shape === "I" ? (A - Av_y) / A : Av_z / A;
+    },
     a_f: ({ a_f_raw }) => Math.min(a_f_raw, 0.5),
     Wpl_z_web: ({ Av_z, tw }) => (Av_z * tw) / 4,
     Wpl_z_flange: ({ Wpl_z, Wpl_z_web }) => Wpl_z - Wpl_z_web,
@@ -164,8 +168,8 @@ export const ulsBendingZAxialShear: VerificationDefinition<typeof nodes> = {
     },
     W_z_res: ({ section_class, Wpl_z, Wel_z }) => (section_class === 3 ? Wel_z : Wpl_z),
     Wpl_z_eff: ({ W_z_res, rho_flange_reduction }) => W_z_res - rho_flange_reduction,
-    M_z_V_num: ({ Wpl_z_eff, fy }) => Wpl_z_eff * fy,
-    M_z_V_Rd: ({ class_guard, M_z_V_num, gamma_M0 }) => class_guard * (M_z_V_num / gamma_M0),
+    M_z_VProduct: ({ Wpl_z_eff, fy }) => Wpl_z_eff * fy,
+    M_z_V_Rd: ({ class_guard, M_z_VProduct, gamma_M0 }) => class_guard * (M_z_VProduct / gamma_M0),
     n_minus_af: ({ n, a_f }) => n - a_f,
     one_minus_af: ({ a_f }) => 1 - a_f,
     axial_ratio: ({ n_minus_af, one_minus_af }) => n_minus_af / one_minus_af,

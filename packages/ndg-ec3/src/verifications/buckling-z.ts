@@ -27,21 +27,21 @@ const nodes = [
     expression: "L_{cr,z}^2",
     unit: "mm^2",
   }),
-  derived(p, "N_cr_z_num", "Numerator of N_cr,z", ["piSq", "E", "Iz"], {
+  derived(p, "N_cr_zProduct", "Numerator of N_cr,z", ["piSq", "E", "Iz"], {
     expression: "\\pi^2EI_z",
     unit: "N·mm^2",
   }),
-  derived(p, "N_cr_z", "Elastic critical force z-z", ["N_cr_z_num", "Lcr_z_sq"], {
+  derived(p, "N_cr_z", "Elastic critical force z-z", ["N_cr_zProduct", "Lcr_z_sq"], {
     symbol: "N_{cr,z}",
     expression: "\\frac{\\pi^2EI_z}{L_{cr,z}^2}",
     unit: "N",
     meta: { sectionRef: "6.3.1.2" },
   }),
-  derived(p, "lambda_bar_z_num", "Numerator of slenderness square", ["A", "fy"], {
+  derived(p, "lambda_bar_zProduct", "Numerator of slenderness square", ["A", "fy"], {
     expression: "Af_y",
     unit: "N",
   }),
-  derived(p, "lambda_bar_z_sq", "Squared non-dimensional slenderness z-z", ["lambda_bar_z_num", "N_cr_z"], {
+  derived(p, "lambda_bar_z_sq", "Squared non-dimensional slenderness z-z", ["lambda_bar_zProduct", "N_cr_z"], {
     expression: "\\frac{Af_y}{N_{cr,z}}",
   }),
   derived(p, "lambda_bar_z", "Non-dimensional slenderness z-z", ["lambda_bar_z_sq"], {
@@ -70,10 +70,10 @@ const nodes = [
   derived(p, "chi_z_root", "Square-root term in χ_z denominator", ["chi_z_root_arg"], {
     expression: "\\sqrt{\\Phi_z^2-\\bar{\\lambda}_z^2}",
   }),
-  derived(p, "chi_z_den", "Denominator of χ_z", ["phi_z", "chi_z_root"], {
+  derived(p, "chi_zFactor", "Denominator of χ_z", ["phi_z", "chi_z_root"], {
     expression: "\\Phi_z+\\sqrt{\\Phi_z^2-\\bar{\\lambda}_z^2}",
   }),
-  derived(p, "chi_z_base", "Uncapped reduction factor χ_z", ["chi_z_den"], {
+  derived(p, "chi_z_base", "Uncapped reduction factor χ_z", ["chi_zFactor"], {
     expression: "\\left(\\Phi_z+\\sqrt{\\Phi_z^2-\\bar{\\lambda}_z^2}\\right)^{-1}",
   }),
   formula(p, "chi_z", "Reduction factor z-z", ["chi_z_base"], {
@@ -81,11 +81,11 @@ const nodes = [
     expression: "\\frac{1}{\\Phi_z + \\sqrt{\\Phi_z^2 - \\bar{\\lambda}_z^2}}",
     meta: { sectionRef: "6.3.1.2", formulaRef: "(6.49)" },
   }),
-  derived(p, "N_b_z_num", "Numerator of N_b,z,Rd", ["chi_z", "A", "fy"], {
+  derived(p, "N_b_zProduct", "Numerator of N_b,z,Rd", ["chi_z", "A", "fy"], {
     expression: "\\chi_zAf_y",
     unit: "N",
   }),
-  formula(p, "N_b_z_Rd", "Buckling resistance z-z", ["N_b_z_num", "gamma_M1"], {
+  formula(p, "N_b_z_Rd", "Buckling resistance z-z", ["N_b_zProduct", "gamma_M1"], {
     symbol: "N_{b,z,Rd}",
     expression: "\\frac{\\chi_z A f_y}{\\gamma_{M1}}",
     unit: "N",
@@ -109,10 +109,10 @@ export const ulsBucklingZ: VerificationDefinition<typeof nodes> = {
   evaluate: {
     Lcr_z: ({ L, k_z }) => L * k_z,
     Lcr_z_sq: ({ Lcr_z }) => Lcr_z ** 2,
-    N_cr_z_num: ({ piSq, E, Iz }) => piSq * E * Iz,
-    N_cr_z: ({ N_cr_z_num, Lcr_z_sq }) => N_cr_z_num / Lcr_z_sq,
-    lambda_bar_z_num: ({ A, fy }) => A * fy,
-    lambda_bar_z_sq: ({ lambda_bar_z_num, N_cr_z }) => lambda_bar_z_num / N_cr_z,
+    N_cr_zProduct: ({ piSq, E, Iz }) => piSq * E * Iz,
+    N_cr_z: ({ N_cr_zProduct, Lcr_z_sq }) => N_cr_zProduct / Lcr_z_sq,
+    lambda_bar_zProduct: ({ A, fy }) => A * fy,
+    lambda_bar_z_sq: ({ lambda_bar_zProduct, N_cr_z }) => lambda_bar_zProduct / N_cr_z,
     lambda_bar_z: ({ lambda_bar_z_sq }) => Math.sqrt(lambda_bar_z_sq),
     lambda_bar_z_minus_02: ({ lambda_bar_z }) => lambda_bar_z - 0.2,
     phi_z_alpha_term: ({ alpha_z, lambda_bar_z_minus_02 }) => alpha_z * lambda_bar_z_minus_02,
@@ -121,11 +121,11 @@ export const ulsBucklingZ: VerificationDefinition<typeof nodes> = {
     phi_z_sq: ({ phi_z }) => phi_z ** 2,
     chi_z_root_arg: ({ phi_z_sq, lambda_bar_z_sq }) => phi_z_sq - lambda_bar_z_sq,
     chi_z_root: ({ chi_z_root_arg }) => Math.sqrt(chi_z_root_arg),
-    chi_z_den: ({ phi_z, chi_z_root }) => phi_z + chi_z_root,
-    chi_z_base: ({ chi_z_den }) => 1 / chi_z_den,
+    chi_zFactor: ({ phi_z, chi_z_root }) => phi_z + chi_z_root,
+    chi_z_base: ({ chi_zFactor }) => 1 / chi_zFactor,
     chi_z: ({ chi_z_base }) => Math.min(1, chi_z_base),
-    N_b_z_num: ({ chi_z, A, fy }) => chi_z * A * fy,
-    N_b_z_Rd: ({ N_b_z_num, gamma_M1 }) => N_b_z_num / gamma_M1,
+    N_b_zProduct: ({ chi_z, A, fy }) => chi_z * A * fy,
+    N_b_z_Rd: ({ N_b_zProduct, gamma_M1 }) => N_b_zProduct / gamma_M1,
     abs_N_Ed: ({ N_Ed }) => {
       if (N_Ed >= 0) {
         throwNotApplicableLoadCase("buckling-z: verification is only applicable for compression (N_Ed < 0)", {
