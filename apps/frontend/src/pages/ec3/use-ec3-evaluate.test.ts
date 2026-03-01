@@ -31,11 +31,16 @@ const editableInputs: Ec3EditableInputs = {
   M_z_Ed: 5000000,
   V_y_Ed: 10000,
   V_z_Ed: 50000,
-  section_class: 2,
+  section_class_mode: 2,
   L: 3000,
   k_y: 1,
   k_z: 1,
-  k_LT: 1,
+  LLT_over_L: 1,
+  LcrT_over_L: 1,
+  torsional_deformations: "yes",
+  interaction_factor_method: "both",
+  coefficient_f_method: "default-equation",
+  buckling_curves_LT_policy: "default",
   moment_shape_y: "linear",
   support_condition_y: "pinned-pinned",
   moment_shape_z: "linear",
@@ -77,19 +82,19 @@ const material: Ec3MaterialInputs = {
 describe("EC3 frontend input + evaluation contract", () => {
   it("matches runtime user-input keys required by graph", () => {
     const graphKeys = getRuntimeInputKeysFromGraph();
-    expect(graphKeys).toEqual([...REQUIRED_RUNTIME_INPUT_KEYS]);
+    expect(graphKeys).toEqual([...REQUIRED_RUNTIME_INPUT_KEYS].sort());
   });
 
   it("keeps editable keys and annex keys aligned with scope", () => {
-    expect(EDITABLE_INPUT_KEYS).toContain("section_class");
-    expect(SECTION_CLASS_OPTIONS).toEqual([1, 2, 3]);
+    expect(EDITABLE_INPUT_KEYS).toContain("section_class_mode");
+    expect(SECTION_CLASS_OPTIONS).toEqual(["auto", 1, 2, 3]);
     expect(ANNEX_EDITABLE_KEYS).toEqual(["gamma_M0", "gamma_M1", "lambda_LT_0", "beta_LT"]);
   });
 
   it("builds resolved input payload with exact required keys", () => {
-    const resolved = buildResolvedInputs(editableInputs, section, material);
+    const resolved = buildResolvedInputs(editableInputs, section, material, 2);
     const resolvedKeys = Object.keys(resolved).sort();
-    expect(resolvedKeys).toEqual([...REQUIRED_RUNTIME_INPUT_KEYS]);
+    expect(resolvedKeys).toEqual([...REQUIRED_RUNTIME_INPUT_KEYS].sort());
   });
 
   it("normalizes support condition aliases and clamps linear psi values", () => {
@@ -106,6 +111,7 @@ describe("EC3 frontend input + evaluation contract", () => {
       },
       section,
       material,
+      2,
     );
 
     expect(resolved.support_condition_y).toBe("fixed-pinned");
@@ -114,10 +120,13 @@ describe("EC3 frontend input + evaluation contract", () => {
     expect(resolved.psi_y).toBe(1);
     expect(resolved.psi_z).toBe(-1);
     expect(resolved.psi_LT).toBe(1);
+    expect(resolved.k_LT).toBe(1);
+    expect(resolved.k_T).toBe(1);
+    expect(resolved.section_class).toBe(2);
   });
 
   it("enforces payload exclusivity for all rows", () => {
-    const resolved = buildResolvedInputs(editableInputs, section, material);
+    const resolved = buildResolvedInputs(editableInputs, section, material, 2);
     const rows = evaluateEc3Rows(resolved, annex);
     expect(rows).toHaveLength(22);
 
@@ -133,6 +142,7 @@ describe("EC3 frontend input + evaluation contract", () => {
       editableInputs,
       { ...section, section_shape: "RHS", Iw: 0 },
       material,
+      2,
     );
     const rows = evaluateEc3Rows(resolved, annex);
     const check12 = rows.find((row) => row.checkId === 12);

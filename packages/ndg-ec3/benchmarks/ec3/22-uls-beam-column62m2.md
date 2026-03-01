@@ -114,39 +114,40 @@
 79. `chi_z` (derived) = 0.263094394
 80. `lambda_LT_sq` (derived) = 1.470791605
 81. `lambda_LT` (derived) = 1.212761974
-82. `phi_LT_alpha` (derived) = 0.276339071
-83. `phi_LT_beta` (derived) = 1.103093704
-84. `phi_LT_inner` (derived) = 2.379432775
-85. `phi_LT` (derived) = 1.189716387
-86. `phi_LT_sq` (derived) = 1.415425083
-87. `chi_LT_radicand` (derived) = 0.312331379
-88. `chi_LT_root` (derived) = 0.558866155
-89. `chi_LT_den` (derived) = 1.748582542
-90. `chi_LT_base` (derived) = 0.57189179
-91. `chi_LT_cap` (derived) = 0.679905975
-92. `chi_LT` (derived) = 0.57189179
-93. `f_LT` (derived) = 1
-94. `chi_LT_mod` (derived) = 0.57189179
-95. `N_b_z_Rd` (derived) = 265998.955855133
-96. `n_z` (derived) = 0.751882651
-97. `lambda_bar_z_cap` (derived) = 1
-98. `k_zz_branch1_term` (derived) = 1.4
-99. `k_zz_branch1` (derived) = 1.06737057
-100. `k_zz_branch2` (derived) = 1.06737057
-101. `k_zz` (table) = 1.06737057
-102. `k_zy_cm_denom` (derived) = 0.75
-103. `k_zy_lambda_ratio` (derived) = 0.234115218
-104. `k_zy_n_factor` (derived) = 0.176027171
-105. `k_zy_low_a` (derived) = 2.355864139
-106. `k_zy_low_b` (derived) = 0.823972829
-107. `k_zy_high_lambda_cap` (derived) = 1
-108. `k_zy_high_a` (derived) = 0.89974898
-109. `k_zy_high_b` (derived) = 0.89974898
-110. `k_zy` (table) = 0.89974898
-111. `bc_62_term1` (derived) = 0.751882651
-112. `bc_62_term2` (derived) = 0.401794174
-113. `bc_62_term3` (derived) = 0.260543991
-114. `bc_62_m2_check` (check) = 1.414220816
+82. `alpha_LT_eff` (derived) = 0.34
+83. `phi_LT_alpha` (derived) = 0.276339071
+84. `phi_LT_beta` (derived) = 1.103093704
+85. `phi_LT_inner` (derived) = 2.379432775
+86. `phi_LT` (derived) = 1.189716387
+87. `phi_LT_sq` (derived) = 1.415425083
+88. `chi_LT_radicand` (derived) = 0.312331379
+89. `chi_LT_root` (derived) = 0.558866155
+90. `chi_LT_den` (derived) = 1.748582542
+91. `chi_LT_base` (derived) = 0.57189179
+92. `chi_LT_cap` (derived) = 0.679905975
+93. `chi_LT` (derived) = 0.57189179
+94. `f_LT` (derived) = 1
+95. `chi_LT_mod` (derived) = 0.57189179
+96. `N_b_z_Rd` (derived) = 265998.955855133
+97. `n_z` (derived) = 0.751882651
+98. `lambda_bar_z_cap` (derived) = 1
+99. `k_zz_branch1_term` (derived) = 1.4
+100. `k_zz_branch1` (derived) = 1.06737057
+101. `k_zz_branch2` (derived) = 1.06737057
+102. `k_zz` (table) = 1.06737057
+103. `k_zy_cm_denom` (derived) = 0.75
+104. `k_zy_lambda_ratio` (derived) = 0.234115218
+105. `k_zy_n_factor` (derived) = 0.176027171
+106. `k_zy_low_a` (derived) = 2.355864139
+107. `k_zy_low_b` (derived) = 0.823972829
+108. `k_zy_high_lambda_cap` (derived) = 1
+109. `k_zy_high_a` (derived) = 0.89974898
+110. `k_zy_high_b` (derived) = 0.89974898
+111. `k_zy` (table) = 0.89974898
+112. `bc_62_term1` (derived) = 0.751882651
+113. `bc_62_term2` (derived) = 0.401794174
+114. `bc_62_term3` (derived) = 0.260543991
+115. `bc_62_m2_check` (check) = 1.414220816
 
 #### Expected Intermediates
 
@@ -154,6 +155,7 @@
 {
   "A": 2848,
   "alpha_LT": 0.34,
+  "alpha_LT_eff": 0.34,
   "alpha_y": 0.21,
   "alpha_z": 0.34,
   "bc_62_m2_check": 1.4142208163592045,
@@ -358,39 +360,40 @@
 79. `chi_z` (derived) = 0.263094394
 80. `lambda_LT_sq` (derived) = 1.470791605
 81. `lambda_LT` (derived) = 1.212761974
-82. `phi_LT_alpha` (derived) = 0.276339071
-83. `phi_LT_beta` (derived) = 1.103093704
-84. `phi_LT_inner` (derived) = 2.379432775
-85. `phi_LT` (derived) = 1.189716387
-86. `phi_LT_sq` (derived) = 1.415425083
-87. `chi_LT_radicand` (derived) = 0.312331379
-88. `chi_LT_root` (derived) = 0.558866155
-89. `chi_LT_den` (derived) = 1.748582542
-90. `chi_LT_base` (derived) = 0.57189179
-91. `chi_LT_cap` (derived) = 0.679905975
-92. `chi_LT` (derived) = 0.57189179
-93. `f_LT` (derived) = 1
-94. `chi_LT_mod` (derived) = 0.57189179
-95. `N_b_z_Rd` (derived) = 265998.955855133
-96. `n_z` (derived) = 0.751882651
-97. `lambda_bar_z_cap` (derived) = 1
-98. `k_zz_branch1_term` (derived) = 1.4
-99. `k_zz_branch1` (derived) = 1.06737057
-100. `k_zz_branch2` (derived) = 1.06737057
-101. `k_zz` (table) = 1.06737057
-102. `k_zy_cm_denom` (derived) = 0.75
-103. `k_zy_lambda_ratio` (derived) = 0.234115218
-104. `k_zy_n_factor` (derived) = 0.176027171
-105. `k_zy_low_a` (derived) = 2.355864139
-106. `k_zy_low_b` (derived) = 0.823972829
-107. `k_zy_high_lambda_cap` (derived) = 1
-108. `k_zy_high_a` (derived) = 0.89974898
-109. `k_zy_high_b` (derived) = 0.89974898
-110. `k_zy` (table) = 0.89974898
-111. `bc_62_term1` (derived) = 0.751882651
-112. `bc_62_term2` (derived) = 0.401794174
-113. `bc_62_term3` (derived) = 0.260543991
-114. `bc_62_m2_check` (check) = 1.414220816
+82. `alpha_LT_eff` (derived) = 0.34
+83. `phi_LT_alpha` (derived) = 0.276339071
+84. `phi_LT_beta` (derived) = 1.103093704
+85. `phi_LT_inner` (derived) = 2.379432775
+86. `phi_LT` (derived) = 1.189716387
+87. `phi_LT_sq` (derived) = 1.415425083
+88. `chi_LT_radicand` (derived) = 0.312331379
+89. `chi_LT_root` (derived) = 0.558866155
+90. `chi_LT_den` (derived) = 1.748582542
+91. `chi_LT_base` (derived) = 0.57189179
+92. `chi_LT_cap` (derived) = 0.679905975
+93. `chi_LT` (derived) = 0.57189179
+94. `f_LT` (derived) = 1
+95. `chi_LT_mod` (derived) = 0.57189179
+96. `N_b_z_Rd` (derived) = 265998.955855133
+97. `n_z` (derived) = 0.751882651
+98. `lambda_bar_z_cap` (derived) = 1
+99. `k_zz_branch1_term` (derived) = 1.4
+100. `k_zz_branch1` (derived) = 1.06737057
+101. `k_zz_branch2` (derived) = 1.06737057
+102. `k_zz` (table) = 1.06737057
+103. `k_zy_cm_denom` (derived) = 0.75
+104. `k_zy_lambda_ratio` (derived) = 0.234115218
+105. `k_zy_n_factor` (derived) = 0.176027171
+106. `k_zy_low_a` (derived) = 2.355864139
+107. `k_zy_low_b` (derived) = 0.823972829
+108. `k_zy_high_lambda_cap` (derived) = 1
+109. `k_zy_high_a` (derived) = 0.89974898
+110. `k_zy_high_b` (derived) = 0.89974898
+111. `k_zy` (table) = 0.89974898
+112. `bc_62_term1` (derived) = 0.751882651
+113. `bc_62_term2` (derived) = 0.401794174
+114. `bc_62_term3` (derived) = 0.260543991
+115. `bc_62_m2_check` (check) = 1.414220816
 
 #### Expected Intermediates
 
@@ -398,6 +401,7 @@
 {
   "A": 2848,
   "alpha_LT": 0.34,
+  "alpha_LT_eff": 0.34,
   "alpha_y": 0.21,
   "alpha_z": 0.34,
   "bc_62_m2_check": 1.4142208163592045,
@@ -602,39 +606,40 @@
 79. `chi_z` (derived) = 0.263094394
 80. `lambda_LT_sq` (derived) = 1.470791605
 81. `lambda_LT` (derived) = 1.212761974
-82. `phi_LT_alpha` (derived) = 0.276339071
-83. `phi_LT_beta` (derived) = 1.103093704
-84. `phi_LT_inner` (derived) = 2.379432775
-85. `phi_LT` (derived) = 1.189716387
-86. `phi_LT_sq` (derived) = 1.415425083
-87. `chi_LT_radicand` (derived) = 0.312331379
-88. `chi_LT_root` (derived) = 0.558866155
-89. `chi_LT_den` (derived) = 1.748582542
-90. `chi_LT_base` (derived) = 0.57189179
-91. `chi_LT_cap` (derived) = 0.679905975
-92. `chi_LT` (derived) = 0.57189179
-93. `f_LT` (derived) = 1
-94. `chi_LT_mod` (derived) = 0.57189179
-95. `N_b_z_Rd` (derived) = 265998.955855133
-96. `n_z` (derived) = 0.751882651
-97. `lambda_bar_z_cap` (derived) = 1
-98. `k_zz_branch1_term` (derived) = 1.4
-99. `k_zz_branch1` (derived) = 1.06737057
-100. `k_zz_branch2` (derived) = 1.06737057
-101. `k_zz` (table) = 1.06737057
-102. `k_zy_cm_denom` (derived) = 0.75
-103. `k_zy_lambda_ratio` (derived) = 0.234115218
-104. `k_zy_n_factor` (derived) = 0.176027171
-105. `k_zy_low_a` (derived) = 2.355864139
-106. `k_zy_low_b` (derived) = 0.823972829
-107. `k_zy_high_lambda_cap` (derived) = 1
-108. `k_zy_high_a` (derived) = 0.89974898
-109. `k_zy_high_b` (derived) = 0.89974898
-110. `k_zy` (table) = 0.89974898
-111. `bc_62_term1` (derived) = 0.751882651
-112. `bc_62_term2` (derived) = 0.401794174
-113. `bc_62_term3` (derived) = 0.260543991
-114. `bc_62_m2_check` (check) = 1.414220816
+82. `alpha_LT_eff` (derived) = 0.34
+83. `phi_LT_alpha` (derived) = 0.276339071
+84. `phi_LT_beta` (derived) = 1.103093704
+85. `phi_LT_inner` (derived) = 2.379432775
+86. `phi_LT` (derived) = 1.189716387
+87. `phi_LT_sq` (derived) = 1.415425083
+88. `chi_LT_radicand` (derived) = 0.312331379
+89. `chi_LT_root` (derived) = 0.558866155
+90. `chi_LT_den` (derived) = 1.748582542
+91. `chi_LT_base` (derived) = 0.57189179
+92. `chi_LT_cap` (derived) = 0.679905975
+93. `chi_LT` (derived) = 0.57189179
+94. `f_LT` (derived) = 1
+95. `chi_LT_mod` (derived) = 0.57189179
+96. `N_b_z_Rd` (derived) = 265998.955855133
+97. `n_z` (derived) = 0.751882651
+98. `lambda_bar_z_cap` (derived) = 1
+99. `k_zz_branch1_term` (derived) = 1.4
+100. `k_zz_branch1` (derived) = 1.06737057
+101. `k_zz_branch2` (derived) = 1.06737057
+102. `k_zz` (table) = 1.06737057
+103. `k_zy_cm_denom` (derived) = 0.75
+104. `k_zy_lambda_ratio` (derived) = 0.234115218
+105. `k_zy_n_factor` (derived) = 0.176027171
+106. `k_zy_low_a` (derived) = 2.355864139
+107. `k_zy_low_b` (derived) = 0.823972829
+108. `k_zy_high_lambda_cap` (derived) = 1
+109. `k_zy_high_a` (derived) = 0.89974898
+110. `k_zy_high_b` (derived) = 0.89974898
+111. `k_zy` (table) = 0.89974898
+112. `bc_62_term1` (derived) = 0.751882651
+113. `bc_62_term2` (derived) = 0.401794174
+114. `bc_62_term3` (derived) = 0.260543991
+115. `bc_62_m2_check` (check) = 1.414220816
 
 #### Expected Intermediates
 
@@ -642,6 +647,7 @@
 {
   "A": 2848,
   "alpha_LT": 0.34,
+  "alpha_LT_eff": 0.34,
   "alpha_y": 0.21,
   "alpha_z": 0.34,
   "bc_62_m2_check": 1.4142208163592045,

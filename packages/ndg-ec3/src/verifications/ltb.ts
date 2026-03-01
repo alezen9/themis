@@ -22,6 +22,9 @@ const nodes = [
   input(p, "L", "Member length", { unit: "mm" }),
   input(p, "k_LT", "LT buckling length factor"),
   input(p, "psi_LT", "Moment ratio for LT shape selection"),
+  stringInput(p, "torsional_deformations", "Member susceptible to torsional deformations (yes/no)"),
+  stringInput(p, "coefficient_f_method", "Method selector for coefficient f"),
+  stringInput(p, "buckling_curves_LT_policy", "LT buckling curve policy selector"),
   stringInput(p, "moment_shape_LT", "Moment shape for LT segment"),
   stringInput(p, "support_condition_LT", "Support condition for LT segment"),
   stringInput(p, "load_application_LT", "Load application for LT segment"),
@@ -95,7 +98,10 @@ const nodes = [
   derived(p, "lambda_LT_delta", "LT slenderness delta", ["lambda_bar_LT", "lambda_LT_0"], {
     expression: "\\bar{\\lambda}_{LT} - \\bar{\\lambda}_{LT,0}",
   }),
-  derived(p, "phi_alpha_term", "Alpha term in Phi_LT", ["alpha_LT", "lambda_LT_delta"], {
+  derived(p, "alpha_LT_eff", "Effective LT imperfection factor", ["alpha_LT", "buckling_curves_LT_policy"], {
+    expression: "\\alpha_{LT,eff}",
+  }),
+  derived(p, "phi_alpha_term", "Alpha term in Phi_LT", ["alpha_LT_eff", "lambda_LT_delta"], {
     expression: "\\alpha_{LT}(\\bar{\\lambda}_{LT} - \\bar{\\lambda}_{LT,0})",
   }),
   derived(p, "phi_beta_term", "Beta term in Phi_LT", ["beta_LT", "lambda_bar_LT_sq"], {
@@ -195,7 +201,14 @@ export const ulsLtb: VerificationDefinition<typeof nodes> = {
       return Math.sqrt(torsion_sum);
     },
     M_cr_prefactor: ({ C1, euler_term }) => C1 * euler_term,
-    M_cr: ({ section_shape, section_class, Iz, It, Iw, M_cr_prefactor, torsion_root }) => {
+    M_cr: ({ section_shape, section_class, torsional_deformations, Iz, It, Iw, M_cr_prefactor, torsion_root }) => {
+      if ((torsional_deformations ?? "yes") !== "yes") {
+        throwEc3VerificationError({
+          type: "NOT_APPLICABLE_LOAD_CASE",
+          message: "ltb: torsional deformations are disabled",
+          details: { torsional_deformations, sectionRef: "6.3.2.3" },
+        });
+      }
       if (section_class === 4) {
         throwEc3VerificationError({
           type: "NOT_APPLICABLE_SECTION_CLASS",
@@ -220,7 +233,9 @@ export const ulsLtb: VerificationDefinition<typeof nodes> = {
     },
     lambda_bar_LT: ({ lambda_bar_LT_sq }) => Math.sqrt(lambda_bar_LT_sq),
     lambda_LT_delta: ({ lambda_bar_LT, lambda_LT_0 }) => lambda_bar_LT - lambda_LT_0,
-    phi_alpha_term: ({ alpha_LT, lambda_LT_delta }) => alpha_LT * lambda_LT_delta,
+    alpha_LT_eff: ({ alpha_LT, buckling_curves_LT_policy }) =>
+      (buckling_curves_LT_policy ?? "default") === "general" ? 0.34 : alpha_LT,
+    phi_alpha_term: ({ alpha_LT_eff, lambda_LT_delta }) => alpha_LT_eff * lambda_LT_delta,
     phi_beta_term: ({ beta_LT, lambda_bar_LT_sq }) => beta_LT * lambda_bar_LT_sq,
     phi_inner: ({ phi_alpha_term, phi_beta_term }) => 1 + phi_alpha_term + phi_beta_term,
     phi_LT: ({ phi_inner }) => 0.5 * phi_inner,
@@ -231,7 +246,10 @@ export const ulsLtb: VerificationDefinition<typeof nodes> = {
     chi_LT_base: ({ chi_LT_den }) => 1 / chi_LT_den,
     chi_LT_cap: ({ lambda_bar_LT_sq }) => 1 / lambda_bar_LT_sq,
     chi_LT: ({ chi_LT_base, chi_LT_cap }) => Math.min(1, Math.min(chi_LT_base, chi_LT_cap)),
-    f_LT: ({ lambda_bar_LT, k_c }) => getFReductionEq658(lambda_bar_LT, k_c),
+    f_LT: ({ coefficient_f_method, lambda_bar_LT, k_c }) =>
+      (coefficient_f_method ?? "default-equation") === "force-1.0"
+        ? 1
+        : getFReductionEq658(lambda_bar_LT, k_c),
     chi_LT_mod: ({ chi_LT, f_LT }) => {
       if (f_LT <= 0) throwInvalidInput("ltb: f_LT must be > 0");
       return Math.min(1, chi_LT / f_LT);

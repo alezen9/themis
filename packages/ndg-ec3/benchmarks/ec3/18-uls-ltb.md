@@ -68,23 +68,24 @@
 33. `lambda_bar_LT_sq` (derived) = 1.470791605
 34. `lambda_bar_LT` (derived) = 1.212761974
 35. `lambda_LT_delta` (derived) = 0.812761974
-36. `phi_alpha_term` (derived) = 0.276339071
-37. `phi_beta_term` (derived) = 1.103093704
-38. `phi_inner` (derived) = 2.379432775
-39. `phi_LT` (derived) = 1.189716387
-40. `phi_LT_sq` (derived) = 1.415425083
-41. `chi_LT_radicand` (derived) = 0.312331379
-42. `chi_LT_root` (derived) = 0.558866155
-43. `chi_LT_den` (derived) = 1.748582542
-44. `chi_LT_base` (formula) = 0.57189179
-45. `chi_LT_cap` (derived) = 0.679905975
-46. `chi_LT` (derived) = 0.57189179
-47. `f_LT` (derived) = 1
-48. `chi_LT_mod` (formula) = 0.57189179
-49. `M_b_num` (derived) = 4.478656e+7
-50. `M_b_Rd` (formula) = 4.478656e+7
-51. `abs_M_y_Ed` (derived) = 2.000000e+7
-52. `ltb_check` (check) = 0.446562523
+36. `alpha_LT_eff` (derived) = 0.34
+37. `phi_alpha_term` (derived) = 0.276339071
+38. `phi_beta_term` (derived) = 1.103093704
+39. `phi_inner` (derived) = 2.379432775
+40. `phi_LT` (derived) = 1.189716387
+41. `phi_LT_sq` (derived) = 1.415425083
+42. `chi_LT_radicand` (derived) = 0.312331379
+43. `chi_LT_root` (derived) = 0.558866155
+44. `chi_LT_den` (derived) = 1.748582542
+45. `chi_LT_base` (formula) = 0.57189179
+46. `chi_LT_cap` (derived) = 0.679905975
+47. `chi_LT` (derived) = 0.57189179
+48. `f_LT` (derived) = 1
+49. `chi_LT_mod` (formula) = 0.57189179
+50. `M_b_num` (derived) = 4.478656e+7
+51. `M_b_Rd` (formula) = 4.478656e+7
+52. `abs_M_y_Ed` (derived) = 2.000000e+7
+53. `ltb_check` (check) = 0.446562523
 
 #### Expected Intermediates
 
@@ -92,6 +93,7 @@
 {
   "abs_M_y_Ed": 20000000,
   "alpha_LT": 0.34,
+  "alpha_LT_eff": 0.34,
   "beta_LT": 0.75,
   "C1": 1,
   "chi_LT": 0.571891790034929,
@@ -188,23 +190,24 @@
 33. `lambda_bar_LT_sq` (derived) = 1.470791605
 34. `lambda_bar_LT` (derived) = 1.212761974
 35. `lambda_LT_delta` (derived) = 0.812761974
-36. `phi_alpha_term` (derived) = 0.276339071
-37. `phi_beta_term` (derived) = 1.103093704
-38. `phi_inner` (derived) = 2.379432775
-39. `phi_LT` (derived) = 1.189716387
-40. `phi_LT_sq` (derived) = 1.415425083
-41. `chi_LT_radicand` (derived) = 0.312331379
-42. `chi_LT_root` (derived) = 0.558866155
-43. `chi_LT_den` (derived) = 1.748582542
-44. `chi_LT_base` (formula) = 0.57189179
-45. `chi_LT_cap` (derived) = 0.679905975
-46. `chi_LT` (derived) = 0.57189179
-47. `f_LT` (derived) = 1
-48. `chi_LT_mod` (formula) = 0.57189179
-49. `M_b_num` (derived) = 4.478656e+7
-50. `M_b_Rd` (formula) = 4.478656e+7
-51. `abs_M_y_Ed` (derived) = 2.000000e+7
-52. `ltb_check` (check) = 0.446562523
+36. `alpha_LT_eff` (derived) = 0.34
+37. `phi_alpha_term` (derived) = 0.276339071
+38. `phi_beta_term` (derived) = 1.103093704
+39. `phi_inner` (derived) = 2.379432775
+40. `phi_LT` (derived) = 1.189716387
+41. `phi_LT_sq` (derived) = 1.415425083
+42. `chi_LT_radicand` (derived) = 0.312331379
+43. `chi_LT_root` (derived) = 0.558866155
+44. `chi_LT_den` (derived) = 1.748582542
+45. `chi_LT_base` (formula) = 0.57189179
+46. `chi_LT_cap` (derived) = 0.679905975
+47. `chi_LT` (derived) = 0.57189179
+48. `f_LT` (derived) = 1
+49. `chi_LT_mod` (formula) = 0.57189179
+50. `M_b_num` (derived) = 4.478656e+7
+51. `M_b_Rd` (formula) = 4.478656e+7
+52. `abs_M_y_Ed` (derived) = 2.000000e+7
+53. `ltb_check` (check) = 0.446562523
 
 #### Expected Intermediates
 
@@ -212,6 +215,7 @@
 {
   "abs_M_y_Ed": 20000000,
   "alpha_LT": 0.34,
+  "alpha_LT_eff": 0.34,
   "beta_LT": 0.75,
   "C1": 1,
   "chi_LT": 0.571891790034929,
@@ -308,23 +312,24 @@
 33. `lambda_bar_LT_sq` (derived) = 1.470791605
 34. `lambda_bar_LT` (derived) = 1.212761974
 35. `lambda_LT_delta` (derived) = 0.812761974
-36. `phi_alpha_term` (derived) = 0.276339071
-37. `phi_beta_term` (derived) = 1.103093704
-38. `phi_inner` (derived) = 2.379432775
-39. `phi_LT` (derived) = 1.189716387
-40. `phi_LT_sq` (derived) = 1.415425083
-41. `chi_LT_radicand` (derived) = 0.312331379
-42. `chi_LT_root` (derived) = 0.558866155
-43. `chi_LT_den` (derived) = 1.748582542
-44. `chi_LT_base` (formula) = 0.57189179
-45. `chi_LT_cap` (derived) = 0.679905975
-46. `chi_LT` (derived) = 0.57189179
-47. `f_LT` (derived) = 1
-48. `chi_LT_mod` (formula) = 0.57189179
-49. `M_b_num` (derived) = 4.478656e+7
-50. `M_b_Rd` (formula) = 4.478656e+7
-51. `abs_M_y_Ed` (derived) = 2.000000e+7
-52. `ltb_check` (check) = 0.446562523
+36. `alpha_LT_eff` (derived) = 0.34
+37. `phi_alpha_term` (derived) = 0.276339071
+38. `phi_beta_term` (derived) = 1.103093704
+39. `phi_inner` (derived) = 2.379432775
+40. `phi_LT` (derived) = 1.189716387
+41. `phi_LT_sq` (derived) = 1.415425083
+42. `chi_LT_radicand` (derived) = 0.312331379
+43. `chi_LT_root` (derived) = 0.558866155
+44. `chi_LT_den` (derived) = 1.748582542
+45. `chi_LT_base` (formula) = 0.57189179
+46. `chi_LT_cap` (derived) = 0.679905975
+47. `chi_LT` (derived) = 0.57189179
+48. `f_LT` (derived) = 1
+49. `chi_LT_mod` (formula) = 0.57189179
+50. `M_b_num` (derived) = 4.478656e+7
+51. `M_b_Rd` (formula) = 4.478656e+7
+52. `abs_M_y_Ed` (derived) = 2.000000e+7
+53. `ltb_check` (check) = 0.446562523
 
 #### Expected Intermediates
 
@@ -332,6 +337,7 @@
 {
   "abs_M_y_Ed": 20000000,
   "alpha_LT": 0.34,
+  "alpha_LT_eff": 0.34,
   "beta_LT": 0.75,
   "C1": 1,
   "chi_LT": 0.571891790034929,

@@ -262,10 +262,10 @@
       "expectedOutcome": "ok",
       "classification": "exact_pass",
       "reason": "strict raw pass for ratio and intermediates",
-      "expectedRatio": 0.9970816228271112,
-      "actualRatio": 0.9970816228271112,
-      "expectedDisplay": "0.997",
-      "actualDisplay": "0.997",
+      "expectedRatio": 0.1856746008286648,
+      "actualRatio": 0.1856746008286648,
+      "expectedDisplay": "0.186",
+      "actualDisplay": "0.186",
       "intermediateMismatches": []
     },
     {
@@ -2986,10 +2986,10 @@
       "expectedOutcome": "ok",
       "classification": "exact_pass",
       "reason": "strict raw pass for ratio and intermediates",
-      "expectedRatio": 0.7518826506556789,
-      "actualRatio": 0.7518826506556789,
-      "expectedDisplay": "0.752",
-      "actualDisplay": "0.752",
+      "expectedRatio": 0.3067643364499936,
+      "actualRatio": 0.3067643364499936,
+      "expectedDisplay": "0.307",
+      "actualDisplay": "0.307",
       "intermediateMismatches": []
     },
     {
@@ -3000,10 +3000,10 @@
       "expectedOutcome": "ok",
       "classification": "exact_pass",
       "reason": "strict raw pass for ratio and intermediates",
-      "expectedRatio": 0.7518826506556789,
-      "actualRatio": 0.7518826506556789,
-      "expectedDisplay": "0.752",
-      "actualDisplay": "0.752",
+      "expectedRatio": 0.3067643364499936,
+      "actualRatio": 0.3067643364499936,
+      "expectedDisplay": "0.307",
+      "actualDisplay": "0.307",
       "intermediateMismatches": []
     },
     {
@@ -3014,10 +3014,10 @@
       "expectedOutcome": "ok",
       "classification": "exact_pass",
       "reason": "strict raw pass for ratio and intermediates",
-      "expectedRatio": 0.7518826506556789,
-      "actualRatio": 0.7518826506556789,
-      "expectedDisplay": "0.752",
-      "actualDisplay": "0.752",
+      "expectedRatio": 0.3067643364499936,
+      "actualRatio": 0.3067643364499936,
+      "expectedDisplay": "0.307",
+      "actualDisplay": "0.307",
       "intermediateMismatches": []
     },
     {

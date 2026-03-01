@@ -8,10 +8,15 @@ import type { EvaluationResult, EvaluationContext } from "@ndg/ndg-ec3";
 import type { Ec3VerificationFailure } from "@ndg/ndg-ec3";
 
 export type SectionShape = "I" | "RHS" | "CHS";
-export type SectionClass = 1 | 2 | 3;
+export type EditableSectionClass = "auto" | 1 | 2 | 3;
+export type ResolvedSectionClass = 1 | 2 | 3 | 4;
 export type MomentShape = "uniform" | "linear" | "parabolic" | "triangular";
 export type SupportCondition = "pinned-pinned" | "fixed-pinned" | "pinned-fixed" | "fixed-fixed";
 export type LoadApplicationLT = "top-flange" | "centroid" | "bottom-flange";
+export type TorsionalDeformations = "yes" | "no";
+export type InteractionFactorMethod = "both" | "method1" | "method2" | "any";
+export type CoefficientFMethod = "default-equation" | "force-1.0";
+export type BucklingCurvesLtPolicy = "default" | "general";
 
 export type Ec3EditableInputs = {
   N_Ed: number;
@@ -22,7 +27,8 @@ export type Ec3EditableInputs = {
   L: number;
   k_y: number;
   k_z: number;
-  k_LT: number;
+  LLT_over_L: number;
+  LcrT_over_L: number;
   psi_y: number;
   psi_z: number;
   psi_LT: number;
@@ -33,7 +39,11 @@ export type Ec3EditableInputs = {
   support_condition_z: SupportCondition;
   support_condition_LT: SupportCondition;
   load_application_LT: LoadApplicationLT;
-  section_class: SectionClass;
+  torsional_deformations: TorsionalDeformations;
+  interaction_factor_method: InteractionFactorMethod;
+  coefficient_f_method: CoefficientFMethod;
+  buckling_curves_LT_policy: BucklingCurvesLtPolicy;
+  section_class_mode: EditableSectionClass;
 };
 
 export type Ec3SectionDerivedInputs = {
@@ -62,7 +72,15 @@ export type Ec3MaterialInputs = {
   G: number;
 };
 
-export type Ec3ResolvedInputs = Ec3EditableInputs & Ec3SectionDerivedInputs & Ec3MaterialInputs;
+export type Ec3ResolvedInputs =
+  Omit<Ec3EditableInputs, "section_class_mode" | "LLT_over_L" | "LcrT_over_L">
+  & {
+    section_class: ResolvedSectionClass;
+    k_LT: number;
+    k_T: number;
+  }
+  & Ec3SectionDerivedInputs
+  & Ec3MaterialInputs;
 
 export type AnnexCoeffs = {
   gamma_M0: number;
@@ -88,6 +106,7 @@ export const buildResolvedInputs = (
   editable: Ec3EditableInputs,
   section: Ec3SectionDerivedInputs,
   material: Ec3MaterialInputs,
+  resolvedSectionClass: ResolvedSectionClass,
 ): Ec3ResolvedInputs => {
   const normalized = { ...editable };
 
@@ -99,8 +118,16 @@ export const buildResolvedInputs = (
   normalized.support_condition_z = canonicalSupportCondition(normalized.support_condition_z);
   normalized.support_condition_LT = canonicalSupportCondition(normalized.support_condition_LT);
 
+  const resolvedEditable = { ...normalized } as Omit<Ec3EditableInputs, "section_class_mode" | "LLT_over_L" | "LcrT_over_L">;
+  delete (resolvedEditable as Partial<Ec3EditableInputs>).section_class_mode;
+  delete (resolvedEditable as Partial<Ec3EditableInputs>).LLT_over_L;
+  delete (resolvedEditable as Partial<Ec3EditableInputs>).LcrT_over_L;
+
   return {
-    ...normalized,
+    ...resolvedEditable,
+    section_class: resolvedSectionClass,
+    k_LT: normalized.LLT_over_L,
+    k_T: normalized.LcrT_over_L,
     ...section,
     ...material,
   };

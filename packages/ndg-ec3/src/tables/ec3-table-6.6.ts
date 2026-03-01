@@ -18,13 +18,13 @@ const table66NonLinearKc: Record<
 > = {
   parabolic: {
     "pinned-pinned": { "top-flange": 0.9, centroid: 0.94, "bottom-flange": 0.91 },
-    "fixed-pinned": { "top-flange": 0.9, centroid: 0.94, "bottom-flange": 0.91 },
-    "fixed-fixed": { "top-flange": 0.9, centroid: 0.94, "bottom-flange": 0.91 },
+    "fixed-pinned": { "top-flange": 0.86, centroid: 0.9, "bottom-flange": 0.87 },
+    "fixed-fixed": { "top-flange": 0.82, centroid: 0.86, "bottom-flange": 0.83 },
   },
   triangular: {
     "pinned-pinned": { "top-flange": 0.77, centroid: 0.86, "bottom-flange": 0.82 },
-    "fixed-pinned": { "top-flange": 0.77, centroid: 0.86, "bottom-flange": 0.82 },
-    "fixed-fixed": { "top-flange": 0.77, centroid: 0.86, "bottom-flange": 0.82 },
+    "fixed-pinned": { "top-flange": 0.73, centroid: 0.82, "bottom-flange": 0.78 },
+    "fixed-fixed": { "top-flange": 0.7, centroid: 0.79, "bottom-flange": 0.75 },
   },
 };
 

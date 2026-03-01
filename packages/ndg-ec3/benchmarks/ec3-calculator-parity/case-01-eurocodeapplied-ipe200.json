@@ -10,7 +10,7 @@
     ]
   },
   "sourceInputs": {
-    "N_kN": 100,
+    "N_kN": -100,
     "V_y_kN": 10,
     "V_z_kN": 50,
     "M_y_kNm": 20,
@@ -47,6 +47,11 @@
     "k_y": 1,
     "k_z": 1,
     "k_LT": 1,
+    "k_T": 1,
+    "torsional_deformations": "yes",
+    "interaction_factor_method": "both",
+    "coefficient_f_method": "default-equation",
+    "buckling_curves_LT_policy": "default",
     "psi_y": 1,
     "psi_z": 1,
     "psi_LT": 1,
@@ -300,8 +305,8 @@
       "verification": "ulsTorsionalBuckling",
       "expected": {
         "outcome": "ok",
-        "ratio": 0.9970816228271112,
-        "display": "0.997",
+        "ratio": 0.1856746008286648,
+        "display": "0.186",
         "tolerance": 0.001
       },
       "sourceAnchor": {

@@ -19,15 +19,17 @@ const nodes = [
   input(p, "It", "St. Venant torsion constant", { unit: "mm⁴" }),
   input(p, "Iw", "Warping constant", { unit: "mm⁶" }),
   input(p, "L", "Member length", { unit: "mm" }),
-  input(p, "k_z", "Buckling length factor z"),
+  input(p, "k_T", "Buckling length factor for torsional buckling"),
+  input(p, "k_z", "Fallback buckling length factor z"),
+  stringInput(p, "torsional_deformations", "Member susceptible to torsional deformations (yes/no)"),
   stringInput(p, "section_shape", "Section shape family (I, RHS, CHS)"),
   input(p, "section_class", "Section class (1, 2, 3, 4)"),
   input(p, "alpha_z", "Imperfection factor (z-axis curve)", { symbol: "\\alpha" }),
   coeff(p, "gamma_M1", "Partial safety factor", { sectionRef: "6.1" }, { symbol: "\\gamma_{M1}" }),
   constant(p, "piSq", "Pi squared", { symbol: "\\pi^2" }),
-  derived(p, "Lcr_T", "Torsional buckling length", ["L", "k_z"], {
+  derived(p, "Lcr_T", "Torsional buckling length", ["L", "k_T", "k_z"], {
     symbol: "L_{cr,T}",
-    expression: "k_z L",
+    expression: "k_T L",
     unit: "mm",
   }),
   derived(p, "Lcr_T_sq", "Squared torsional buckling length", ["Lcr_T"], {
@@ -73,9 +75,9 @@ const nodes = [
     unit: "N",
     meta: { sectionRef: "6.3.1.4", paragraphRef: "(2)" },
   }),
-  derived(p, "N_cr_governing", "Governing critical force for torsional-flexural slenderness", ["N_cr_T", "N_cr_TF"], {
+  derived(p, "N_cr_governing", "Governing critical force for torsional buckling slenderness", ["N_cr_T"], {
     symbol: "N_{cr}",
-    expression: "N_{cr,TF} \\;\\text{with}\\; N_{cr,TF} < N_{cr,T}",
+    expression: "N_{cr,T}",
     unit: "N",
     meta: { sectionRef: "6.3.1.4", paragraphRef: "(2)" },
   }),
@@ -144,7 +146,7 @@ const nodes = [
 export const ulsTorsionalBuckling: VerificationDefinition<typeof nodes> = {
   nodes,
   evaluate: {
-    Lcr_T: ({ L, k_z }) => L * k_z,
+    Lcr_T: ({ L, k_T, k_z }) => L * (k_T ?? k_z ?? 1),
     Lcr_T_sq: ({ Lcr_T }) => {
       if (Lcr_T <= 0) throwInvalidInput("torsional-buckling: Lcr_T must be > 0");
       return Lcr_T ** 2;
@@ -183,9 +185,9 @@ export const ulsTorsionalBuckling: VerificationDefinition<typeof nodes> = {
     N_cr_z_num: ({ piSq, E, Iz }) => piSq * E * Iz,
     N_cr_z: ({ N_cr_z_num, Lcr_T_sq }) => N_cr_z_num / Lcr_T_sq,
     N_cr_TF: ({ N_cr_T, N_cr_z }) => Math.min(N_cr_T, N_cr_z),
-    N_cr_governing: ({ N_cr_T, N_cr_TF }) => {
-      if (N_cr_TF <= 0) throwInvalidInput("torsional-buckling: invalid governing critical force");
-      return Math.min(N_cr_TF, N_cr_T);
+    N_cr_governing: ({ N_cr_T }) => {
+      if (N_cr_T <= 0) throwInvalidInput("torsional-buckling: invalid governing critical force");
+      return N_cr_T;
     },
     lambda_bar_TF_num: ({ A, fy }) => A * fy,
     lambda_bar_TF_sq: ({ lambda_bar_TF_num, N_cr_governing }) => lambda_bar_TF_num / N_cr_governing,
@@ -202,7 +204,13 @@ export const ulsTorsionalBuckling: VerificationDefinition<typeof nodes> = {
     chi_TF: ({ chi_TF_base }) => Math.min(1, chi_TF_base),
     N_b_TF_num: ({ chi_TF, A, fy }) => chi_TF * A * fy,
     N_b_TF_Rd: ({ N_b_TF_num, gamma_M1 }) => N_b_TF_num / gamma_M1,
-    abs_N_Ed: ({ N_Ed }) => {
+    abs_N_Ed: ({ N_Ed, torsional_deformations }) => {
+      if ((torsional_deformations ?? "yes") !== "yes") {
+        throwNotApplicableLoadCase("torsional-buckling: torsional deformations are disabled", {
+          torsional_deformations,
+          sectionRef: "6.3.1.4",
+        });
+      }
       if (N_Ed >= 0) {
         throwNotApplicableLoadCase("torsional-buckling: verification is only applicable for compression (N_Ed < 0)", {
           N_Ed,

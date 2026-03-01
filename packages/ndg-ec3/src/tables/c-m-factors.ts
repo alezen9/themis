@@ -12,6 +12,37 @@
 import { throwInvalidInput } from "../errors";
 const cmLinear = (psi: number) => 0.6 + 0.4 * psi;
 
+export type CmMomentShape = "uniform" | "linear" | "parabolic" | "triangular";
+export type CmSupportCondition = "pinned-pinned" | "fixed-pinned" | "fixed-fixed";
+
+export const getPsiEquivalentForMomentShape = (
+  momentShape: CmMomentShape,
+  psi: number | undefined,
+  supportCondition: CmSupportCondition,
+): number => {
+  if (momentShape === "uniform") return 1;
+  if (momentShape === "linear") {
+    if (typeof psi !== "number" || Number.isNaN(psi)) {
+      return throwInvalidInput("getPsiEquivalentForMomentShape: psi is required for linear shape");
+    }
+    return psi;
+  }
+  if (momentShape === "parabolic") {
+    if (supportCondition === "pinned-pinned") return 0;
+    if (supportCondition === "fixed-pinned") return 0.5;
+    return 1;
+  }
+  if (supportCondition === "pinned-pinned") return 0;
+  if (supportCondition === "fixed-pinned") return 0.75;
+  return 1;
+};
+
+export const getPsiEquivalentFromKc = (kc: number): number => {
+  if (kc <= 0) throwInvalidInput("getPsiEquivalentFromKc: kc must be > 0");
+  const psiEquivalent = (1.33 - 1 / kc) / 0.33;
+  return Math.max(-1, Math.min(1, psiEquivalent));
+};
+
 /** Annex B / Method 2 C_m with Table B.3 lower bound. */
 export const getCm = (psi: number) => {
   return Math.max(0.4, cmLinear(psi));

@@ -28,6 +28,10 @@ const nodes = [
   input(p, "k_z", "Buckling length factor z"),
   input(p, "k_LT", "LT buckling length factor"),
   input(p, "psi_LT", "Moment ratio for LT shape selection"),
+  stringInput(p, "torsional_deformations", "Member susceptible to torsional deformations (yes/no)"),
+  stringInput(p, "interaction_factor_method", "Interaction factor method selector"),
+  stringInput(p, "coefficient_f_method", "Method selector for coefficient f"),
+  stringInput(p, "buckling_curves_LT_policy", "LT buckling curve policy selector"),
   stringInput(p, "moment_shape_y", "Moment shape for y-axis"),
   stringInput(p, "support_condition_y", "Support condition for y-axis"),
   stringInput(p, "moment_shape_z", "Moment shape for z-axis"),
@@ -62,7 +66,7 @@ const nodes = [
   derived(p, "Lcr_LT_sq", "Squared LT buckling length", ["Lcr_LT"], { expression: "L_{cr,LT}^2", unit: "mm²" }),
   derived(p, "psi_y_eff", "Effective psi for y-axis moment shape", ["moment_shape_y", "psi_y"], { expression: "\\psi_{y,eff}" }),
   derived(p, "psi_z_eff", "Effective psi for z-axis moment shape", ["moment_shape_z", "psi_z"], { expression: "\\psi_{z,eff}" }),
-  derived(p, "psi_LT_eff", "Effective psi for LT moment shape", ["moment_shape_LT", "psi_LT"], { expression: "\\psi_{LT,eff}" }),
+  derived(p, "psi_LT_eff", "Effective psi for LT moment shape", ["moment_shape_LT", "psi_LT", "k_c"], { expression: "\\psi_{LT,eff}" }),
   table(p, "Cm_y", "Equivalent moment factor y", ["psi_y_eff"], { source: "EC3-B.3", meta: { sectionRef: "Annex B", tableRef: "B.3" } }),
   table(p, "Cm_z", "Equivalent moment factor z", ["psi_z_eff"], { source: "EC3-B.3", meta: { sectionRef: "Annex B", tableRef: "B.3" } }),
   table(p, "Cm_LT", "Equivalent moment factor LT", ["psi_LT_eff"], { source: "EC3-B.3", meta: { sectionRef: "Annex B", tableRef: "B.3" } }),
@@ -118,7 +122,7 @@ const nodes = [
   derived(p, "chi_z", "Reduction factor z", ["chi_z_base"]),
   derived(p, "lambda_LT_sq", "Squared LT slenderness", ["Wpl_y", "fy", "M_cr"]),
   derived(p, "lambda_LT", "LT slenderness", ["lambda_LT_sq"]),
-  derived(p, "phi_LT_alpha", "Alpha term in phi_LT", ["alpha_LT", "lambda_LT", "lambda_LT_0"]),
+  derived(p, "phi_LT_alpha", "Alpha term in phi_LT", ["alpha_LT_eff", "lambda_LT", "lambda_LT_0"]),
   derived(p, "phi_LT_beta", "Beta term in phi_LT", ["beta_LT", "lambda_LT_sq"]),
   derived(p, "phi_LT_inner", "Inner sum in phi_LT", ["phi_LT_alpha", "phi_LT_beta"]),
   derived(p, "phi_LT", "LTB buckling parameter", ["phi_LT_inner"]),
@@ -128,6 +132,9 @@ const nodes = [
   derived(p, "chi_LT_den", "Denominator for chi_LT", ["phi_LT", "chi_LT_root"]),
   derived(p, "chi_LT_base", "Base chi_LT", ["chi_LT_den"]),
   derived(p, "chi_LT_cap", "Cap term for chi_LT", ["lambda_LT_sq"]),
+  derived(p, "alpha_LT_eff", "Effective LT imperfection factor", ["alpha_LT", "buckling_curves_LT_policy"], {
+    expression: "\\alpha_{LT,eff}",
+  }),
   derived(p, "chi_LT", "LTB reduction factor", ["chi_LT_base", "chi_LT_cap"]),
   derived(p, "f_LT", "LT correction factor", ["lambda_LT", "k_c"], {
     expression: "f = \\min\\left(1, 1 - 0.5(1-k_c)[1-2(\\bar{\\lambda}_{LT}-0.8)^2]\\right)",
@@ -194,45 +201,59 @@ export const ulsBeamColumn61M2: VerificationDefinition<typeof nodes> = {
       if (Lcr_LT <= 0) throwInvalidInput("beam-column-61-m2: Lcr_LT must be > 0");
       return Lcr_LT ** 2;
     },
-    psi_y_eff: ({ moment_shape_y, psi_y }): number => {
+    psi_y_eff: ({ moment_shape_y, support_condition_y, psi_y }): number => {
       if (moment_shape_y === "uniform") return 1;
       if (moment_shape_y === "linear") {
-        if (psi_y === undefined) {
-          throwEc3VerificationError({
+        if (typeof psi_y !== "number" || Number.isNaN(psi_y)) {
+          return throwEc3VerificationError({
             type: "MISSING_INPUT",
             message: "beam-column-61-m2: psi_y is required when moment_shape_y is linear",
             details: { moment_shape_y, sectionRef: "Annex B Table B.3" },
           });
         }
-        return psi_y!;
+        return psi_y;
       }
-      return throwNotApplicableLoadCase(
-        "beam-column-61-m2: Annex B Cm_y is currently limited to uniform/linear y-axis moment shapes",
-        { moment_shape_y, sectionRef: "Annex B Table B.3" },
-      );
+      if (moment_shape_y === "parabolic") {
+        if (support_condition_y === "pinned-pinned") return 0;
+        if (support_condition_y === "fixed-pinned") return 0.5;
+        return 1;
+      }
+      if (moment_shape_y === "triangular") {
+        if (support_condition_y === "pinned-pinned") return 0;
+        if (support_condition_y === "fixed-pinned") return 0.75;
+        return 1;
+      }
+      return throwInvalidInput("beam-column-61-m2: unsupported moment_shape_y");
     },
-    psi_z_eff: ({ moment_shape_z, psi_z }): number => {
+    psi_z_eff: ({ moment_shape_z, support_condition_z, psi_z }): number => {
       if (moment_shape_z === "uniform") return 1;
       if (moment_shape_z === "linear") {
-        if (psi_z === undefined) {
-          throwEc3VerificationError({
+        if (typeof psi_z !== "number" || Number.isNaN(psi_z)) {
+          return throwEc3VerificationError({
             type: "MISSING_INPUT",
             message: "beam-column-61-m2: psi_z is required when moment_shape_z is linear",
             details: { moment_shape_z, sectionRef: "Annex B Table B.3" },
           });
         }
-        return psi_z!;
+        return psi_z;
       }
-      return throwNotApplicableLoadCase(
-        "beam-column-61-m2: Annex B Cm_z is currently limited to uniform/linear z-axis moment shapes",
-        { moment_shape_z, sectionRef: "Annex B Table B.3" },
-      );
+      if (moment_shape_z === "parabolic") {
+        if (support_condition_z === "pinned-pinned") return 0;
+        if (support_condition_z === "fixed-pinned") return 0.5;
+        return 1;
+      }
+      if (moment_shape_z === "triangular") {
+        if (support_condition_z === "pinned-pinned") return 0;
+        if (support_condition_z === "fixed-pinned") return 0.75;
+        return 1;
+      }
+      return throwInvalidInput("beam-column-61-m2: unsupported moment_shape_z");
     },
-    psi_LT_eff: ({ moment_shape_LT, psi_LT }) => {
+    psi_LT_eff: ({ moment_shape_LT, psi_LT, k_c }) => {
       if (moment_shape_LT === "uniform") return 1;
       if (moment_shape_LT === "linear") return psi_LT;
-      if (moment_shape_LT === "parabolic") return 0.94;
-      return 0.86;
+      const psiEquivalent = (1.33 - 1 / k_c) / 0.33;
+      return Math.max(-1, Math.min(1, psiEquivalent));
     },
     Cm_y: ({ psi_y_eff }) => Math.max(0.4, 0.6 + 0.4 * psi_y_eff),
     Cm_z: ({ psi_z_eff }) => Math.max(0.4, 0.6 + 0.4 * psi_z_eff),
@@ -307,7 +328,9 @@ export const ulsBeamColumn61M2: VerificationDefinition<typeof nodes> = {
       return (Wpl_y * fy) / M_cr;
     },
     lambda_LT: ({ lambda_LT_sq }) => Math.sqrt(lambda_LT_sq),
-    phi_LT_alpha: ({ alpha_LT, lambda_LT, lambda_LT_0 }) => alpha_LT * (lambda_LT - lambda_LT_0),
+    alpha_LT_eff: ({ alpha_LT, buckling_curves_LT_policy }) =>
+      (buckling_curves_LT_policy ?? "default") === "general" ? 0.34 : alpha_LT,
+    phi_LT_alpha: ({ alpha_LT_eff, lambda_LT, lambda_LT_0 }) => alpha_LT_eff * (lambda_LT - lambda_LT_0),
     phi_LT_beta: ({ beta_LT, lambda_LT_sq }) => beta_LT * lambda_LT_sq,
     phi_LT_inner: ({ phi_LT_alpha, phi_LT_beta }) => 1 + phi_LT_alpha + phi_LT_beta,
     phi_LT: ({ phi_LT_inner }) => 0.5 * phi_LT_inner,
@@ -318,14 +341,29 @@ export const ulsBeamColumn61M2: VerificationDefinition<typeof nodes> = {
     chi_LT_base: ({ chi_LT_den }) => 1 / chi_LT_den,
     chi_LT_cap: ({ lambda_LT_sq }) => 1 / lambda_LT_sq,
     chi_LT: ({ chi_LT_base, chi_LT_cap }) => Math.min(1, Math.min(chi_LT_base, chi_LT_cap)),
-    f_LT: ({ lambda_LT, k_c }) => getFReductionEq658(lambda_LT, k_c),
+    f_LT: ({ coefficient_f_method, lambda_LT, k_c }) =>
+      (coefficient_f_method ?? "default-equation") === "force-1.0"
+        ? 1
+        : getFReductionEq658(lambda_LT, k_c),
     chi_LT_mod: ({ chi_LT, f_LT }) => {
       if (f_LT <= 0) throwInvalidInput("beam-column-61-m2: f_LT must be > 0");
       return Math.min(1, chi_LT / f_LT);
     },
     N_b_y_Rd: ({ chi_y, N_Rk, gamma_M1 }) => (chi_y * N_Rk) / gamma_M1,
-    n_y: ({ N_Ed, N_b_y_Rd }) => {
+    n_y: ({ N_Ed, N_b_y_Rd, torsional_deformations, interaction_factor_method }) => {
       if (N_b_y_Rd <= 0) throwInvalidInput("beam-column-61-m2: NbyRd must be > 0");
+      if ((torsional_deformations ?? "yes") !== "yes") {
+        throwNotApplicableLoadCase("beam-column-61-m2: torsional deformations are disabled", {
+          torsional_deformations,
+          sectionRef: "6.3.3",
+        });
+      }
+      if ((interaction_factor_method ?? "both") === "method1") {
+        throwNotApplicableLoadCase("beam-column-61-m2: interaction factor method set to method1", {
+          interaction_factor_method,
+          sectionRef: "6.3.3(5)",
+        });
+      }
       if (N_Ed > 0) {
         throwNotApplicableLoadCase("beam-column-61-m2: check is only applicable for compression (N_Ed < 0)", {
           N_Ed,

@@ -129,22 +129,23 @@
 94. `wz` (derived) = 1.154
 95. `chi_y` (derived) = 0.931755785
 96. `chi_z` (derived) = 0.263094394
-97. `chi_LT` (derived) = 0.57189179
-98. `f_LT` (derived) = 1
-99. `chi_LT_mod` (derived) = 0.57189179
-100. `C_zy` (derived) = 1
-101. `k_yy_denom` (derived) = 0.955302764
-102. `k_yy` (derived) = 0.845071426
-103. `k_zz_denom` (derived) = 0.390121286
-104. `k_zz` (derived) = 1.619073769
-105. `k_zy` (derived) = 0.507042855
-106. `bc_62_term1_den` (derived) = 265998.955855133
-107. `bc_62_term1` (derived) = 0.751882651
-108. `bc_62_term2_den` (derived) = 4.478656e+7
-109. `bc_62_term2` (derived) = 0.226426337
-110. `bc_62_term3_den` (derived) = 2.048350e+7
-111. `bc_62_term3` (derived) = 0.39521414
-112. `bc_62_m1_check` (check) = 1.373523128
+97. `alpha_LT_eff` (derived) = 0.34
+98. `chi_LT` (derived) = 0.57189179
+99. `f_LT` (derived) = 1
+100. `chi_LT_mod` (derived) = 0.57189179
+101. `C_zy` (derived) = 1
+102. `k_yy_denom` (derived) = 0.955302764
+103. `k_yy` (derived) = 0.845071426
+104. `k_zz_denom` (derived) = 0.390121286
+105. `k_zz` (derived) = 1.619073769
+106. `k_zy` (derived) = 0.507042855
+107. `bc_62_term1_den` (derived) = 265998.955855133
+108. `bc_62_term1` (derived) = 0.751882651
+109. `bc_62_term2_den` (derived) = 4.478656e+7
+110. `bc_62_term2` (derived) = 0.226426337
+111. `bc_62_term3_den` (derived) = 2.048350e+7
+112. `bc_62_term3` (derived) = 0.39521414
+113. `bc_62_m1_check` (check) = 1.373523128
 
 #### Expected Intermediates
 
@@ -156,6 +157,7 @@
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
   "alpha_LT": 0.34,
+  "alpha_LT_eff": 0.34,
   "alpha_y": 0.21,
   "alpha_z": 0.34,
   "bc_62_m1_check": 1.3735231277180233,
@@ -369,22 +371,23 @@
 94. `wz` (derived) = 1.154
 95. `chi_y` (derived) = 0.931755785
 96. `chi_z` (derived) = 0.263094394
-97. `chi_LT` (derived) = 0.57189179
-98. `f_LT` (derived) = 1
-99. `chi_LT_mod` (derived) = 0.57189179
-100. `C_zy` (derived) = 1
-101. `k_yy_denom` (derived) = 0.955302764
-102. `k_yy` (derived) = 0.845071426
-103. `k_zz_denom` (derived) = 0.390121286
-104. `k_zz` (derived) = 1.619073769
-105. `k_zy` (derived) = 0.507042855
-106. `bc_62_term1_den` (derived) = 265998.955855133
-107. `bc_62_term1` (derived) = 0.751882651
-108. `bc_62_term2_den` (derived) = 4.478656e+7
-109. `bc_62_term2` (derived) = 0.226426337
-110. `bc_62_term3_den` (derived) = 2.048350e+7
-111. `bc_62_term3` (derived) = 0.39521414
-112. `bc_62_m1_check` (check) = 1.373523128
+97. `alpha_LT_eff` (derived) = 0.34
+98. `chi_LT` (derived) = 0.57189179
+99. `f_LT` (derived) = 1
+100. `chi_LT_mod` (derived) = 0.57189179
+101. `C_zy` (derived) = 1
+102. `k_yy_denom` (derived) = 0.955302764
+103. `k_yy` (derived) = 0.845071426
+104. `k_zz_denom` (derived) = 0.390121286
+105. `k_zz` (derived) = 1.619073769
+106. `k_zy` (derived) = 0.507042855
+107. `bc_62_term1_den` (derived) = 265998.955855133
+108. `bc_62_term1` (derived) = 0.751882651
+109. `bc_62_term2_den` (derived) = 4.478656e+7
+110. `bc_62_term2` (derived) = 0.226426337
+111. `bc_62_term3_den` (derived) = 2.048350e+7
+112. `bc_62_term3` (derived) = 0.39521414
+113. `bc_62_m1_check` (check) = 1.373523128
 
 #### Expected Intermediates
 
@@ -396,6 +399,7 @@
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
   "alpha_LT": 0.34,
+  "alpha_LT_eff": 0.34,
   "alpha_y": 0.21,
   "alpha_z": 0.34,
   "bc_62_m1_check": 1.3735231277180233,
@@ -609,22 +613,23 @@
 94. `wz` (derived) = 1.154
 95. `chi_y` (derived) = 0.931755785
 96. `chi_z` (derived) = 0.263094394
-97. `chi_LT` (derived) = 0.57189179
-98. `f_LT` (derived) = 1
-99. `chi_LT_mod` (derived) = 0.57189179
-100. `C_zy` (derived) = 1
-101. `k_yy_denom` (derived) = 0.955302764
-102. `k_yy` (derived) = 0.845071426
-103. `k_zz_denom` (derived) = 0.390121286
-104. `k_zz` (derived) = 1.619073769
-105. `k_zy` (derived) = 0.507042855
-106. `bc_62_term1_den` (derived) = 265998.955855133
-107. `bc_62_term1` (derived) = 0.751882651
-108. `bc_62_term2_den` (derived) = 4.478656e+7
-109. `bc_62_term2` (derived) = 0.226426337
-110. `bc_62_term3_den` (derived) = 2.048350e+7
-111. `bc_62_term3` (derived) = 0.39521414
-112. `bc_62_m1_check` (check) = 1.373523128
+97. `alpha_LT_eff` (derived) = 0.34
+98. `chi_LT` (derived) = 0.57189179
+99. `f_LT` (derived) = 1
+100. `chi_LT_mod` (derived) = 0.57189179
+101. `C_zy` (derived) = 1
+102. `k_yy_denom` (derived) = 0.955302764
+103. `k_yy` (derived) = 0.845071426
+104. `k_zz_denom` (derived) = 0.390121286
+105. `k_zz` (derived) = 1.619073769
+106. `k_zy` (derived) = 0.507042855
+107. `bc_62_term1_den` (derived) = 265998.955855133
+108. `bc_62_term1` (derived) = 0.751882651
+109. `bc_62_term2_den` (derived) = 4.478656e+7
+110. `bc_62_term2` (derived) = 0.226426337
+111. `bc_62_term3_den` (derived) = 2.048350e+7
+112. `bc_62_term3` (derived) = 0.39521414
+113. `bc_62_m1_check` (check) = 1.373523128
 
 #### Expected Intermediates
 
@@ -636,6 +641,7 @@
   "abs_M_z_Ed": 5000000,
   "abs_N_Ed": 200000,
   "alpha_LT": 0.34,
+  "alpha_LT_eff": 0.34,
   "alpha_y": 0.21,
   "alpha_z": 0.34,
   "bc_62_m1_check": 1.3735231277180233,

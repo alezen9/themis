@@ -1,0 +1,205 @@
+{
+  "source": "resources/eurocode_beam_column_inputs.md",
+  "version": "2026-03-01",
+  "inputs": [
+    {
+      "id": "Calculation_SteelClass",
+      "engineKey": "steel_grade",
+      "status": "implemented-now",
+      "default": "s235"
+    },
+    {
+      "id": "Calculation_Profile",
+      "engineKey": "section_id",
+      "status": "implemented-now",
+      "default": "IPE300"
+    },
+    {
+      "id": "Calculation_SectionClass",
+      "engineKey": "section_class_mode",
+      "status": "implemented-now",
+      "default": "auto",
+      "options": ["auto", 1, 2, 3]
+    },
+    {
+      "id": "Calculation_L",
+      "engineKey": "L",
+      "status": "implemented-now",
+      "default": 5
+    },
+    {
+      "id": "Calculation_N",
+      "engineKey": "N_Ed",
+      "status": "implemented-now",
+      "default": -100
+    },
+    {
+      "id": "Calculation_Vy",
+      "engineKey": "V_y_Ed",
+      "status": "implemented-now",
+      "default": 10
+    },
+    {
+      "id": "Calculation_Vz",
+      "engineKey": "V_z_Ed",
+      "status": "implemented-now",
+      "default": 50
+    },
+    {
+      "id": "Calculation_My",
+      "engineKey": "M_y_Ed",
+      "status": "implemented-now",
+      "default": 20
+    },
+    {
+      "id": "Calculation_Mz",
+      "engineKey": "M_z_Ed",
+      "status": "implemented-now",
+      "default": 5
+    },
+    {
+      "id": "Calculation_Lcry_L",
+      "engineKey": "k_y",
+      "status": "implemented-now",
+      "default": 1
+    },
+    {
+      "id": "Calculation_Lcrz_L",
+      "engineKey": "k_z",
+      "status": "implemented-now",
+      "default": 1
+    },
+    {
+      "id": "Calculation_LLT_L",
+      "engineKey": "LLT_over_L",
+      "status": "implemented-now",
+      "default": 1
+    },
+    {
+      "id": "Calculation_LcrT_L",
+      "engineKey": "LcrT_over_L",
+      "status": "implemented-now",
+      "default": 1
+    },
+    {
+      "id": "Calculation_MomentDiagramMy",
+      "engineKey": "moment_shape_y",
+      "status": "implemented-now",
+      "default": "linear"
+    },
+    {
+      "id": "Calculation_psiy",
+      "engineKey": "psi_y",
+      "status": "implemented-now",
+      "visibility": "moment_shape_y == linear"
+    },
+    {
+      "id": "Calculation_SupportConditionsMy",
+      "engineKey": "support_condition_y",
+      "status": "implemented-now",
+      "visibility": "moment_shape_y in {parabolic,triangular}"
+    },
+    {
+      "id": "Calculation_MomentDiagramMz",
+      "engineKey": "moment_shape_z",
+      "status": "implemented-now",
+      "default": "linear"
+    },
+    {
+      "id": "Calculation_psiz",
+      "engineKey": "psi_z",
+      "status": "implemented-now",
+      "visibility": "moment_shape_z == linear"
+    },
+    {
+      "id": "Calculation_SupportConditionsMz",
+      "engineKey": "support_condition_z",
+      "status": "implemented-now",
+      "visibility": "moment_shape_z in {parabolic,triangular}"
+    },
+    {
+      "id": "Calculation_TorsionalDeformations",
+      "engineKey": "torsional_deformations",
+      "status": "implemented-now",
+      "default": "yes"
+    },
+    {
+      "id": "Calculation_MomentDiagramLT",
+      "engineKey": "moment_shape_LT",
+      "status": "implemented-now",
+      "visibility": "torsional_deformations == yes"
+    },
+    {
+      "id": "Calculation_psiLT",
+      "engineKey": "psi_LT",
+      "status": "implemented-now",
+      "visibility": "torsional_deformations == yes && moment_shape_LT == linear"
+    },
+    {
+      "id": "Calculation_SupportConditionsLT",
+      "engineKey": "support_condition_LT",
+      "status": "implemented-now",
+      "visibility": "torsional_deformations == yes && moment_shape_LT in {parabolic,triangular}"
+    },
+    {
+      "id": "Calculation_LoadLocation",
+      "engineKey": "load_application_LT",
+      "status": "implemented-now",
+      "visibility": "torsional_deformations == yes && moment_shape_LT in {parabolic,triangular}"
+    },
+    {
+      "id": "Calculation_gammaM0",
+      "engineKey": "gamma_M0",
+      "status": "implemented-now"
+    },
+    {
+      "id": "Calculation_gammaM1",
+      "engineKey": "gamma_M1",
+      "status": "implemented-now"
+    },
+    {
+      "id": "Calculation_lambdaLT0",
+      "engineKey": "lambda_LT_0",
+      "status": "implemented-now"
+    },
+    {
+      "id": "Calculation_beta",
+      "engineKey": "beta_LT",
+      "status": "implemented-now"
+    },
+    {
+      "id": "Calculation_InteractionFactorMethod",
+      "engineKey": "interaction_factor_method",
+      "status": "implemented-now",
+      "default": "both"
+    },
+    {
+      "id": "Calculation_CoefficientFMethod",
+      "engineKey": "coefficient_f_method",
+      "status": "implemented-now",
+      "default": "default-equation"
+    },
+    {
+      "id": "Calculation_BucklingCurvesLT",
+      "engineKey": "buckling_curves_LT_policy",
+      "status": "implemented-now",
+      "default": "default"
+    },
+    {
+      "id": "Calculation_eta",
+      "engineKey": "eta",
+      "status": "deferred"
+    },
+    {
+      "id": "Calculation_SectionType",
+      "engineKey": "section_manufacturing_route",
+      "status": "mapped-internally"
+    },
+    {
+      "id": "Calculation_fy",
+      "engineKey": "fy",
+      "status": "mapped-internally"
+    }
+  ]
+}
+

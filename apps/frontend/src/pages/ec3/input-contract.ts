@@ -4,6 +4,8 @@ export const REQUIRED_RUNTIME_INPUT_KEYS = [
   "A",
   "Av_y",
   "Av_z",
+  "buckling_curves_LT_policy",
+  "coefficient_f_method",
   "E",
   "G",
   "It",
@@ -26,8 +28,10 @@ export const REQUIRED_RUNTIME_INPUT_KEYS = [
   "fy",
   "hw",
   "k_LT",
+  "k_T",
   "k_y",
   "k_z",
+  "interaction_factor_method",
   "load_application_LT",
   "moment_shape_LT",
   "moment_shape_y",
@@ -40,6 +44,7 @@ export const REQUIRED_RUNTIME_INPUT_KEYS = [
   "support_condition_LT",
   "support_condition_y",
   "support_condition_z",
+  "torsional_deformations",
   "tw",
 ] as const;
 
@@ -52,7 +57,8 @@ export const EDITABLE_INPUT_KEYS = [
   "L",
   "k_y",
   "k_z",
-  "k_LT",
+  "LLT_over_L",
+  "LcrT_over_L",
   "moment_shape_y",
   "support_condition_y",
   "moment_shape_z",
@@ -60,13 +66,17 @@ export const EDITABLE_INPUT_KEYS = [
   "moment_shape_LT",
   "support_condition_LT",
   "load_application_LT",
+  "torsional_deformations",
+  "interaction_factor_method",
+  "coefficient_f_method",
+  "buckling_curves_LT_policy",
   "psi_y",
   "psi_z",
   "psi_LT",
-  "section_class",
+  "section_class_mode",
 ] as const;
 
-export const SECTION_CLASS_OPTIONS = [1, 2, 3] as const;
+export const SECTION_CLASS_OPTIONS = ["auto", 1, 2, 3] as const;
 
 export const ANNEX_EDITABLE_KEYS = [
   "gamma_M0",

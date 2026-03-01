@@ -17,7 +17,7 @@ import {
   SECTION_CLASS_OPTIONS,
 } from "./input-contract";
 import { computeSectionProperties } from "./compute-section-properties";
-import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3";
+import { eurocodeAnnex, italianAnnex, inferSectionClassForStandardSection } from "@ndg/ndg-ec3";
 import type { Ec3NationalAnnex } from "@ndg/ndg-ec3";
 
 const ANNEXES: Ec3NationalAnnex[] = [italianAnnex, eurocodeAnnex];
@@ -48,6 +48,10 @@ const DEFAULT_ANNEX = italianAnnex;
 const MOMENT_SHAPE_OPTIONS = ["uniform", "linear", "parabolic", "triangular"] as const;
 const SUPPORT_CONDITION_OPTIONS = ["pinned-pinned", "pinned-fixed", "fixed-fixed"] as const;
 const LOAD_APPLICATION_LT_OPTIONS = ["top-flange", "centroid", "bottom-flange"] as const;
+const TORSIONAL_DEFORMATION_OPTIONS = ["yes", "no"] as const;
+const INTERACTION_FACTOR_METHOD_OPTIONS = ["both", "method1", "method2", "any"] as const;
+const COEFFICIENT_F_METHOD_OPTIONS = ["default-equation", "force-1.0"] as const;
+const BUCKLING_CURVES_LT_POLICY_OPTIONS = ["default", "general"] as const;
 
 type EditableNumericKey = {
   [K in keyof Ec3EditableInputs]: Ec3EditableInputs[K] extends number ? K : never;
@@ -74,9 +78,10 @@ const FIELD_GROUPS: { legend: string; fields: FieldDef[] }[] = [
     legend: "Buckling",
     fields: [
       { key: "L", label: "L", displayUnit: "m", toEngine: 1000 },
-      { key: "k_y", label: "k_y" },
-      { key: "k_z", label: "k_z" },
-      { key: "k_LT", label: "k_LT" },
+      { key: "k_y", label: "Lcr,y / L" },
+      { key: "k_z", label: "Lcr,z / L" },
+      { key: "LLT_over_L", label: "LLT / L" },
+      { key: "LcrT_over_L", label: "Lcr,T / L" },
     ],
   },
 ];
@@ -113,11 +118,16 @@ const INITIAL_EDITABLE_INPUTS: Ec3EditableInputs = {
   M_z_Ed: 5_000_000,
   V_y_Ed: 10_000,
   V_z_Ed: 50_000,
-  section_class: 1,
+  section_class_mode: "auto",
   L: 5000,
   k_y: 1,
   k_z: 1,
-  k_LT: 1,
+  LLT_over_L: 1,
+  LcrT_over_L: 1,
+  torsional_deformations: "no",
+  interaction_factor_method: "both",
+  coefficient_f_method: "default-equation",
+  buckling_curves_LT_policy: "default",
   moment_shape_y: "linear",
   support_condition_y: "pinned-pinned",
   moment_shape_z: "linear",
@@ -129,6 +139,60 @@ const INITIAL_EDITABLE_INPUTS: Ec3EditableInputs = {
   psi_z: 0,
   psi_LT: 1,
 };
+
+function resolveSectionClass(
+  section: Section,
+  fy: number,
+  sectionDerived: Ec3SectionDerivedInputs,
+  actions: Pick<Ec3EditableInputs, "N_Ed" | "M_y_Ed" | "M_z_Ed">,
+  sectionClassMode: Ec3EditableInputs["section_class_mode"],
+): 1 | 2 | 3 | 4 {
+  if (sectionClassMode !== "auto") return sectionClassMode;
+  if (section.shape === "I") {
+    return inferSectionClassForStandardSection({
+      sectionShape: "I",
+      fy,
+      h: section.h,
+      b: section.b,
+      tw: section.tw,
+      tf: section.tf,
+      r: section.r,
+      A: sectionDerived.A,
+      Wel_y: sectionDerived.Wel_y,
+      Wel_z: sectionDerived.Wel_z,
+      N_Ed: actions.N_Ed,
+      M_y_Ed: actions.M_y_Ed,
+      M_z_Ed: actions.M_z_Ed,
+    });
+  }
+  if (section.shape === "RHS") {
+    return inferSectionClassForStandardSection({
+      sectionShape: "RHS",
+      fy,
+      h: section.h,
+      b: section.b,
+      tw: section.tw,
+      A: sectionDerived.A,
+      Wel_y: sectionDerived.Wel_y,
+      Wel_z: sectionDerived.Wel_z,
+      N_Ed: actions.N_Ed,
+      M_y_Ed: actions.M_y_Ed,
+      M_z_Ed: actions.M_z_Ed,
+    });
+  }
+  return inferSectionClassForStandardSection({
+    sectionShape: "CHS",
+    fy,
+    d: section.d,
+    t: section.t,
+    A: sectionDerived.A,
+    Wel_y: sectionDerived.Wel_y,
+    Wel_z: sectionDerived.Wel_z,
+    N_Ed: actions.N_Ed,
+    M_y_Ed: actions.M_y_Ed,
+    M_z_Ed: actions.M_z_Ed,
+  });
+}
 
 function NumberInput({
   label,
@@ -247,6 +311,17 @@ export function PageEc3() {
       alpha_z: properties.alpha_z,
       alpha_LT: properties.alpha_LT,
     } satisfies Ec3SectionDerivedInputs;
+    const resolvedSectionClass = resolveSectionClass(
+      selectedSection,
+      grade.fy,
+      sectionDerived,
+      {
+        N_Ed: editableInputs.N_Ed,
+        M_y_Ed: editableInputs.M_y_Ed,
+        M_z_Ed: editableInputs.M_z_Ed,
+      },
+      editableInputs.section_class_mode,
+    );
 
     return buildResolvedInputs(
       editableInputs,
@@ -256,6 +331,7 @@ export function PageEc3() {
         E: STEEL_E,
         G: STEEL_G,
       },
+      resolvedSectionClass,
     );
   }, [currentSection, editableInputs, grade, sections]);
 
@@ -329,6 +405,7 @@ export function PageEc3() {
   const yLinear = editableInputs.moment_shape_y === "linear";
   const zLinear = editableInputs.moment_shape_z === "linear";
   const ltLinear = editableInputs.moment_shape_LT === "linear";
+  const torsionalActive = editableInputs.torsional_deformations === "yes";
   const yNeedsSupport =
     editableInputs.moment_shape_y === "parabolic"
     || editableInputs.moment_shape_y === "triangular";
@@ -393,10 +470,13 @@ export function PageEc3() {
               <label className="flex items-center gap-2 text-sm">
                 <span className="w-20 shrink-0">Class</span>
                 <select
-                  value={editableInputs.section_class}
+                  value={editableInputs.section_class_mode}
                   onChange={(e) => {
-                    const nextClass = Number(e.target.value) as Ec3EditableInputs["section_class"];
-                    setEditableValue("section_class", nextClass);
+                    const rawValue = e.target.value;
+                    const nextClass = rawValue === "auto"
+                      ? "auto"
+                      : Number(rawValue) as Exclude<Ec3EditableInputs["section_class_mode"], "auto">;
+                    setEditableValue("section_class_mode", nextClass);
                   }}
                   className="border px-1 py-0.5 w-36"
                 >
@@ -435,11 +515,73 @@ export function PageEc3() {
             <FieldGroup
               key={group.legend}
               legend={group.legend}
-              fields={group.fields}
+              fields={
+                group.legend === "Buckling" && !torsionalActive
+                  ? group.fields.filter((field) => field.key !== "LLT_over_L" && field.key !== "LcrT_over_L")
+                  : group.fields
+              }
               values={editableInputs as unknown as Record<string, number>}
               onChange={setInput}
             />
           ))}
+
+          <fieldset className="border p-3">
+            <legend className="text-xs font-semibold px-1">Stability Options</legend>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm">
+                <span className="w-20 shrink-0">torsional</span>
+                <select
+                  value={editableInputs.torsional_deformations}
+                  onChange={(e) =>
+                    setEditableValue("torsional_deformations", e.target.value as Ec3EditableInputs["torsional_deformations"])}
+                  className="border px-1 py-0.5 w-36"
+                >
+                  {TORSIONAL_DEFORMATION_OPTIONS.map((option) => (
+                    <option key={`td-${option}`} value={option}>{option}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <span className="w-20 shrink-0">k-method</span>
+                <select
+                  value={editableInputs.interaction_factor_method}
+                  onChange={(e) =>
+                    setEditableValue("interaction_factor_method", e.target.value as Ec3EditableInputs["interaction_factor_method"])}
+                  className="border px-1 py-0.5 w-36"
+                >
+                  {INTERACTION_FACTOR_METHOD_OPTIONS.map((option) => (
+                    <option key={`ifm-${option}`} value={option}>{option}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <span className="w-20 shrink-0">f method</span>
+                <select
+                  value={editableInputs.coefficient_f_method}
+                  onChange={(e) =>
+                    setEditableValue("coefficient_f_method", e.target.value as Ec3EditableInputs["coefficient_f_method"])}
+                  className="border px-1 py-0.5 w-36"
+                >
+                  {COEFFICIENT_F_METHOD_OPTIONS.map((option) => (
+                    <option key={`fm-${option}`} value={option}>{option}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <span className="w-20 shrink-0">LT curves</span>
+                <select
+                  value={editableInputs.buckling_curves_LT_policy}
+                  onChange={(e) =>
+                    setEditableValue("buckling_curves_LT_policy", e.target.value as Ec3EditableInputs["buckling_curves_LT_policy"])}
+                  className="border px-1 py-0.5 w-36"
+                >
+                  {BUCKLING_CURVES_LT_POLICY_OPTIONS.map((option) => (
+                    <option key={`ltc-${option}`} value={option}>{option}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </fieldset>
 
           <fieldset className="border p-3">
             <legend className="text-xs font-semibold px-1">Moment Shape</legend>
@@ -518,55 +660,59 @@ export function PageEc3() {
                 </label>
               )}
 
-              <label className="flex items-center gap-2 text-sm">
-                <span className="w-20 shrink-0">shape LT</span>
-                <select
-                  value={editableInputs.moment_shape_LT}
-                  onChange={(e) =>
-                    setEditableValue("moment_shape_LT", e.target.value as Ec3EditableInputs["moment_shape_LT"])}
-                  className="border px-1 py-0.5 w-36"
-                >
-                  {MOMENT_SHAPE_OPTIONS.map((option) => (
-                    <option key={`lt-${option}`} value={option}>{option}</option>
-                  ))}
-                </select>
-              </label>
-              {ltLinear && (
-                <NumberInput
-                  label="psi_LT"
-                  value={editableInputs.psi_LT}
-                  onChange={(value) => setInput("psi_LT", clampPsi(value))}
-                  unit="[-1,1]"
-                />
-              )}
-              {ltNonLinear && (
+              {torsionalActive && (
                 <>
                   <label className="flex items-center gap-2 text-sm">
-                    <span className="w-20 shrink-0">support LT</span>
+                    <span className="w-20 shrink-0">shape LT</span>
                     <select
-                      value={editableInputs.support_condition_LT}
+                      value={editableInputs.moment_shape_LT}
                       onChange={(e) =>
-                        setEditableValue("support_condition_LT", e.target.value as Ec3EditableInputs["support_condition_LT"])}
+                        setEditableValue("moment_shape_LT", e.target.value as Ec3EditableInputs["moment_shape_LT"])}
                       className="border px-1 py-0.5 w-36"
                     >
-                      {SUPPORT_CONDITION_OPTIONS.map((option) => (
-                        <option key={`slt-${option}`} value={option}>{option}</option>
+                      {MOMENT_SHAPE_OPTIONS.map((option) => (
+                        <option key={`lt-${option}`} value={option}>{option}</option>
                       ))}
                     </select>
                   </label>
-                  <label className="flex items-center gap-2 text-sm">
-                    <span className="w-20 shrink-0">load LT</span>
-                    <select
-                      value={editableInputs.load_application_LT}
-                      onChange={(e) =>
-                        setEditableValue("load_application_LT", e.target.value as Ec3EditableInputs["load_application_LT"])}
-                      className="border px-1 py-0.5 w-36"
-                    >
-                      {LOAD_APPLICATION_LT_OPTIONS.map((option) => (
-                        <option key={`llt-${option}`} value={option}>{option}</option>
-                      ))}
-                    </select>
-                  </label>
+                  {ltLinear && (
+                    <NumberInput
+                      label="psi_LT"
+                      value={editableInputs.psi_LT}
+                      onChange={(value) => setInput("psi_LT", clampPsi(value))}
+                      unit="[-1,1]"
+                    />
+                  )}
+                  {ltNonLinear && (
+                    <>
+                      <label className="flex items-center gap-2 text-sm">
+                        <span className="w-20 shrink-0">support LT</span>
+                        <select
+                          value={editableInputs.support_condition_LT}
+                          onChange={(e) =>
+                            setEditableValue("support_condition_LT", e.target.value as Ec3EditableInputs["support_condition_LT"])}
+                          className="border px-1 py-0.5 w-36"
+                        >
+                          {SUPPORT_CONDITION_OPTIONS.map((option) => (
+                            <option key={`slt-${option}`} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      </label>
+                      <label className="flex items-center gap-2 text-sm">
+                        <span className="w-20 shrink-0">load LT</span>
+                        <select
+                          value={editableInputs.load_application_LT}
+                          onChange={(e) =>
+                            setEditableValue("load_application_LT", e.target.value as Ec3EditableInputs["load_application_LT"])}
+                          className="border px-1 py-0.5 w-36"
+                        >
+                          {LOAD_APPLICATION_LT_OPTIONS.map((option) => (
+                            <option key={`llt-${option}`} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      </label>
+                    </>
+                  )}
                 </>
               )}
             </div>

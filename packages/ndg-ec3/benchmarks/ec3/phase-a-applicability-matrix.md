@@ -1,10 +1,10 @@
 # EC3 Phase A Applicability Matrix
 
-Date: 2026-02-28  
+Date: 2026-03-01  
 Normative baseline: `resources/ec3-part1-1.pdf`  
 Scope: deterministic `compute` vs `not_applicable` for checks `01..22`.
 
-MatrixSourceHash: `26d61c4ff30e02407e8b8b6d825f2786bfe15b1b3e1fd367b5ff2c4309269245`
+MatrixSourceHash: `46f594cfdb5413c2c7f05bf7b34cd4f168301b754c33fc5dde696549853fc751`
 
 ## Failure type mapping
 

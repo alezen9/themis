@@ -16,7 +16,16 @@ export {
   type Ec3SupportCondition,
   type Ec3LoadApplicationLT,
 } from "./tables/ec3-table-6.6";
-export { getCm, getCmMethod1, getCmMethod2, resolveCmMethod1 } from "./tables/c-m-factors";
+export {
+  getCm,
+  getCmMethod1,
+  getCmMethod2,
+  resolveCmMethod1,
+  getPsiEquivalentForMomentShape,
+  getPsiEquivalentFromKc,
+  type CmMomentShape,
+  type CmSupportCondition,
+} from "./tables/c-m-factors";
 export { computeChi, computeChiLT, computeNcrT, computeMcrSn003b } from "./helpers/reduction-factors";
 export {
   computeKyy,
@@ -28,3 +37,7 @@ export {
   computeKyzMethod2,
   computeKzyMethod2,
 } from "./helpers/interaction-factors";
+export {
+  inferSectionClassForStandardSection,
+  type StandardSectionClassInput,
+} from "./helpers/section-class-auto";
