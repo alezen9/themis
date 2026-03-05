@@ -1,5 +1,4 @@
 import { VerificationSchema } from "@ndg/ndg-ec3";
-import type { Node } from "@ndg/ndg-ec3";
 
 const modules = import.meta.glob<{ default: unknown }>(
   "../verifications/**/*.json",
@@ -28,7 +27,7 @@ export function getSections(): string[] {
 export async function loadVerification(
   section: string,
   key: string,
-): Promise<Node[]> {
+): Promise<ReturnType<typeof VerificationSchema.parse>> {
   const path = `../verifications/${section}/${key}.json`;
   const loader = modules[path];
   if (!loader) throw new Error(`"${section}/${key}" not found`);

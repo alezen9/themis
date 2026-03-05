@@ -64,9 +64,6 @@
     "symbol": "\\eta",
     "meta": { "sectionRef": "6.2.4", "verificationRef": "(6.10)" },
     "verificationExpression": "\\frac{N_{Ed}}{N_{c,Rd}} \\leq 1.0",
-    "children": [
-      { "nodeId": "node-N-Ed" },
-      { "nodeId": "node-N-c-Rd" }
-    ]
+    "children": [{ "nodeId": "node-N-Ed" }, { "nodeId": "node-N-c-Rd" }]
   }
 ]

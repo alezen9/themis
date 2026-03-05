@@ -1,0 +1,258 @@
+import { defineNodes } from "@ndg/ndg-core";
+
+export const nodes = defineNodes([
+  {
+    type: "user-input",
+    key: "N_Ed",
+    valueType: { type: "number" },
+    id: "N_Ed",
+    name: "Design compression force",
+    symbol: "N_{Ed}",
+    unit: "N",
+    children: [],
+  },
+  {
+    type: "user-input",
+    key: "section_class",
+    valueType: { type: "number" },
+    id: "section_class",
+    name: "Section class (1, 2, 3, 4)",
+    children: [],
+  },
+  {
+    type: "user-input",
+    key: "A",
+    valueType: { type: "number" },
+    id: "A",
+    name: "Cross-sectional area",
+    unit: "mm²",
+    children: [],
+  },
+  {
+    type: "user-input",
+    key: "fy",
+    valueType: { type: "number" },
+    id: "fy",
+    name: "Yield strength",
+    unit: "MPa",
+    children: [],
+  },
+  {
+    type: "user-input",
+    key: "E",
+    valueType: { type: "number" },
+    id: "E",
+    name: "Elastic modulus",
+    unit: "MPa",
+    children: [],
+  },
+  {
+    type: "user-input",
+    key: "Iy",
+    valueType: { type: "number" },
+    id: "Iy",
+    name: "Second moment of area y-y",
+    unit: "mm⁴",
+    children: [],
+  },
+  {
+    type: "user-input",
+    key: "L",
+    valueType: { type: "number" },
+    id: "L",
+    name: "Member length",
+    unit: "mm",
+    children: [],
+  },
+  {
+    type: "user-input",
+    key: "k_y",
+    valueType: { type: "number" },
+    id: "k_y",
+    name: "Buckling length factor y",
+    children: [],
+  },
+  {
+    type: "user-input",
+    key: "alpha_y",
+    valueType: { type: "number" },
+    id: "alpha_y",
+    name: "Imperfection factor y-y",
+    symbol: "\\alpha_y",
+    children: [],
+  },
+  {
+    type: "coefficient",
+    key: "gamma_M1",
+    valueType: { type: "number" },
+    id: "gamma_M1",
+    name: "Partial safety factor",
+    symbol: "\\gamma_{M1}",
+    meta: {
+      sectionRef: "6.1",
+    },
+    children: [],
+  },
+  {
+    type: "constant",
+    key: "pi",
+    valueType: { type: "number" },
+    id: "pi",
+    name: "Pi",
+    symbol: "\\pi",
+    children: [],
+  },
+  {
+    type: "derived",
+    key: "N_cr_y",
+    valueType: { type: "number" },
+    id: "N_cr_y",
+    name: "Elastic critical force y-y",
+    symbol: "N_{cr,y}",
+    expression: "\\frac{\\pi^2EI_y}{(k_yL)^2}",
+    unit: "N",
+    meta: {
+      sectionRef: "6.3.1.2",
+    },
+    children: [
+      {
+        nodeId: "pi",
+      },
+      {
+        nodeId: "E",
+      },
+      {
+        nodeId: "Iy",
+      },
+      {
+        nodeId: "L",
+      },
+      {
+        nodeId: "k_y",
+      },
+    ],
+  },
+  {
+    type: "derived",
+    key: "lambda_bar_y",
+    valueType: { type: "number" },
+    id: "lambda_bar_y",
+    name: "Non-dimensional slenderness y-y",
+    symbol: "\\bar{\\lambda}_y",
+    expression: "\\sqrt{\\frac{Af_y}{N_{cr,y}}}",
+    children: [
+      {
+        nodeId: "A",
+      },
+      {
+        nodeId: "fy",
+      },
+      {
+        nodeId: "N_cr_y",
+      },
+    ],
+  },
+  {
+    type: "derived",
+    key: "phi_y",
+    valueType: { type: "number" },
+    id: "phi_y",
+    name: "Buckling parameter y-y",
+    symbol: "\\Phi_y",
+    expression:
+      "0.5\\left(1+\\alpha_y(\\bar{\\lambda}_y-0.2)+\\bar{\\lambda}_y^2\\right)",
+    children: [
+      {
+        nodeId: "alpha_y",
+      },
+      {
+        nodeId: "lambda_bar_y",
+      },
+    ],
+  },
+  {
+    type: "formula",
+    key: "chi_y",
+    valueType: { type: "number" },
+    id: "chi_y",
+    name: "Reduction factor y-y",
+    symbol: "\\chi_y",
+    expression: "\\frac{1}{\\Phi_y + \\sqrt{\\Phi_y^2 - \\bar{\\lambda}_y^2}}",
+    meta: {
+      sectionRef: "6.3.1.2",
+      formulaRef: "(6.49)",
+    },
+    children: [
+      {
+        nodeId: "phi_y",
+      },
+      {
+        nodeId: "lambda_bar_y",
+      },
+    ],
+  },
+  {
+    type: "formula",
+    key: "N_b_y_Rd",
+    valueType: { type: "number" },
+    id: "N_b_y_Rd",
+    name: "Buckling resistance y-y",
+    symbol: "N_{b,y,Rd}",
+    expression: "\\frac{\\chi_y A f_y}{\\gamma_{M1}}",
+    unit: "N",
+    meta: {
+      sectionRef: "6.3.1.1",
+      formulaRef: "(6.47)",
+    },
+    children: [
+      {
+        nodeId: "chi_y",
+      },
+      {
+        nodeId: "A",
+      },
+      {
+        nodeId: "fy",
+      },
+      {
+        nodeId: "gamma_M1",
+      },
+    ],
+  },
+  {
+    type: "derived",
+    key: "abs_N_Ed",
+    valueType: { type: "number" },
+    id: "abs_N_Ed",
+    name: "Absolute design axial force",
+    expression: "\\left|N_{Ed}\\right|",
+    unit: "N",
+    children: [
+      {
+        nodeId: "N_Ed",
+      },
+    ],
+  },
+  {
+    type: "check",
+    key: "buckling_y_check",
+    valueType: { type: "number" },
+    id: "buckling_y_check",
+    name: "Flexural buckling check y-y",
+    verificationExpression: "\\frac{N_{Ed}}{N_{b,y,Rd}} \\leq 1.0",
+    meta: {
+      sectionRef: "6.3.1.1",
+      verificationRef: "(6.46)",
+    },
+    children: [
+      {
+        nodeId: "abs_N_Ed",
+      },
+      {
+        nodeId: "N_b_y_Rd",
+      },
+    ],
+  },
+]);
+
+export type Nodes = typeof nodes;

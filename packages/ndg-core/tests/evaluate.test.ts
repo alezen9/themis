@@ -7,7 +7,7 @@ const compressionNodes = [
   {
     type: "user-input",
     key: "fy",
-    valueType: "number",
+    valueType: { type: "number" },
     id: "node-fy",
     name: "Yield strength",
     symbol: "f_y",
@@ -17,7 +17,7 @@ const compressionNodes = [
   {
     type: "coefficient",
     key: "gamma_M0",
-    valueType: "number",
+    valueType: { type: "number" },
     id: "node-gamma-M0",
     name: "Partial factor",
     symbol: "\\gamma_{M0}",
@@ -27,7 +27,7 @@ const compressionNodes = [
   {
     type: "user-input",
     key: "A",
-    valueType: "number",
+    valueType: { type: "number" },
     id: "node-A",
     name: "Area",
     unit: "mm²",
@@ -36,7 +36,7 @@ const compressionNodes = [
   {
     type: "user-input",
     key: "N_Ed",
-    valueType: "number",
+    valueType: { type: "number" },
     id: "node-N-Ed",
     name: "Compression force",
     unit: "N",
@@ -45,7 +45,7 @@ const compressionNodes = [
   {
     type: "formula",
     key: "N_c_Rd",
-    valueType: "number",
+    valueType: { type: "number" },
     id: "node-N-c-Rd",
     name: "Compression resistance",
     expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
@@ -60,7 +60,7 @@ const compressionNodes = [
   {
     type: "check",
     key: "compression_check",
-    valueType: "number",
+    valueType: { type: "number" },
     id: "node-check",
     name: "Compression check",
     verificationExpression: "\\frac{N_{Ed}}{N_{c,Rd}} \\leq 1.0",
@@ -122,7 +122,9 @@ describe("evaluate", () => {
       annex: { id: "eurocode", coefficients: { gamma_M0: 1.0 } },
     };
 
-    expect(() => evaluate(compressionDef, ctx)).toThrow('Missing input: "N_Ed"');
+    expect(() => evaluate(compressionDef, ctx)).toThrow(
+      'Missing input: "N_Ed"',
+    );
   });
 
   it("throws for missing coefficient", () => {
@@ -142,7 +144,7 @@ describe("evaluate with conditional children", () => {
     {
       type: "user-input",
       key: "shape",
-      valueType: "string",
+      valueType: { type: "string" },
       id: "n-shape",
       name: "Shape",
       children: [],
@@ -150,7 +152,7 @@ describe("evaluate with conditional children", () => {
     {
       type: "user-input",
       key: "val_a",
-      valueType: "number",
+      valueType: { type: "number" },
       id: "n-a",
       name: "Value A",
       children: [],
@@ -158,7 +160,7 @@ describe("evaluate with conditional children", () => {
     {
       type: "user-input",
       key: "val_b",
-      valueType: "number",
+      valueType: { type: "number" },
       id: "n-b",
       name: "Value B",
       children: [],
@@ -166,7 +168,7 @@ describe("evaluate with conditional children", () => {
     {
       type: "derived",
       key: "result",
-      valueType: "number",
+      valueType: { type: "number" },
       id: "n-result",
       name: "Result",
       children: [
@@ -177,7 +179,7 @@ describe("evaluate with conditional children", () => {
     {
       type: "check",
       key: "cond_check",
-      valueType: "number",
+      valueType: { type: "number" },
       id: "n-check",
       name: "Check",
       verificationExpression: "result \\leq 1.0",
@@ -188,8 +190,7 @@ describe("evaluate with conditional children", () => {
   const condDef: VerificationDefinition<typeof conditionalNodes> = {
     nodes: conditionalNodes,
     evaluate: {
-      result: ({ val_a, val_b, shape }) =>
-        shape === "I" ? val_a : val_b,
+      result: ({ val_a, val_b, shape }) => (shape === "I" ? val_a : val_b),
       cond_check: ({ result }) => result,
     },
   };
@@ -202,16 +203,61 @@ describe("evaluate with conditional children", () => {
     expect(result.ratio).toBe(0.5);
     expect(result.passed).toBe(true);
   });
+
+  it("does not require inactive branch inputs", () => {
+    const result = evaluate(condDef, {
+      inputs: { shape: "I", val_a: 0.5 },
+      annex: { id: "test", coefficients: {} },
+    });
+    expect(result.ratio).toBe(0.5);
+    const resultTrace = result.trace.find((entry) => entry.key === "result");
+    expect(resultTrace?.children).toEqual(["n-a"]);
+  });
+
+  it("is deterministic across repeated active-branch runs", () => {
+    const first = evaluate(condDef, {
+      inputs: { shape: "CHS", val_b: 0.8 },
+      annex: { id: "test", coefficients: {} },
+    });
+    const second = evaluate(condDef, {
+      inputs: { shape: "CHS", val_b: 0.8 },
+      annex: { id: "test", coefficients: {} },
+    });
+
+    expect(first.ratio).toBe(second.ratio);
+    expect(first.trace.map((entry) => entry.key)).toEqual(
+      second.trace.map((entry) => entry.key),
+    );
+  });
 });
 
 describe("evaluate edge cases", () => {
   it("throws on NaN ratio (division by zero)", () => {
     const nodes = [
-      { type: "user-input", key: "a", valueType: "number", id: "n-a", name: "A", children: [] },
-      { type: "user-input", key: "b", valueType: "number", id: "n-b", name: "B", children: [] },
       {
-        type: "check", key: "chk", valueType: "number", id: "n-chk", name: "Check",
-        verificationExpression: "a/b", children: [{ nodeId: "n-a" }, { nodeId: "n-b" }],
+        type: "user-input",
+        key: "a",
+        valueType: { type: "number" },
+        id: "n-a",
+        name: "A",
+        children: [],
+      },
+      {
+        type: "user-input",
+        key: "b",
+        valueType: { type: "number" },
+        id: "n-b",
+        name: "B",
+        children: [],
+      },
+      {
+        type: "check",
+        key: "chk",
+        valueType: { type: "number" },
+        id: "n-chk",
+        name: "Check",
+        verificationExpression: "a/b",
+        children: [{ nodeId: "n-a" }, { nodeId: "n-b" }],
       },
     ] as const;
 
@@ -220,19 +266,40 @@ describe("evaluate edge cases", () => {
       evaluate: { chk: ({ a, b }) => a / b },
     };
 
-    expect(() => evaluate(def, {
-      inputs: { a: 0, b: 0 },
-      annex: { id: "t", coefficients: {} },
-    })).toThrow("produced NaN");
+    expect(() =>
+      evaluate(def, {
+        inputs: { a: 0, b: 0 },
+        annex: { id: "t", coefficients: {} },
+      }),
+    ).toThrow("produced NaN");
   });
 
   it("throws on Infinity ratio", () => {
     const nodes = [
-      { type: "user-input", key: "a", valueType: "number", id: "n-a", name: "A", children: [] },
-      { type: "user-input", key: "b", valueType: "number", id: "n-b", name: "B", children: [] },
       {
-        type: "check", key: "chk", valueType: "number", id: "n-chk", name: "Check",
-        verificationExpression: "a/b", children: [{ nodeId: "n-a" }, { nodeId: "n-b" }],
+        type: "user-input",
+        key: "a",
+        valueType: { type: "number" },
+        id: "n-a",
+        name: "A",
+        children: [],
+      },
+      {
+        type: "user-input",
+        key: "b",
+        valueType: { type: "number" },
+        id: "n-b",
+        name: "B",
+        children: [],
+      },
+      {
+        type: "check",
+        key: "chk",
+        valueType: { type: "number" },
+        id: "n-chk",
+        name: "Check",
+        verificationExpression: "a/b",
+        children: [{ nodeId: "n-a" }, { nodeId: "n-b" }],
       },
     ] as const;
 
@@ -241,10 +308,12 @@ describe("evaluate edge cases", () => {
       evaluate: { chk: ({ a, b }) => a / b },
     };
 
-    expect(() => evaluate(def, {
-      inputs: { a: 1, b: 0 },
-      annex: { id: "t", coefficients: {} },
-    })).toThrow("produced Infinity");
+    expect(() =>
+      evaluate(def, {
+        inputs: { a: 1, b: 0 },
+        annex: { id: "t", coefficients: {} },
+      }),
+    ).toThrow("produced Infinity");
   });
 
   it("includes expression and evaluatorInputs in trace", () => {
@@ -256,7 +325,11 @@ describe("evaluate edge cases", () => {
     const result = evaluate(compressionDef, ctx);
     const formulaTrace = result.trace.find((t) => t.key === "N_c_Rd")!;
     expect(formulaTrace.expression).toBe("\\frac{A \\cdot f_y}{\\gamma_{M0}}");
-    expect(formulaTrace.evaluatorInputs).toEqual({ A: 1032, fy: 355, gamma_M0: 1.0 });
+    expect(formulaTrace.evaluatorInputs).toEqual({
+      A: 1032,
+      fy: 355,
+      gamma_M0: 1.0,
+    });
 
     const checkTrace = result.trace.find((t) => t.key === "compression_check")!;
     expect(checkTrace.evaluatorInputs).toHaveProperty("N_Ed");
@@ -318,16 +391,29 @@ describe("evaluate graph validation", () => {
   it("throws on circular dependency", () => {
     const nodes = [
       {
-        type: "derived", key: "a", valueType: "number", id: "n-a", name: "A",
+        type: "derived",
+        key: "a",
+        valueType: { type: "number" },
+        id: "n-a",
+        name: "A",
         children: [{ nodeId: "n-b" }],
       },
       {
-        type: "derived", key: "b", valueType: "number", id: "n-b", name: "B",
+        type: "derived",
+        key: "b",
+        valueType: { type: "number" },
+        id: "n-b",
+        name: "B",
         children: [{ nodeId: "n-a" }],
       },
       {
-        type: "check", key: "chk", valueType: "number", id: "n-chk", name: "Check",
-        verificationExpression: "a", children: [{ nodeId: "n-a" }],
+        type: "check",
+        key: "chk",
+        valueType: { type: "number" },
+        id: "n-chk",
+        name: "Check",
+        verificationExpression: "a",
+        children: [{ nodeId: "n-a" }],
       },
     ] as const;
 
@@ -340,19 +426,40 @@ describe("evaluate graph validation", () => {
       },
     };
 
-    expect(() => evaluate(def, {
-      inputs: {},
-      annex: { id: "t", coefficients: {} },
-    })).toThrow("Circular dependency");
+    expect(() =>
+      evaluate(def, {
+        inputs: {},
+        annex: { id: "t", coefficients: {} },
+      }),
+    ).toThrow("Circular dependency");
   });
 
   it("throws on duplicate node IDs", () => {
     const nodes = [
-      { type: "user-input", key: "x", valueType: "number", id: "n-x", name: "X", children: [] },
-      { type: "user-input", key: "y", valueType: "number", id: "n-x", name: "Y", children: [] },
       {
-        type: "check", key: "chk", valueType: "number", id: "n-chk", name: "Check",
-        verificationExpression: "x", children: [{ nodeId: "n-x" }],
+        type: "user-input",
+        key: "x",
+        valueType: { type: "number" },
+        id: "n-x",
+        name: "X",
+        children: [],
+      },
+      {
+        type: "user-input",
+        key: "y",
+        valueType: { type: "number" },
+        id: "n-x",
+        name: "Y",
+        children: [],
+      },
+      {
+        type: "check",
+        key: "chk",
+        valueType: { type: "number" },
+        id: "n-chk",
+        name: "Check",
+        verificationExpression: "x",
+        children: [{ nodeId: "n-x" }],
       },
     ] as const;
 
@@ -361,18 +468,32 @@ describe("evaluate graph validation", () => {
       evaluate: { chk: ({ x }) => x as number },
     };
 
-    expect(() => evaluate(def, {
-      inputs: { x: 1, y: 2 },
-      annex: { id: "t", coefficients: {} },
-    })).toThrow('Duplicate node ID: "n-x"');
+    expect(() =>
+      evaluate(def, {
+        inputs: { x: 1, y: 2 },
+        annex: { id: "t", coefficients: {} },
+      }),
+    ).toThrow('Duplicate node ID: "n-x"');
   });
 
   it("throws when evaluator key doesn't match any node (typo detection)", () => {
     const nodes = [
-      { type: "user-input", key: "x", valueType: "number", id: "n-x", name: "X", children: [] },
       {
-        type: "check", key: "chk", valueType: "number", id: "n-chk", name: "Check",
-        verificationExpression: "x", children: [{ nodeId: "n-x" }],
+        type: "user-input",
+        key: "x",
+        valueType: { type: "number" },
+        id: "n-x",
+        name: "X",
+        children: [],
+      },
+      {
+        type: "check",
+        key: "chk",
+        valueType: { type: "number" },
+        id: "n-chk",
+        name: "Check",
+        verificationExpression: "x",
+        children: [{ nodeId: "n-x" }],
       },
     ] as const;
 
@@ -382,22 +503,40 @@ describe("evaluate graph validation", () => {
       evaluate: { chk: ({ x }) => x as number, ck: ({ x }) => x as number },
     };
 
-    expect(() => evaluate(def, {
-      inputs: { x: 0.5 },
-      annex: { id: "t", coefficients: {} },
-    })).toThrow('Evaluator key "ck" does not match any node');
+    expect(() =>
+      evaluate(def, {
+        inputs: { x: 0.5 },
+        annex: { id: "t", coefficients: {} },
+      }),
+    ).toThrow('Evaluator key "ck" does not match any node');
   });
 
   it("throws when computed node is missing its evaluator (early detection)", () => {
     const nodes = [
-      { type: "user-input", key: "x", valueType: "number", id: "n-x", name: "X", children: [] },
       {
-        type: "derived", key: "d", valueType: "number", id: "n-d", name: "D",
+        type: "user-input",
+        key: "x",
+        valueType: { type: "number" },
+        id: "n-x",
+        name: "X",
+        children: [],
+      },
+      {
+        type: "derived",
+        key: "d",
+        valueType: { type: "number" },
+        id: "n-d",
+        name: "D",
         children: [{ nodeId: "n-x" }],
       },
       {
-        type: "check", key: "chk", valueType: "number", id: "n-chk", name: "Check",
-        verificationExpression: "d", children: [{ nodeId: "n-d" }],
+        type: "check",
+        key: "chk",
+        valueType: { type: "number" },
+        id: "n-chk",
+        name: "Check",
+        verificationExpression: "d",
+        children: [{ nodeId: "n-d" }],
       },
     ] as const;
 
@@ -407,22 +546,40 @@ describe("evaluate graph validation", () => {
       evaluate: { chk: ({ d }) => d as number },
     };
 
-    expect(() => evaluate(def, {
-      inputs: { x: 1 },
-      annex: { id: "t", coefficients: {} },
-    })).toThrow('Missing evaluator for derived node: "d"');
+    expect(() =>
+      evaluate(def, {
+        inputs: { x: 1 },
+        annex: { id: "t", coefficients: {} },
+      }),
+    ).toThrow('Missing evaluator for derived node: "d"');
   });
 
   it("throws on intermediate NaN (not just check node)", () => {
     const nodes = [
-      { type: "user-input", key: "a", valueType: "number", id: "n-a", name: "A", children: [] },
       {
-        type: "derived", key: "d", valueType: "number", id: "n-d", name: "D",
+        type: "user-input",
+        key: "a",
+        valueType: { type: "number" },
+        id: "n-a",
+        name: "A",
+        children: [],
+      },
+      {
+        type: "derived",
+        key: "d",
+        valueType: { type: "number" },
+        id: "n-d",
+        name: "D",
         children: [{ nodeId: "n-a" }],
       },
       {
-        type: "check", key: "chk", valueType: "number", id: "n-chk", name: "Check",
-        verificationExpression: "d", children: [{ nodeId: "n-d" }],
+        type: "check",
+        key: "chk",
+        valueType: { type: "number" },
+        id: "n-chk",
+        name: "Check",
+        verificationExpression: "d",
+        children: [{ nodeId: "n-d" }],
       },
     ] as const;
 
@@ -434,18 +591,32 @@ describe("evaluate graph validation", () => {
       },
     };
 
-    expect(() => evaluate(def, {
-      inputs: { a: 1 },
-      annex: { id: "t", coefficients: {} },
-    })).toThrow('Node "d" (derived) produced Infinity');
+    expect(() =>
+      evaluate(def, {
+        inputs: { a: 1 },
+        annex: { id: "t", coefficients: {} },
+      }),
+    ).toThrow('Node "d" (derived) produced Infinity');
   });
 
   it("throws on dangling child reference", () => {
     const nodes = [
-      { type: "user-input", key: "x", valueType: "number", id: "n-x", name: "X", children: [] },
       {
-        type: "check", key: "chk", valueType: "number", id: "n-chk", name: "Check",
-        verificationExpression: "x", children: [{ nodeId: "n-x" }, { nodeId: "n-ghost" }],
+        type: "user-input",
+        key: "x",
+        valueType: { type: "number" },
+        id: "n-x",
+        name: "X",
+        children: [],
+      },
+      {
+        type: "check",
+        key: "chk",
+        valueType: { type: "number" },
+        id: "n-chk",
+        name: "Check",
+        verificationExpression: "x",
+        children: [{ nodeId: "n-x" }, { nodeId: "n-ghost" }],
       },
     ] as const;
 
@@ -454,9 +625,11 @@ describe("evaluate graph validation", () => {
       evaluate: { chk: ({ x }) => x as number },
     };
 
-    expect(() => evaluate(def, {
-      inputs: { x: 1 },
-      annex: { id: "t", coefficients: {} },
-    })).toThrow('references unknown child "n-ghost"');
+    expect(() =>
+      evaluate(def, {
+        inputs: { x: 1 },
+        annex: { id: "t", coefficients: {} },
+      }),
+    ).toThrow('references unknown child "n-ghost"');
   });
 });

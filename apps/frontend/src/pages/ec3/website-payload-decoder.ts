@@ -1,4 +1,5 @@
-import { flangedSections, steelGrades } from "./data";
+import { flangedSections } from "./data/flanged-sections";
+import { steelGrades } from "./data/steel-grades";
 import type { AnnexCoeffs, Ec3EditableInputs } from "./use-ec3-evaluate";
 
 type WebsitePayload = Record<string, string | number | undefined>;
@@ -10,7 +11,10 @@ type DecodeResult = {
   annex: Partial<AnnexCoeffs>;
 };
 
-const SECTION_CLASS_MAP: Record<string, Ec3EditableInputs["section_class_mode"]> = {
+const SECTION_CLASS_MAP: Record<
+  string,
+  Ec3EditableInputs["section_class_mode"]
+> = {
   "0": "auto",
   "1": 1,
   "2": 2,
@@ -24,36 +28,52 @@ const MOMENT_SHAPE_MAP: Record<string, Ec3EditableInputs["moment_shape_y"]> = {
   "3": "triangular",
 };
 
-const SUPPORT_CONDITION_MAP: Record<string, Ec3EditableInputs["support_condition_y"]> = {
+const SUPPORT_CONDITION_MAP: Record<
+  string,
+  Ec3EditableInputs["support_condition_y"]
+> = {
   "0": "pinned-pinned",
   "1": "fixed-pinned",
   "2": "fixed-fixed",
 };
 
-const LOAD_LOCATION_MAP: Record<string, Ec3EditableInputs["load_application_LT"]> = {
+const LOAD_LOCATION_MAP: Record<
+  string,
+  Ec3EditableInputs["load_application_LT"]
+> = {
   "0": "top-flange",
   "1": "centroid",
   "2": "bottom-flange",
 };
 
-const TORSIONAL_DEFORMATION_MAP: Record<string, Ec3EditableInputs["torsional_deformations"]> = {
+const TORSIONAL_DEFORMATION_MAP: Record<
+  string,
+  Ec3EditableInputs["torsional_deformations"]
+> = {
   "0": "yes",
   "1": "no",
 };
 
-const INTERACTION_METHOD_MAP: Record<string, Ec3EditableInputs["interaction_factor_method"]> = {
+const INTERACTION_METHOD_MAP: Record<
+  string,
+  Ec3EditableInputs["interaction_factor_method"]
+> = {
   "0": "both",
   "1": "method1",
   "2": "method2",
   "3": "any",
 };
 
-const F_METHOD_MAP: Record<string, Ec3EditableInputs["coefficient_f_method"]> = {
-  "0": "default-equation",
-  "1": "force-1.0",
-};
+const F_METHOD_MAP: Record<string, Ec3EditableInputs["coefficient_f_method"]> =
+  {
+    "0": "default-equation",
+    "1": "force-1.0",
+  };
 
-const LT_CURVE_POLICY_MAP: Record<string, Ec3EditableInputs["buckling_curves_LT_policy"]> = {
+const LT_CURVE_POLICY_MAP: Record<
+  string,
+  Ec3EditableInputs["buckling_curves_LT_policy"]
+> = {
   "0": "default",
 };
 
@@ -88,11 +108,17 @@ const toNumber = (value: string | number | undefined): number | undefined => {
   return Number.isFinite(n) ? n : undefined;
 };
 
-const setIfDefined = <T extends object, K extends keyof T>(target: T, key: K, value: T[K] | undefined) => {
+const setIfDefined = <T extends object, K extends keyof T>(
+  target: T,
+  key: K,
+  value: T[K] | undefined,
+) => {
   if (value !== undefined) target[key] = value;
 };
 
-const profileCodeToSectionId = (rawCode: string | undefined): string | undefined => {
+const profileCodeToSectionId = (
+  rawCode: string | undefined,
+): string | undefined => {
   if (!rawCode) return undefined;
   const n = Number(rawCode);
   if (!Number.isInteger(n) || n < 1) return undefined;
@@ -103,29 +129,94 @@ const profileCodeToSectionId = (rawCode: string | undefined): string | undefined
 const normalizeGradeId = (raw: string | undefined): string | undefined => {
   if (!raw) return undefined;
   const [norm, id] = raw.split(":");
-  const exists = steelGrades.some((grade) => grade.norm === norm && grade.id === id);
+  const exists = steelGrades.some(
+    (grade) => grade.norm === norm && grade.id === id,
+  );
   return exists ? raw : undefined;
 };
 
-export const decodeWebsiteCalculationPayload = (payload: WebsitePayload): DecodeResult => {
+export const decodeWebsiteCalculationPayload = (
+  payload: WebsitePayload,
+): DecodeResult => {
   const editable: Partial<Ec3EditableInputs> = {};
   const annex: Partial<AnnexCoeffs> = {};
 
   const profileCode = toCode(payload["Calculation.Profile"]);
   const steelCode = toCode(payload["Calculation.SteelClass"]);
 
-  setIfDefined(editable, "section_class_mode", SECTION_CLASS_MAP[toCode(payload["Calculation.SectionClass"]) ?? ""]);
-  setIfDefined(editable, "moment_shape_y", MOMENT_SHAPE_MAP[toCode(payload["Calculation.MomentDiagramMy"]) ?? ""]);
-  setIfDefined(editable, "moment_shape_z", MOMENT_SHAPE_MAP[toCode(payload["Calculation.MomentDiagramMz"]) ?? ""]);
-  setIfDefined(editable, "moment_shape_LT", MOMENT_SHAPE_MAP[toCode(payload["Calculation.MomentDiagramLT"]) ?? ""]);
-  setIfDefined(editable, "support_condition_y", SUPPORT_CONDITION_MAP[toCode(payload["Calculation.SupportConditionsMy"]) ?? ""]);
-  setIfDefined(editable, "support_condition_z", SUPPORT_CONDITION_MAP[toCode(payload["Calculation.SupportConditionsMz"]) ?? ""]);
-  setIfDefined(editable, "support_condition_LT", SUPPORT_CONDITION_MAP[toCode(payload["Calculation.SupportConditionsLT"]) ?? ""]);
-  setIfDefined(editable, "load_application_LT", LOAD_LOCATION_MAP[toCode(payload["Calculation.LoadLocation"]) ?? ""]);
-  setIfDefined(editable, "torsional_deformations", TORSIONAL_DEFORMATION_MAP[toCode(payload["Calculation.TorsionalDeformations"]) ?? ""]);
-  setIfDefined(editable, "interaction_factor_method", INTERACTION_METHOD_MAP[toCode(payload["Calculation.InteractionMethod"]) ?? ""]);
-  setIfDefined(editable, "coefficient_f_method", F_METHOD_MAP[toCode(payload["Calculation.fFactorMethod"]) ?? ""] ?? "default-equation");
-  setIfDefined(editable, "buckling_curves_LT_policy", LT_CURVE_POLICY_MAP[toCode(payload["Calculation.BucklingCurvesForLTBucklingRule"]) ?? ""] ?? "general");
+  setIfDefined(
+    editable,
+    "section_class_mode",
+    SECTION_CLASS_MAP[toCode(payload["Calculation.SectionClass"]) ?? ""],
+  );
+  setIfDefined(
+    editable,
+    "moment_shape_y",
+    MOMENT_SHAPE_MAP[toCode(payload["Calculation.MomentDiagramMy"]) ?? ""],
+  );
+  setIfDefined(
+    editable,
+    "moment_shape_z",
+    MOMENT_SHAPE_MAP[toCode(payload["Calculation.MomentDiagramMz"]) ?? ""],
+  );
+  setIfDefined(
+    editable,
+    "moment_shape_LT",
+    MOMENT_SHAPE_MAP[toCode(payload["Calculation.MomentDiagramLT"]) ?? ""],
+  );
+  setIfDefined(
+    editable,
+    "support_condition_y",
+    SUPPORT_CONDITION_MAP[
+      toCode(payload["Calculation.SupportConditionsMy"]) ?? ""
+    ],
+  );
+  setIfDefined(
+    editable,
+    "support_condition_z",
+    SUPPORT_CONDITION_MAP[
+      toCode(payload["Calculation.SupportConditionsMz"]) ?? ""
+    ],
+  );
+  setIfDefined(
+    editable,
+    "support_condition_LT",
+    SUPPORT_CONDITION_MAP[
+      toCode(payload["Calculation.SupportConditionsLT"]) ?? ""
+    ],
+  );
+  setIfDefined(
+    editable,
+    "load_application_LT",
+    LOAD_LOCATION_MAP[toCode(payload["Calculation.LoadLocation"]) ?? ""],
+  );
+  setIfDefined(
+    editable,
+    "torsional_deformations",
+    TORSIONAL_DEFORMATION_MAP[
+      toCode(payload["Calculation.TorsionalDeformations"]) ?? ""
+    ],
+  );
+  setIfDefined(
+    editable,
+    "interaction_factor_method",
+    INTERACTION_METHOD_MAP[
+      toCode(payload["Calculation.InteractionMethod"]) ?? ""
+    ],
+  );
+  setIfDefined(
+    editable,
+    "coefficient_f_method",
+    F_METHOD_MAP[toCode(payload["Calculation.fFactorMethod"]) ?? ""] ??
+      "default-equation",
+  );
+  setIfDefined(
+    editable,
+    "buckling_curves_LT_policy",
+    LT_CURVE_POLICY_MAP[
+      toCode(payload["Calculation.BucklingCurvesForLTBucklingRule"]) ?? ""
+    ] ?? "general",
+  );
 
   // Website forces are kN / kNm and lengths are m.
   const N = toNumber(payload["Calculation.N"]);
@@ -171,4 +262,3 @@ export const decodeWebsiteCalculationPayload = (payload: WebsitePayload): Decode
     annex,
   };
 };
-

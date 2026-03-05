@@ -1,10 +1,10 @@
-import type { Node, Child } from "./schemas";
+import type { Node } from "./schemas";
+import type { Condition } from "./schemas";
 import type {
-  InferableNode,
+  InferCache,
   VerificationDefinition,
   EvaluationContext,
 } from "./engine";
-import { CONSTANTS } from "./engine";
 import { evaluateCondition } from "./evaluate-condition";
 
 export type TraceEntry = {
@@ -24,22 +24,20 @@ export type TraceEntry = {
   children: string[];
 };
 
-export type EvaluationResult = {
+export type EvaluationResult<
+  TNodes extends readonly Node[] = readonly Node[],
+> = {
   passed: boolean;
   ratio: number;
-  cache: Record<string, number | string>;
+  cache: InferCache<TNodes>;
   trace: TraceEntry[];
 };
 
-/**
- * Evaluate a verification definition against a context.
- * Topologically sorts nodes, resolves values, and produces a traced result.
- */
-export const evaluate = <TNodes extends readonly InferableNode[]>(
+export const evaluate = <TNodes extends readonly Node[]>(
   def: VerificationDefinition<TNodes>,
   context: EvaluationContext,
-): EvaluationResult => {
-  const nodes = def.nodes as unknown as readonly Node[];
+): EvaluationResult<TNodes> => {
+  const nodes = def.nodes as readonly Node[];
   const evaluators = def.evaluate as unknown as Record<
     string,
     (cache: Record<string, number | string>) => number | string
@@ -47,16 +45,27 @@ export const evaluate = <TNodes extends readonly InferableNode[]>(
 
   // Build node lookup -- detect duplicate IDs
   const nodeById = new Map<string, Node>();
+  const nodeByKey = new Map<string, Node>();
   for (const node of nodes) {
     if (nodeById.has(node.id)) {
-      throw new Error(`Duplicate node ID: "${node.id}" (keys: "${nodeById.get(node.id)!.key}", "${node.key}")`);
+      throw new Error(
+        `Duplicate node ID: "${node.id}" (keys: "${nodeById.get(node.id)!.key}", "${node.key}")`,
+      );
     }
     nodeById.set(node.id, node);
+    if (nodeByKey.has(node.key)) {
+      throw new Error(
+        `Duplicate node key: "${node.key}" (ids: "${nodeByKey.get(node.key)!.id}", "${node.id}")`,
+      );
+    }
+    nodeByKey.set(node.key, node);
   }
   for (const node of nodes) {
     for (const child of node.children) {
       if (!nodeById.has(child.nodeId)) {
-        throw new Error(`Node "${node.id}" (key: "${node.key}") references unknown child "${child.nodeId}"`);
+        throw new Error(
+          `Node "${node.id}" (key: "${node.key}") references unknown child "${child.nodeId}"`,
+        );
       }
     }
   }
@@ -66,21 +75,32 @@ export const evaluate = <TNodes extends readonly InferableNode[]>(
   const nodeKeys = new Set(nodes.map((n) => n.key));
   for (const node of nodes) {
     if (computedTypes.has(node.type) && !evaluators[node.key]) {
-      throw new Error(`Missing evaluator for ${node.type} node: "${node.key}" (id: ${node.id})`);
+      throw new Error(
+        `Missing evaluator for ${node.type} node: "${node.key}" (id: ${node.id})`,
+      );
     }
   }
   for (const key of Object.keys(evaluators)) {
     if (!nodeKeys.has(key)) {
-      throw new Error(`Evaluator key "${key}" does not match any node -- possible typo`);
+      throw new Error(
+        `Evaluator key "${key}" does not match any node -- possible typo`,
+      );
     }
   }
 
-  // Topological sort (DFS post-order)
-  const sorted: Node[] = [];
+  const checkNodes = nodes.filter((node) => node.type === "check");
+  if (checkNodes.length === 0) {
+    throw new Error("No check node found in verification");
+  }
+
+  // Evaluate only the active graph reachable from check roots
+  const cache: Record<string, number | string> = {};
+  const trace: TraceEntry[] = [];
   const visited = new Set<string>();
   const visiting = new Set<string>();
+  let activeNode: Node | undefined;
 
-  const visit = (nodeId: string): void => {
+  const evaluateNode = (nodeId: string): void => {
     if (visited.has(nodeId)) return;
     if (visiting.has(nodeId)) {
       throw new Error(`Circular dependency detected at node: ${nodeId}`);
@@ -89,31 +109,35 @@ export const evaluate = <TNodes extends readonly InferableNode[]>(
 
     const node = nodeById.get(nodeId);
     if (!node) throw new Error(`Node not found: ${nodeId}`);
+    activeNode = node;
 
+    const activeChildren: string[] = [];
     for (const child of node.children) {
-      visit(child.nodeId);
+      if (child.when) {
+        for (const conditionKey of getConditionKeys(child.when)) {
+          if (cache[conditionKey] !== undefined) continue;
+          const conditionNode = nodeByKey.get(conditionKey);
+          if (!conditionNode) {
+            throw new Error(
+              `Condition references unknown key: "${conditionKey}"`,
+            );
+          }
+          evaluateNode(conditionNode.id);
+        }
+      }
+
+      if (child.when && !evaluateCondition(child.when, cache)) {
+        continue;
+      }
+      evaluateNode(child.nodeId);
+      activeChildren.push(child.nodeId);
     }
 
-    visiting.delete(nodeId);
-    visited.add(nodeId);
-    sorted.push(node);
-  };
-
-  // Find root (check node) -- visit from all nodes to handle disconnected graphs
-  for (const node of nodes) {
-    visit(node.id);
-  }
-
-  // Evaluate in topological order
-  const cache: Record<string, number | string> = {};
-  const trace: TraceEntry[] = [];
-
-  for (const node of sorted) {
-    // Resolve active children (respecting `when` conditions)
-    const activeChildren = resolveChildren(node.children, cache);
-
-    // Snapshot evaluator inputs for computed nodes (before evaluation)
-    const isComputed = node.type === "formula" || node.type === "derived" || node.type === "table" || node.type === "check";
+    const isComputed =
+      node.type === "formula" ||
+      node.type === "derived" ||
+      node.type === "table" ||
+      node.type === "check";
     let evaluatorInputs: Record<string, number | string> | undefined;
     if (isComputed) {
       evaluatorInputs = {};
@@ -123,7 +147,6 @@ export const evaluate = <TNodes extends readonly InferableNode[]>(
       }
     }
 
-    // Resolve value based on node type
     const value = resolveNode(node, cache, evaluators, context);
     cache[node.key] = value;
 
@@ -134,47 +157,79 @@ export const evaluate = <TNodes extends readonly InferableNode[]>(
       value,
       unit: "unit" in node ? (node.unit as string | undefined) : undefined,
       symbol: node.symbol,
-      expression: "expression" in node ? (node.expression as string | undefined) : undefined,
-      verificationExpression: "verificationExpression" in node ? (node.verificationExpression as string | undefined) : undefined,
+      expression:
+        "expression" in node
+          ? (node.expression as string | undefined)
+          : undefined,
+      verificationExpression:
+        "verificationExpression" in node
+          ? (node.verificationExpression as string | undefined)
+          : undefined,
       description: node.description,
       meta: "meta" in node ? (node.meta as TraceEntry["meta"]) : undefined,
       evaluatorInputs,
       children: activeChildren,
     });
-  }
 
-  // Find the check node (root) -- last check node in the array
-  const checkNode = [...nodes].reverse().find((n) => n.type === "check");
-  if (!checkNode) {
-    throw new Error("No check node found in verification");
-  }
-
-  const ratio = cache[checkNode.key];
-  if (typeof ratio !== "number") {
-    throw new Error(`Check node "${checkNode.key}" must evaluate to a number, got ${typeof ratio}`);
-  }
-  if (!isFinite(ratio)) {
-    throw new Error(`Check node "${checkNode.key}" produced ${ratio} -- likely division by zero or invalid computation`);
-  }
-
-  return {
-    passed: ratio <= 1.0,
-    ratio,
-    cache,
-    trace,
+    visiting.delete(nodeId);
+    visited.add(nodeId);
   };
+
+  try {
+    for (const checkNode of checkNodes) {
+      evaluateNode(checkNode.id);
+    }
+
+    const checkNode = checkNodes[checkNodes.length - 1];
+
+    const ratio = cache[checkNode.key];
+    if (typeof ratio !== "number") {
+      throw new Error(
+        `Check node "${checkNode.key}" must evaluate to a number, got ${typeof ratio}`,
+      );
+    }
+    if (!isFinite(ratio)) {
+      throw new Error(
+        `Check node "${checkNode.key}" produced ${ratio} -- likely division by zero or invalid computation`,
+      );
+    }
+
+    return {
+      passed: ratio <= 1.0,
+      ratio,
+      cache: cache as InferCache<TNodes>,
+      trace,
+    };
+  } catch (error) {
+    if (error instanceof Error && error.name === "Ec3VerificationError") {
+      throw error;
+    }
+
+    const verificationKeys = checkNodes.map((node) => node.key).join(", ");
+    const nodeContext = activeNode
+      ? ` at node "${activeNode.key}" (id: "${activeNode.id}")`
+      : "";
+    const cause = error instanceof Error ? error.message : String(error);
+
+    throw new Error(
+      `Unhandled evaluation failure in verification [${verificationKeys}]${nodeContext}: ${cause}`,
+    );
+  }
 };
 
-const resolveChildren = (
-  children: readonly Child[],
-  cache: Record<string, number | string>,
-) => {
-  return children
-    .filter((child) => {
-      if (!child.when) return true;
-      return evaluateCondition(child.when, cache);
-    })
-    .map((child) => child.nodeId);
+const getConditionKeys = (condition: Condition): string[] => {
+  if ("eq" in condition) return [condition.eq[0]];
+  if ("lt" in condition) return [condition.lt[0]];
+  if ("lte" in condition) return [condition.lte[0]];
+  if ("gt" in condition) return [condition.gt[0]];
+  if ("gte" in condition) return [condition.gte[0]];
+  if ("and" in condition) {
+    return condition.and.flatMap((c) => getConditionKeys(c));
+  }
+  if ("or" in condition) {
+    return condition.or.flatMap((c) => getConditionKeys(c));
+  }
+  return [];
 };
 
 const resolveNode = (
@@ -195,11 +250,9 @@ const resolveNode = (
       return val;
     }
     case "constant": {
-      const val = CONSTANTS[node.key];
-      if (val === undefined) {
-        throw new Error(`Missing constant: "${node.key}"`);
-      }
-      return val;
+      if (node.key === "pi") return Math.PI;
+      if (node.key === "e") return Math.E;
+      throw new Error(`Unsupported constant: "${node.key}"`);
     }
     case "coefficient": {
       const val = context.annex.coefficients[node.key];
@@ -229,8 +282,7 @@ const resolveNode = (
       return result;
     }
     default: {
-      const _exhaustive: never = node;
-      throw new Error(`Unhandled node type: ${(_exhaustive as Node).type}`);
+      throw new Error(`Unhandled node type: ${(node as Node).type}`);
     }
   }
 };

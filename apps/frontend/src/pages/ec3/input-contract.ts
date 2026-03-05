@@ -1,5 +1,3 @@
-import { ec3Verifications } from "@ndg/ndg-ec3";
-
 export const REQUIRED_RUNTIME_INPUT_KEYS = [
   "A",
   "Av_y",
@@ -16,6 +14,7 @@ export const REQUIRED_RUNTIME_INPUT_KEYS = [
   "M_y_Ed",
   "M_z_Ed",
   "N_Ed",
+  "b",
   "V_y_Ed",
   "V_z_Ed",
   "Wel_y",
@@ -26,6 +25,7 @@ export const REQUIRED_RUNTIME_INPUT_KEYS = [
   "alpha_y",
   "alpha_z",
   "fy",
+  "h",
   "hw",
   "k_LT",
   "k_T",
@@ -44,6 +44,8 @@ export const REQUIRED_RUNTIME_INPUT_KEYS = [
   "support_condition_LT",
   "support_condition_y",
   "support_condition_z",
+  "t",
+  "tf",
   "torsional_deformations",
   "tw",
 ] as const;
@@ -86,15 +88,6 @@ export const ANNEX_EDITABLE_KEYS = [
 ] as const;
 
 export const DERIVED_INPUT_KEYS = REQUIRED_RUNTIME_INPUT_KEYS.filter(
-  (key) => !EDITABLE_INPUT_KEYS.includes(key as (typeof EDITABLE_INPUT_KEYS)[number]),
+  (key) =>
+    !EDITABLE_INPUT_KEYS.includes(key as (typeof EDITABLE_INPUT_KEYS)[number]),
 );
-
-export const getRuntimeInputKeysFromGraph = (): string[] => {
-  const keys = new Set<string>();
-  for (const verification of ec3Verifications) {
-    for (const node of verification.nodes) {
-      if (node.type === "user-input") keys.add(node.key);
-    }
-  }
-  return [...keys].sort();
-};

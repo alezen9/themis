@@ -1,6 +1,9 @@
 import type { Condition } from "./schemas";
 
-const assertCacheKey = (key: string, cache: Record<string, number | string>): void => {
+const assertCacheKey = (
+  key: string,
+  cache: Record<string, number | string>,
+): void => {
   if (cache[key] === undefined) {
     throw new Error(`Condition references undefined cache key: "${key}"`);
   }

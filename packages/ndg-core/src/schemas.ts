@@ -41,11 +41,20 @@ const BaseNodeSchema = z.object({
   name: z.string(),
   symbol: z.string().optional(), // LaTeX: "N_{cr}", "\\bar{\\lambda}", "A"
   description: z.string().optional(),
-  children: z.array(ChildSchema),
+  children: z.array(ChildSchema).readonly(),
 });
 
-const NumericValueType = z.literal("number");
-const AnyValueType = z.enum(["number", "string"]);
+const NumericValueType = z.object({
+  type: z.literal("number"),
+  literal: z.array(z.number()).readonly().optional(),
+});
+
+const StringValueType = z.object({
+  type: z.literal("string"),
+  literal: z.array(z.string()).readonly().optional(),
+});
+
+const AnyValueType = z.union([NumericValueType, StringValueType]);
 
 /**
  * Root node of a verification.
@@ -119,7 +128,7 @@ export const UserInputNodeSchema = BaseNodeSchema.extend({
 });
 
 /**
- * Mathematical constant (e.g. pi). Value comes from the engine's CONSTANTS map.
+ * Mathematical constant (e.g. pi). Value is resolved by the engine.
  * symbol is required.
  */
 export const ConstantNodeSchema = BaseNodeSchema.extend({

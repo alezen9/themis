@@ -21,5 +21,4 @@ export default defineConfig({
     passWithNoTests: true,
     exclude: ["**/node_modules/**", "**/dist/**", "src/verifications/**"],
   },
-
 });
