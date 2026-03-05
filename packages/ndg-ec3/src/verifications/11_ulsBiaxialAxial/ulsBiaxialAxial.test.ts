@@ -66,8 +66,8 @@ describe("check-11 biaxial-axial", () => {
     const expected = ratioY ** alpha + ratioZ ** beta;
 
     expect(result.cache.n).toBeCloseTo(n, 12);
-    expect(result.cache.axial_y_factor).toBeCloseTo(axialY, 12);
-    expect(result.cache.axial_z_factor).toBeCloseTo(axialZ, 12);
+    expect(result.cache.k_y).toBeCloseTo(axialY, 12);
+    expect(result.cache.k_z).toBeCloseTo(axialZ, 12);
     expect(result.cache.alpha_biax).toBeCloseTo(alpha, 12);
     expect(result.cache.beta_biax).toBeCloseTo(beta, 12);
     expect(result.ratio).toBeCloseTo(expected, 12);
@@ -159,12 +159,12 @@ describe("check-11 biaxial-axial", () => {
     });
 
     expect(tension.cache.n).toBeCloseTo(compression.cache.n, 12);
-    expect(tension.cache.axial_y_factor).toBeCloseTo(
-      compression.cache.axial_y_factor,
+    expect(tension.cache.k_y).toBeCloseTo(
+      compression.cache.k_y,
       12,
     );
-    expect(tension.cache.axial_z_factor).toBeCloseTo(
-      compression.cache.axial_z_factor,
+    expect(tension.cache.k_z).toBeCloseTo(
+      compression.cache.k_z,
       12,
     );
     expect(tension.ratio).toBeCloseTo(compression.ratio, 12);

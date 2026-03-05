@@ -36,8 +36,8 @@ describe("check-09 bending-y-axial", () => {
 
     expect(result.cache.N_pl_Rd).toBeCloseTo(nPlRd, 10);
     expect(result.cache.n).toBeCloseTo(n, 12);
-    expect(result.cache.a_w_raw).toBeCloseTo(aRaw, 12);
-    expect(result.cache.axial_ratio).toBeCloseTo(axialRatio, 12);
+    expect(result.cache.a_w).toBeCloseTo(a, 12);
+    expect(result.cache.k_y).toBeCloseTo(axialFactor, 12);
     expect(result.cache.M_N_y_Rd).toBeCloseTo(mNyRd, 8);
     expect(result.ratio).toBeCloseTo(ratio, 12);
     expect(result.passed).toBe(result.ratio <= 1);
@@ -86,8 +86,8 @@ describe("check-09 bending-y-axial", () => {
       annex: customAnnex,
     });
 
-    expect(result.cache.n_le_half_a_w).toBe(1);
-    expect(result.cache.axial_factor).toBeCloseTo(1, 12);
+    expect(result.cache.is_n_le_half_a_w).toBe(1);
+    expect(result.cache.k_y).toBeCloseTo(1, 12);
   });
 
   it("reduces axial_factor when n is just above 0.5*a_w", () => {
@@ -104,8 +104,8 @@ describe("check-09 bending-y-axial", () => {
       annex: customAnnex,
     });
 
-    expect(result.cache.n_le_half_a_w).toBe(0);
-    expect(result.cache.axial_factor).toBeLessThan(1);
+    expect(result.cache.is_n_le_half_a_w).toBe(0);
+    expect(result.cache.k_y).toBeLessThan(1);
   });
 
   it("applies axial reduction for both tension and compression (|N_Ed|)", () => {

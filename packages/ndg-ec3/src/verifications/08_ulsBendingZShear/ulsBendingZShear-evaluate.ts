@@ -100,7 +100,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return Math.abs(V_y_Ed);
   },
 
-  rho_ratio: ({ abs_V_y_Ed, V_pl_y_Rd }) => {
+  rho_y: ({ abs_V_y_Ed, V_pl_y_Rd }) => {
     if (!Number.isFinite(V_pl_y_Rd) || V_pl_y_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -110,11 +110,8 @@ export const evaluate = defineEvaluators<Nodes>({
       });
     }
 
-    return abs_V_y_Ed / V_pl_y_Rd;
-  },
-
-  rho_y: ({ rho_ratio }) => {
-    return rho_ratio <= 0.5 ? 0 : (2 * rho_ratio - 1) ** 2;
+    const shearUtilization = abs_V_y_Ed / V_pl_y_Rd;
+    return shearUtilization <= 0.5 ? 0 : (2 * shearUtilization - 1) ** 2;
   },
 
   W_z_web: ({ tw, h, tf }) => {

@@ -80,7 +80,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return abs_N_Ed / N_pl_Rd;
   },
 
-  a_f_raw_i: ({ A, b, tf }) => {
+  a_f_i: ({ A, b, tf }) => {
     if (!Number.isFinite(A) || A <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -108,7 +108,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return (A - 2 * b * tf) / A;
   },
 
-  a_f_raw_rhs: ({ A, h, t }) => {
+  a_f_rhs: ({ A, h, t }) => {
     if (!Number.isFinite(A) || A <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -136,58 +136,49 @@ export const evaluate = defineEvaluators<Nodes>({
     return (A - 2 * h * t) / A;
   },
 
-  a_f_raw_chs: () => {
+  a_f_chs: () => {
     return 0.5;
   },
 
-  a_f_raw: ({ section_shape, a_f_raw_i, a_f_raw_rhs, a_f_raw_chs }) => {
-    if (section_shape === "I") return a_f_raw_i;
-    if (section_shape === "RHS") return a_f_raw_rhs;
-    if (section_shape === "CHS") return a_f_raw_chs;
-    const unknownSectionShape: never = section_shape;
-    return unknownSectionShape;
-  },
+  a_f: ({ section_shape, a_f_i, a_f_rhs, a_f_chs }) => {
+    const reductionParameter =
+      section_shape === "I"
+        ? a_f_i
+        : section_shape === "RHS"
+          ? a_f_rhs
+          : a_f_chs;
 
-  a_f: ({ a_f_raw }) => {
-    if (!Number.isFinite(a_f_raw) || a_f_raw < 0) {
+    if (!Number.isFinite(reductionParameter) || reductionParameter < 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial-shear: a_f_raw must be >= 0",
-        details: { a_f_raw, sectionRef: "6.2.9.1" },
+        message: "bending-z-axial-shear: reduction parameter must be >= 0",
+        details: { reductionParameter, sectionRef: "6.2.9.1" },
       });
     }
 
-    return Math.min(a_f_raw, 0.5);
+    return Math.min(reductionParameter, 0.5);
   },
 
-  n_le_a_f: ({ n, a_f }) => {
+  is_n_le_a_f: ({ n, a_f }) => {
     return n <= a_f ? 1 : 0;
   },
 
-  axial_ratio: ({ n, a_f }) => {
-    const axialDenominator = 1 - a_f;
-    if (!Number.isFinite(axialDenominator) || axialDenominator <= 0) {
+  k_z: ({ is_n_le_a_f, n, a_f }) => {
+    if (is_n_le_a_f === 1) {
+      return 1;
+    }
+
+    const denominator = 1 - a_f;
+    if (!Number.isFinite(denominator) || denominator <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message:
-          "bending-z-axial-shear: denominator axialDenominator must be > 0 (division by zero)",
-        details: { axialDenominator, sectionRef: "6.2.9.1" },
+          "bending-z-axial-shear: denominator (1 - a_f) must be > 0 (division by zero)",
+        details: { denominator, sectionRef: "6.2.9.1" },
       });
     }
 
-    return (n - a_f) / axialDenominator;
-  },
-
-  axial_factor_low: () => {
-    return 1;
-  },
-
-  axial_factor_high: ({ axial_ratio }) => {
-    return 1 - axial_ratio ** 2;
-  },
-
-  axial_factor: ({ n_le_a_f, axial_factor_low, axial_factor_high }) => {
-    return n_le_a_f === 1 ? axial_factor_low : axial_factor_high;
+    return 1 - ((n - a_f) / denominator) ** 2;
   },
 
   V_pl_y_Rd: ({ Av_y, fy, gamma_M0 }) => {
@@ -218,7 +209,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return (Av_y * fy) / (Math.sqrt(3) * gamma_M0);
   },
 
-  rho_ratio_y: ({ abs_V_y_Ed, V_pl_y_Rd }) => {
+  rho_y: ({ abs_V_y_Ed, V_pl_y_Rd }) => {
     if (!Number.isFinite(V_pl_y_Rd) || V_pl_y_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -228,11 +219,8 @@ export const evaluate = defineEvaluators<Nodes>({
       });
     }
 
-    return abs_V_y_Ed / V_pl_y_Rd;
-  },
-
-  rho_y: ({ rho_ratio_y }) => {
-    return rho_ratio_y <= 0.5 ? 0 : (2 * rho_ratio_y - 1) ** 2;
+    const shearUtilization = abs_V_y_Ed / V_pl_y_Rd;
+    return shearUtilization <= 0.5 ? 0 : (2 * shearUtilization - 1) ** 2;
   },
 
   Wpl_z_web: ({ Av_z, tw }) => {
@@ -312,8 +300,8 @@ export const evaluate = defineEvaluators<Nodes>({
     return (Wpl_z_eff * fy) / gamma_M0;
   },
 
-  M_NV_z_Rd: ({ M_z_V_Rd, axial_factor }) => {
-    const M_NV_z_Rd = M_z_V_Rd * axial_factor;
+  M_NV_z_Rd: ({ M_z_V_Rd, k_z }) => {
+    const M_NV_z_Rd = M_z_V_Rd * k_z;
     if (!Number.isFinite(M_NV_z_Rd) || M_NV_z_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -326,7 +314,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return M_NV_z_Rd;
   },
 
-  class12_ratio: ({ abs_M_z_Ed, M_NV_z_Rd }) => {
+  utilization_class12: ({ abs_M_z_Ed, M_NV_z_Rd }) => {
     if (!Number.isFinite(M_NV_z_Rd) || M_NV_z_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -412,7 +400,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return fy / gamma_M0;
   },
 
-  class3_ratio: ({ sigma_v_class3, sigma_limit }) => {
+  utilization_class3: ({ sigma_v_class3, sigma_limit }) => {
     if (!Number.isFinite(sigma_limit) || sigma_limit <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -425,7 +413,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return sigma_v_class3 / sigma_limit;
   },
 
-  bending_z_axial_shear_check: ({ section_class, class12_ratio, class3_ratio }) => {
+  bending_z_axial_shear_check: ({ section_class, utilization_class12, utilization_class3 }) => {
     if (!Number.isFinite(section_class) || !Number.isInteger(section_class)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -443,6 +431,6 @@ export const evaluate = defineEvaluators<Nodes>({
       });
     }
 
-    return section_class === 3 ? class3_ratio : class12_ratio;
+    return section_class === 3 ? utilization_class3 : utilization_class12;
   },
 });

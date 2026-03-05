@@ -1,76 +1,29 @@
-# Bending and Shear Resistance About y-y (EC3 §6.2.8)
+# Bending y-y with Shear (EC3 6.2.8)
 
 ## What this check does
 
-This check verifies whether the section can carry the applied bending moment about y-y while accounting for shear interaction from `V_z_Ed`.
+Checks y-axis bending under high shear using reduced resistance.
 
-## When it applies
+## Equation Ledger
 
-- It applies for finite `M_y_Ed` and `V_z_Ed`
-- It supports `section_class` in `{1,2,3}` and throws `invalid-input-domain` outside this range
-- It supports `section_shape` branches `I`, `RHS`, and `CHS`
+| Node key | EC3 ref | Expression | Branch |
+|---|---|---|---|
+| `V_pl_z_Rd` | 6.2.6 (6.18) | `A_v,z * f_y / (sqrt(3) * gamma_M0)` | none |
+| `rho_z` | 6.2.8 | `0` for `|V_z,Ed|/V_pl,z,Rd <= 0.5`, else `(2*ratio - 1)^2` | threshold |
+| `W_y_eff` | 6.2.8 (6.30 intent) | effective `W_y` under shear | shape (`I/RHS/CHS`) |
+| `M_y_V_Rd` | 6.2.8 (6.30) | `W_y_eff * f_y / gamma_M0` | none |
+| `bending_y_shear_check` | 6.2.8 (6.29) | `|M_y,Ed| / M_y,V,Rd` | none |
 
-## Terms in plain language
-
-- `M_y_Ed`: Applied design bending moment about y-y
-- `V_z_Ed`: Applied design shear force about z-z
-- `Wpl_y`, `Wel_y`: Plastic and elastic section moduli about y-y
-- `W_y_res`: Class-dependent resistance modulus (`Wpl_y` for class 1/2, `Wel_y` for class 3)
-- `rho_ratio`: Shear ratio `|V_z_Ed| / V_pl_z_Rd`
-- `rho_z`: EC3 shear reduction factor (zero when `rho_ratio <= 0.5`)
-- `W_y_eff`: Effective modulus under shear, shape-dependent branch
-- `M_y_V_Rd`: Reduced bending resistance under shear
-- `bending_y_shear_check`: Final utilization ratio
-
-## Full node tree (ascii)
+## Node Tree
 
 ```text
-                                      ┌──────────────────────────────────────────────────────┐
-                                      │ Bending and shear resistance check about y-y         │
-                                      │ id: bending_y_shear_check                            │
-                                      │ expr: |M_y_Ed| / M_y_V_Rd <= 1.0                     │
-                                      └──────────────────────────────────────────────────────┘
-                                                           │
-                          ┌────────────────────────────────┴────────────────────────────────┐
-                          │                                                                 │
-            ┌──────────────────────────────┐                                ┌──────────────────────────────┐
-            │ abs_M_y_Ed                   │                                │ M_y_V_Rd                     │
-            │ expr: |M_y_Ed|               │                                │ expr: W_y_eff*fy/gamma_M0    │
-            └──────────────────────────────┘                                └──────────────────────────────┘
-                          │                                                                 │
-                    ┌──────────────┐                                 ┌──────────────────────┼──────────────────────┐
-                    │ M_y_Ed        │                                 │                      │                      │
-                    └──────────────┘                           ┌──────────────┐        ┌──────────────┐      ┌──────────────┐
-                                                               │ W_y_eff      │        │ fy           │      │ gamma_M0     │
-                                                               └──────────────┘        └──────────────┘      └──────────────┘
-                                                                      │
-                    ┌─────────────────────────────────────────────────┴─────────────────────────────────────────────────┐
-                    │                                                                                                   │
-          ┌────────────────────┐                                                                           ┌────────────────────┐
-          │ section_shape      │                                                                           │ shape branches     │
-          └────────────────────┘                                                                           │ I / RHS / CHS      │
-                                                                                                           └────────────────────┘
-                                                                                                                        │
-                         ┌──────────────────────────────────────────────────────────────────────────────────────────────┴──────────────────────────────────────────────────────────────────────────────────────────────┐
-                         │                                                                                                                                                                                                             │
-               ┌────────────────────┐                                                                                                                                ┌────────────────────┐
-               │ W_y_eff_i          │                                                                                                                                │ W_y_eff_rhs / chs  │
-               │ expr: W_y_res -    │                                                                                                                                │ expr: W_y_res*(1-rho_z) │
-               │ rho_z*Av_z^2/(4*tw)│                                                                                                                                └────────────────────┘
-               └────────────────────┘                                                                                                                                                │
-                         │                                                                                                                                                             ┌──────────────┴──────────────┐
-          ┌──────────────┼──────────────┬──────────────┬──────────────┐                                                                                                             │                             │
-          │              │              │              │              │                                                                                                       ┌──────────────┐             ┌──────────────┐
-     ┌──────────┐  ┌──────────┐   ┌──────────┐   ┌──────────┐                                                                                                                      │ W_y_res      │             │ rho_z        │
-     │ W_y_res  │  │ rho_z    │   │ Av_z     │   │ tw       │                                                                                                                      └──────────────┘             └──────────────┘
-     └──────────┘  └──────────┘   └──────────┘   └──────────┘
-          │              │
-   ┌──────┴──────┐   ┌───┴──────────────┐
-   │ section_class│   │ rho_ratio       │
-   └──────────────┘   │ expr: |V_z_Ed|/V_pl_z_Rd
-          │           └──────────────────┘
-  ┌───────┴───────────┐          │
-  │ class branches     │   ┌──────┴────────────┐
-  │ W_y_res_class12/3  │   │ abs_V_z_Ed + V_pl_z_Rd │
-  └────────────────────┘   └────────────────────┘
+bending_y_shear_check
+|- abs_M_y_Ed
+|  `- M_y_Ed
+`- M_y_V_Rd
+   |- W_y_eff
+   |  |- W_y_res (class branch)
+   |  `- rho_z
+   |- fy
+   `- gamma_M0
 ```

@@ -37,9 +37,8 @@ describe("check-10 bending-z-axial", () => {
 
     expect(result.cache.N_pl_Rd).toBeCloseTo(nPlRd, 10);
     expect(result.cache.n).toBeCloseTo(n, 12);
-    expect(result.cache.a_f_raw).toBeCloseTo(aRaw, 12);
-    expect(result.cache.axial_ratio).toBeCloseTo(axialRatio, 12);
-    expect(result.cache.axial_factor).toBeCloseTo(axialFactor, 12);
+    expect(result.cache.a_f).toBeCloseTo(a, 12);
+    expect(result.cache.k_z).toBeCloseTo(axialFactor, 12);
     expect(result.cache.M_N_z_Rd).toBeCloseTo(mNzRd, 8);
     expect(result.ratio).toBeCloseTo(ratio, 12);
     expect(result.passed).toBe(result.ratio <= 1);
@@ -88,8 +87,8 @@ describe("check-10 bending-z-axial", () => {
       annex: customAnnex,
     });
 
-    expect(result.cache.n_le_a_f).toBe(1);
-    expect(result.cache.axial_factor).toBeCloseTo(1, 12);
+    expect(result.cache.is_n_le_a_f).toBe(1);
+    expect(result.cache.k_z).toBeCloseTo(1, 12);
   });
 
   it("reduces axial_factor when n is just above a_f", () => {
@@ -106,8 +105,8 @@ describe("check-10 bending-z-axial", () => {
       annex: customAnnex,
     });
 
-    expect(result.cache.n_le_a_f).toBe(0);
-    expect(result.cache.axial_factor).toBeLessThan(1);
+    expect(result.cache.is_n_le_a_f).toBe(0);
+    expect(result.cache.k_z).toBeLessThan(1);
   });
 
   it("applies axial reduction for both tension and compression (|N_Ed|)", () => {
@@ -131,7 +130,7 @@ describe("check-10 bending-z-axial", () => {
     });
 
     expect(highAxial.cache.n > highAxial.cache.a_f).toBe(true);
-    expect(highAxial.cache.axial_factor < 1).toBe(true);
+    expect(highAxial.cache.k_z < 1).toBe(true);
   });
 
   it("passes at ratio = 1", () => {

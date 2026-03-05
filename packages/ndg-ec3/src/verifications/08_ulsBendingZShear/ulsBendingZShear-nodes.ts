@@ -227,15 +227,6 @@ export const nodes = defineNodes([
     expression:
       "\\left(\\frac{2\\left|V_{y,Ed}\\right|}{V_{pl,y,Rd}} - 1\\right)^2 \\text{ for } \\frac{\\left|V_{y,Ed}\\right|}{V_{pl,y,Rd}} > 0.5, \\text{ else } 0",
     symbol: "\\rho_y",
-    children: [{ nodeId: "rho_ratio" }],
-  },
-  {
-    id: "rho_ratio",
-    type: "derived",
-    key: "rho_ratio",
-    valueType: { type: "number" },
-    name: "Shear utilization ratio about y-y",
-    expression: "\\dfrac{\\left|V_{y,Ed}\\right|}{V_{pl,y,Rd}}",
     children: [{ nodeId: "abs_V_y_Ed" }, { nodeId: "V_pl_y_Rd" }],
   },
   {

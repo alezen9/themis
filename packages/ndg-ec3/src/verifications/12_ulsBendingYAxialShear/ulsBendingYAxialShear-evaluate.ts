@@ -160,7 +160,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return (Av_y * fy) / (Math.sqrt(3) * gamma_M0);
   },
 
-  rho_ratio_z: ({ abs_V_z_Ed, V_pl_z_Rd }) => {
+  rho_z: ({ abs_V_z_Ed, V_pl_z_Rd }) => {
     if (!Number.isFinite(V_pl_z_Rd) || V_pl_z_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -170,14 +170,11 @@ export const evaluate = defineEvaluators<Nodes>({
       });
     }
 
-    return abs_V_z_Ed / V_pl_z_Rd;
+    const shearUtilization = abs_V_z_Ed / V_pl_z_Rd;
+    return shearUtilization <= 0.5 ? 0 : (2 * shearUtilization - 1) ** 2;
   },
 
-  rho_z: ({ rho_ratio_z }) => {
-    return rho_ratio_z <= 0.5 ? 0 : (2 * rho_ratio_z - 1) ** 2;
-  },
-
-  rho_ratio_y: ({ abs_V_y_Ed, V_pl_y_Rd }) => {
+  rho_y: ({ abs_V_y_Ed, V_pl_y_Rd }) => {
     if (!Number.isFinite(V_pl_y_Rd) || V_pl_y_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -187,14 +184,11 @@ export const evaluate = defineEvaluators<Nodes>({
       });
     }
 
-    return abs_V_y_Ed / V_pl_y_Rd;
+    const shearUtilization = abs_V_y_Ed / V_pl_y_Rd;
+    return shearUtilization <= 0.5 ? 0 : (2 * shearUtilization - 1) ** 2;
   },
 
-  rho_y: ({ rho_ratio_y }) => {
-    return rho_ratio_y <= 0.5 ? 0 : (2 * rho_ratio_y - 1) ** 2;
-  },
-
-  a_w_raw_i: ({ A, b, tf }) => {
+  a_w_i: ({ A, b, tf }) => {
     if (!Number.isFinite(A) || A <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -222,7 +216,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return (A - 2 * b * tf) / A;
   },
 
-  a_w_raw_rhs: ({ A, b, tw }) => {
+  a_w_rhs: ({ A, b, tw }) => {
     if (!Number.isFinite(A) || A <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -250,58 +244,49 @@ export const evaluate = defineEvaluators<Nodes>({
     return (A - 2 * b * tw) / A;
   },
 
-  a_w_raw_chs: () => {
+  a_w_chs: () => {
     return 0.5;
   },
 
-  a_w_raw: ({ section_shape, a_w_raw_i, a_w_raw_rhs, a_w_raw_chs }) => {
-    if (section_shape === "I") return a_w_raw_i;
-    if (section_shape === "RHS") return a_w_raw_rhs;
-    if (section_shape === "CHS") return a_w_raw_chs;
-    const unknownSectionShape: never = section_shape;
-    return unknownSectionShape;
-  },
+  a_w: ({ section_shape, a_w_i, a_w_rhs, a_w_chs }) => {
+    const areaRatioByShape =
+      section_shape === "I"
+        ? a_w_i
+        : section_shape === "RHS"
+          ? a_w_rhs
+          : a_w_chs;
 
-  a_w: ({ a_w_raw }) => {
-    if (!Number.isFinite(a_w_raw) || a_w_raw < 0) {
+    if (!Number.isFinite(areaRatioByShape) || areaRatioByShape < 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-y-axial-shear: a_w_raw must be >= 0",
-        details: { a_w_raw, sectionRef: "6.2.9.1" },
+        message: "bending-y-axial-shear: area ratio must be >= 0",
+        details: { areaRatioByShape, sectionRef: "6.2.9.1" },
       });
     }
 
-    return Math.min(a_w_raw, 0.5);
+    return Math.min(areaRatioByShape, 0.5);
   },
 
-  n_le_half_a_w: ({ n, a_w }) => {
+  is_n_le_half_a_w: ({ n, a_w }) => {
     return n <= 0.5 * a_w ? 1 : 0;
   },
 
-  axial_ratio: ({ n, a_w }) => {
-    const axial_denominator = 1 - 0.5 * a_w;
-    if (!Number.isFinite(axial_denominator) || axial_denominator <= 0) {
+  k_y: ({ is_n_le_half_a_w, n, a_w }) => {
+    if (is_n_le_half_a_w === 1) {
+      return 1;
+    }
+
+    const denominator = 1 - 0.5 * a_w;
+    if (!Number.isFinite(denominator) || denominator <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message:
-          "bending-y-axial-shear: denominator axial_denominator must be > 0 (division by zero)",
-        details: { axial_denominator, sectionRef: "6.2.9.1" },
+          "bending-y-axial-shear: denominator (1 - 0.5 a_w) must be > 0 (division by zero)",
+        details: { denominator, sectionRef: "6.2.9.1" },
       });
     }
 
-    return (1 - n) / axial_denominator;
-  },
-
-  axial_factor_low: () => {
-    return 1;
-  },
-
-  axial_factor_high: ({ axial_ratio }) => {
-    return Math.min(1, axial_ratio);
-  },
-
-  axial_factor: ({ n_le_half_a_w, axial_factor_low, axial_factor_high }) => {
-    return n_le_half_a_w === 1 ? axial_factor_low : axial_factor_high;
+    return Math.min(1, (1 - n) / denominator);
   },
 
   Wpl_y_eff_i: ({ Wpl_y, b, h, tf, tw, rho_y, rho_z }) => {
@@ -510,8 +495,8 @@ export const evaluate = defineEvaluators<Nodes>({
     return (Wpl_y_eff * fy) / gamma_M0;
   },
 
-  M_NV_y_Rd: ({ M_y_V_Rd, axial_factor }) => {
-    const M_NV_y_Rd = M_y_V_Rd * axial_factor;
+  M_NV_y_Rd: ({ M_y_V_Rd, k_y }) => {
+    const M_NV_y_Rd = M_y_V_Rd * k_y;
     if (!Number.isFinite(M_NV_y_Rd) || M_NV_y_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -524,7 +509,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return M_NV_y_Rd;
   },
 
-  class12_ratio: ({ abs_M_y_Ed, M_NV_y_Rd }) => {
+  utilization_class12: ({ abs_M_y_Ed, M_NV_y_Rd }) => {
     if (!Number.isFinite(M_NV_y_Rd) || M_NV_y_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -625,7 +610,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return fy / gamma_M0;
   },
 
-  class3_ratio: ({ sigma_v_class3, sigma_limit }) => {
+  utilization_class3: ({ sigma_v_class3, sigma_limit }) => {
     if (!Number.isFinite(sigma_limit) || sigma_limit <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -638,7 +623,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return sigma_v_class3 / sigma_limit;
   },
 
-  bending_y_axial_shear_check: ({ section_class, class12_ratio, class3_ratio }) => {
+  bending_y_axial_shear_check: ({ section_class, utilization_class12, utilization_class3 }) => {
     if (!Number.isFinite(section_class) || !Number.isInteger(section_class)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -656,6 +641,6 @@ export const evaluate = defineEvaluators<Nodes>({
       });
     }
 
-    return section_class === 3 ? class3_ratio : class12_ratio;
+    return section_class === 3 ? utilization_class3 : utilization_class12;
   },
 });
