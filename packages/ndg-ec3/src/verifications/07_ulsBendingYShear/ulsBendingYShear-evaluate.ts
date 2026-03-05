@@ -100,7 +100,7 @@ export const evaluate = defineEvaluators<Nodes>({
     return Math.abs(V_z_Ed);
   },
 
-  rho_z: ({ abs_V_z_Ed, V_pl_z_Rd }) => {
+  shear_utilization_z: ({ abs_V_z_Ed, V_pl_z_Rd }) => {
     if (!Number.isFinite(V_pl_z_Rd) || V_pl_z_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -110,8 +110,27 @@ export const evaluate = defineEvaluators<Nodes>({
       });
     }
 
-    const shearUtilization = abs_V_z_Ed / V_pl_z_Rd;
-    return shearUtilization <= 0.5 ? 0 : (2 * shearUtilization - 1) ** 2;
+    return abs_V_z_Ed / V_pl_z_Rd;
+  },
+
+  rho_z_1: () => 0,
+
+  rho_z_2: ({ shear_utilization_z }) => (2 * shear_utilization_z - 1) ** 2,
+
+  rho_z: ({ rho_z_1, rho_z_2 }) => {
+    if (Number.isFinite(rho_z_1)) {
+      return rho_z_1;
+    }
+
+    if (Number.isFinite(rho_z_2)) {
+      return rho_z_2;
+    }
+
+    throw new Ec3VerificationError({
+      type: "evaluation-error",
+      message: "bending-y-shear: rho_z branch resolution failed",
+      details: { sectionRef: "6.2.8" },
+    });
   },
 
   W_y_eff_i: ({ W_y_res, rho_z, Av_z, tw }) => {

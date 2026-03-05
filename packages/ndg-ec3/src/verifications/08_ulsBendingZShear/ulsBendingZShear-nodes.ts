@@ -224,10 +224,37 @@ export const nodes = defineNodes([
     key: "rho_y",
     valueType: { type: "number" },
     name: "Shear reduction factor",
-    expression:
-      "\\left(\\frac{2\\left|V_{y,Ed}\\right|}{V_{pl,y,Rd}} - 1\\right)^2 \\text{ for } \\frac{\\left|V_{y,Ed}\\right|}{V_{pl,y,Rd}} > 0.5, \\text{ else } 0",
+    expression: "\\text{branch-selected }\\rho_y",
     symbol: "\\rho_y",
-    children: [{ nodeId: "abs_V_y_Ed" }, { nodeId: "V_pl_y_Rd" }],
+    children: [
+      { nodeId: "shear_utilization_y" },
+      {
+        nodeId: "rho_y_1",
+        when: { lte: ["shear_utilization_y", 0.5] },
+      },
+      {
+        nodeId: "rho_y_2",
+        when: { gt: ["shear_utilization_y", 0.5] },
+      },
+    ],
+  },
+  {
+    id: "rho_y_1",
+    type: "derived",
+    key: "rho_y_1",
+    valueType: { type: "number" },
+    name: "Shear reduction factor for low-shear branch",
+    expression: "0",
+    children: [{ nodeId: "shear_utilization_y" }],
+  },
+  {
+    id: "rho_y_2",
+    type: "derived",
+    key: "rho_y_2",
+    valueType: { type: "number" },
+    name: "Shear reduction factor for high-shear branch",
+    expression: "\\left(2u_y - 1\\right)^2",
+    children: [{ nodeId: "shear_utilization_y" }],
   },
   {
     id: "abs_V_y_Ed",
@@ -264,6 +291,15 @@ export const nodes = defineNodes([
       { nodeId: "fy" },
       { nodeId: "gamma_M0" },
     ],
+  },
+  {
+    id: "shear_utilization_y",
+    type: "derived",
+    key: "shear_utilization_y",
+    valueType: { type: "number" },
+    name: "Shear utilization about y-y",
+    expression: "\\left|V_{y,Ed}\\right| / V_{pl,y,Rd}",
+    children: [{ nodeId: "abs_V_y_Ed" }, { nodeId: "V_pl_y_Rd" }],
   },
   {
     id: "Av_y",
