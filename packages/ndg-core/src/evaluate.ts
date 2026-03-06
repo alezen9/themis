@@ -33,10 +33,24 @@ export type EvaluationResult<
   trace: TraceEntry[];
 };
 
+const INTERNAL_CONSTANTS: Readonly<Record<string, number>> = {
+  pi: Math.PI,
+  e: Math.E,
+};
+
+type RuntimeContext = EvaluationContext & {
+  constants: Readonly<Record<string, number>>;
+};
+
 export const evaluate = <TNodes extends readonly Node[]>(
   def: VerificationDefinition<TNodes>,
   context: EvaluationContext,
 ): EvaluationResult<TNodes> => {
+  const runtimeContext: RuntimeContext = {
+    ...context,
+    constants: INTERNAL_CONSTANTS,
+  };
+
   const nodes = def.nodes as readonly Node[];
   const evaluators = def.evaluate as unknown as Record<
     string,
@@ -121,7 +135,18 @@ export const evaluate = <TNodes extends readonly Node[]>(
         for (const conditionKey of getConditionKeys(child.when)) {
           if (cache[conditionKey] !== undefined) continue;
           if (
-            Object.prototype.hasOwnProperty.call(context.inputs, conditionKey)
+            Object.prototype.hasOwnProperty.call(
+              runtimeContext.inputs,
+              conditionKey,
+            )
+          ) {
+            continue;
+          }
+          if (
+            Object.prototype.hasOwnProperty.call(
+              runtimeContext.constants,
+              conditionKey,
+            )
           ) {
             continue;
           }
@@ -137,7 +162,11 @@ export const evaluate = <TNodes extends readonly Node[]>(
 
       if (
         child.when &&
-        !evaluateCondition(child.when, { ...context.inputs, ...cache })
+        !evaluateCondition(child.when, {
+          ...runtimeContext.constants,
+          ...runtimeContext.inputs,
+          ...cache,
+        })
       ) {
         continue;
       }
@@ -163,7 +192,7 @@ export const evaluate = <TNodes extends readonly Node[]>(
       node,
       cache,
       evaluators,
-      context,
+      runtimeContext,
       activeChildren,
       nodeById,
     );
@@ -258,7 +287,7 @@ const resolveNode = (
     string,
     (deps: Record<string, number | string>) => number | string
   >,
-  context: EvaluationContext,
+  context: RuntimeContext,
   activeChildren: string[],
   nodeById: Map<string, Node>,
 ): number | string => {
@@ -271,8 +300,8 @@ const resolveNode = (
       return val;
     }
     case "constant": {
-      if (node.key === "pi") return Math.PI;
-      if (node.key === "e") return Math.E;
+      const val = context.constants[node.key];
+      if (val !== undefined) return val;
       throw new Error(`Unsupported constant: "${node.key}"`);
     }
     case "coefficient": {
@@ -320,7 +349,11 @@ const resolveNode = (
         }
         return selectedValue;
       }
-      const result = evaluator({ ...context.inputs, ...cache });
+      const result = evaluator({
+        ...context.constants,
+        ...context.inputs,
+        ...cache,
+      });
       if (typeof result === "number" && !isFinite(result)) {
         throw new Error(
           `Node "${node.key}" (${node.type}) produced ${result} -- check inputs for division by zero or invalid values`,
