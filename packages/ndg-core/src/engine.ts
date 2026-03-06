@@ -1,4 +1,4 @@
-import { VerificationSchema, type Node } from "./schemas";
+import { VerificationSchema, type Node } from "./schema";
 
 export type NationalAnnex = {
   id: string;
@@ -8,21 +8,21 @@ export type NationalAnnex = {
 type ComputedNodeType = "formula" | "derived" | "table" | "check";
 
 export type ValueType =
-  | { readonly type: "number"; readonly literal?: readonly number[] }
-  | { readonly type: "string"; readonly literal?: readonly string[] };
+  | { readonly type: "number"; readonly oneOf?: readonly number[] }
+  | { readonly type: "string"; readonly oneOf?: readonly string[] };
 
 type NumberValue<TValueType extends ValueType> = TValueType extends {
   type: "number";
-  literal: readonly number[];
+  oneOf: readonly number[];
 }
-  ? TValueType["literal"][number]
+  ? TValueType["oneOf"][number]
   : number;
 
 type StringValue<TValueType extends ValueType> = TValueType extends {
   type: "string";
-  literal: readonly string[];
+  oneOf: readonly string[];
 }
-  ? TValueType["literal"][number]
+  ? TValueType["oneOf"][number]
   : string;
 
 type ValueFromValueType<TValueType extends ValueType> = TValueType extends {

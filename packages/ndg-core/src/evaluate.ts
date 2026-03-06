@@ -1,5 +1,4 @@
-import type { Node } from "./schemas";
-import type { Condition } from "./schemas";
+import { ConditionSchema, type Condition, type Node } from "./schema";
 import type {
   InferCache,
   VerificationDefinition,
@@ -265,18 +264,45 @@ export const evaluate = <TNodes extends readonly Node[]>(
   }
 };
 
-const getConditionKeys = (condition: Condition): string[] => {
-  if ("eq" in condition) return [condition.eq[0]];
-  if ("lt" in condition) return [condition.lt[0]];
-  if ("lte" in condition) return [condition.lte[0]];
-  if ("gt" in condition) return [condition.gt[0]];
-  if ("gte" in condition) return [condition.gte[0]];
+const getConditionKeys = (condition: unknown): string[] => {
+  return collectConditionKeys(ConditionSchema.parse(condition));
+};
+
+const collectConditionKeys = (
+  condition: Condition,
+): string[] => {
+  if ("eq" in condition) {
+    const [left, right] = condition.eq;
+    if ("key" in right) return [left, right.key];
+    return [left];
+  }
+  if ("lt" in condition) {
+    const [left, right] = condition.lt;
+    if ("key" in right) return [left, right.key];
+    return [left];
+  }
+  if ("lte" in condition) {
+    const [left, right] = condition.lte;
+    if ("key" in right) return [left, right.key];
+    return [left];
+  }
+  if ("gt" in condition) {
+    const [left, right] = condition.gt;
+    if ("key" in right) return [left, right.key];
+    return [left];
+  }
+  if ("gte" in condition) {
+    const [left, right] = condition.gte;
+    if ("key" in right) return [left, right.key];
+    return [left];
+  }
   if ("and" in condition) {
-    return condition.and.flatMap((c) => getConditionKeys(c));
+    return condition.and.flatMap((item) => collectConditionKeys(item));
   }
   if ("or" in condition) {
-    return condition.or.flatMap((c) => getConditionKeys(c));
+    return condition.or.flatMap((item) => collectConditionKeys(item));
   }
+
   return [];
 };
 

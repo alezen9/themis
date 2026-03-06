@@ -14,12 +14,12 @@ export const nodes = defineNodes([
       {
         nodeId: "utilization_class12",
         when: {
-          or: [{ eq: ["section_class", 1] }, { eq: ["section_class", 2] }],
+          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
         },
       },
       {
         nodeId: "utilization_class3",
-        when: { eq: ["section_class", 3] },
+        when: { eq: ["section_class", { value: 3 }] },
       },
     ],
   },
@@ -89,12 +89,12 @@ export const nodes = defineNodes([
       {
         nodeId: "W_y_res_class12",
         when: {
-          or: [{ eq: ["section_class", 1] }, { eq: ["section_class", 2] }],
+          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
         },
       },
       {
         nodeId: "W_y_res_class3",
-        when: { eq: ["section_class", 3] },
+        when: { eq: ["section_class", { value: 3 }] },
       },
     ],
   },
@@ -167,15 +167,15 @@ export const nodes = defineNodes([
       { nodeId: "section_shape" },
       {
         nodeId: "a_w_i",
-        when: { eq: ["section_shape", "I"] },
+        when: { eq: ["section_shape", { value: "I" }] },
       },
       {
         nodeId: "a_w_rhs",
-        when: { eq: ["section_shape", "RHS"] },
+        when: { eq: ["section_shape", { value: "RHS" }] },
       },
       {
         nodeId: "a_w_chs",
-        when: { eq: ["section_shape", "CHS"] },
+        when: { eq: ["section_shape", { value: "CHS" }] },
       },
     ],
   },
@@ -272,7 +272,7 @@ export const nodes = defineNodes([
     id: "section_shape",
     type: "user-input",
     key: "section_shape",
-    valueType: { type: "string", literal: ["I", "RHS", "CHS"] },
+    valueType: { type: "string", oneOf: ["I", "RHS", "CHS"] },
     name: "Section shape family",
     symbol: "\\text{shape}",
     children: [],
@@ -397,12 +397,12 @@ export const nodes = defineNodes([
       {
         nodeId: "W_z_res_class12",
         when: {
-          or: [{ eq: ["section_class", 1] }, { eq: ["section_class", 2] }],
+          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
         },
       },
       {
         nodeId: "W_z_res_class3",
-        when: { eq: ["section_class", 3] },
+        when: { eq: ["section_class", { value: 3 }] },
       },
     ],
   },
@@ -466,15 +466,15 @@ export const nodes = defineNodes([
       { nodeId: "section_shape" },
       {
         nodeId: "a_f_i",
-        when: { eq: ["section_shape", "I"] },
+        when: { eq: ["section_shape", { value: "I" }] },
       },
       {
         nodeId: "a_f_rhs",
-        when: { eq: ["section_shape", "RHS"] },
+        when: { eq: ["section_shape", { value: "RHS" }] },
       },
       {
         nodeId: "a_f_chs",
-        when: { eq: ["section_shape", "CHS"] },
+        when: { eq: ["section_shape", { value: "CHS" }] },
       },
     ],
   },
@@ -516,15 +516,15 @@ export const nodes = defineNodes([
     children: [
       {
         nodeId: "alpha_biax_i",
-        when: { eq: ["section_shape", "I"] },
+        when: { eq: ["section_shape", { value: "I" }] },
       },
       {
         nodeId: "alpha_biax_rhs",
-        when: { eq: ["section_shape", "RHS"] },
+        when: { eq: ["section_shape", { value: "RHS" }] },
       },
       {
         nodeId: "alpha_biax_chs",
-        when: { eq: ["section_shape", "CHS"] },
+        when: { eq: ["section_shape", { value: "CHS" }] },
       },
     ],
   },
@@ -569,15 +569,15 @@ export const nodes = defineNodes([
     children: [
       {
         nodeId: "beta_biax_i",
-        when: { eq: ["section_shape", "I"] },
+        when: { eq: ["section_shape", { value: "I" }] },
       },
       {
         nodeId: "beta_biax_rhs",
-        when: { eq: ["section_shape", "RHS"] },
+        when: { eq: ["section_shape", { value: "RHS" }] },
       },
       {
         nodeId: "beta_biax_chs",
-        when: { eq: ["section_shape", "CHS"] },
+        when: { eq: ["section_shape", { value: "CHS" }] },
       },
     ],
   },

@@ -158,7 +158,7 @@ export const nodes = defineNodes([
     id: "section_shape",
     type: "user-input",
     key: "section_shape",
-    valueType: { type: "string", literal: ["I", "RHS", "CHS"] },
+    valueType: { type: "string", oneOf: ["I", "RHS", "CHS"] },
     name: "Section shape family",
     children: [],
   },
@@ -285,9 +285,9 @@ export const nodes = defineNodes([
     expression: "min(a_w,0.5)",
     children: [
       { nodeId: "section_shape" },
-      { nodeId: "a_w_i", when: { eq: ["section_shape", "I"] } },
-      { nodeId: "a_w_rhs", when: { eq: ["section_shape", "RHS"] } },
-      { nodeId: "a_w_chs", when: { eq: ["section_shape", "CHS"] } },
+      { nodeId: "a_w_i", when: { eq: ["section_shape", { value: "I" }] } },
+      { nodeId: "a_w_rhs", when: { eq: ["section_shape", { value: "RHS" }] } },
+      { nodeId: "a_w_chs", when: { eq: ["section_shape", { value: "CHS" }] } },
     ],
   },
   {
@@ -326,9 +326,9 @@ export const nodes = defineNodes([
     expression: "min(a_f,0.5)",
     children: [
       { nodeId: "section_shape" },
-      { nodeId: "a_f_i", when: { eq: ["section_shape", "I"] } },
-      { nodeId: "a_f_rhs", when: { eq: ["section_shape", "RHS"] } },
-      { nodeId: "a_f_chs", when: { eq: ["section_shape", "CHS"] } },
+      { nodeId: "a_f_i", when: { eq: ["section_shape", { value: "I" }] } },
+      { nodeId: "a_f_rhs", when: { eq: ["section_shape", { value: "RHS" }] } },
+      { nodeId: "a_f_chs", when: { eq: ["section_shape", { value: "CHS" }] } },
     ],
   },
   {
@@ -384,9 +384,9 @@ export const nodes = defineNodes([
     expression: "Shape branch reduced-thickness model",
     children: [
       { nodeId: "section_shape" },
-      { nodeId: "Wpl_y_eff_i", when: { eq: ["section_shape", "I"] } },
-      { nodeId: "Wpl_y_eff_rhs", when: { eq: ["section_shape", "RHS"] } },
-      { nodeId: "Wpl_y_eff_chs", when: { eq: ["section_shape", "CHS"] } },
+      { nodeId: "Wpl_y_eff_i", when: { eq: ["section_shape", { value: "I" }] } },
+      { nodeId: "Wpl_y_eff_rhs", when: { eq: ["section_shape", { value: "RHS" }] } },
+      { nodeId: "Wpl_y_eff_chs", when: { eq: ["section_shape", { value: "CHS" }] } },
     ],
   },
   {
@@ -466,10 +466,10 @@ export const nodes = defineNodes([
       {
         nodeId: "W_z_res_class12",
         when: {
-          or: [{ eq: ["section_class", 1] }, { eq: ["section_class", 2] }],
+          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
         },
       },
-      { nodeId: "W_z_res_class3", when: { eq: ["section_class", 3] } },
+      { nodeId: "W_z_res_class3", when: { eq: ["section_class", { value: 3 }] } },
     ],
   },
   {

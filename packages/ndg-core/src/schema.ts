@@ -9,27 +9,41 @@ export const NodeMetaSchema = z.strictObject({
   verificationRef: z.string().optional(),
 });
 
-// Explicit type declaration required for recursive Zod schemas
-export type Condition =
-  | { eq: [string, unknown] }
-  | { lt: [string, number] }
-  | { lte: [string, number] }
-  | { gt: [string, number] }
-  | { gte: [string, number] }
-  | { and: Condition[] }
-  | { or: Condition[] };
+const ConditionKeySchema = z.string();
 
-export const ConditionSchema: z.ZodType<Condition> = z.lazy(() =>
-  z.union([
-    z.strictObject({ eq: z.tuple([z.string(), z.unknown()]) }),
-    z.strictObject({ lt: z.tuple([z.string(), z.number()]) }),
-    z.strictObject({ lte: z.tuple([z.string(), z.number()]) }),
-    z.strictObject({ gt: z.tuple([z.string(), z.number()]) }),
-    z.strictObject({ gte: z.tuple([z.string(), z.number()]) }),
-    z.strictObject({ and: z.array(ConditionSchema) }),
-    z.strictObject({ or: z.array(ConditionSchema) }),
-  ]),
-);
+const ConditionOperandSchema = z.union([
+  z.strictObject({ value: z.union([z.string(), z.number()]) }),
+  z.strictObject({ key: z.string() }),
+]);
+const ConditionTupleSchema = z
+  .tuple([ConditionKeySchema, ConditionOperandSchema])
+  .readonly();
+
+const ComparisonConditionSchema = z.union([
+  z.strictObject({ eq: ConditionTupleSchema }),
+  z.strictObject({ lt: ConditionTupleSchema }),
+  z.strictObject({ lte: ConditionTupleSchema }),
+  z.strictObject({ gt: ConditionTupleSchema }),
+  z.strictObject({ gte: ConditionTupleSchema }),
+]);
+
+const AndConditionSchema = z.strictObject({
+  get and() {
+    return z.array(ConditionSchema);
+  },
+});
+
+const OrConditionSchema = z.strictObject({
+  get or() {
+    return z.array(ConditionSchema);
+  },
+});
+
+export const ConditionSchema = z.union([
+  ComparisonConditionSchema,
+  AndConditionSchema,
+  OrConditionSchema,
+]);
 
 export const ChildSchema = z.strictObject({
   nodeId: z.string(),
@@ -46,15 +60,18 @@ const BaseNodeSchema = z.strictObject({
 
 const NumericValueType = z.strictObject({
   type: z.literal("number"),
-  literal: z.array(z.number()).readonly().optional(),
+  oneOf: z.array(z.number()).readonly().optional(),
 });
 
 const StringValueType = z.strictObject({
   type: z.literal("string"),
-  literal: z.array(z.string()).readonly().optional(),
+  oneOf: z.array(z.string()).readonly().optional(),
 });
 
-const AnyValueType = z.union([NumericValueType, StringValueType]);
+const ValueTypeSchema = z.discriminatedUnion("type", [
+  NumericValueType,
+  StringValueType,
+]);
 
 /**
  * Root node of a verification.
@@ -87,7 +104,7 @@ export const FormulaNodeSchema = BaseNodeSchema.extend({
 export const DerivedNodeSchema = BaseNodeSchema.extend({
   type: z.literal("derived"),
   key: z.string(),
-  valueType: AnyValueType,
+  valueType: ValueTypeSchema,
   meta: NodeMetaSchema.optional(),
   expression: z.string().optional(), // LaTeX, optional
   unit: z.string().optional(),
@@ -100,7 +117,7 @@ export const DerivedNodeSchema = BaseNodeSchema.extend({
 export const TableNodeSchema = BaseNodeSchema.extend({
   type: z.literal("table"),
   key: z.string(),
-  valueType: AnyValueType,
+  valueType: ValueTypeSchema,
   meta: NodeMetaSchema.optional(),
   source: z.string(), // e.g. "EC3-Table-6.2"
   unit: z.string().optional(),
@@ -123,7 +140,7 @@ export const CoefficientNodeSchema = BaseNodeSchema.extend({
 export const UserInputNodeSchema = BaseNodeSchema.extend({
   type: z.literal("user-input"),
   key: z.string(),
-  valueType: AnyValueType,
+  valueType: ValueTypeSchema,
   unit: z.string().optional(),
 });
 
@@ -163,3 +180,6 @@ export type Node = z.infer<typeof NodeSchema>;
 export type Verification = z.infer<typeof VerificationSchema>;
 export type NodeId = string;
 export type NodeType = Node["type"];
+
+export type Condition = z.infer<typeof ConditionSchema>;
+export type ConditionOperand = z.infer<typeof ConditionOperandSchema>;

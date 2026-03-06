@@ -34,14 +34,14 @@ export const nodes = defineNodes([
     children: [
       {
         nodeId: "M_z_V_Rd_i",
-        when: { eq: ["section_shape", "I"] },
+        when: { eq: ["section_shape", { value: "I" }] },
       },
       {
         nodeId: "M_z_V_Rd_rhs_chs",
         when: {
           or: [
-            { eq: ["section_shape", "RHS"] },
-            { eq: ["section_shape", "CHS"] },
+            { eq: ["section_shape", { value: "RHS" }] },
+            { eq: ["section_shape", { value: "CHS" }] },
           ],
         },
       },
@@ -96,12 +96,12 @@ export const nodes = defineNodes([
       {
         nodeId: "Wpl_z",
         when: {
-          or: [{ eq: ["section_class", 1] }, { eq: ["section_class", 2] }],
+          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
         },
       },
       {
         nodeId: "Wel_z",
-        when: { eq: ["section_class", 3] },
+        when: { eq: ["section_class", { value: 3 }] },
       },
     ],
   },
@@ -176,11 +176,11 @@ export const nodes = defineNodes([
     children: [
       {
         nodeId: "rho_y_1",
-        when: { lte: ["u_y", 0.5] },
+        when: { lte: ["u_y", { value: 0.5 }] },
       },
       {
         nodeId: "rho_y_2",
-        when: { gt: ["u_y", 0.5] },
+        when: { gt: ["u_y", { value: 0.5 }] },
       },
     ],
   },

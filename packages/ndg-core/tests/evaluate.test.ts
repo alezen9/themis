@@ -172,8 +172,8 @@ describe("evaluate with conditional children", () => {
       id: "n-result",
       name: "Result",
       children: [
-        { nodeId: "n-a", when: { eq: ["shape", "I"] as [string, unknown] } },
-        { nodeId: "n-b", when: { eq: ["shape", "CHS"] as [string, unknown] } },
+        { nodeId: "n-a", when: { eq: ["shape", { value: "I" }] } },
+        { nodeId: "n-b", when: { eq: ["shape", { value: "CHS" }] } },
       ],
     },
     {
@@ -271,8 +271,8 @@ describe("evaluate with conditional children", () => {
         id: "m-result",
         name: "Result",
         children: [
-          { nodeId: "m-a", when: { eq: ["shape", "I"] as [string, unknown] } },
-          { nodeId: "m-b", when: { eq: ["shape", "I"] as [string, unknown] } },
+          { nodeId: "m-a", when: { eq: ["shape", { value: "I" }] } },
+          { nodeId: "m-b", when: { eq: ["shape", { value: "I" }] } },
         ],
       },
       {
@@ -299,6 +299,96 @@ describe("evaluate with conditional children", () => {
         annex: { id: "test", coefficients: {} },
       }),
     ).toThrow("must have exactly one active child, got 2");
+  });
+
+  it("supports key thresholds in when conditions", () => {
+    const nodes = [
+      {
+        type: "user-input",
+        key: "n",
+        valueType: { type: "number" },
+        id: "s-n",
+        name: "n",
+        children: [],
+      },
+      {
+        type: "user-input",
+        key: "a_w",
+        valueType: { type: "number" },
+        id: "s-aw",
+        name: "a_w",
+        children: [],
+      },
+      {
+        type: "derived",
+        key: "a_w_half",
+        valueType: { type: "number" },
+        id: "s-aw-half",
+        name: "0.5 a_w",
+        expression: "0.5 a_w",
+        children: [{ nodeId: "s-aw" }],
+      },
+      {
+        type: "derived",
+        key: "k",
+        valueType: { type: "number" },
+        id: "s-k",
+        name: "k",
+        children: [
+          { nodeId: "s-one", when: { lte: ["n", { key: "a_w_half" }] } },
+          { nodeId: "s-two", when: { gt: ["n", { key: "a_w_half" }] } },
+        ],
+      },
+      {
+        type: "derived",
+        key: "k_one",
+        valueType: { type: "number" },
+        id: "s-one",
+        name: "k1",
+        expression: "1",
+        children: [],
+      },
+      {
+        type: "derived",
+        key: "k_two",
+        valueType: { type: "number" },
+        id: "s-two",
+        name: "k2",
+        expression: "2",
+        children: [],
+      },
+      {
+        type: "check",
+        key: "s-check",
+        valueType: { type: "number" },
+        id: "s-check-id",
+        name: "Check",
+        verificationExpression: "k",
+        children: [{ nodeId: "s-k" }],
+      },
+    ] as const;
+
+    const def: VerificationDefinition<typeof nodes> = {
+      nodes,
+      evaluate: {
+        a_w_half: ({ a_w }) => 0.5 * a_w,
+        k_one: () => 1,
+        k_two: () => 2,
+        "s-check": ({ k }) => k,
+      },
+    };
+
+    const low = evaluate(def, {
+      inputs: { n: 0.2, a_w: 0.6 },
+      annex: { id: "test", coefficients: {} },
+    });
+    const high = evaluate(def, {
+      inputs: { n: 0.4, a_w: 0.6 },
+      annex: { id: "test", coefficients: {} },
+    });
+
+    expect(low.ratio).toBe(1);
+    expect(high.ratio).toBe(2);
   });
 });
 
@@ -330,11 +420,11 @@ describe("evaluate with raw-input condition keys and merged evaluator args", () 
         children: [
           {
             nodeId: "raw-i",
-            when: { eq: ["shape_input", "I"] as [string, unknown] },
+            when: { eq: ["shape_input", { value: "I" }] },
           },
           {
             nodeId: "raw-h",
-            when: { eq: ["shape_input", "H"] as [string, unknown] },
+            when: { eq: ["shape_input", { value: "H" }] },
           },
         ],
       },
@@ -383,7 +473,7 @@ describe("evaluate with raw-input condition keys and merged evaluator args", () 
         children: [
           {
             nodeId: "unk-val",
-            when: { eq: ["missing_key", "x"] as [string, unknown] },
+            when: { eq: ["missing_key", { value: "x" }] },
           },
         ],
       },
@@ -626,38 +716,66 @@ describe("evaluateCondition", () => {
   const cache = { x: 5, y: "hello" };
 
   it("eq", () => {
-    expect(evaluateCondition({ eq: ["x", 5] }, cache)).toBe(true);
-    expect(evaluateCondition({ eq: ["x", 6] }, cache)).toBe(false);
-    expect(evaluateCondition({ eq: ["y", "hello"] }, cache)).toBe(true);
+    expect(evaluateCondition({ eq: ["x", { value: 5 }] }, cache)).toBe(true);
+    expect(evaluateCondition({ eq: ["x", { value: 6 }] }, cache)).toBe(false);
+    expect(evaluateCondition({ eq: ["y", { value: "hello" }] }, cache)).toBe(
+      true,
+    );
+    expect(evaluateCondition({ eq: ["x", { key: "x" }] }, cache)).toBe(true);
+    expect(evaluateCondition({ eq: ["x", { key: "y" }] }, cache)).toBe(false);
   });
 
   it("lt/lte/gt/gte", () => {
-    expect(evaluateCondition({ lt: ["x", 6] }, cache)).toBe(true);
-    expect(evaluateCondition({ lt: ["x", 5] }, cache)).toBe(false);
-    expect(evaluateCondition({ lte: ["x", 5] }, cache)).toBe(true);
-    expect(evaluateCondition({ gt: ["x", 4] }, cache)).toBe(true);
-    expect(evaluateCondition({ gte: ["x", 5] }, cache)).toBe(true);
+    expect(evaluateCondition({ lt: ["x", { value: 6 }] }, cache)).toBe(true);
+    expect(evaluateCondition({ lt: ["x", { value: 5 }] }, cache)).toBe(false);
+    expect(evaluateCondition({ lte: ["x", { value: 5 }] }, cache)).toBe(true);
+    expect(evaluateCondition({ gt: ["x", { value: 4 }] }, cache)).toBe(true);
+    expect(evaluateCondition({ gte: ["x", { value: 5 }] }, cache)).toBe(true);
+  });
+
+  it("supports key-to-key numeric thresholds", () => {
+    expect(evaluateCondition({ lte: ["x", { key: "x" }] }, cache)).toBe(true);
+    expect(evaluateCondition({ gt: ["x", { key: "x" }] }, cache)).toBe(false);
   });
 
   it("and/or", () => {
     expect(
-      evaluateCondition({ and: [{ gt: ["x", 3] }, { lt: ["x", 10] }] }, cache),
+      evaluateCondition(
+        { and: [{ gt: ["x", { value: 3 }] }, { lt: ["x", { value: 10 }] }] },
+        cache,
+      ),
     ).toBe(true);
     expect(
-      evaluateCondition({ or: [{ eq: ["x", 1] }, { eq: ["x", 5] }] }, cache),
+      evaluateCondition(
+        {
+          or: [
+            { eq: ["x", { value: 1 }] },
+            { eq: ["x", { value: 5 }] },
+          ],
+        },
+        cache,
+      ),
     ).toBe(true);
     expect(
-      evaluateCondition({ and: [{ eq: ["x", 1] }, { eq: ["x", 5] }] }, cache),
+      evaluateCondition(
+        {
+          and: [
+            { eq: ["x", { value: 1 }] },
+            { eq: ["x", { value: 5 }] },
+          ],
+        },
+        cache,
+      ),
     ).toBe(false);
   });
 
   it("throws for undefined cache key", () => {
-    expect(() => evaluateCondition({ lt: ["missing_key", 5] }, cache)).toThrow(
-      'Condition references undefined cache key: "missing_key"',
-    );
-    expect(() => evaluateCondition({ eq: ["missing_key", 5] }, cache)).toThrow(
-      'Condition references undefined cache key: "missing_key"',
-    );
+    expect(() =>
+      evaluateCondition({ lt: ["missing_key", { value: 5 }] }, cache),
+    ).toThrow('Condition references undefined cache key: "missing_key"');
+    expect(() =>
+      evaluateCondition({ eq: ["missing_key", { value: 5 }] }, cache),
+    ).toThrow('Condition references undefined cache key: "missing_key"');
   });
 });
 

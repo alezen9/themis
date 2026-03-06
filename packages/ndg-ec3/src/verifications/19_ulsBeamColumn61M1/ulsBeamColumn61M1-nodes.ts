@@ -323,7 +323,7 @@ export const nodes = defineNodes([
   {
     type: "user-input",
     key: "section_shape",
-    valueType: { type: "string", literal: ["I", "RHS", "CHS"] },
+    valueType: { type: "string", oneOf: ["I", "RHS", "CHS"] },
     id: "section_shape",
     name: "Section shape family (I, RHS, CHS)",
     children: [],

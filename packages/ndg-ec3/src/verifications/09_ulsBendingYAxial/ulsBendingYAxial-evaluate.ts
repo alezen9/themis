@@ -60,19 +60,14 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return (A * fy) / gamma_M0;
   },
 
-  abs_N_Ed: ({ N_Ed }) => {
+  n: ({ N_Ed, N_pl_Rd }) => {
     if (!Number.isFinite(N_Ed)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message: "bending-y-axial: N_Ed must be finite",
-        details: { N_Ed, sectionRef: "6.2.9" },
+        details: { N_Ed, sectionRef: "6.2.9.1" },
       });
     }
-
-    return Math.abs(N_Ed);
-  },
-
-  n: ({ abs_N_Ed, N_pl_Rd }) => {
     if (!Number.isFinite(N_pl_Rd) || N_pl_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -82,7 +77,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return abs_N_Ed / N_pl_Rd;
+    return Math.abs(N_Ed) / N_pl_Rd;
   },
 
   a_w_i: ({ A, b, tf }) => {
@@ -110,7 +105,16 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A - 2 * b * tf) / A;
+    const areaRatio = (A - 2 * b * tf) / A;
+    if (!Number.isFinite(areaRatio) || areaRatio < 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-y-axial: a_w_i must be >= 0",
+        details: { areaRatio, sectionRef: "6.2.9.1" },
+      });
+    }
+
+    return Math.min(areaRatio, 0.5);
   },
 
   a_w_rhs: ({ A, b, t }) => {
@@ -138,39 +142,39 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A - 2 * b * t) / A;
-  },
-
-  a_w_chs: () => {
-    return 0.5;
-  },
-
-  a_w: ({ section_shape, a_w_i, a_w_rhs, a_w_chs }) => {
-    const areaRatioByShape =
-      section_shape === "I"
-        ? a_w_i
-        : section_shape === "RHS"
-          ? a_w_rhs
-          : a_w_chs;
-
-    if (!Number.isFinite(areaRatioByShape) || areaRatioByShape < 0) {
+    const areaRatio = (A - 2 * b * t) / A;
+    if (!Number.isFinite(areaRatio) || areaRatio < 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-y-axial: area ratio must be >= 0",
-        details: { areaRatioByShape, sectionRef: "6.2.9.1" },
+        message: "bending-y-axial: a_w_rhs must be >= 0",
+        details: { areaRatio, sectionRef: "6.2.9.1" },
       });
     }
 
-    return Math.min(areaRatioByShape, 0.5);
+    return Math.min(areaRatio, 0.5);
   },
 
-  is_n_le_half_a_w: ({ n, a_w }) => {
-    return n <= 0.5 * a_w ? 1 : 0;
-  },
+  a_w_chs: () => 0.5,
 
-  k_y: ({ is_n_le_half_a_w, n, a_w }) => {
-    if (is_n_le_half_a_w === 1) {
-      return 1;
+  a_w_half: ({ a_w }) => 0.5 * a_w,
+
+  k_y_1: () => 1,
+
+  k_y_2: ({ n, a_w }) => {
+    if (!Number.isFinite(n)) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-y-axial: n must be finite",
+        details: { n, sectionRef: "6.2.9.1" },
+      });
+    }
+
+    if (!Number.isFinite(a_w) || a_w < 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-y-axial: a_w must be >= 0",
+        details: { a_w, sectionRef: "6.2.9.1" },
+      });
     }
 
     const denominator = 1 - 0.5 * a_w;
@@ -216,19 +220,15 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return reducedResistance;
   },
 
-  abs_M_y_Ed: ({ M_y_Ed }) => {
+  utilization_class12: ({ M_y_Ed, M_N_y_Rd }) => {
     if (!Number.isFinite(M_y_Ed)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message: "bending-y-axial: M_y_Ed must be finite",
-        details: { M_y_Ed, sectionRef: "6.2.9" },
+        details: { M_y_Ed, sectionRef: "6.2.9.1" },
       });
     }
 
-    return Math.abs(M_y_Ed);
-  },
-
-  utilization_class12: ({ abs_M_y_Ed, M_N_y_Rd }) => {
     if (!Number.isFinite(M_N_y_Rd) || M_N_y_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -238,10 +238,18 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return abs_M_y_Ed / M_N_y_Rd;
+    return Math.abs(M_y_Ed) / M_N_y_Rd;
   },
 
-  sigma_N: ({ abs_N_Ed, A }) => {
+  sigma_N: ({ N_Ed, A }) => {
+    if (!Number.isFinite(N_Ed)) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-y-axial: N_Ed must be finite",
+        details: { N_Ed, sectionRef: "6.2.9.2" },
+      });
+    }
+
     if (!Number.isFinite(A) || A <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -250,10 +258,18 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return abs_N_Ed / A;
+    return Math.abs(N_Ed) / A;
   },
 
-  sigma_M_y: ({ abs_M_y_Ed, Wel_y }) => {
+  sigma_M_y: ({ M_y_Ed, Wel_y }) => {
+    if (!Number.isFinite(M_y_Ed)) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-y-axial: M_y_Ed must be finite",
+        details: { M_y_Ed, sectionRef: "6.2.9.2" },
+      });
+    }
+
     if (!Number.isFinite(Wel_y) || Wel_y <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -262,7 +278,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return abs_M_y_Ed / Wel_y;
+    return Math.abs(M_y_Ed) / Wel_y;
   },
 
   sigma_x_class3: ({ sigma_N, sigma_M_y }) => {
@@ -302,7 +318,11 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return sigma_x_class3 / sigma_limit;
   },
 
-  bending_y_axial_check: ({ section_class, utilization_class12, utilization_class3 }) => {
+  bending_y_axial_check: ({
+    section_class,
+    utilization_class12,
+    utilization_class3,
+  }) => {
     if (!Number.isFinite(section_class) || !Number.isInteger(section_class)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -320,6 +340,13 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return section_class === 3 ? utilization_class3 : utilization_class12;
+    if (typeof utilization_class12 === "number") return utilization_class12;
+    if (typeof utilization_class3 === "number") return utilization_class3;
+
+    throw new Ec3VerificationError({
+      type: "evaluation-error",
+      message: "bending-y-axial: no active utilization branch was selected",
+      details: { sectionRef: "6.2.9" },
+    });
   },
 });

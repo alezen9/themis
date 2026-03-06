@@ -1,52 +1,80 @@
-import type { Condition } from "./schemas";
+import {
+  ConditionSchema,
+  type Condition,
+  type ConditionOperand,
+} from "./schema";
 
-const assertCacheKey = (
-  key: string,
-  cache: Record<string, number | string>,
-): void => {
-  if (cache[key] === undefined) {
-    throw new Error(`Condition references undefined cache key: "${key}"`);
+type Context = Record<string, string | number>; // constants + inputs + computed values
+
+const readKey = (key: string, ctx: Context) => {
+  const value = ctx[key];
+  if (value === undefined) {
+    throw new Error(`Condition references undefined context key: "${key}"`);
   }
+  return value;
+};
+
+const resolveRightOperand = (operand: ConditionOperand, ctx: Context) => {
+  if ("key" in operand) return readKey(operand.key, ctx);
+  return operand.value;
+};
+
+const assertNumber = (value: number | string, label: string) => {
+  if (typeof value !== "number") {
+    throw new Error(`Condition ${label} must resolve to a number`);
+  }
+  return value;
 };
 
 /**
- * Evaluate a condition against a cache of resolved values.
- * Conditions reference cache keys for comparison.
+ * Evaluate a condition against the merged condition context.
  */
-export const evaluateCondition = (
+export const evaluateCondition = (condition: unknown, ctx: Context) => {
+  return evaluateParsedCondition(ConditionSchema.parse(condition), ctx);
+};
+
+const evaluateParsedCondition = (
   condition: Condition,
-  cache: Record<string, number | string>,
+  ctx: Context,
 ): boolean => {
-  if ("eq" in condition) {
-    const [key, expected] = condition.eq;
-    assertCacheKey(key, cache);
-    return cache[key] === expected;
+  switch (true) {
+    case "eq" in condition: {
+      const [left, right] = condition.eq;
+      return readKey(left, ctx) === resolveRightOperand(right, ctx);
+    }
+    case "lt" in condition: {
+      const [left, right] = condition.lt;
+      return (
+        assertNumber(readKey(left, ctx), "left operand") <
+        assertNumber(resolveRightOperand(right, ctx), "right operand")
+      );
+    }
+    case "lte" in condition: {
+      const [left, right] = condition.lte;
+      return (
+        assertNumber(readKey(left, ctx), "left operand") <=
+        assertNumber(resolveRightOperand(right, ctx), "right operand")
+      );
+    }
+    case "gt" in condition: {
+      const [left, right] = condition.gt;
+      return (
+        assertNumber(readKey(left, ctx), "left operand") >
+        assertNumber(resolveRightOperand(right, ctx), "right operand")
+      );
+    }
+    case "gte" in condition: {
+      const [left, right] = condition.gte;
+      return (
+        assertNumber(readKey(left, ctx), "left operand") >=
+        assertNumber(resolveRightOperand(right, ctx), "right operand")
+      );
+    }
+    case "and" in condition:
+      return condition.and.every((item) => evaluateParsedCondition(item, ctx));
+    case "or" in condition:
+      return condition.or.some((item) => evaluateParsedCondition(item, ctx));
+    default:
+      throw new Error(`Unknown condition: ${JSON.stringify(condition)}`);
   }
-  if ("lt" in condition) {
-    const [key, threshold] = condition.lt;
-    assertCacheKey(key, cache);
-    return (cache[key] as number) < threshold;
-  }
-  if ("lte" in condition) {
-    const [key, threshold] = condition.lte;
-    assertCacheKey(key, cache);
-    return (cache[key] as number) <= threshold;
-  }
-  if ("gt" in condition) {
-    const [key, threshold] = condition.gt;
-    assertCacheKey(key, cache);
-    return (cache[key] as number) > threshold;
-  }
-  if ("gte" in condition) {
-    const [key, threshold] = condition.gte;
-    assertCacheKey(key, cache);
-    return (cache[key] as number) >= threshold;
-  }
-  if ("and" in condition) {
-    return condition.and.every((c) => evaluateCondition(c, cache));
-  }
-  if ("or" in condition) {
-    return condition.or.some((c) => evaluateCondition(c, cache));
-  }
-  throw new Error(`Unknown condition: ${JSON.stringify(condition)}`);
 };

@@ -46,12 +46,12 @@ export const nodes = defineNodes([
       {
         nodeId: "Wpl_z",
         when: {
-          or: [{ eq: ["section_class", 1] }, { eq: ["section_class", 2] }],
+          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
         },
       },
       {
         nodeId: "Wel_z",
-        when: { eq: ["section_class", 3] },
+        when: { eq: ["section_class", { value: 3 }] },
       },
     ],
   },

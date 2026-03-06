@@ -86,7 +86,6 @@ describe("check-09 bending-y-axial", () => {
       annex: customAnnex,
     });
 
-    expect(result.cache.is_n_le_half_a_w).toBe(1);
     expect(result.cache.k_y).toBeCloseTo(1, 12);
   });
 
@@ -104,7 +103,6 @@ describe("check-09 bending-y-axial", () => {
       annex: customAnnex,
     });
 
-    expect(result.cache.is_n_le_half_a_w).toBe(0);
     expect(result.cache.k_y).toBeLessThan(1);
   });
 
