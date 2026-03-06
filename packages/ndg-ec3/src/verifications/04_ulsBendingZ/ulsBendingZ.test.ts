@@ -117,60 +117,40 @@ describe("check-04 bending-z", () => {
     expect(result.passed).toBe(false);
   });
 
-  it("throws invalid-input-domain when section_class is 0", () => {
-    try {
+  it("throws when section_class is 0 (no active selector branch)", () => {
+    expect(() =>
       evaluate(check, {
         inputs: { ...baselineInputs, section_class: 0 },
         annex: customAnnex,
-      });
-      throw new Error("expected evaluation to fail");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Ec3VerificationError);
-      if (!(error instanceof Ec3VerificationError)) throw error;
-      expect(error.type).toBe("invalid-input-domain");
-    }
+      }),
+    ).toThrow("must have exactly one active child, got 0");
   });
 
-  it("throws invalid-input-domain when section_class is 4", () => {
-    try {
+  it("throws when section_class is 4 (no active selector branch)", () => {
+    expect(() =>
       evaluate(check, {
         inputs: { ...baselineInputs, section_class: 4 },
         annex: customAnnex,
-      });
-      throw new Error("expected evaluation to fail");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Ec3VerificationError);
-      if (!(error instanceof Ec3VerificationError)) throw error;
-      expect(error.type).toBe("invalid-input-domain");
-    }
+      }),
+    ).toThrow("must have exactly one active child, got 0");
   });
 
-  it("throws invalid-input-domain when section_class is non-integer", () => {
-    try {
+  it("throws when section_class is non-integer (no active selector branch)", () => {
+    expect(() =>
       evaluate(check, {
         inputs: { ...baselineInputs, section_class: 2.5 },
         annex: customAnnex,
-      });
-      throw new Error("expected evaluation to fail");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Ec3VerificationError);
-      if (!(error instanceof Ec3VerificationError)) throw error;
-      expect(error.type).toBe("invalid-input-domain");
-    }
+      }),
+    ).toThrow("must have exactly one active child, got 0");
   });
 
-  it("throws invalid-input-domain when section_class is NaN", () => {
-    try {
+  it("throws when section_class is NaN (no active selector branch)", () => {
+    expect(() =>
       evaluate(check, {
         inputs: { ...baselineInputs, section_class: Number.NaN },
         annex: customAnnex,
-      });
-      throw new Error("expected evaluation to fail");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Ec3VerificationError);
-      if (!(error instanceof Ec3VerificationError)) throw error;
-      expect(error.type).toBe("invalid-input-domain");
-    }
+      }),
+    ).toThrow("must have exactly one active child, got 0");
   });
 
   it("throws invalid-input-domain when Wpl_z <= 0 for class 1 or 2", () => {
