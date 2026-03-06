@@ -37,7 +37,7 @@ export const nodes = defineNodes([
     name: "Reduced bending resistance about z-z under axial force and shear",
     symbol: "M_{NV,z,Rd}",
     expression: "M_{z,V,Rd} \\cdot k_z",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.10", formulaRef: "(6.38)" },
     children: [{ nodeId: "M_z_V_Rd" }, { nodeId: "k_z" }],
   },
@@ -49,7 +49,7 @@ export const nodes = defineNodes([
     name: "Reduced bending resistance about z-z under shear",
     symbol: "M_{z,V,Rd}",
     expression: "\\frac{W_{pl,z,eff} \\cdot f_y}{\\gamma_{M0}}",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.8", formulaRef: "(6.30)" },
     children: [{ nodeId: "Wpl_z_eff" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
   },
@@ -60,7 +60,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Effective plastic section modulus about z-z under shear",
     expression: "W_{pl,z} - \\rho_y (W_{pl,z} - W_{pl,z,web})",
-    unit: "\\mathrm{mm}^3",
+    unit: "\\mathrm{mm^{3}}",
     children: [{ nodeId: "Wpl_z" }, { nodeId: "rho_y" }, { nodeId: "Wpl_z_web" }],
   },
   {
@@ -70,7 +70,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Web contribution to plastic section modulus about z-z",
     expression: "A_{v,z} t_w / 4",
-    unit: "\\mathrm{mm}^3",
+    unit: "\\mathrm{mm^{3}}",
     children: [{ nodeId: "Av_z" }, { nodeId: "tw" }],
   },
   {
@@ -154,7 +154,7 @@ export const nodes = defineNodes([
     name: "Plastic resistance to normal force",
     symbol: "N_{pl,Rd}",
     expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: { sectionRef: "6.2.4", formulaRef: "(6.10)" },
     children: [{ nodeId: "A" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
   },
@@ -177,7 +177,7 @@ export const nodes = defineNodes([
     name: "Plastic shear resistance about y-y",
     symbol: "V_{pl,y,Rd}",
     expression: "\\dfrac{A_{v,y} \\cdot f_y}{\\sqrt{3}\\,\\gamma_{M0}}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: { sectionRef: "6.2.6", formulaRef: "(6.18)" },
     children: [{ nodeId: "Av_y" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
   },
@@ -197,7 +197,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Equivalent Von Mises stress for class 3",
     expression: "\\sqrt{\\sigma_x^2+3\\tau_y^2}",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [{ nodeId: "sigma_x_class3" }, { nodeId: "tau_y" }],
   },
   {
@@ -207,7 +207,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Longitudinal normal stress for class 3",
     expression: "\\sigma_N+\\sigma_{M,z}",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [{ nodeId: "sigma_N" }, { nodeId: "sigma_M_z" }],
   },
   {
@@ -217,7 +217,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Axial stress contribution",
     expression: "\\left|N_{Ed}\\right|/A",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [{ nodeId: "abs_N_Ed" }, { nodeId: "A" }],
   },
   {
@@ -227,7 +227,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Bending stress contribution about z-z",
     expression: "\\left|M_{z,Ed}\\right|/W_{el,z}",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [{ nodeId: "abs_M_z_Ed" }, { nodeId: "Wel_z" }],
   },
   {
@@ -237,7 +237,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Average shear stress from V_y",
     expression: "\\left|V_{y,Ed}\\right|/A_{v,y}",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [{ nodeId: "abs_V_y_Ed" }, { nodeId: "Av_y" }],
   },
   {
@@ -248,7 +248,7 @@ export const nodes = defineNodes([
     name: "Class 3 stress limit",
     symbol: "f_y/\\gamma_{M0}",
     expression: "\\frac{f_y}{\\gamma_{M0}}",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     meta: { sectionRef: "6.2.10", formulaRef: "(6.42)" },
     children: [{ nodeId: "fy" }, { nodeId: "gamma_M0" }],
   },
@@ -259,7 +259,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Design bending moment magnitude about z-z",
     expression: "\\left|M_{z,Ed}\\right|",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     children: [{ nodeId: "M_z_Ed" }],
   },
   {
@@ -269,7 +269,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Design axial force magnitude",
     expression: "\\left|N_{Ed}\\right|",
-    unit: "N",
+    unit: "\\mathrm{N}",
     children: [{ nodeId: "N_Ed" }],
   },
   {
@@ -279,7 +279,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Design shear force magnitude about y-y",
     expression: "\\left|V_{y,Ed}\\right|",
-    unit: "N",
+    unit: "\\mathrm{N}",
     children: [{ nodeId: "V_y_Ed" }],
   },
   {
@@ -289,7 +289,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Design bending moment about z-z",
     symbol: "M_{z,Ed}",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     children: [],
   },
   {
@@ -299,7 +299,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Design axial force",
     symbol: "N_{Ed}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     children: [],
   },
   {
@@ -309,7 +309,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Design shear force about y-y",
     symbol: "V_{y,Ed}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     children: [],
   },
   {
@@ -337,7 +337,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Cross-sectional area",
     symbol: "A",
-    unit: "\\mathrm{mm}^2",
+    unit: "\\mathrm{mm^{2}}",
     children: [],
   },
   {
@@ -347,7 +347,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Section width",
     symbol: "b",
-    unit: "mm",
+    unit: "\\mathrm{mm}",
     children: [],
   },
   {
@@ -357,7 +357,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Section depth",
     symbol: "h",
-    unit: "mm",
+    unit: "\\mathrm{mm}",
     children: [],
   },
   {
@@ -367,7 +367,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Flange thickness",
     symbol: "t_f",
-    unit: "mm",
+    unit: "\\mathrm{mm}",
     children: [],
   },
   {
@@ -377,7 +377,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Wall thickness",
     symbol: "t",
-    unit: "mm",
+    unit: "\\mathrm{mm}",
     children: [],
   },
   {
@@ -387,7 +387,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Elastic section modulus about z-z",
     symbol: "W_{el,z}",
-    unit: "\\mathrm{mm}^3",
+    unit: "\\mathrm{mm^{3}}",
     children: [],
   },
   {
@@ -397,7 +397,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Plastic section modulus about z-z",
     symbol: "W_{pl,z}",
-    unit: "\\mathrm{mm}^3",
+    unit: "\\mathrm{mm^{3}}",
     children: [],
   },
   {
@@ -407,7 +407,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Shear area about y-y",
     symbol: "A_{v,y}",
-    unit: "\\mathrm{mm}^2",
+    unit: "\\mathrm{mm^{2}}",
     children: [],
   },
   {
@@ -417,7 +417,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Shear area about z-z",
     symbol: "A_{v,z}",
-    unit: "\\mathrm{mm}^2",
+    unit: "\\mathrm{mm^{2}}",
     children: [],
   },
   {
@@ -427,7 +427,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Web or wall thickness",
     symbol: "t_w",
-    unit: "mm",
+    unit: "\\mathrm{mm}",
     children: [],
   },
   {
@@ -437,7 +437,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Yield strength",
     symbol: "f_y",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {

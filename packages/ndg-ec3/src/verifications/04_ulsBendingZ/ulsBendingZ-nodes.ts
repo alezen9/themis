@@ -19,7 +19,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Design bending moment magnitude about z-z",
     expression: "\\left|M_{z,Ed}\\right|",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     children: [{ nodeId: "M_z_Ed" }],
   },
   {
@@ -29,7 +29,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Design bending moment about z-z",
     symbol: "M_{z,Ed}",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     children: [],
   },
   {
@@ -40,7 +40,7 @@ export const nodes = defineNodes([
     name: "Design resistance moment about z-z",
     symbol: "M_{c,z,Rd}",
     expression: "\\frac{W_{z,res} \\cdot f_y}{\\gamma_{M0}}",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.5", formulaRef: "(6.13)" },
     children: [{ nodeId: "W_z_res" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
   },
@@ -51,7 +51,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Class-dependent resistance modulus about z-z",
     expression: "\\text{class 1/2 ? }W_{pl,z}:W_{el,z}",
-    unit: "\\mathrm{mm}^3",
+    unit: "\\mathrm{mm^{3}}",
     children: [
       { nodeId: "section_class" },
       {
@@ -73,7 +73,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Class 1/2 resistance modulus about z-z",
     expression: "W_{pl,z}",
-    unit: "\\mathrm{mm}^3",
+    unit: "\\mathrm{mm^{3}}",
     children: [{ nodeId: "Wpl_z" }],
   },
   {
@@ -83,7 +83,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Class 3 resistance modulus about z-z",
     expression: "W_{el,z}",
-    unit: "\\mathrm{mm}^3",
+    unit: "\\mathrm{mm^{3}}",
     children: [{ nodeId: "Wel_z" }],
   },
   {
@@ -102,7 +102,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Plastic section modulus about z-z",
     symbol: "W_{pl,z}",
-    unit: "\\mathrm{mm}^3",
+    unit: "\\mathrm{mm^{3}}",
     children: [],
   },
   {
@@ -112,7 +112,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Elastic section modulus about z-z",
     symbol: "W_{el,z}",
-    unit: "\\mathrm{mm}^3",
+    unit: "\\mathrm{mm^{3}}",
     children: [],
   },
   {
@@ -122,7 +122,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Yield strength",
     symbol: "f_y",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {

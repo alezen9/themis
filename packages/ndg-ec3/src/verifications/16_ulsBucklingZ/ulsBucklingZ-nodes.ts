@@ -8,7 +8,7 @@ export const nodes = defineNodes([
     id: "N_Ed",
     name: "Design compression force",
     symbol: "N_{Ed}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     children: [],
   },
   {
@@ -25,7 +25,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "A",
     name: "Cross-sectional area",
-    unit: "mm²",
+    unit: "\\mathrm{mm^{2}}",
     children: [],
   },
   {
@@ -34,7 +34,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "fy",
     name: "Yield strength",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {
@@ -43,7 +43,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "E",
     name: "Elastic modulus",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {
@@ -52,7 +52,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Iz",
     name: "Second moment of area z-z",
-    unit: "mm⁴",
+    unit: "\\mathrm{mm^{4}}",
     children: [],
   },
   {
@@ -61,7 +61,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "L",
     name: "Member length",
-    unit: "mm",
+    unit: "\\mathrm{mm}",
     children: [],
   },
   {
@@ -110,7 +110,7 @@ export const nodes = defineNodes([
     name: "Elastic critical force z-z",
     symbol: "N_{cr,z}",
     expression: "\\frac{\\pi^2EI_z}{(k_zL)^2}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.2",
     },
@@ -199,7 +199,7 @@ export const nodes = defineNodes([
     name: "Buckling resistance z-z",
     symbol: "N_{b,z,Rd}",
     expression: "\\frac{\\chi_z A f_y}{\\gamma_{M1}}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.1",
       formulaRef: "(6.47)",
@@ -226,7 +226,7 @@ export const nodes = defineNodes([
     id: "abs_N_Ed",
     name: "Absolute design axial force",
     expression: "\\left|N_{Ed}\\right|",
-    unit: "N",
+    unit: "\\mathrm{N}",
     children: [
       {
         nodeId: "N_Ed",

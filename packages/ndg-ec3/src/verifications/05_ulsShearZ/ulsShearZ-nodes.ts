@@ -19,7 +19,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Design shear force magnitude about z-z",
     expression: "\\left|V_{z,Ed}\\right|",
-    unit: "N",
+    unit: "\\mathrm{N}",
     children: [{ nodeId: "V_z_Ed" }],
   },
   {
@@ -29,7 +29,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Design shear force about z-z",
     symbol: "V_{z,Ed}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     children: [],
   },
   {
@@ -40,7 +40,7 @@ export const nodes = defineNodes([
     name: "Plastic shear resistance about z-z",
     symbol: "V_{pl,z,Rd}",
     expression: "\\frac{A_{v,z} \\cdot f_y}{\\sqrt{3}\\,\\gamma_{M0}}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: { sectionRef: "6.2.6", formulaRef: "(6.18)" },
     children: [
       { nodeId: "Av_z" },
@@ -55,7 +55,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Shear area about z-z",
     symbol: "A_{v,z}",
-    unit: "\\mathrm{mm}^2",
+    unit: "\\mathrm{mm^{2}}",
     children: [],
   },
   {
@@ -65,7 +65,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Yield strength",
     symbol: "f_y",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {

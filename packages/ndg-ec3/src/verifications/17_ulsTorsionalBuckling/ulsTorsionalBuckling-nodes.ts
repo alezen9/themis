@@ -8,7 +8,7 @@ export const nodes = defineNodes([
     id: "N_Ed",
     name: "Design compression force",
     symbol: "N_{Ed}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     children: [],
   },
   {
@@ -17,7 +17,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "A",
     name: "Cross-sectional area",
-    unit: "mm²",
+    unit: "\\mathrm{mm^{2}}",
     children: [],
   },
   {
@@ -26,7 +26,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "fy",
     name: "Yield strength",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {
@@ -35,7 +35,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "E",
     name: "Elastic modulus",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {
@@ -44,7 +44,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "G",
     name: "Shear modulus",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {
@@ -53,7 +53,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Iy",
     name: "Second moment of area y-y",
-    unit: "mm⁴",
+    unit: "\\mathrm{mm^{4}}",
     children: [],
   },
   {
@@ -62,7 +62,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Iz",
     name: "Second moment of area z-z",
-    unit: "mm⁴",
+    unit: "\\mathrm{mm^{4}}",
     children: [],
   },
   {
@@ -71,7 +71,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "It",
     name: "St. Venant torsion constant",
-    unit: "mm⁴",
+    unit: "\\mathrm{mm^{4}}",
     children: [],
   },
   {
@@ -80,7 +80,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Iw",
     name: "Warping constant",
-    unit: "mm⁶",
+    unit: "\\mathrm{mm^{6}}",
     children: [],
   },
   {
@@ -89,7 +89,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "L",
     name: "Member length",
-    unit: "mm",
+    unit: "\\mathrm{mm}",
     children: [],
   },
   {
@@ -218,7 +218,7 @@ export const nodes = defineNodes([
     symbol: "N_{cr,T}",
     expression:
       "\\frac{1}{i_p^2}\\left(G I_t + \\frac{\\pi^2 E I_w}{L_{cr,T}^2}\\right)",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.4",
       paragraphRef: "(2)",
@@ -273,7 +273,7 @@ export const nodes = defineNodes([
     name: "Elastic flexural critical force about z-z",
     symbol: "N_{cr,z}",
     expression: "\\frac{\\pi^2 E I_z}{L_{cr,T}^2}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.2",
     },
@@ -306,7 +306,7 @@ export const nodes = defineNodes([
     name: "Elastic torsional-flexural critical force",
     symbol: "N_{cr,TF}",
     expression: "\\min(N_{cr,T}, N_{cr,z})",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.4",
       paragraphRef: "(2)",
@@ -328,7 +328,7 @@ export const nodes = defineNodes([
     name: "Governing critical force for torsional buckling slenderness",
     symbol: "N_{cr}",
     expression: "N_{cr,T}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.4",
       paragraphRef: "(2)",
@@ -405,7 +405,7 @@ export const nodes = defineNodes([
     name: "Torsional-flexural buckling resistance",
     symbol: "N_{b,TF,Rd}",
     expression: "\\frac{\\chi_{TF} A f_y}{\\gamma_{M1}}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.1",
       formulaRef: "(6.47)",

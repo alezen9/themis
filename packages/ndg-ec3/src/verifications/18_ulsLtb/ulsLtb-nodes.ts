@@ -8,7 +8,7 @@ export const nodes = defineNodes([
     id: "M_y_Ed",
     name: "Design bending moment about y-y",
     symbol: "M_{y,Ed}",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     children: [],
   },
   {
@@ -17,7 +17,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Wpl_y",
     name: "Plastic section modulus y-y",
-    unit: "mm³",
+    unit: "\\mathrm{mm^{3}}",
     children: [],
   },
   {
@@ -26,7 +26,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "fy",
     name: "Yield strength",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {
@@ -35,7 +35,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "E",
     name: "Elastic modulus",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {
@@ -44,7 +44,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "G",
     name: "Shear modulus",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {
@@ -53,7 +53,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Iz",
     name: "Minor-axis second moment of area",
-    unit: "mm⁴",
+    unit: "\\mathrm{mm^{4}}",
     children: [],
   },
   {
@@ -62,7 +62,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "It",
     name: "St. Venant torsion constant",
-    unit: "mm⁴",
+    unit: "\\mathrm{mm^{4}}",
     children: [],
   },
   {
@@ -71,7 +71,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Iw",
     name: "Warping constant",
-    unit: "mm⁶",
+    unit: "\\mathrm{mm^{6}}",
     children: [],
   },
   {
@@ -80,7 +80,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "L",
     name: "Member length",
-    unit: "mm",
+    unit: "\\mathrm{mm}",
     children: [],
   },
   {
@@ -266,7 +266,7 @@ export const nodes = defineNodes([
     symbol: "M_{cr}",
     expression:
       "C_1 \\frac{\\pi^2 E I_z}{L_{cr,LT}^2}\\sqrt{\\frac{I_w}{I_z}+\\frac{L_{cr,LT}^2 G I_t}{\\pi^2 E I_z}}",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     meta: {
       sectionRef: "6.3.2.2",
       paragraphRef: "(2)",
@@ -438,7 +438,7 @@ export const nodes = defineNodes([
     name: "LTB resistance",
     symbol: "M_{b,Rd}",
     expression: "\\frac{\\chi_{LT,mod} W_{pl,y} f_y}{\\gamma_{M1}}",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     meta: {
       sectionRef: "6.3.2.1",
       formulaRef: "(6.55)",

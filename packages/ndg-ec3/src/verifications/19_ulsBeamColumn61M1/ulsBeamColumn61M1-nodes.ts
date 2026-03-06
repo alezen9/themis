@@ -8,7 +8,7 @@ export const nodes = defineNodes([
     id: "N_Ed",
     name: "Axial force",
     symbol: "N_{Ed}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     children: [],
   },
   {
@@ -18,7 +18,7 @@ export const nodes = defineNodes([
     id: "M_y_Ed",
     name: "Bending moment y",
     symbol: "M_{y,Ed}",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     children: [],
   },
   {
@@ -28,7 +28,7 @@ export const nodes = defineNodes([
     id: "M_z_Ed",
     name: "Bending moment z",
     symbol: "M_{z,Ed}",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     children: [],
   },
   {
@@ -37,7 +37,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "A",
     name: "Area",
-    unit: "mm²",
+    unit: "\\mathrm{mm^{2}}",
     children: [],
   },
   {
@@ -46,7 +46,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Wel_y",
     name: "Elastic modulus y",
-    unit: "mm³",
+    unit: "\\mathrm{mm^{3}}",
     children: [],
   },
   {
@@ -55,7 +55,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Wel_z",
     name: "Elastic modulus z",
-    unit: "mm³",
+    unit: "\\mathrm{mm^{3}}",
     children: [],
   },
   {
@@ -64,7 +64,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Wpl_y",
     name: "Plastic modulus y",
-    unit: "mm³",
+    unit: "\\mathrm{mm^{3}}",
     children: [],
   },
   {
@@ -73,7 +73,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Wpl_z",
     name: "Plastic modulus z",
-    unit: "mm³",
+    unit: "\\mathrm{mm^{3}}",
     children: [],
   },
   {
@@ -82,7 +82,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Av_y",
     name: "Shear area y",
-    unit: "mm²",
+    unit: "\\mathrm{mm^{2}}",
     children: [],
   },
   {
@@ -91,7 +91,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Av_z",
     name: "Shear area z",
-    unit: "mm²",
+    unit: "\\mathrm{mm^{2}}",
     children: [],
   },
   {
@@ -100,7 +100,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "tw",
     name: "Web thickness",
-    unit: "mm",
+    unit: "\\mathrm{mm}",
     children: [],
   },
   {
@@ -109,7 +109,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "hw",
     name: "Web clear height",
-    unit: "mm",
+    unit: "\\mathrm{mm}",
     children: [],
   },
   {
@@ -118,7 +118,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "fy",
     name: "Yield strength",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {
@@ -127,7 +127,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "E",
     name: "Elastic modulus",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {
@@ -136,7 +136,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "G",
     name: "Shear modulus",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {
@@ -145,7 +145,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Iy",
     name: "Inertia y",
-    unit: "mm⁴",
+    unit: "\\mathrm{mm^{4}}",
     children: [],
   },
   {
@@ -154,7 +154,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Iz",
     name: "Inertia z",
-    unit: "mm⁴",
+    unit: "\\mathrm{mm^{4}}",
     children: [],
   },
   {
@@ -163,7 +163,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "It",
     name: "St. Venant torsion constant",
-    unit: "mm⁴",
+    unit: "\\mathrm{mm^{4}}",
     children: [],
   },
   {
@@ -172,7 +172,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "Iw",
     name: "Warping constant",
-    unit: "mm⁶",
+    unit: "\\mathrm{mm^{6}}",
     children: [],
   },
   {
@@ -181,7 +181,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "L",
     name: "Member length",
-    unit: "mm",
+    unit: "\\mathrm{mm}",
     children: [],
   },
   {
@@ -489,7 +489,7 @@ export const nodes = defineNodes([
     id: "N_cr_y",
     name: "Elastic critical force y",
     expression: "\\pi^2 E I_y / L_{cr,y}^2",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.2",
     },
@@ -518,7 +518,7 @@ export const nodes = defineNodes([
     id: "N_cr_z",
     name: "Elastic critical force z",
     expression: "\\pi^2 E I_z / L_{cr,z}^2",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.2",
     },
@@ -590,7 +590,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "N_cr_T",
     name: "Elastic torsional critical force",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.4",
       paragraphRef: "(2)",
@@ -626,7 +626,7 @@ export const nodes = defineNodes([
     id: "N_cr_TF",
     name: "Elastic torsional-flexural critical force",
     expression: "\\min(N_{cr,T}, N_{cr,z})",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.4",
       paragraphRef: "(2)",
@@ -646,7 +646,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "M_cr",
     name: "Elastic critical moment",
-    unit: "N·mm",
+    unit: "\\mathrm{N\\cdot mm}",
     meta: {
       sectionRef: "6.3.2.2",
       paragraphRef: "(2)",

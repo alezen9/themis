@@ -15,13 +15,18 @@ type TraceEntry = NonNullable<
 // -- Helpers --
 
 const UNIT_MAP: Record<string, { unit: string; scale: number }> = {
-  N: { unit: "kN", scale: 1e-3 },
-  "N\u00B7mm": { unit: "kNm", scale: 1e-6 },
-  "mm\u00B2": { unit: "cm\u00B2", scale: 1e-2 },
-  "\\mathrm{mm}^2": { unit: "cm\u00B2", scale: 1e-2 },
-  "mm\u00B3": { unit: "cm\u00B3", scale: 1e-3 },
-  "mm\u2074": { unit: "cm\u2074", scale: 1e-4 },
-  "mm\u2076": { unit: "cm\u2076", scale: 1e-6 },
+  N: { unit: "\\mathrm{kN}", scale: 1e-3 },
+  "\\mathrm{N}": { unit: "\\mathrm{kN}", scale: 1e-3 },
+  "N\u00B7mm": { unit: "\\mathrm{kN\\cdot m}", scale: 1e-6 },
+  "\\mathrm{N\\cdot mm}": { unit: "\\mathrm{kN\\cdot m}", scale: 1e-6 },
+  "mm\u00B2": { unit: "\\mathrm{cm^{2}}", scale: 1e-2 },
+  "\\mathrm{mm^{2}}": { unit: "\\mathrm{cm^{2}}", scale: 1e-2 },
+  "mm\u00B3": { unit: "\\mathrm{cm^{3}}", scale: 1e-3 },
+  "\\mathrm{mm^{3}}": { unit: "\\mathrm{cm^{3}}", scale: 1e-3 },
+  "mm\u2074": { unit: "\\mathrm{cm^{4}}", scale: 1e-4 },
+  "\\mathrm{mm^{4}}": { unit: "\\mathrm{cm^{4}}", scale: 1e-4 },
+  "mm\u2076": { unit: "\\mathrm{cm^{6}}", scale: 1e-6 },
+  "\\mathrm{mm^{6}}": { unit: "\\mathrm{cm^{6}}", scale: 1e-6 },
 };
 
 const convertUnit = (
@@ -64,6 +69,12 @@ const Formula = ({
     return <code className="text-xs text-red-500">{tex}</code>;
   }
 };
+
+const Unit = ({ unit }: { unit: string }) => (
+  <span className="text-gray-400 ml-1">
+    <Formula tex={unit} />
+  </span>
+);
 
 const SectionRef = ({ meta }: { meta?: Record<string, unknown> }) => {
   if (!meta) return null;
@@ -252,7 +263,7 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
                       </span>
                       <span className="font-mono text-xs tabular-nums text-right">
                         {formatValue(dv)}
-                        {du && <span className="text-gray-400 ml-1">{du}</span>}
+                        {du && <Unit unit={du} />}
                       </span>
                     </div>
                   );
@@ -292,9 +303,7 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
                         </span>
                         <span className="font-mono text-xs tabular-nums font-medium text-right">
                           {formatValue(dv)}
-                          {du && (
-                            <span className="text-gray-400 ml-1">{du}</span>
-                          )}
+                          {du && <Unit unit={du} />}
                         </span>
                         {typeof meta?.formulaRef === "string" && (
                           <span className="text-gray-300 text-xs">
@@ -336,7 +345,7 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
                                           ? formatValue(sdv)
                                           : v}
                                         {typeof v === "number" && sdu && (
-                                          <span className="ml-0.5">{sdu}</span>
+                                          <Unit unit={sdu} />
                                         )}
                                       </span>
                                     );
@@ -380,9 +389,7 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
                               {typeof v === "number" ? formatValue(sdv) : v}
                             </span>
                             {typeof v === "number" && sdu && (
-                              <span className="text-gray-400 ml-0.5">
-                                {sdu}
-                              </span>
+                              <Unit unit={sdu} />
                             )}
                           </span>
                         );
@@ -541,9 +548,7 @@ const SummaryVerification = ({
                         {entry?.symbol ? <Formula tex={entry.symbol} /> : k}
                         {" = "}
                         {typeof v === "number" ? formatValue(dv) : v}
-                        {typeof v === "number" && du && (
-                          <span className="text-gray-400 ml-0.5">{du}</span>
-                        )}
+                        {typeof v === "number" && du && <Unit unit={du} />}
                       </span>
                     );
                   })}
@@ -573,9 +578,7 @@ const SummaryVerification = ({
                           )}
                           {" = "}
                           {formatValue(dv)}
-                          {du && (
-                            <span className="text-gray-400 ml-0.5">{du}</span>
-                          )}
+                          {du && <Unit unit={du} />}
                         </span>
                       );
                     })}
@@ -608,9 +611,7 @@ const SummaryVerification = ({
                           )}
                           {" = "}
                           {formatValue(dv)}
-                          {du && (
-                            <span className="text-gray-400 ml-0.5">{du}</span>
-                          )}
+                          {du && <Unit unit={du} />}
                         </span>
                       );
                     })}
@@ -643,9 +644,7 @@ const SummaryVerification = ({
                           )}
                           {" = "}
                           {formatValue(dv)}
-                          {du && (
-                            <span className="text-gray-400 ml-0.5">{du}</span>
-                          )}
+                          {du && <Unit unit={du} />}
                         </span>
                       );
                     })}

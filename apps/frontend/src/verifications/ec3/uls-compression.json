@@ -6,7 +6,7 @@
     "valueType": "number",
     "name": "Characteristic yield strength",
     "symbol": "f_y",
-    "unit": "MPa",
+    "unit": "\\mathrm{MPa}",
     "children": []
   },
   {
@@ -26,7 +26,7 @@
     "valueType": "number",
     "name": "Cross-sectional area",
     "symbol": "A",
-    "unit": "mm²",
+    "unit": "\\mathrm{mm^{2}}",
     "children": []
   },
   {
@@ -36,7 +36,7 @@
     "valueType": "number",
     "name": "Design value of compression force",
     "symbol": "N_{Ed}",
-    "unit": "N",
+    "unit": "\\mathrm{N}",
     "children": []
   },
   {
@@ -48,7 +48,7 @@
     "symbol": "N_{c,Rd}",
     "meta": { "sectionRef": "6.2.4", "formulaRef": "(6.11)" },
     "expression": "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
-    "unit": "N",
+    "unit": "\\mathrm{N}",
     "children": [
       { "nodeId": "node-A" },
       { "nodeId": "node-fy" },

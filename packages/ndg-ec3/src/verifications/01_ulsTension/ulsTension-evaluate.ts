@@ -1,8 +1,9 @@
 import { defineEvaluators } from "@ndg/ndg-core";
 import { Ec3VerificationError } from "../../errors";
 import type { Nodes } from "./ulsTension-nodes";
+import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
 
-export const evaluate = defineEvaluators<Nodes>({
+export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
   N_pl_Rd: ({ A, fy, gamma_M0 }) => {
     if (!Number.isFinite(A) || A <= 0) {
       throw new Ec3VerificationError({

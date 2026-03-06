@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const NodeMetaSchema = z.object({
+export const NodeMetaSchema = z.strictObject({
   sectionRef: z.string().optional(),
   paragraphRef: z.string().optional(),
   subParagraphRef: z.string().optional(),
@@ -21,22 +21,22 @@ export type Condition =
 
 export const ConditionSchema: z.ZodType<Condition> = z.lazy(() =>
   z.union([
-    z.object({ eq: z.tuple([z.string(), z.unknown()]) }),
-    z.object({ lt: z.tuple([z.string(), z.number()]) }),
-    z.object({ lte: z.tuple([z.string(), z.number()]) }),
-    z.object({ gt: z.tuple([z.string(), z.number()]) }),
-    z.object({ gte: z.tuple([z.string(), z.number()]) }),
-    z.object({ and: z.array(ConditionSchema) }),
-    z.object({ or: z.array(ConditionSchema) }),
+    z.strictObject({ eq: z.tuple([z.string(), z.unknown()]) }),
+    z.strictObject({ lt: z.tuple([z.string(), z.number()]) }),
+    z.strictObject({ lte: z.tuple([z.string(), z.number()]) }),
+    z.strictObject({ gt: z.tuple([z.string(), z.number()]) }),
+    z.strictObject({ gte: z.tuple([z.string(), z.number()]) }),
+    z.strictObject({ and: z.array(ConditionSchema) }),
+    z.strictObject({ or: z.array(ConditionSchema) }),
   ]),
 );
 
-export const ChildSchema = z.object({
+export const ChildSchema = z.strictObject({
   nodeId: z.string(),
   when: ConditionSchema.optional(),
 });
 
-const BaseNodeSchema = z.object({
+const BaseNodeSchema = z.strictObject({
   id: z.string(),
   name: z.string(),
   symbol: z.string().optional(), // LaTeX: "N_{cr}", "\\bar{\\lambda}", "A"
@@ -44,12 +44,12 @@ const BaseNodeSchema = z.object({
   children: z.array(ChildSchema).readonly(),
 });
 
-const NumericValueType = z.object({
+const NumericValueType = z.strictObject({
   type: z.literal("number"),
   literal: z.array(z.number()).readonly().optional(),
 });
 
-const StringValueType = z.object({
+const StringValueType = z.strictObject({
   type: z.literal("string"),
   literal: z.array(z.string()).readonly().optional(),
 });

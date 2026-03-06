@@ -1,4 +1,4 @@
-import type { Node } from "./schemas";
+import { VerificationSchema, type Node } from "./schemas";
 
 export type NationalAnnex = {
   id: string;
@@ -11,20 +11,25 @@ export type ValueType =
   | { readonly type: "number"; readonly literal?: readonly number[] }
   | { readonly type: "string"; readonly literal?: readonly string[] };
 
-type NumberValue<TValueType extends ValueType> =
-  TValueType extends { type: "number"; literal: readonly number[] }
-    ? TValueType["literal"][number]
-    : number;
+type NumberValue<TValueType extends ValueType> = TValueType extends {
+  type: "number";
+  literal: readonly number[];
+}
+  ? TValueType["literal"][number]
+  : number;
 
-type StringValue<TValueType extends ValueType> =
-  TValueType extends { type: "string"; literal: readonly string[] }
-    ? TValueType["literal"][number]
-    : string;
+type StringValue<TValueType extends ValueType> = TValueType extends {
+  type: "string";
+  literal: readonly string[];
+}
+  ? TValueType["literal"][number]
+  : string;
 
-type ValueFromValueType<TValueType extends ValueType> =
-  TValueType extends { type: "number" }
-    ? NumberValue<TValueType>
-    : StringValue<TValueType>;
+type ValueFromValueType<TValueType extends ValueType> = TValueType extends {
+  type: "number";
+}
+  ? NumberValue<TValueType>
+  : StringValue<TValueType>;
 
 type NodeValue<TNode extends Node> = ValueFromValueType<TNode["valueType"]>;
 
@@ -38,24 +43,71 @@ type InferComputed<TNodes extends readonly Node[]> = {
     : never]: NodeValue<N>;
 };
 
-export type VerificationDefinition<TNodes extends readonly Node[]> = {
-  nodes: TNodes;
-  evaluate: Evaluate<TNodes>;
-};
+type SelectorDerivedNode<TNodes extends readonly Node[]> = Extract<
+  TNodes[number],
+  {
+    type: "derived";
+    expression?: undefined;
+    children: readonly [unknown, ...unknown[]];
+  }
+>;
 
-type Evaluate<TNodes extends readonly Node[]> = {
-  [K in keyof InferComputed<TNodes>]: (
-    deps: Readonly<InferCache<TNodes>>,
+type SelectorDerivedKey<TNodes extends readonly Node[]> = Extract<
+  SelectorDerivedNode<TNodes>["key"],
+  keyof InferComputed<TNodes>
+>;
+
+type RequiredComputedKey<TNodes extends readonly Node[]> = Exclude<
+  keyof InferComputed<TNodes>,
+  SelectorDerivedKey<TNodes>
+>;
+
+export type EvaluatorArgs<
+  TNodes extends readonly Node[],
+  TInputs extends EvaluationContext["inputs"] = EvaluationContext["inputs"],
+> = Readonly<InferCache<TNodes> & TInputs>;
+
+export type VerificationDefinition<
+  TNodes extends readonly Node[],
+  TInputs extends EvaluationContext["inputs"] = EvaluationContext["inputs"],
+> = { nodes: TNodes; evaluate: Evaluate<TNodes, TInputs> };
+
+type EvaluateRequired<
+  TNodes extends readonly Node[],
+  TInputs extends EvaluationContext["inputs"],
+> = {
+  [K in RequiredComputedKey<TNodes>]: (
+    deps: EvaluatorArgs<TNodes, TInputs>,
   ) => InferComputed<TNodes>[K];
 };
 
-export const defineNodes = <const TNodes extends readonly Node[]>(
-  nodes: TNodes,
-): TNodes => nodes;
+type EvaluateOptional<
+  TNodes extends readonly Node[],
+  TInputs extends EvaluationContext["inputs"],
+> = {
+  [K in SelectorDerivedKey<TNodes>]?: (
+    deps: EvaluatorArgs<TNodes, TInputs>,
+  ) => InferComputed<TNodes>[K];
+};
 
-export const defineEvaluators = <const TNodes extends readonly Node[]>(
-  evaluators: Evaluate<TNodes>,
-): Evaluate<TNodes> => evaluators;
+type Evaluate<
+  TNodes extends readonly Node[],
+  TInputs extends EvaluationContext["inputs"],
+> = EvaluateRequired<TNodes, TInputs> & EvaluateOptional<TNodes, TInputs>;
+
+export const defineNodes = <const TNodes extends readonly Node[]>(
+  nodes: readonly [...TNodes],
+): readonly [...TNodes] => {
+  VerificationSchema.parse(nodes);
+  return nodes;
+};
+
+export const defineEvaluators = <
+  const TNodes extends readonly Node[],
+  TInputs extends EvaluationContext["inputs"] = EvaluationContext["inputs"],
+>(
+  evaluators: Evaluate<TNodes, TInputs>,
+): Evaluate<TNodes, TInputs> => evaluators;
 
 export type EvaluationContext = {
   inputs: Record<string, number | string>;

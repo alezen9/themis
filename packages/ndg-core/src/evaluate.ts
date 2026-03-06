@@ -40,7 +40,7 @@ export const evaluate = <TNodes extends readonly Node[]>(
   const nodes = def.nodes as readonly Node[];
   const evaluators = def.evaluate as unknown as Record<
     string,
-    (cache: Record<string, number | string>) => number | string
+    (deps: Record<string, number | string>) => number | string
   >;
 
   // Build node lookup -- detect duplicate IDs
@@ -74,7 +74,11 @@ export const evaluate = <TNodes extends readonly Node[]>(
   const computedTypes = new Set(["formula", "derived", "table", "check"]);
   const nodeKeys = new Set(nodes.map((n) => n.key));
   for (const node of nodes) {
-    if (computedTypes.has(node.type) && !evaluators[node.key]) {
+    if (
+      computedTypes.has(node.type) &&
+      !evaluators[node.key] &&
+      !isAutoSelectorNode(node)
+    ) {
       throw new Error(
         `Missing evaluator for ${node.type} node: "${node.key}" (id: ${node.id})`,
       );
@@ -116,6 +120,11 @@ export const evaluate = <TNodes extends readonly Node[]>(
       if (child.when) {
         for (const conditionKey of getConditionKeys(child.when)) {
           if (cache[conditionKey] !== undefined) continue;
+          if (
+            Object.prototype.hasOwnProperty.call(context.inputs, conditionKey)
+          ) {
+            continue;
+          }
           const conditionNode = nodeByKey.get(conditionKey);
           if (!conditionNode) {
             throw new Error(
@@ -126,7 +135,10 @@ export const evaluate = <TNodes extends readonly Node[]>(
         }
       }
 
-      if (child.when && !evaluateCondition(child.when, cache)) {
+      if (
+        child.when &&
+        !evaluateCondition(child.when, { ...context.inputs, ...cache })
+      ) {
         continue;
       }
       evaluateNode(child.nodeId);
@@ -147,7 +159,14 @@ export const evaluate = <TNodes extends readonly Node[]>(
       }
     }
 
-    const value = resolveNode(node, cache, evaluators, context);
+    const value = resolveNode(
+      node,
+      cache,
+      evaluators,
+      context,
+      activeChildren,
+      nodeById,
+    );
     cache[node.key] = value;
 
     trace.push({
@@ -237,9 +256,11 @@ const resolveNode = (
   cache: Record<string, number | string>,
   evaluators: Record<
     string,
-    (cache: Record<string, number | string>) => number | string
+    (deps: Record<string, number | string>) => number | string
   >,
   context: EvaluationContext,
+  activeChildren: string[],
+  nodeById: Map<string, Node>,
 ): number | string => {
   switch (node.type) {
     case "user-input": {
@@ -269,11 +290,37 @@ const resolveNode = (
     case "check": {
       const evaluator = evaluators[node.key];
       if (!evaluator) {
-        throw new Error(
-          `Missing evaluator for ${node.type} node: "${node.key}" (id: ${node.id})`,
-        );
+        if (!isAutoSelectorNode(node)) {
+          throw new Error(
+            `Missing evaluator for ${node.type} node: "${node.key}" (id: ${node.id})`,
+          );
+        }
+        if (activeChildren.length !== 1) {
+          throw new Error(
+            `Auto-selector node "${node.key}" (id: ${node.id}) must have exactly one active child, got ${activeChildren.length}`,
+          );
+        }
+        const selectedChildId = activeChildren[0];
+        const selectedChildNode = nodeById.get(selectedChildId);
+        if (!selectedChildNode) {
+          throw new Error(
+            `Auto-selector node "${node.key}" (id: ${node.id}) references unknown child "${selectedChildId}"`,
+          );
+        }
+        const selectedValue = cache[selectedChildNode.key];
+        if (selectedValue === undefined) {
+          throw new Error(
+            `Auto-selector node "${node.key}" (id: ${node.id}) selected child "${selectedChildNode.key}" with undefined value`,
+          );
+        }
+        if (typeof selectedValue === "number" && !isFinite(selectedValue)) {
+          throw new Error(
+            `Node "${node.key}" (${node.type}) produced ${selectedValue} -- check inputs for division by zero or invalid values`,
+          );
+        }
+        return selectedValue;
       }
-      const result = evaluator(cache);
+      const result = evaluator({ ...context.inputs, ...cache });
       if (typeof result === "number" && !isFinite(result)) {
         throw new Error(
           `Node "${node.key}" (${node.type}) produced ${result} -- check inputs for division by zero or invalid values`,
@@ -285,4 +332,9 @@ const resolveNode = (
       throw new Error(`Unhandled node type: ${(node as Node).type}`);
     }
   }
+};
+
+const isAutoSelectorNode = (node: Node): boolean => {
+  if (node.type !== "derived") return false;
+  return node.expression === undefined && node.children.length > 0;
 };

@@ -3,6 +3,7 @@ import type {
   EvaluationContext,
   EvaluationResult,
   InferCache,
+  VerificationDefinition,
 } from "@ndg/ndg-core";
 import v01_ulsTension from "./verifications/01_ulsTension/ulsTension";
 import v02_ulsCompression from "./verifications/02_ulsCompression/ulsCompression";
@@ -36,8 +37,6 @@ export { italianAnnex } from "./annexes/italian-na";
 export { getImperfectionFactor } from "./tables/ec3-table-6.1";
 export { getBucklingCurves } from "./tables/ec3-table-6.2";
 
-type Verification = Parameters<typeof evaluate>[0];
-
 const verifications = [
   v01_ulsTension,
   v02_ulsCompression,
@@ -61,7 +60,7 @@ const verifications = [
   v20_ulsBeamColumn62M1,
   v21_ulsBeamColumn61M2,
   v22_ulsBeamColumn62M2,
-];
+] as const;
 
 type Nodes = (typeof verifications)[number]["nodes"];
 type UserInputKeys = Extract<Nodes[number], { type: "user-input" }>["key"];
@@ -77,10 +76,33 @@ export type VerificationRow = {
   payload: VerificationPayload;
 };
 
-const runVerification = (
-  verification: Verification,
+const toVerificationRow = <
+  TNodes extends readonly import("@ndg/ndg-core").Node[],
+>(
+  checkId: number,
+  verification: VerificationDefinition<TNodes>,
   context: EvaluationContext,
-) => evaluate(verification, context);
+): VerificationRow => {
+  const checkNode = [...verification.nodes]
+    .reverse()
+    .find((node) => node.type === "check");
+  const name =
+    checkNode?.name ?? verification.nodes[verification.nodes.length - 1].key;
+
+  try {
+    const data = evaluate(verification, context);
+    return { checkId, name, payload: { data } };
+  } catch (error) {
+    const failure =
+      error instanceof Ec3VerificationError
+        ? error
+        : new Ec3VerificationError({
+            type: "evaluation-error",
+            message: error instanceof Error ? error.message : String(error),
+          });
+    return { checkId, name, payload: { error: failure } };
+  }
+};
 
 const verify = (
   inputs: Ec3Inputs,
@@ -88,28 +110,30 @@ const verify = (
 ): VerificationRow[] => {
   const context: EvaluationContext = { inputs, annex };
 
-  return verifications.map((verification, index) => {
-    const checkId = index + 1;
-    const checkNode = [...verification.nodes]
-      .reverse()
-      .find((node) => node.type === "check");
-    const name =
-      checkNode?.name ?? verification.nodes[verification.nodes.length - 1].key;
-
-    try {
-      const data = runVerification(verification, context);
-      return { checkId, name, payload: { data } };
-    } catch (error) {
-      const failure =
-        error instanceof Ec3VerificationError
-          ? error
-          : new Ec3VerificationError({
-              type: "evaluation-error",
-              message: error instanceof Error ? error.message : String(error),
-            });
-      return { checkId, name, payload: { error: failure } };
-    }
-  });
+  return [
+    toVerificationRow(1, v01_ulsTension, context),
+    toVerificationRow(2, v02_ulsCompression, context),
+    toVerificationRow(3, v03_ulsBendingY, context),
+    toVerificationRow(4, v04_ulsBendingZ, context),
+    toVerificationRow(5, v05_ulsShearZ, context),
+    toVerificationRow(6, v06_ulsShearY, context),
+    toVerificationRow(7, v07_ulsBendingYShear, context),
+    toVerificationRow(8, v08_ulsBendingZShear, context),
+    toVerificationRow(9, v09_ulsBendingYAxial, context),
+    toVerificationRow(10, v10_ulsBendingZAxial, context),
+    toVerificationRow(11, v11_ulsBiaxialAxial, context),
+    toVerificationRow(12, v12_ulsBendingYAxialShear, context),
+    toVerificationRow(13, v13_ulsBendingZAxialShear, context),
+    toVerificationRow(14, v14_ulsBiaxialAxialShear, context),
+    toVerificationRow(15, v15_ulsBucklingY, context),
+    toVerificationRow(16, v16_ulsBucklingZ, context),
+    toVerificationRow(17, v17_ulsTorsionalBuckling, context),
+    toVerificationRow(18, v18_ulsLtb, context),
+    toVerificationRow(19, v19_ulsBeamColumn61M1, context),
+    toVerificationRow(20, v20_ulsBeamColumn62M1, context),
+    toVerificationRow(21, v21_ulsBeamColumn61M2, context),
+    toVerificationRow(22, v22_ulsBeamColumn62M2, context),
+  ];
 };
 
 export default verify;

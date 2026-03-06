@@ -1,8 +1,9 @@
 import { defineEvaluators } from "@ndg/ndg-core";
 import { Ec3VerificationError } from "../../errors";
 import type { Nodes } from "./ulsBendingYAxial-nodes";
+import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
 
-export const evaluate = defineEvaluators<Nodes>({
+export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
   M_pl_y_Rd: ({ Wpl_y, fy, gamma_M0 }) => {
     if (!Number.isFinite(Wpl_y) || Wpl_y <= 0) {
       throw new Ec3VerificationError({

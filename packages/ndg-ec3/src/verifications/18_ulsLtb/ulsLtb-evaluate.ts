@@ -1,7 +1,8 @@
 import { defineEvaluators } from "@ndg/ndg-core";
 import type { Nodes } from "./ulsLtb-nodes";
+import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
 import { Ec3VerificationError } from "../../errors";
-export const evaluate = defineEvaluators<Nodes>({
+export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
   k_c: (args) => {
     const {
       moment_shape_LT,

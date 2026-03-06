@@ -1,8 +1,9 @@
 import { defineEvaluators } from "@ndg/ndg-core";
 import { Ec3VerificationError } from "../../errors";
 import type { Nodes } from "./ulsShearY-nodes";
+import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
 
-export const evaluate = defineEvaluators<Nodes>({
+export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
   V_pl_y_Rd: ({ Av_y, fy, gamma_M0 }) => {
     if (!Number.isFinite(Av_y) || Av_y <= 0) {
       throw new Ec3VerificationError({

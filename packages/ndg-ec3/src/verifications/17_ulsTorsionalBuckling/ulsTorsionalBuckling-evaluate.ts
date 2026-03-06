@@ -1,8 +1,9 @@
 import { defineEvaluators } from "@ndg/ndg-core";
 import type { Nodes } from "./ulsTorsionalBuckling-nodes";
+import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
 import { Ec3VerificationError } from "../../errors";
 
-export const evaluate = defineEvaluators<Nodes>({
+export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
   ip2: ({ Iy, Iz, A }) => {
     if (A <= 0)
       throw new Ec3VerificationError({

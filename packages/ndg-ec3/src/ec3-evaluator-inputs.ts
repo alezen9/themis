@@ -1,0 +1,58 @@
+type Ec3InputKey =
+  | "A"
+  | "Av_y"
+  | "Av_z"
+  | "E"
+  | "G"
+  | "It"
+  | "Iw"
+  | "Iy"
+  | "Iz"
+  | "L"
+  | "M_y_Ed"
+  | "M_z_Ed"
+  | "N_Ed"
+  | "V_y_Ed"
+  | "V_z_Ed"
+  | "Wel_y"
+  | "Wel_z"
+  | "Wpl_y"
+  | "Wpl_z"
+  | "alpha_LT"
+  | "alpha_y"
+  | "alpha_z"
+  | "b"
+  | "buckling_curves_LT_policy"
+  | "coefficient_f_method"
+  | "fy"
+  | "h"
+  | "hw"
+  | "interaction_factor_method"
+  | "k_LT"
+  | "k_T"
+  | "k_y"
+  | "k_z"
+  | "load_application_LT"
+  | "moment_shape_LT"
+  | "moment_shape_y"
+  | "moment_shape_z"
+  | "psi_LT"
+  | "psi_y"
+  | "psi_z"
+  | "section_class"
+  | "section_shape"
+  | "support_condition_LT"
+  | "support_condition_y"
+  | "support_condition_z"
+  | "t"
+  | "tf"
+  | "torsional_deformations"
+  | "tw";
+
+type Ec3KnownInputs = {
+  [K in Exclude<Ec3InputKey, "section_shape">]?: number | string;
+} & {
+  section_shape?: "I" | "RHS" | "CHS";
+};
+
+export type Ec3EvaluatorInputs = Ec3KnownInputs;

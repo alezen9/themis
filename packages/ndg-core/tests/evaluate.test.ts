@@ -190,7 +190,6 @@ describe("evaluate with conditional children", () => {
   const condDef: VerificationDefinition<typeof conditionalNodes> = {
     nodes: conditionalNodes,
     evaluate: {
-      result: ({ val_a, val_b, shape }) => (shape === "I" ? val_a : val_b),
       cond_check: ({ result }) => result,
     },
   };
@@ -228,6 +227,281 @@ describe("evaluate with conditional children", () => {
     expect(first.trace.map((entry) => entry.key)).toEqual(
       second.trace.map((entry) => entry.key),
     );
+  });
+
+  it("throws when selector derived node has no active child", () => {
+    expect(() =>
+      evaluate(condDef, {
+        inputs: { shape: "RHS", val_a: 0.5, val_b: 0.8 },
+        annex: { id: "test", coefficients: {} },
+      }),
+    ).toThrow("must have exactly one active child, got 0");
+  });
+
+  it("throws when selector derived node has multiple active children", () => {
+    const nodes = [
+      {
+        type: "user-input",
+        key: "shape",
+        valueType: { type: "string" },
+        id: "m-shape",
+        name: "Shape",
+        children: [],
+      },
+      {
+        type: "user-input",
+        key: "val_a",
+        valueType: { type: "number" },
+        id: "m-a",
+        name: "A",
+        children: [],
+      },
+      {
+        type: "user-input",
+        key: "val_b",
+        valueType: { type: "number" },
+        id: "m-b",
+        name: "B",
+        children: [],
+      },
+      {
+        type: "derived",
+        key: "result",
+        valueType: { type: "number" },
+        id: "m-result",
+        name: "Result",
+        children: [
+          { nodeId: "m-a", when: { eq: ["shape", "I"] as [string, unknown] } },
+          { nodeId: "m-b", when: { eq: ["shape", "I"] as [string, unknown] } },
+        ],
+      },
+      {
+        type: "check",
+        key: "m-check",
+        valueType: { type: "number" },
+        id: "m-check-id",
+        name: "Check",
+        verificationExpression: "result <= 1.0",
+        children: [{ nodeId: "m-result" }],
+      },
+    ] as const;
+
+    const def: VerificationDefinition<typeof nodes> = {
+      nodes,
+      evaluate: {
+        "m-check": ({ result }) => result,
+      },
+    };
+
+    expect(() =>
+      evaluate(def, {
+        inputs: { shape: "I", val_a: 0.5, val_b: 0.8 },
+        annex: { id: "test", coefficients: {} },
+      }),
+    ).toThrow("must have exactly one active child, got 2");
+  });
+});
+
+describe("evaluate with raw-input condition keys and merged evaluator args", () => {
+  it("supports when condition keys from raw inputs without node", () => {
+    const nodes = [
+      {
+        type: "user-input",
+        key: "val_i",
+        valueType: { type: "number" },
+        id: "raw-i",
+        name: "Value I",
+        children: [],
+      },
+      {
+        type: "user-input",
+        key: "val_h",
+        valueType: { type: "number" },
+        id: "raw-h",
+        name: "Value H",
+        children: [],
+      },
+      {
+        type: "derived",
+        key: "selected",
+        valueType: { type: "number" },
+        id: "raw-selected",
+        name: "Selected",
+        children: [
+          {
+            nodeId: "raw-i",
+            when: { eq: ["shape_input", "I"] as [string, unknown] },
+          },
+          {
+            nodeId: "raw-h",
+            when: { eq: ["shape_input", "H"] as [string, unknown] },
+          },
+        ],
+      },
+      {
+        type: "check",
+        key: "raw-check",
+        valueType: { type: "number" },
+        id: "raw-check-id",
+        name: "Check",
+        verificationExpression: "selected <= 1.0",
+        children: [{ nodeId: "raw-selected" }],
+      },
+    ] as const;
+
+    const def: VerificationDefinition<typeof nodes> = {
+      nodes,
+      evaluate: {
+        "raw-check": ({ selected }) => selected,
+      },
+    };
+
+    const result = evaluate(def, {
+      inputs: { shape_input: "I", val_i: 0.25, val_h: 0.75 },
+      annex: { id: "test", coefficients: {} },
+    });
+
+    expect(result.ratio).toBe(0.25);
+  });
+
+  it("throws for unknown condition key not in nodes or raw inputs", () => {
+    const nodes = [
+      {
+        type: "user-input",
+        key: "val",
+        valueType: { type: "number" },
+        id: "unk-val",
+        name: "Value",
+        children: [],
+      },
+      {
+        type: "derived",
+        key: "selected",
+        valueType: { type: "number" },
+        id: "unk-selected",
+        name: "Selected",
+        children: [
+          {
+            nodeId: "unk-val",
+            when: { eq: ["missing_key", "x"] as [string, unknown] },
+          },
+        ],
+      },
+      {
+        type: "check",
+        key: "unk-check",
+        valueType: { type: "number" },
+        id: "unk-check-id",
+        name: "Check",
+        verificationExpression: "selected <= 1.0",
+        children: [{ nodeId: "unk-selected" }],
+      },
+    ] as const;
+
+    const def: VerificationDefinition<typeof nodes> = {
+      nodes,
+      evaluate: { "unk-check": ({ selected }) => selected },
+    };
+
+    expect(() =>
+      evaluate(def, {
+        inputs: { val: 0.5 },
+        annex: { id: "test", coefficients: {} },
+      }),
+    ).toThrow('Condition references unknown key: "missing_key"');
+  });
+
+  it("passes raw non-node inputs into evaluator args", () => {
+    const nodes = [
+      {
+        type: "user-input",
+        key: "a",
+        valueType: { type: "number" },
+        id: "ext-a",
+        name: "A",
+        children: [],
+      },
+      {
+        type: "derived",
+        key: "sum_ext",
+        valueType: { type: "number" },
+        id: "ext-sum",
+        name: "Sum",
+        expression: "a + external_addend",
+        children: [{ nodeId: "ext-a" }],
+      },
+      {
+        type: "check",
+        key: "ext-check",
+        valueType: { type: "number" },
+        id: "ext-check-id",
+        name: "Check",
+        verificationExpression: "sum_ext <= 1.0",
+        children: [{ nodeId: "ext-sum" }],
+      },
+    ] as const;
+
+    const def: VerificationDefinition<typeof nodes> = {
+      nodes,
+      evaluate: {
+        sum_ext: ({ a, external_addend }) => a + Number(external_addend),
+        "ext-check": ({ sum_ext }) => sum_ext,
+      },
+    };
+
+    const result = evaluate(def, {
+      inputs: { a: 0.3, external_addend: 0.2 },
+      annex: { id: "test", coefficients: {} },
+    });
+
+    expect(result.ratio).toBe(0.5);
+  });
+
+  it("uses cache value over raw input for overlapping keys", () => {
+    const nodes = [
+      {
+        type: "user-input",
+        key: "a",
+        valueType: { type: "number" },
+        id: "ovr-a",
+        name: "A",
+        children: [],
+      },
+      {
+        type: "formula",
+        key: "sum_ext",
+        valueType: { type: "number" },
+        id: "ovr-sum",
+        name: "Sum",
+        expression: "a + b",
+        meta: { formulaRef: "(x)", sectionRef: "x" },
+        children: [{ nodeId: "ovr-a" }],
+      },
+      {
+        type: "check",
+        key: "ovr-check",
+        valueType: { type: "number" },
+        id: "ovr-check-id",
+        name: "Check",
+        verificationExpression: "sum_ext <= 1.0",
+        children: [{ nodeId: "ovr-sum" }],
+      },
+    ] as const;
+
+    const def: VerificationDefinition<typeof nodes> = {
+      nodes,
+      evaluate: {
+        sum_ext: ({ a, b }) => a + Number(b),
+        "ovr-check": ({ sum_ext }) => sum_ext,
+      },
+    };
+
+    const result = evaluate(def, {
+      inputs: { a: 0.4, b: 0.1, sum_ext: 999 },
+      annex: { id: "test", coefficients: {} },
+    });
+
+    expect(result.ratio).toBe(0.5);
   });
 });
 
@@ -527,6 +801,7 @@ describe("evaluate graph validation", () => {
         valueType: { type: "number" },
         id: "n-d",
         name: "D",
+        expression: "x",
         children: [{ nodeId: "n-x" }],
       },
       {

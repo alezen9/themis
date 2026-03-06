@@ -1,8 +1,9 @@
 import { defineEvaluators } from "@ndg/ndg-core";
 import type { Nodes } from "./ulsBucklingZ-nodes";
+import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
 import { Ec3VerificationError } from "../../errors";
 
-export const evaluate = defineEvaluators<Nodes>({
+export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
   N_cr_z: ({ pi, E, Iz, L, k_z }) => {
     if (!Number.isFinite(L) || !Number.isFinite(k_z)) {
       throw new Ec3VerificationError({
