@@ -32,7 +32,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return (Av_y * fy) / (Math.sqrt(3) * gamma_M0);
   },
 
-  abs_V_y_Ed: ({ V_y_Ed }) => {
+  shear_y_check: ({ V_y_Ed, V_pl_y_Rd }) => {
     if (!Number.isFinite(V_y_Ed)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -40,11 +40,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         details: { V_y_Ed, sectionRef: "6.2.6" },
       });
     }
-
-    return Math.abs(V_y_Ed);
-  },
-
-  shear_y_check: ({ abs_V_y_Ed, V_pl_y_Rd }) => {
     if (!Number.isFinite(V_pl_y_Rd) || V_pl_y_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -53,6 +48,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return abs_V_y_Ed / V_pl_y_Rd;
+    return Math.abs(V_y_Ed) / V_pl_y_Rd;
   },
 });

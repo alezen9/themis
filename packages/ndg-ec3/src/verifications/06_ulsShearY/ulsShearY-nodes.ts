@@ -10,17 +10,7 @@ export const nodes = defineNodes([
     verificationExpression:
       "\\frac{\\left|V_{y,Ed}\\right|}{V_{pl,y,Rd}} \\leq 1.0",
     meta: { sectionRef: "6.2.6", verificationRef: "(6.17)" },
-    children: [{ nodeId: "abs_V_y_Ed" }, { nodeId: "V_pl_y_Rd" }],
-  },
-  {
-    id: "abs_V_y_Ed",
-    type: "derived",
-    key: "abs_V_y_Ed",
-    valueType: { type: "number" },
-    name: "Design shear force magnitude about y-y",
-    expression: "\\left|V_{y,Ed}\\right|",
-    unit: "\\mathrm{N}",
-    children: [{ nodeId: "V_y_Ed" }],
+    children: [{ nodeId: "V_y_Ed" }, { nodeId: "V_pl_y_Rd" }],
   },
   {
     id: "V_y_Ed",
