@@ -9,17 +9,7 @@ export const nodes = defineNodes([
     name: "Compression resistance check",
     verificationExpression: "\\frac{\\left|N_{Ed}\\right|}{N_{c,Rd}} \\leq 1.0",
     meta: { sectionRef: "6.2.4", verificationRef: "(6.9)" },
-    children: [{ nodeId: "abs_N_Ed" }, { nodeId: "N_c_Rd" }],
-  },
-  {
-    id: "abs_N_Ed",
-    type: "derived",
-    key: "abs_N_Ed",
-    valueType: { type: "number" },
-    name: "Design compression force magnitude",
-    expression: "\\left|N_{Ed}\\right|",
-    unit: "\\mathrm{N}",
-    children: [{ nodeId: "N_Ed" }],
+    children: [{ nodeId: "N_Ed" }, { nodeId: "N_c_Rd" }],
   },
   {
     id: "N_Ed",
