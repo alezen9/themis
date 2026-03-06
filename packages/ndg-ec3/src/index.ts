@@ -110,6 +110,12 @@ const verify = (
 ): VerificationRow[] => {
   const context: EvaluationContext = { inputs, annex };
 
+  if (verifications.length !== 22) {
+    throw new Error(
+      `Unexpected verification registry size: ${verifications.length}`,
+    );
+  }
+
   return [
     toVerificationRow(1, v01_ulsTension, context),
     toVerificationRow(2, v02_ulsCompression, context),
