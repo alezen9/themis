@@ -32,7 +32,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return (A * fy) / gamma_M0;
   },
 
-  abs_N_Ed: ({ N_Ed }) => {
+  tension_check: ({ N_Ed, N_pl_Rd }) => {
     if (!Number.isFinite(N_Ed)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -49,10 +49,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return Math.abs(N_Ed);
-  },
-
-  tension_check: ({ abs_N_Ed, N_pl_Rd }) => {
     if (!Number.isFinite(N_pl_Rd) || N_pl_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -61,6 +57,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return abs_N_Ed / N_pl_Rd;
+    return N_Ed / N_pl_Rd;
   },
 });

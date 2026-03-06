@@ -9,17 +9,7 @@ export const nodes = defineNodes([
     name: "Tension resistance check",
     verificationExpression: "\\frac{N_{Ed}}{N_{pl,Rd}} \\leq 1.0",
     meta: { sectionRef: "6.2.3", verificationRef: "(6.5)" },
-    children: [{ nodeId: "abs_N_Ed" }, { nodeId: "N_pl_Rd" }],
-  },
-  {
-    id: "abs_N_Ed",
-    type: "derived",
-    key: "abs_N_Ed",
-    valueType: { type: "number" },
-    name: "Design tensile force magnitude",
-    expression: "\\left|N_{Ed}\\right|",
-    unit: "\\mathrm{N}",
-    children: [{ nodeId: "N_Ed" }],
+    children: [{ nodeId: "N_Ed" }, { nodeId: "N_pl_Rd" }],
   },
   {
     id: "N_Ed",
