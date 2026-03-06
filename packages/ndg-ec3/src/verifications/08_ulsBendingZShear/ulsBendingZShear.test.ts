@@ -77,7 +77,7 @@ describe("check-08 bending-z-shear", () => {
     expect(result.cache.M_z_V_Rd).toBeCloseTo(expectedMzVRd, 12);
   });
 
-  it("applies RHS high-shear branch with W_z_eff = W_z_res * (1 - rho_y)", () => {
+  it("applies RHS high-shear branch with direct M_z_V_Rd_rhs_chs branch", () => {
     const inputs = {
       M_z_Ed: 3_000_000,
       V_y_Ed: 70_000,
@@ -102,7 +102,7 @@ describe("check-08 bending-z-shear", () => {
 
     expect(rhoRatio).toBeGreaterThan(0.5);
     expect(result.cache.rho_y).toBeCloseTo(rhoExpected, 12);
-    expect(result.cache.W_z_eff).toBeCloseTo(W_z_eff_expected, 10);
+    expect(result.cache.M_z_V_Rd_rhs_chs).toBeCloseTo(M_z_V_Rd_expected, 10);
     expect(result.cache.M_z_V_Rd).toBeCloseTo(M_z_V_Rd_expected, 10);
   });
 
@@ -159,60 +159,40 @@ describe("check-08 bending-z-shear", () => {
     expect(result.passed).toBe(false);
   });
 
-  it("throws invalid-input-domain when section_class is 0", () => {
-    try {
+  it("throws when section_class is 0 (no active selector branch)", () => {
+    expect(() =>
       evaluate(check, {
         inputs: { ...baselineInputs, section_class: 0 },
         annex: customAnnex,
-      });
-      throw new Error("expected evaluation to fail");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Ec3VerificationError);
-      if (!(error instanceof Ec3VerificationError)) throw error;
-      expect(error.type).toBe("invalid-input-domain");
-    }
+      }),
+    ).toThrow("must have exactly one active child, got 0");
   });
 
-  it("throws invalid-input-domain when section_class is 4", () => {
-    try {
+  it("throws when section_class is 4 (no active selector branch)", () => {
+    expect(() =>
       evaluate(check, {
         inputs: { ...baselineInputs, section_class: 4 },
         annex: customAnnex,
-      });
-      throw new Error("expected evaluation to fail");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Ec3VerificationError);
-      if (!(error instanceof Ec3VerificationError)) throw error;
-      expect(error.type).toBe("invalid-input-domain");
-    }
+      }),
+    ).toThrow("must have exactly one active child, got 0");
   });
 
-  it("throws invalid-input-domain when section_class is non-integer", () => {
-    try {
+  it("throws when section_class is non-integer (no active selector branch)", () => {
+    expect(() =>
       evaluate(check, {
         inputs: { ...baselineInputs, section_class: 2.5 },
         annex: customAnnex,
-      });
-      throw new Error("expected evaluation to fail");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Ec3VerificationError);
-      if (!(error instanceof Ec3VerificationError)) throw error;
-      expect(error.type).toBe("invalid-input-domain");
-    }
+      }),
+    ).toThrow("must have exactly one active child, got 0");
   });
 
-  it("throws invalid-input-domain when section_class is NaN", () => {
-    try {
+  it("throws when section_class is NaN (no active selector branch)", () => {
+    expect(() =>
       evaluate(check, {
         inputs: { ...baselineInputs, section_class: Number.NaN },
         annex: customAnnex,
-      });
-      throw new Error("expected evaluation to fail");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Ec3VerificationError);
-      if (!(error instanceof Ec3VerificationError)) throw error;
-      expect(error.type).toBe("invalid-input-domain");
-    }
+      }),
+    ).toThrow("must have exactly one active child, got 0");
   });
 
   it("throws invalid-input-domain when Wpl_z <= 0 for class 1 or 2", () => {

@@ -40,6 +40,7 @@ export const nodes = defineNodes([
     key: "W_y_res",
     valueType: { type: "number" },
     name: "Class-dependent resistance modulus about y-y",
+    symbol: "W_{y,res}",
     unit: "\\mathrm{mm^{3}}",
     children: [
       {

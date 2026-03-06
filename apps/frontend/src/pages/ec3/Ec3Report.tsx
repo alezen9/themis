@@ -281,6 +281,13 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
                   const meta = entry.meta as
                     | Record<string, unknown>
                     | undefined;
+                  const selectedChild =
+                    entry.type === "derived" &&
+                    !entry.expression &&
+                    entry.children.length === 1
+                      ? traceMap.get(entry.children[0])
+                      : undefined;
+                  const displayExpression = entry.expression;
                   const { value: dv, unit: du } = convertUnit(
                     entry.value as number,
                     entry.unit,
@@ -311,11 +318,25 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
                           </span>
                         )}
                       </div>
-                      {entry.expression && (
+                      {(displayExpression || selectedChild) && (
                         <div className="ml-[94px] mt-1 space-y-0.5">
-                          <div className="text-sm">
-                            <Formula tex={`= ${entry.expression}`} />
-                          </div>
+                          {selectedChild && (
+                            <div className="text-xs text-gray-400 flex items-center gap-1">
+                              <span>=&gt;</span>
+                              {selectedChild.symbol ? (
+                                <Formula tex={selectedChild.symbol} />
+                              ) : (
+                                <code className="text-xs">
+                                  {selectedChild.key}
+                                </code>
+                              )}
+                            </div>
+                          )}
+                          {displayExpression && (
+                            <div className="text-sm">
+                              <Formula tex={`= ${displayExpression}`} />
+                            </div>
+                          )}
                           {entry.evaluatorInputs &&
                             Object.keys(entry.evaluatorInputs).length > 0 && (
                               <div className="flex flex-wrap items-center gap-x-3 gap-y-0">
@@ -338,7 +359,7 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
                                         {sub?.symbol ? (
                                           <Formula tex={sub.symbol} />
                                         ) : (
-                                          k
+                                          <code className="text-xs">{k}</code>
                                         )}
                                         {"\u00A0=\u00A0"}
                                         {typeof v === "number"
@@ -382,7 +403,11 @@ const VerboseVerification = ({ result }: { result: VerificationRow }) => {
                             className="text-xs font-mono tabular-nums"
                           >
                             <span className="text-gray-500">
-                              {sub?.symbol ? <Formula tex={sub.symbol} /> : k}
+                              {sub?.symbol ? (
+                                <Formula tex={sub.symbol} />
+                              ) : (
+                                <code className="text-xs">{k}</code>
+                              )}
                             </span>
                             {" = "}
                             <span className="font-medium">
@@ -545,7 +570,11 @@ const SummaryVerification = ({
                     );
                     return (
                       <span key={k} className="text-gray-600">
-                        {entry?.symbol ? <Formula tex={entry.symbol} /> : k}
+                        {entry?.symbol ? (
+                          <Formula tex={entry.symbol} />
+                        ) : (
+                          <code className="text-xs">{k}</code>
+                        )}
                         {" = "}
                         {typeof v === "number" ? formatValue(dv) : v}
                         {typeof v === "number" && du && <Unit unit={du} />}
@@ -574,7 +603,7 @@ const SummaryVerification = ({
                           {entry.symbol ? (
                             <Formula tex={entry.symbol} />
                           ) : (
-                            entry.key
+                            <code className="text-xs">{entry.key}</code>
                           )}
                           {" = "}
                           {formatValue(dv)}
@@ -607,7 +636,7 @@ const SummaryVerification = ({
                           {entry.symbol ? (
                             <Formula tex={entry.symbol} />
                           ) : (
-                            entry.key
+                            <code className="text-xs">{entry.key}</code>
                           )}
                           {" = "}
                           {formatValue(dv)}
@@ -640,7 +669,7 @@ const SummaryVerification = ({
                           {entry.symbol ? (
                             <Formula tex={entry.symbol} />
                           ) : (
-                            entry.key
+                            <code className="text-xs">{entry.key}</code>
                           )}
                           {" = "}
                           {formatValue(dv)}

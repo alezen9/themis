@@ -4,51 +4,6 @@ import type { Nodes } from "./ulsBendingYShear-nodes";
 import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
 
 export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
-  W_y_res_class12: ({ Wpl_y }) => {
-    if (!Number.isFinite(Wpl_y) || Wpl_y <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-shear: Wpl_y must be > 0",
-        details: { Wpl_y, sectionRef: "6.2.8" },
-      });
-    }
-
-    return Wpl_y;
-  },
-
-  W_y_res_class3: ({ Wel_y }) => {
-    if (!Number.isFinite(Wel_y) || Wel_y <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-shear: Wel_y must be > 0",
-        details: { Wel_y, sectionRef: "6.2.8" },
-      });
-    }
-
-    return Wel_y;
-  },
-
-  W_y_res: ({ section_class, W_y_res_class12, W_y_res_class3 }) => {
-    if (!Number.isFinite(section_class) || !Number.isInteger(section_class)) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message:
-          "bending-y-shear: section_class must be an integer in {1,2,3}",
-        details: { section_class, sectionRef: "6.2.8" },
-      });
-    }
-
-    if (section_class < 1 || section_class > 3) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-shear: section_class must be in {1,2,3}",
-        details: { section_class, sectionRef: "6.2.8" },
-      });
-    }
-
-    return section_class === 3 ? W_y_res_class3 : W_y_res_class12;
-  },
-
   V_pl_z_Rd: ({ Av_z, fy, gamma_M0 }) => {
     if (!Number.isFinite(Av_z) || Av_z <= 0) {
       throw new Ec3VerificationError({
@@ -77,19 +32,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return (Av_z * fy) / (Math.sqrt(3) * gamma_M0);
   },
 
-  abs_M_y_Ed: ({ M_y_Ed }) => {
-    if (!Number.isFinite(M_y_Ed)) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-shear: M_y_Ed must be finite",
-        details: { M_y_Ed, sectionRef: "6.2.8" },
-      });
-    }
-
-    return Math.abs(M_y_Ed);
-  },
-
-  abs_V_z_Ed: ({ V_z_Ed }) => {
+  u_z: ({ V_z_Ed, V_pl_z_Rd }) => {
     if (!Number.isFinite(V_z_Ed)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -97,11 +40,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         details: { V_z_Ed, sectionRef: "6.2.8" },
       });
     }
-
-    return Math.abs(V_z_Ed);
-  },
-
-  shear_utilization_z: ({ abs_V_z_Ed, V_pl_z_Rd }) => {
     if (!Number.isFinite(V_pl_z_Rd) || V_pl_z_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -111,30 +49,14 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return abs_V_z_Ed / V_pl_z_Rd;
+    return Math.abs(V_z_Ed) / V_pl_z_Rd;
   },
 
   rho_z_1: () => 0,
 
-  rho_z_2: ({ shear_utilization_z }) => (2 * shear_utilization_z - 1) ** 2,
+  rho_z_2: ({ u_z }) => (2 * u_z - 1) ** 2,
 
-  rho_z: ({ rho_z_1, rho_z_2 }) => {
-    if (Number.isFinite(rho_z_1)) {
-      return rho_z_1;
-    }
-
-    if (Number.isFinite(rho_z_2)) {
-      return rho_z_2;
-    }
-
-    throw new Ec3VerificationError({
-      type: "evaluation-error",
-      message: "bending-y-shear: rho_z branch resolution failed",
-      details: { sectionRef: "6.2.8" },
-    });
-  },
-
-  W_y_eff_i: ({ W_y_res, rho_z, Av_z, tw }) => {
+  M_y_V_Rd_i: ({ W_y_res, rho_z, Av_z, tw, fy, gamma_M0 }) => {
     if (!Number.isFinite(W_y_res) || W_y_res <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -167,72 +89,47 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return W_y_res - (rho_z * Av_z ** 2) / (4 * tw);
-  },
-
-  W_y_eff_rhs: ({ W_y_res, rho_z }) => {
-    if (!Number.isFinite(W_y_res) || W_y_res <= 0) {
+    if (!Number.isFinite(fy) || fy <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-y-shear: W_y_res must be > 0",
-        details: { W_y_res, sectionRef: "6.2.8" },
+        message: "bending-y-shear: fy must be > 0",
+        details: { fy, sectionRef: "6.2.8" },
       });
     }
 
-    if (!Number.isFinite(rho_z) || rho_z < 0) {
+    if (!Number.isFinite(gamma_M0) || gamma_M0 <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-y-shear: rho_z must be >= 0",
-        details: { rho_z, sectionRef: "6.2.8" },
+        message: "bending-y-shear: gamma_M0 must be > 0",
+        details: { gamma_M0, sectionRef: "6.1" },
       });
     }
 
-    return W_y_res * (1 - rho_z);
-  },
-
-  W_y_eff_chs: ({ W_y_res, rho_z }) => {
-    if (!Number.isFinite(W_y_res) || W_y_res <= 0) {
+    const W_y_eff = W_y_res - (rho_z * Av_z ** 2) / (4 * tw);
+    if (W_y_eff <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-y-shear: W_y_res must be > 0",
-        details: { W_y_res, sectionRef: "6.2.8" },
-      });
-    }
-
-    if (!Number.isFinite(rho_z) || rho_z < 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-shear: rho_z must be >= 0",
-        details: { rho_z, sectionRef: "6.2.8" },
-      });
-    }
-
-    return W_y_res * (1 - rho_z);
-  },
-
-  W_y_eff: ({ section_shape, W_y_eff_i, W_y_eff_rhs, W_y_eff_chs }) => {
-    if (section_shape === "I") {
-      return W_y_eff_i;
-    }
-
-    if (section_shape === "RHS") {
-      return W_y_eff_rhs;
-    }
-
-    if (section_shape === "CHS") {
-      return W_y_eff_chs;
-    }
-
-    const unknownSectionShape: never = section_shape;
-    return unknownSectionShape;
-  },
-
-  M_y_V_Rd: ({ W_y_eff, fy, gamma_M0 }) => {
-    if (!Number.isFinite(W_y_eff) || W_y_eff <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-shear: W_y_eff must be > 0",
+        message: "bending-y-shear: reduced W_y_eff must be > 0",
         details: { W_y_eff, sectionRef: "6.2.8" },
+      });
+    }
+    return (W_y_eff * fy) / gamma_M0;
+  },
+
+  M_y_V_Rd_rhs_chs: ({ W_y_res, rho_z, fy, gamma_M0 }) => {
+    if (!Number.isFinite(W_y_res) || W_y_res <= 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-y-shear: W_y_res must be > 0",
+        details: { W_y_res, sectionRef: "6.2.8" },
+      });
+    }
+
+    if (!Number.isFinite(rho_z) || rho_z < 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-y-shear: rho_z must be >= 0",
+        details: { rho_z, sectionRef: "6.2.8" },
       });
     }
 
@@ -252,10 +149,19 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
+    const W_y_eff = W_y_res * (1 - rho_z);
     return (W_y_eff * fy) / gamma_M0;
   },
 
-  bending_y_shear_check: ({ abs_M_y_Ed, M_y_V_Rd }) => {
+  bending_y_shear_check: ({ M_y_Ed, M_y_V_Rd }) => {
+    if (!Number.isFinite(M_y_Ed)) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-y-shear: M_y_Ed must be finite",
+        details: { M_y_Ed, sectionRef: "6.2.8" },
+      });
+    }
+
     if (!Number.isFinite(M_y_V_Rd) || M_y_V_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -265,6 +171,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return abs_M_y_Ed / M_y_V_Rd;
+    return Math.abs(M_y_Ed) / M_y_V_Rd;
   },
 });
