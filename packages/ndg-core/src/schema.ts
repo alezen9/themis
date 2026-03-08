@@ -183,3 +183,17 @@ export type NodeType = Node["type"];
 
 export type Condition = z.infer<typeof ConditionSchema>;
 export type ConditionOperand = z.infer<typeof ConditionOperandSchema>;
+export type ConditionTuple = z.infer<typeof ConditionTupleSchema>;
+export type ComputedNode = CheckNode | FormulaNode | DerivedNode | TableNode;
+
+export const isComputedNode = (node: Node): node is ComputedNode => {
+  return ["formula", "derived", "table", "check"].includes(node.type);
+};
+
+export const isAutoSelectorNode = (node: Node): node is DerivedNode => {
+  return (
+    node.type === "derived" &&
+    node.expression === undefined &&
+    node.children.length > 0
+  );
+};

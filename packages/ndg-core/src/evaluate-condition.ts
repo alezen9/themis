@@ -1,8 +1,4 @@
-import {
-  ConditionSchema,
-  type Condition,
-  type ConditionOperand,
-} from "./schema";
+import { type Condition, type ConditionOperand } from "./schema";
 
 type Context = Record<string, string | number>; // constants + inputs + computed values
 
@@ -29,11 +25,7 @@ const assertNumber = (value: number | string, label: string) => {
 /**
  * Evaluate a condition against the merged condition context.
  */
-export const evaluateCondition = (condition: unknown, ctx: Context) => {
-  return evaluateParsedCondition(ConditionSchema.parse(condition), ctx);
-};
-
-const evaluateParsedCondition = (
+export const evaluateCondition = (
   condition: Condition,
   ctx: Context,
 ): boolean => {
@@ -71,9 +63,9 @@ const evaluateParsedCondition = (
       );
     }
     case "and" in condition:
-      return condition.and.every((item) => evaluateParsedCondition(item, ctx));
+      return condition.and.every((item) => evaluateCondition(item, ctx));
     case "or" in condition:
-      return condition.or.some((item) => evaluateParsedCondition(item, ctx));
+      return condition.or.some((item) => evaluateCondition(item, ctx));
     default:
       throw new Error(`Unknown condition: ${JSON.stringify(condition)}`);
   }
