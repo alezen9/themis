@@ -148,9 +148,68 @@ describe("check-19 parity", () => {
       annex,
     });
 
-    // PDF reports Method 1 overall = 1.061; current EC3-derived implementation gives 0.831.
-    expect(Math.max(r61.ratio, r62.ratio)).toBeCloseTo(0.831, 3);
+    // PDF reports Method 1 overall = 1.061; corrected Annex A formulas give ~1.045.
+    expect(Math.max(r61.ratio, r62.ratio)).toBeCloseTo(1.045, 2);
     expect(r61.ratio).toBeGreaterThan(0);
+  });
+
+  it("evaluates the RHS Method 1 branch without a closed-section support gap", () => {
+    const r61 = evaluate(check_19_ulsBeamColumn61M1, {
+      inputs: {
+        ...baseInputs,
+        N_Ed: -30_000,
+        M_y_Ed: 7_000_000,
+        M_z_Ed: 3_000_000,
+        A: 1915,
+        Wel_y: 38_569,
+        Wel_z: 25_830,
+        Wpl_y: 51_407,
+        Wpl_z: 32_941,
+        Av_y: 684,
+        Av_z: 1231,
+        tw: 8,
+        hw: 74,
+        Iy: 1_735_604,
+        Iz: 645_759,
+        It: 1_602_747,
+        Iw: 1,
+        L: 2000,
+        section_shape: "RHS",
+        alpha_y: 0.21,
+        alpha_z: 0.21,
+      },
+      annex,
+    });
+    const r62 = evaluate(check_20_ulsBeamColumn62M1, {
+      inputs: {
+        ...baseInputs,
+        N_Ed: -30_000,
+        M_y_Ed: 7_000_000,
+        M_z_Ed: 3_000_000,
+        A: 1915,
+        Wel_y: 38_569,
+        Wel_z: 25_830,
+        Wpl_y: 51_407,
+        Wpl_z: 32_941,
+        Av_y: 684,
+        Av_z: 1231,
+        tw: 8,
+        hw: 74,
+        Iy: 1_735_604,
+        Iz: 645_759,
+        It: 1_602_747,
+        Iw: 1,
+        L: 2000,
+        section_shape: "RHS",
+        alpha_y: 0.21,
+        alpha_z: 0.21,
+      },
+      annex,
+    });
+
+    expect(Number.isFinite(r61.ratio)).toBe(true);
+    expect(Number.isFinite(r62.ratio)).toBe(true);
+    expect(Math.max(r61.ratio, r62.ratio)).toBeGreaterThan(0);
   });
 
   it("throws on Test_High compression.pdf where Method 1 is undefined (NaN)", () => {

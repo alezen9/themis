@@ -156,33 +156,30 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
 
   a_w_chs: () => 0.5,
 
-  a_w_half: ({ a_w }) => 0.5 * a_w,
+  k_y_i: ({ n, a_w }) => {
+    const a_w_half = 0.5 * a_w;
+    if (n <= a_w_half) return 1;
 
-  k_y_1: () => 1,
-
-  k_y_2: ({ n, a_w }) => {
-    if (!Number.isFinite(n)) {
+    const denominator = 1 - a_w_half;
+    if (!Number.isFinite(denominator) || denominator <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-y-axial: n must be finite",
-        details: { n, sectionRef: "6.2.9.1" },
+        message:
+          "bending-y-axial: denominator (1 - 0.5*a_w) must be > 0 (division by zero)",
+        details: { denominator, sectionRef: "6.2.9.1" },
       });
     }
 
-    if (!Number.isFinite(a_w) || a_w < 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: a_w must be >= 0",
-        details: { a_w, sectionRef: "6.2.9.1" },
-      });
-    }
+    return 1 - ((n - a_w_half) / denominator) ** 2;
+  },
 
+  k_y_rhs_chs: ({ n, a_w }) => {
     const denominator = 1 - 0.5 * a_w;
     if (!Number.isFinite(denominator) || denominator <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message:
-          "bending-y-axial: denominator (1 - 0.5 a_w) must be > 0 (division by zero)",
+          "bending-y-axial: denominator (1 - 0.5*a_w) must be > 0 (division by zero)",
         details: { denominator, sectionRef: "6.2.9.1" },
       });
     }

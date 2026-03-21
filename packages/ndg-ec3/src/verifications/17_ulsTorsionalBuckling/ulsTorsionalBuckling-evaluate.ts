@@ -12,26 +12,17 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     return (Iy + Iz) / A;
   },
-  ncr_t_right: ({ pi, E, Iw, L, k_T, k_z }) => {
+  N_cr_T: ({ ip2, G, It, pi, E, Iw, L, k_T, k_z }) => {
     const lcr = L * (k_T ?? k_z ?? 1);
     if (!Number.isFinite(lcr) || lcr <= 0)
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message: "torsional-buckling: L*(k_T or k_z) must be > 0",
       });
-    return (pi ** 2 * E * Iw) / lcr ** 2;
-  },
-  N_cr_T: ({ Iy, Iz, It, Iw, L, k_T, k_z, ip2, G, pi, E }) => {
-    const lcr = L * (k_T ?? k_z ?? 1);
-    if (!Number.isFinite(lcr) || lcr <= 0)
+    if (It <= 0 || Iw <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "torsional-buckling: L*(k_T or k_z) must be > 0",
-      });
-    if (Iy <= 0 || Iz <= 0 || It <= 0 || Iw <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "torsional-buckling: Iy, Iz, It and Iw must be > 0",
+        message: "torsional-buckling: It and Iw must be > 0",
       });
     }
     if (ip2 <= 0)
@@ -42,22 +33,14 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     const ncrTerm = G * It + (pi ** 2 * E * Iw) / lcr ** 2;
     return ncrTerm / ip2;
   },
-  N_cr_z: ({ pi, E, Iz, L, k_T, k_z }) => {
-    const lcr = L * (k_T ?? k_z ?? 1);
-    if (!Number.isFinite(lcr) || lcr <= 0)
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "torsional-buckling: L*(k_T or k_z) must be > 0",
-      });
-    return (pi ** 2 * E * Iz) / lcr ** 2;
-  },
-  N_cr_TF: ({ N_cr_T, N_cr_z }) => Math.min(N_cr_T, N_cr_z),
   N_cr_governing: ({ N_cr_T }) => {
     if (N_cr_T <= 0)
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message: "torsional-buckling: invalid governing critical force",
       });
+    // For the supported doubly-symmetric members in this package, the
+    // torsional-flexural critical force collapses to the torsional one.
     return N_cr_T;
   },
   lambda_bar_TF: ({ A, fy, N_cr_governing }) => {
@@ -92,7 +75,18 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return Math.min(1, 1 / denominator);
   },
   N_b_TF_Rd: ({ chi_TF, A, fy, gamma_M1 }) => (chi_TF * A * fy) / gamma_M1,
-  abs_N_Ed: ({ N_Ed, torsional_deformations }) => {
+  abs_N_Ed: ({ N_Ed, torsional_deformations, section_shape }) => {
+    if (section_shape === "RHS" || section_shape === "CHS") {
+      throw new Ec3VerificationError({
+        type: "not-applicable-load-case",
+        message:
+          "torsional-buckling: closed hollow sections are covered by flexural buckling for this check",
+        details: {
+          section_shape,
+          sectionRef: "6.3.1.4(1)",
+        },
+      });
+    }
     if ((torsional_deformations ?? "yes") !== "yes") {
       throw new Ec3VerificationError({
         type: "not-applicable-load-case",

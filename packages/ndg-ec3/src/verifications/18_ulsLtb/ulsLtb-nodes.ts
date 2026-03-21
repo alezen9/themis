@@ -16,9 +16,38 @@ export const nodes = defineNodes([
     key: "Wpl_y",
     valueType: { type: "number" },
     id: "Wpl_y",
-    name: "Plastic section modulus y-y",
+    name: "Plastic section modulus about y-y",
+    symbol: "W_{pl,y}",
     unit: "\\mathrm{mm^{3}}",
     children: [],
+  },
+  {
+    type: "user-input",
+    key: "Wel_y",
+    valueType: { type: "number" },
+    id: "Wel_y",
+    name: "Elastic section modulus about y-y",
+    symbol: "W_{el,y}",
+    unit: "\\mathrm{mm^{3}}",
+    children: [],
+  },
+  {
+    type: "derived",
+    key: "W_y_res",
+    valueType: { type: "number" },
+    id: "W_y_res",
+    name: "Class-dependent resistance modulus about y-y",
+    symbol: "W_{y,res}",
+    unit: "\\mathrm{mm^{3}}",
+    children: [
+      {
+        nodeId: "Wpl_y",
+        when: {
+          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
+        },
+      },
+      { nodeId: "Wel_y", when: { eq: ["section_class", { value: 3 }] } },
+    ],
   },
   {
     type: "user-input",
@@ -213,8 +242,8 @@ export const nodes = defineNodes([
     key: "pi",
     valueType: { type: "number" },
     id: "pi",
-    name: "Pi squared",
-    symbol: "\\pi^2",
+    name: "Pi",
+    symbol: "\\pi",
     children: [],
   },
   {
@@ -302,6 +331,9 @@ export const nodes = defineNodes([
       {
         nodeId: "torsional_deformations",
       },
+      {
+        nodeId: "section_shape",
+      },
     ],
   },
   {
@@ -311,32 +343,16 @@ export const nodes = defineNodes([
     id: "lambda_bar_LT",
     name: "Non-dimensional slenderness for LTB",
     symbol: "\\bar{\\lambda}_{LT}",
-    expression: "\\sqrt{\\frac{W_{pl,y} f_y}{M_{cr}}}",
+    expression: "\\sqrt{\\frac{W_{y,res} f_y}{M_{cr}}}",
     children: [
       {
-        nodeId: "Wpl_y",
+        nodeId: "W_y_res",
       },
       {
         nodeId: "fy",
       },
       {
         nodeId: "M_cr",
-      },
-    ],
-  },
-  {
-    type: "derived",
-    key: "alpha_LT_eff",
-    valueType: { type: "number" },
-    id: "alpha_LT_eff",
-    name: "Effective LT imperfection factor",
-    expression: "\\alpha_{LT,eff}",
-    children: [
-      {
-        nodeId: "alpha_LT",
-      },
-      {
-        nodeId: "buckling_curves_LT_policy",
       },
     ],
   },
@@ -351,7 +367,7 @@ export const nodes = defineNodes([
       "0.5(1 + \\alpha_{LT}(\\bar{\\lambda}_{LT} - \\bar{\\lambda}_{LT,0}) + \\beta \\bar{\\lambda}_{LT}^2)",
     children: [
       {
-        nodeId: "alpha_LT_eff",
+        nodeId: "alpha_LT",
       },
       {
         nodeId: "lambda_bar_LT",
@@ -361,9 +377,6 @@ export const nodes = defineNodes([
       },
       {
         nodeId: "beta_LT",
-      },
-      {
-        nodeId: "lambda_bar_LT",
       },
     ],
   },
@@ -384,6 +397,9 @@ export const nodes = defineNodes([
       },
       {
         nodeId: "lambda_bar_LT",
+      },
+      {
+        nodeId: "buckling_curves_LT_policy",
       },
     ],
   },
@@ -437,7 +453,7 @@ export const nodes = defineNodes([
     id: "M_b_Rd",
     name: "LTB resistance",
     symbol: "M_{b,Rd}",
-    expression: "\\frac{\\chi_{LT,mod} W_{pl,y} f_y}{\\gamma_{M1}}",
+    expression: "\\frac{\\chi_{LT,mod} W_{y,res} f_y}{\\gamma_{M1}}",
     unit: "\\mathrm{N\\cdot mm}",
     meta: {
       sectionRef: "6.3.2.1",
@@ -448,7 +464,7 @@ export const nodes = defineNodes([
         nodeId: "chi_LT_mod",
       },
       {
-        nodeId: "Wpl_y",
+        nodeId: "W_y_res",
       },
       {
         nodeId: "fy",

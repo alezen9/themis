@@ -87,7 +87,6 @@ describe("check-10 bending-z-axial", () => {
       annex: customAnnex,
     });
 
-    expect(result.cache.is_n_le_a_f).toBe(1);
     expect(result.cache.k_z).toBeCloseTo(1, 12);
   });
 
@@ -105,7 +104,6 @@ describe("check-10 bending-z-axial", () => {
       annex: customAnnex,
     });
 
-    expect(result.cache.is_n_le_a_f).toBe(0);
     expect(result.cache.k_z).toBeLessThan(1);
   });
 

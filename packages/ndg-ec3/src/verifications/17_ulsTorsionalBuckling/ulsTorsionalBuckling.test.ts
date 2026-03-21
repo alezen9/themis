@@ -47,6 +47,20 @@ describe("check_17_ulsTorsionalBuckling", () => {
       expect(failure.type).toBe("not-applicable-load-case");
     }
   });
+
+  it("throws not-applicable-load-case for closed hollow sections", () => {
+    try {
+      evaluate(check_17_ulsTorsionalBuckling, {
+        inputs: { ...baseInputs, section_shape: "RHS", N_Ed: -1_000 },
+        annex,
+      });
+      throw new Error("expected evaluation to fail");
+    } catch (error) {
+      expect(error).toBeInstanceOf(Ec3VerificationError);
+      const failure = error as Ec3VerificationError;
+      expect(failure.type).toBe("not-applicable-load-case");
+    }
+  });
 });
 
 {

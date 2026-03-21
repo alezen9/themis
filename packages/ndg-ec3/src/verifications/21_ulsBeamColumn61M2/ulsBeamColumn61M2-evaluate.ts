@@ -142,7 +142,12 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
   Cm_y: ({ psi_y_eff }) => Math.max(0.4, 0.6 + 0.4 * psi_y_eff),
   Cm_z: ({ psi_z_eff }) => Math.max(0.4, 0.6 + 0.4 * psi_z_eff),
   Cm_LT: ({ psi_LT_eff }) => Math.max(0.4, 0.6 + 0.4 * psi_LT_eff),
-  M_cr: ({ L, k_LT, Iz, It, Iw, C1, pi, E, G }) => {
+  M_cr: ({ L, k_LT, Iz, It, Iw, C1, pi, E, G, section_shape }) => {
+    if (section_shape === "RHS" || section_shape === "CHS") {
+      // Closed sections are treated as not susceptible to LTB in this path,
+      // so use a very large finite critical moment instead of Infinity.
+      return Number.MAX_VALUE;
+    }
     if (Iz <= 0 || It <= 0 || Iw <= 0)
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -169,8 +174,10 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return C1 * eulerTerm * Math.sqrt(torsionTerm);
   },
   N_Rk: ({ A, fy }) => A * fy,
-  M_y_Rk: ({ Wpl_y, fy }) => Wpl_y * fy,
-  M_z_Rk: ({ Wpl_z, fy }) => Wpl_z * fy,
+  M_y_Rk: ({ Wpl_y, Wel_y, fy, section_class }) =>
+    (section_class >= 3 ? Wel_y : Wpl_y) * fy,
+  M_z_Rk: ({ Wpl_z, Wel_z, fy, section_class }) =>
+    (section_class >= 3 ? Wel_z : Wpl_z) * fy,
   N_cr_y: ({ pi, E, Iy, L, k_y }) => {
     const denominator = L * k_y;
     if (!Number.isFinite(denominator) || denominator <= 0) {
@@ -255,13 +262,14 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
     return Math.min(1, 1 / denominator);
   },
-  lambda_LT: ({ Wpl_y, fy, M_cr }) => {
+  lambda_LT: ({ Wpl_y, Wel_y, fy, M_cr, section_class }) => {
     if (M_cr <= 0)
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message: "beam-column-61-m2: M_cr must be > 0",
       });
-    const value = (Wpl_y * fy) / M_cr;
+    const W_y = section_class >= 3 ? Wel_y : Wpl_y;
+    const value = (W_y * fy) / M_cr;
     if (!Number.isFinite(value) || value < 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -276,6 +284,9 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     0.5 *
     (1 + alpha_LT_eff * (lambda_LT - lambda_LT_0) + beta_LT * lambda_LT ** 2),
   chi_LT: ({ phi_LT, beta_LT, lambda_LT }) => {
+    if (lambda_LT === 0) {
+      return 1;
+    }
     const radicand = phi_LT ** 2 - beta_LT * lambda_LT ** 2;
     if (!Number.isFinite(radicand) || radicand < 0) {
       throw new Ec3VerificationError({
@@ -375,11 +386,18 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
     return -N_Ed / N_b_y_Rd;
   },
-  k_yy: ({ Cm_y, lambda_bar_y, n_y }) =>
-    Math.min(
-      Cm_y * (1 + (Math.min(lambda_bar_y, 1) - 0.2) * n_y),
+  k_yy: ({ Cm_y, lambda_bar_y, n_y, section_class }) => {
+    if (section_class >= 3) {
+      return Math.min(
+        Cm_y * (1 + 0.6 * lambda_bar_y * n_y),
+        Cm_y * (1 + 0.6 * n_y),
+      );
+    }
+    return Math.min(
+      Cm_y * (1 + (lambda_bar_y - 0.2) * n_y),
       Cm_y * (1 + 0.8 * n_y),
-    ),
+    );
+  },
   N_b_z_Rd: ({ chi_z, N_Rk, gamma_M1 }) => (chi_z * N_Rk) / gamma_M1,
   n_z: ({ N_Ed, N_b_z_Rd }) => {
     if (N_b_z_Rd <= 0)
@@ -400,17 +418,44 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
     return -N_Ed / N_b_z_Rd;
   },
-  k_zz_aux: ({ Cm_z, lambda_bar_z, n_z }) =>
-    Math.min(
-      Cm_z * (1 + (2 * Math.min(lambda_bar_z, 1) - 0.6) * n_z),
-      Cm_z * (1 + 1.4 * n_z),
-    ),
-  k_yz: ({ Cm_z, lambda_bar_z, n_z }) =>
-    0.6 *
-    Math.min(
-      Cm_z * (1 + (2 * Math.min(lambda_bar_z, 1) - 0.6) * n_z),
-      Cm_z * (1 + 1.4 * n_z),
-    ),
+  k_zz_aux: ({ Cm_z, lambda_bar_z, n_z, section_shape, section_class }) => {
+    if (section_class >= 3) {
+      return Math.min(
+        Cm_z * (1 + 0.6 * lambda_bar_z * n_z),
+        Cm_z * (1 + 0.6 * n_z),
+      );
+    }
+    if (section_shape === "I") {
+      return Math.min(
+        Cm_z * (1 + (2 * lambda_bar_z - 0.6) * n_z),
+        Cm_z * (1 + 1.4 * n_z),
+      );
+    }
+    return Math.min(
+      Cm_z * (1 + (lambda_bar_z - 0.2) * n_z),
+      Cm_z * (1 + 0.8 * n_z),
+    );
+  },
+  k_yz: ({ Cm_z, lambda_bar_z, n_z, section_shape, section_class }) => {
+    // Elastic (class 3): k_yz = k_zz
+    if (section_class >= 3) {
+      return Math.min(
+        Cm_z * (1 + 0.6 * lambda_bar_z * n_z),
+        Cm_z * (1 + 0.6 * n_z),
+      );
+    }
+    // Plastic (class 1/2): k_yz = 0.6 * k_zz
+    if (section_shape === "I") {
+      return 0.6 * Math.min(
+        Cm_z * (1 + (2 * lambda_bar_z - 0.6) * n_z),
+        Cm_z * (1 + 1.4 * n_z),
+      );
+    }
+    return 0.6 * Math.min(
+      Cm_z * (1 + (lambda_bar_z - 0.2) * n_z),
+      Cm_z * (1 + 0.8 * n_z),
+    );
+  },
   bc_61_term1: ({ N_Ed, chi_y, N_Rk, gamma_M1 }) => {
     if (N_Ed > 0) {
       throw new Ec3VerificationError({

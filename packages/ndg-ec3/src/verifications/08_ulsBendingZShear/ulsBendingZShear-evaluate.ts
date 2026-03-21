@@ -134,6 +134,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
+    const M_c_z_Rd = (W_z_res * fy) / gamma_M0;
     const W_z_eff = W_z_res - rho_y * (W_z_res - W_z_web);
     if (W_z_eff <= 0) {
       throw new Ec3VerificationError({
@@ -142,7 +143,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         details: { W_z_eff, sectionRef: "6.2.8" },
       });
     }
-    return (W_z_eff * fy) / gamma_M0;
+    return Math.min((W_z_eff * fy) / gamma_M0, M_c_z_Rd);
   },
 
   M_z_V_Rd_rhs_chs: ({ W_z_res, rho_y, fy, gamma_M0 }) => {
@@ -178,8 +179,9 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
+    const M_c_z_Rd = (W_z_res * fy) / gamma_M0;
     const W_z_eff = W_z_res * (1 - rho_y);
-    return (W_z_eff * fy) / gamma_M0;
+    return Math.min((W_z_eff * fy) / gamma_M0, M_c_z_Rd);
   },
 
   bending_z_shear_check: ({ M_z_Ed, M_z_V_Rd }) => {

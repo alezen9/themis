@@ -93,7 +93,7 @@ export type AnnexCoeffs = {
 
 export type VerificationRow = ReturnType<typeof verify>[number];
 type EvaluationResult = NonNullable<VerificationRow["payload"]["data"]>;
-export const FRONTEND_MAX_CHECK_ID = 13;
+export const FRONTEND_MAX_CHECK_ID = 22;
 
 const clampPsi = (value: number): number => Math.max(-1, Math.min(1, value));
 const canonicalSupportCondition = (

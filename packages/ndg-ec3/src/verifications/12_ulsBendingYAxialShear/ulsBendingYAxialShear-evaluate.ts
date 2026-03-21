@@ -214,7 +214,16 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A - 2 * b * tf) / A;
+    const areaRatio = (A - 2 * b * tf) / A;
+    if (!Number.isFinite(areaRatio) || areaRatio < 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-y-axial-shear: a_w_i must be >= 0",
+        details: { areaRatio, sectionRef: "6.2.9.1" },
+      });
+    }
+
+    return Math.min(areaRatio, 0.5);
   },
 
   a_w_rhs: ({ A, b, tw }) => {
@@ -242,39 +251,39 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A - 2 * b * tw) / A;
-  },
-
-  a_w_chs: () => {
-    return 0.5;
-  },
-
-  a_w: ({ section_shape, a_w_i, a_w_rhs, a_w_chs }) => {
-    const areaRatioByShape =
-      section_shape === "I"
-        ? a_w_i
-        : section_shape === "RHS"
-          ? a_w_rhs
-          : a_w_chs;
-
-    if (!Number.isFinite(areaRatioByShape) || areaRatioByShape < 0) {
+    const areaRatio = (A - 2 * b * tw) / A;
+    if (!Number.isFinite(areaRatio) || areaRatio < 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-y-axial-shear: area ratio must be >= 0",
-        details: { areaRatioByShape, sectionRef: "6.2.9.1" },
+        message: "bending-y-axial-shear: a_w_rhs must be >= 0",
+        details: { areaRatio, sectionRef: "6.2.9.1" },
       });
     }
 
-    return Math.min(areaRatioByShape, 0.5);
+    return Math.min(areaRatio, 0.5);
   },
 
-  is_n_le_half_a_w: ({ n, a_w }) => {
-    return n <= 0.5 * a_w ? 1 : 0;
-  },
+  a_w_chs: () => 0.5,
 
-  k_y: ({ is_n_le_half_a_w, n, a_w }) => {
-    if (is_n_le_half_a_w === 1) {
-      return 1;
+  a_w_half: ({ a_w }) => 0.5 * a_w,
+
+  k_y_1: () => 1,
+
+  k_y_2: ({ n, a_w }) => {
+    if (!Number.isFinite(n)) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-y-axial-shear: n must be finite",
+        details: { n, sectionRef: "6.2.9.1" },
+      });
+    }
+
+    if (!Number.isFinite(a_w) || a_w < 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-y-axial-shear: a_w must be >= 0",
+        details: { a_w, sectionRef: "6.2.9.1" },
+      });
     }
 
     const denominator = 1 - 0.5 * a_w;
@@ -460,12 +469,16 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return Wpl_y_eff_chs;
   },
 
-  Wpl_y_eff: ({ section_shape, Wpl_y_eff_i, Wpl_y_eff_rhs, Wpl_y_eff_chs }) => {
-    if (section_shape === "I") return Wpl_y_eff_i;
-    if (section_shape === "RHS") return Wpl_y_eff_rhs;
-    if (section_shape === "CHS") return Wpl_y_eff_chs;
-    const unknownSectionShape: never = section_shape;
-    return unknownSectionShape;
+  Wpl_y_eff: ({ Wpl_y_eff_i, Wpl_y_eff_rhs, Wpl_y_eff_chs }) => {
+    if (typeof Wpl_y_eff_i === "number") return Wpl_y_eff_i;
+    if (typeof Wpl_y_eff_rhs === "number") return Wpl_y_eff_rhs;
+    if (typeof Wpl_y_eff_chs === "number") return Wpl_y_eff_chs;
+
+    throw new Ec3VerificationError({
+      type: "evaluation-error",
+      message: "bending-y-axial-shear: no active section-shape branch was selected",
+      details: { sectionRef: "6.2.10" },
+    });
   },
 
   M_y_V_Rd: ({ Wpl_y_eff, fy, gamma_M0 }) => {
@@ -642,6 +655,17 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return section_class === 3 ? utilization_class3 : utilization_class12;
+    if (typeof utilization_class12 === "number") {
+      return utilization_class12;
+    }
+    if (typeof utilization_class3 === "number") {
+      return utilization_class3;
+    }
+
+    throw new Ec3VerificationError({
+      type: "evaluation-error",
+      message: "bending-y-axial-shear: no active utilization branch was selected",
+      details: { sectionRef: "6.2.10" },
+    });
   },
 });

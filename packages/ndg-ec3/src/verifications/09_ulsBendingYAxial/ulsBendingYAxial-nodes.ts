@@ -9,7 +9,7 @@ export const nodes = defineNodes([
     name: "Bending and axial resistance check about y-y",
     verificationExpression:
       "\\text{class 1/2: }\\frac{\\left|M_{y,Ed}\\right|}{M_{N,y,Rd}}\\leq1.0\\ ;\\ \\text{class 3: }\\frac{\\sigma_{x,Ed}}{f_y/\\gamma_{M0}}\\leq1.0",
-    meta: { sectionRef: "6.2.9", verificationRef: "(6.31),(6.42)" },
+    meta: { sectionRef: "6.2.9", verificationRef: "(6.36),(6.42)" },
     children: [
       {
         nodeId: "utilization_class12",
@@ -65,28 +65,39 @@ export const nodes = defineNodes([
     name: "Axial reduction factor for y-y branch",
     symbol: "k_y",
     children: [
-      { nodeId: "k_y_1", when: { lte: ["n", { key: "a_w_half" }] } },
-      { nodeId: "k_y_2", when: { gt: ["n", { key: "a_w_half" }] } },
+      { nodeId: "k_y_i", when: { eq: ["section_shape", { value: "I" }] } },
+      {
+        nodeId: "k_y_rhs_chs",
+        when: {
+          or: [
+            { eq: ["section_shape", { value: "RHS" }] },
+            { eq: ["section_shape", { value: "CHS" }] },
+          ],
+        },
+      },
     ],
   },
   {
-    id: "k_y_1",
+    id: "k_y_i",
     type: "derived",
-    key: "k_y_1",
+    key: "k_y_i",
     valueType: { type: "number" },
-    name: "Axial reduction factor for low-axial branch",
-    symbol: "k_{y,1}",
-    expression: "1",
-    children: [],
+    name: "I-section axial reduction factor for y-y",
+    symbol: "k_{y,I}",
+    expression:
+      "n \\leq 0.5a_w \\Rightarrow 1,\\ \\text{else}\\ 1-\\left(\\frac{n-0.5a_w}{1-0.5a_w}\\right)^2",
+    meta: { sectionRef: "6.2.9.1", formulaRef: "(6.33)" },
+    children: [{ nodeId: "n" }, { nodeId: "a_w" }],
   },
   {
-    id: "k_y_2",
+    id: "k_y_rhs_chs",
     type: "derived",
-    key: "k_y_2",
+    key: "k_y_rhs_chs",
     valueType: { type: "number" },
-    name: "Axial reduction factor for high-axial branch",
-    symbol: "k_{y,2}",
+    name: "RHS/CHS axial reduction factor for y-y",
+    symbol: "k_{y,RHS}",
     expression: "\\min\\left(1,\\dfrac{1-n}{1-0.5a_w}\\right)",
+    meta: { sectionRef: "6.2.9.1", formulaRef: "(6.35)" },
     children: [{ nodeId: "n" }, { nodeId: "a_w" }],
   },
   {
@@ -101,16 +112,6 @@ export const nodes = defineNodes([
       { nodeId: "a_w_rhs", when: { eq: ["section_shape", { value: "RHS" }] } },
       { nodeId: "a_w_chs", when: { eq: ["section_shape", { value: "CHS" }] } },
     ],
-  },
-  {
-    id: "a_w_half",
-    type: "derived",
-    key: "a_w_half",
-    valueType: { type: "number" },
-    name: "Half of limited area ratio",
-    symbol: "0.5a_w",
-    expression: "0.5a_w",
-    children: [{ nodeId: "a_w" }],
   },
   {
     id: "a_w_i",

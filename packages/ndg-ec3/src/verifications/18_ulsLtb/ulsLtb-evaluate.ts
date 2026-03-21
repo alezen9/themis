@@ -72,7 +72,14 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
     return 1 / k_c ** 2;
   },
-  M_cr: ({ torsional_deformations, L, k_LT, Iz, It, Iw, C1, pi, E, G }) => {
+  M_cr: ({ torsional_deformations, L, k_LT, Iz, It, Iw, C1, pi, E, G, section_shape }) => {
+    if (section_shape === "RHS" || section_shape === "CHS") {
+      throw new Ec3VerificationError({
+        type: "not-applicable-load-case",
+        message: "ltb: not applicable for closed sections (RHS/CHS)",
+        details: { section_shape, sectionRef: "6.3.2" },
+      });
+    }
     if ((torsional_deformations ?? "yes") !== "yes") {
       throw new Ec3VerificationError({
         type: "not-applicable-load-case",
@@ -106,13 +113,13 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
     return C1 * eulerTerm * Math.sqrt(torsionTerm);
   },
-  lambda_bar_LT: ({ Wpl_y, fy, M_cr }) => {
+  lambda_bar_LT: ({ W_y_res, fy, M_cr }) => {
     if (M_cr <= 0)
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message: "ltb: M_cr must be > 0",
       });
-    const value = (Wpl_y * fy) / M_cr;
+    const value = (W_y_res * fy) / M_cr;
     if (!Number.isFinite(value) || value < 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -128,14 +135,12 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
     return lambda;
   },
-  alpha_LT_eff: ({ alpha_LT, buckling_curves_LT_policy }) =>
-    (buckling_curves_LT_policy ?? "default") === "general" ? 0.34 : alpha_LT,
-  phi_LT: ({ alpha_LT_eff, lambda_bar_LT, lambda_LT_0, beta_LT }) =>
+  phi_LT: ({ alpha_LT, lambda_bar_LT, lambda_LT_0, beta_LT }) =>
     0.5 *
     (1 +
-      alpha_LT_eff * (lambda_bar_LT - lambda_LT_0) +
+      alpha_LT * (lambda_bar_LT - lambda_LT_0) +
       beta_LT * lambda_bar_LT ** 2),
-  chi_LT: ({ phi_LT, beta_LT, lambda_bar_LT }) => {
+  chi_LT: ({ phi_LT, beta_LT, lambda_bar_LT, buckling_curves_LT_policy }) => {
     const radicand = phi_LT ** 2 - beta_LT * lambda_bar_LT ** 2;
     if (!Number.isFinite(radicand) || radicand < 0) {
       throw new Ec3VerificationError({
@@ -161,6 +166,12 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
     const uncapped = 1 / denominator;
+    const isGeneral = (buckling_curves_LT_policy ?? "default") === "general";
+    if (isGeneral) {
+      // Eq 6.56: only cap at 1.0
+      return Math.min(1, uncapped);
+    }
+    // Eq 6.57 (rolled/welded): cap at 1.0 AND 1/lambda_bar_LT^2
     const cap = 1 / lambda_bar_LT ** 2;
     return Math.min(1, Math.min(uncapped, cap));
   },
@@ -193,8 +204,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     return Math.min(1, chi_LT / f_LT);
   },
-  M_b_Rd: ({ chi_LT_mod, Wpl_y, fy, gamma_M1 }) =>
-    (chi_LT_mod * Wpl_y * fy) / gamma_M1,
+  M_b_Rd: ({ chi_LT_mod, W_y_res, fy, gamma_M1 }) =>
+    (chi_LT_mod * W_y_res * fy) / gamma_M1,
   abs_M_y_Ed: ({ M_y_Ed }) => Math.abs(M_y_Ed),
   ltb_check: ({ abs_M_y_Ed, M_b_Rd }) => abs_M_y_Ed / M_b_Rd,
 });

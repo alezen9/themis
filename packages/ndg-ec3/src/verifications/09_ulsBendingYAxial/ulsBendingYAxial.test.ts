@@ -28,8 +28,9 @@ describe("check-09 bending-y-axial", () => {
     const n = Math.abs(inputs.N_Ed) / nPlRd;
     const aRaw = (inputs.A - 2 * inputs.b * inputs.tf) / inputs.A;
     const a = Math.min(aRaw, 0.5);
-    const axialRatio = (1 - n) / (1 - 0.5 * a);
-    const axialFactor = n <= 0.5 * a ? 1 : Math.min(1, axialRatio);
+    const aHalf = 0.5 * a;
+    const axialFactor =
+      n <= aHalf ? 1 : 1 - ((n - aHalf) / (1 - aHalf)) ** 2;
     const mPlRd = (inputs.Wpl_y * inputs.fy) / customAnnex.coefficients.gamma_M0;
     const mNyRd = mPlRd * axialFactor;
     const ratio = Math.abs(inputs.M_y_Ed) / mNyRd;

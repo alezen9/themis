@@ -190,7 +190,16 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A - 2 * b * tf) / A;
+    const areaRatio = (A - 2 * b * tf) / A;
+    if (!Number.isFinite(areaRatio) || areaRatio < 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "biaxial-axial-shear: a_w_i must be >= 0",
+        details: { areaRatio, sectionRef: "6.2.9.1" },
+      });
+    }
+
+    return Math.min(areaRatio, 0.5);
   },
 
   a_w_rhs: ({ A, b, tw }) => {
@@ -218,31 +227,23 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A - 2 * b * tw) / A;
+    const areaRatio = (A - 2 * b * tw) / A;
+    if (!Number.isFinite(areaRatio) || areaRatio < 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "biaxial-axial-shear: a_w_rhs must be >= 0",
+        details: { areaRatio, sectionRef: "6.2.9.1" },
+      });
+    }
+
+    return Math.min(areaRatio, 0.5);
   },
 
   a_w_chs: () => {
     return 0.5;
   },
 
-  a_w: ({ section_shape, a_w_i, a_w_rhs, a_w_chs }) => {
-    const reductionParameter =
-      section_shape === "I"
-        ? a_w_i
-        : section_shape === "RHS"
-          ? a_w_rhs
-          : a_w_chs;
-
-    if (!Number.isFinite(reductionParameter) || reductionParameter < 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "biaxial-axial-shear: reduction parameter a_w must be >= 0",
-        details: { reductionParameter, sectionRef: "6.2.9.1" },
-      });
-    }
-
-    return Math.min(reductionParameter, 0.5);
-  },
+  a_w_half: ({ a_w }) => 0.5 * a_w,
 
   a_f_i: ({ A, b, tf }) => {
     if (!Number.isFinite(A) || A <= 0) {
@@ -269,7 +270,16 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A - 2 * b * tf) / A;
+    const areaRatio = (A - 2 * b * tf) / A;
+    if (!Number.isFinite(areaRatio) || areaRatio < 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "biaxial-axial-shear: a_f_i must be >= 0",
+        details: { areaRatio, sectionRef: "6.2.9.1" },
+      });
+    }
+
+    return Math.min(areaRatio, 0.5);
   },
 
   a_f_rhs: ({ A, h, tw }) => {
@@ -297,39 +307,39 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A - 2 * h * tw) / A;
+    const areaRatio = (A - 2 * h * tw) / A;
+    if (!Number.isFinite(areaRatio) || areaRatio < 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "biaxial-axial-shear: a_f_rhs must be >= 0",
+        details: { areaRatio, sectionRef: "6.2.9.1" },
+      });
+    }
+
+    return Math.min(areaRatio, 0.5);
   },
 
   a_f_chs: () => {
     return 0.5;
   },
 
-  a_f: ({ section_shape, a_f_i, a_f_rhs, a_f_chs }) => {
-    const reductionParameter =
-      section_shape === "I"
-        ? a_f_i
-        : section_shape === "RHS"
-          ? a_f_rhs
-          : a_f_chs;
+  k_y_1: () => 1,
 
-    if (!Number.isFinite(reductionParameter) || reductionParameter < 0) {
+  k_y_2: ({ n, a_w }) => {
+    if (!Number.isFinite(n)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "biaxial-axial-shear: reduction parameter a_f must be >= 0",
-        details: { reductionParameter, sectionRef: "6.2.9.1" },
+        message: "biaxial-axial-shear: n must be finite",
+        details: { n, sectionRef: "6.2.9.1" },
       });
     }
 
-    return Math.min(reductionParameter, 0.5);
-  },
-
-  is_n_le_half_a_w: ({ n, a_w }) => {
-    return n <= 0.5 * a_w ? 1 : 0;
-  },
-
-  k_y: ({ is_n_le_half_a_w, n, a_w }) => {
-    if (is_n_le_half_a_w === 1) {
-      return 1;
+    if (!Number.isFinite(a_w) || a_w < 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "biaxial-axial-shear: a_w must be >= 0",
+        details: { a_w, sectionRef: "6.2.9.1" },
+      });
     }
 
     const denominator = 1 - 0.5 * a_w;
@@ -342,7 +352,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return Math.min(1, (1 - n) / denominator);
+    return 1 - ((n - 0.5 * a_w) / denominator) ** 2;
   },
 
   Wpl_y_eff_i: ({ Wpl_y, b, h, tf, tw, rho_y, rho_z }) => {
@@ -482,12 +492,16 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return effectiveWpl;
   },
 
-  Wpl_y_eff: ({ section_shape, Wpl_y_eff_i, Wpl_y_eff_rhs, Wpl_y_eff_chs }) => {
-    if (section_shape === "I") return Wpl_y_eff_i;
-    if (section_shape === "RHS") return Wpl_y_eff_rhs;
-    if (section_shape === "CHS") return Wpl_y_eff_chs;
-    const unknownSectionShape: never = section_shape;
-    return unknownSectionShape;
+  Wpl_y_eff: ({ Wpl_y_eff_i, Wpl_y_eff_rhs, Wpl_y_eff_chs }) => {
+    if (typeof Wpl_y_eff_i === "number") return Wpl_y_eff_i;
+    if (typeof Wpl_y_eff_rhs === "number") return Wpl_y_eff_rhs;
+    if (typeof Wpl_y_eff_chs === "number") return Wpl_y_eff_chs;
+
+    throw new Ec3VerificationError({
+      type: "evaluation-error",
+      message: "biaxial-axial-shear: no active section-shape branch was selected",
+      details: { sectionRef: "6.2.10" },
+    });
   },
 
   M_y_V_Rd: ({ Wpl_y_eff, fy, gamma_M0 }) => {
@@ -594,7 +608,18 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return section_class === 3 ? W_z_res_class3 : W_z_res_class12;
+    if (typeof W_z_res_class12 === "number") {
+      return W_z_res_class12;
+    }
+    if (typeof W_z_res_class3 === "number") {
+      return W_z_res_class3;
+    }
+
+    throw new Ec3VerificationError({
+      type: "evaluation-error",
+      message: "biaxial-axial-shear: no active section-class branch was selected",
+      details: { sectionRef: "6.2.10" },
+    });
   },
 
   Wpl_z_eff: ({ W_z_res, rho_y, Wpl_z_web }) => {
@@ -646,14 +671,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return (Wpl_z_eff * fy) / gamma_M0;
   },
 
-  is_n_le_a_f: ({ n, a_f }) => {
-    return n <= a_f ? 1 : 0;
-  },
-
-  k_z: ({ is_n_le_a_f, n, a_f }) => {
-    if (is_n_le_a_f === 1) {
-      return 1;
-    }
+  k_z_i: ({ n, a_f }) => {
+    if (n <= a_f) return 1;
 
     const denominator = 1 - a_f;
     if (!Number.isFinite(denominator) || denominator <= 0) {
@@ -666,6 +685,20 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
 
     return 1 - ((n - a_f) / denominator) ** 2;
+  },
+
+  k_z_rhs_chs: ({ n, a_f }) => {
+    const denominator = 1 - 0.5 * a_f;
+    if (!Number.isFinite(denominator) || denominator <= 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message:
+          "biaxial-axial-shear: denominator (1 - 0.5*a_f) must be > 0 (division by zero)",
+        details: { denominator, sectionRef: "6.2.9.1" },
+      });
+    }
+
+    return Math.min(1, (1 - n) / denominator);
   },
 
   M_NV_z_Rd: ({ M_z_V_Rd, k_z }) => {
@@ -682,34 +715,24 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return reducedResistance;
   },
 
-  alpha_biax: ({ section_shape, n }) => {
-    if (section_shape !== "RHS") {
-      return 2;
-    }
+  alpha_biax_i: () => 2,
 
+  alpha_biax_rhs: ({ rhs_exp }) => rhs_exp,
+
+  alpha_biax_chs: () => 2,
+
+  beta_biax_i: ({ n }) => Math.max(1, 5 * n),
+
+  beta_biax_rhs: ({ rhs_exp }) => rhs_exp,
+
+  beta_biax_chs: () => 2,
+
+  rhs_exp: ({ n }) => {
     const denominator = 1 - 1.13 * n ** 2;
     if (!Number.isFinite(denominator) || denominator <= 0) {
       return 6;
     }
-
     return Math.min(1.66 / denominator, 6);
-  },
-
-  beta_biax: ({ section_shape, n }) => {
-    if (section_shape === "CHS") {
-      return 2;
-    }
-
-    if (section_shape === "RHS") {
-      const denominator = 1 - 1.13 * n ** 2;
-      if (!Number.isFinite(denominator) || denominator <= 0) {
-        return 6;
-      }
-
-      return Math.min(1.66 / denominator, 6);
-    }
-
-    return Math.max(1, 5 * n);
   },
 
   abs_M_y_Ed: ({ M_y_Ed }) => {

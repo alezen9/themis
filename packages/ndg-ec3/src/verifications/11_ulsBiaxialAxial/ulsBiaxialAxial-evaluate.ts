@@ -26,9 +26,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return Wel_y;
   },
 
-  W_y_res: ({ section_class, W_y_res_class12, W_y_res_class3 }) => {
-    return section_class === 3 ? W_y_res_class3 : W_y_res_class12;
-  },
 
   W_z_res_class12: ({ Wpl_z }) => {
     if (!Number.isFinite(Wpl_z) || Wpl_z <= 0) {
@@ -52,9 +49,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return Wel_z;
   },
 
-  W_z_res: ({ section_class, W_z_res_class12, W_z_res_class3 }) => {
-    return section_class === 3 ? W_z_res_class3 : W_z_res_class12;
-  },
 
   N_pl_Rd: ({ A, fy, gamma_M0 }) => {
     if (!Number.isFinite(A) || A <= 0) {
@@ -141,7 +135,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         details: { tf, sectionRef: "6.2.9.1" },
       });
     }
-    return (A - 2 * b * tf) / A;
+    return Math.min((A - 2 * b * tf) / A, 0.5);
   },
 
   a_w_rhs: ({ A, b, t }) => {
@@ -166,30 +160,11 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         details: { t, sectionRef: "6.2.9.1" },
       });
     }
-    return (A - 2 * b * t) / A;
+    return Math.min((A - 2 * b * t) / A, 0.5);
   },
 
   a_w_chs: () => {
     return 0.5;
-  },
-
-  a_w: ({ section_shape, a_w_i, a_w_rhs, a_w_chs }) => {
-    const reductionParameter =
-      section_shape === "I"
-        ? a_w_i
-        : section_shape === "RHS"
-          ? a_w_rhs
-          : a_w_chs;
-
-    if (!Number.isFinite(reductionParameter) || reductionParameter < 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "biaxial-axial: reduction parameter a_w must be >= 0",
-        details: { reductionParameter, sectionRef: "6.2.9.1" },
-      });
-    }
-
-    return Math.min(reductionParameter, 0.5);
   },
 
   a_f_i: ({ A, b, tf }) => {
@@ -215,7 +190,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A - 2 * b * tf) / A;
+    return Math.min((A - 2 * b * tf) / A, 0.5);
   },
 
   a_f_rhs: ({ A, h, t }) => {
@@ -240,30 +215,11 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         details: { t, sectionRef: "6.2.9.1" },
       });
     }
-    return (A - 2 * h * t) / A;
+    return Math.min((A - 2 * h * t) / A, 0.5);
   },
 
   a_f_chs: () => {
     return 0.5;
-  },
-
-  a_f: ({ section_shape, a_f_i, a_f_rhs, a_f_chs }) => {
-    const reductionParameter =
-      section_shape === "I"
-        ? a_f_i
-        : section_shape === "RHS"
-          ? a_f_rhs
-          : a_f_chs;
-
-    if (!Number.isFinite(reductionParameter) || reductionParameter < 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "biaxial-axial: reduction parameter a_f must be >= 0",
-        details: { reductionParameter, sectionRef: "6.2.9.1" },
-      });
-    }
-
-    return Math.min(reductionParameter, 0.5);
   },
 
   M_pl_y_Rd: ({ W_y_res, fy, gamma_M0 }) => {
@@ -316,13 +272,30 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return (W_z_res * fy) / gamma_M0;
   },
 
-  k_y: ({ n, a_w }) => {
+  k_y_i: ({ n, a_w }) => {
+    const a_w_half = 0.5 * a_w;
+    if (n <= a_w_half) return 1;
+
+    const denominator = 1 - a_w_half;
+    if (!Number.isFinite(denominator) || denominator <= 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message:
+          "biaxial-axial: denominator (1 - 0.5*a_w) must be > 0 (division by zero)",
+        details: { denominator, sectionRef: "6.2.9.1" },
+      });
+    }
+
+    return 1 - ((n - a_w_half) / denominator) ** 2;
+  },
+
+  k_y_rhs_chs: ({ n, a_w }) => {
     const denominator = 1 - 0.5 * a_w;
     if (!Number.isFinite(denominator) || denominator <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message:
-          "biaxial-axial: denominator (1 - 0.5 a_w) must be > 0 (division by zero)",
+          "biaxial-axial: denominator (1 - 0.5*a_w) must be > 0 (division by zero)",
         details: { denominator, sectionRef: "6.2.9.1" },
       });
     }
@@ -344,7 +317,9 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return M_N_y_Rd;
   },
 
-  k_z: ({ n, a_f }) => {
+  k_z_i: ({ n, a_f }) => {
+    if (n <= a_f) return 1;
+
     const denominator = 1 - a_f;
     if (!Number.isFinite(denominator) || denominator <= 0) {
       throw new Ec3VerificationError({
@@ -355,11 +330,21 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    if (n <= a_f) {
-      return 1;
+    return 1 - ((n - a_f) / denominator) ** 2;
+  },
+
+  k_z_rhs_chs: ({ n, a_f }) => {
+    const denominator = 1 - 0.5 * a_f;
+    if (!Number.isFinite(denominator) || denominator <= 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message:
+          "biaxial-axial: denominator (1 - 0.5*a_f) must be > 0 (division by zero)",
+        details: { denominator, sectionRef: "6.2.9.1" },
+      });
     }
 
-    return 1 - ((n - a_f) / denominator) ** 2;
+    return Math.min(1, (1 - n) / denominator);
   },
 
   M_N_z_Rd: ({ M_pl_z_Rd, k_z }) => {
@@ -394,13 +379,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return 2;
   },
 
-  alpha_biax: ({ section_shape, alpha_biax_i, alpha_biax_rhs, alpha_biax_chs }) => {
-    if (section_shape === "I") return alpha_biax_i;
-    if (section_shape === "RHS") return alpha_biax_rhs;
-    if (section_shape === "CHS") return alpha_biax_chs;
-    const unknownSectionShape: never = section_shape;
-    return unknownSectionShape;
-  },
 
   beta_biax_i: ({ n }) => {
     return Math.max(1, 5 * n);
@@ -414,13 +392,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return 2;
   },
 
-  beta_biax: ({ section_shape, beta_biax_i, beta_biax_rhs, beta_biax_chs }) => {
-    if (section_shape === "I") return beta_biax_i;
-    if (section_shape === "RHS") return beta_biax_rhs;
-    if (section_shape === "CHS") return beta_biax_chs;
-    const unknownSectionShape: never = section_shape;
-    return unknownSectionShape;
-  },
 
   abs_M_y_Ed: ({ M_y_Ed }) => {
     if (!Number.isFinite(M_y_Ed)) {
@@ -561,6 +532,17 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return section_class === 3 ? utilization_class3 : utilization_class12;
+    if (typeof utilization_class12 === "number") {
+      return utilization_class12;
+    }
+    if (typeof utilization_class3 === "number") {
+      return utilization_class3;
+    }
+
+    throw new Ec3VerificationError({
+      type: "evaluation-error",
+      message: "biaxial-axial: no active utilization branch was selected",
+      details: { sectionRef: "6.2.9" },
+    });
   },
 });

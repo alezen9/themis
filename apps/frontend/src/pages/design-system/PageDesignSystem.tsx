@@ -1,17 +1,16 @@
 import { Button } from "../../components/Button";
-import { IconButton } from "../../components/IconButton";
+import { Tabs, Tab } from "../../components/Tabs";
 
 export function PageDesignSystem() {
   return (
-    <main className="p-8 space-y-8">
+    <main className="p-8 h-dvh bg-linear-to-t from-[#bbcfe9] to-[rgba(219,219,219,1)]">
       <h1 className="text-2xl font-bold">Design System</h1>
 
       <section>
         <h2 className="text-lg font-semibold mb-4">Button</h2>
         <div className="flex flex-wrap gap-3">
-          <Button variant="default">Default</Button>
+          <Button>Default</Button>
           <Button variant="outline">Outline</Button>
-          <Button variant="ghost">Ghost</Button>
           <Button variant="destructive">Destructive</Button>
         </div>
         <div className="flex flex-wrap gap-3 mt-3">
@@ -24,16 +23,22 @@ export function PageDesignSystem() {
       <section>
         <h2 className="text-lg font-semibold mb-4">IconButton</h2>
         <div className="flex flex-wrap gap-3">
-          <IconButton variant="default" aria-label="Default">
+          <Button iconButton aria-label="Default">
             ×
-          </IconButton>
-          <IconButton variant="outline" aria-label="Outline">
+          </Button>
+          <Button variant="outline" iconButton aria-label="Outline">
             ×
-          </IconButton>
-          <IconButton variant="ghost" aria-label="Ghost">
-            ×
-          </IconButton>
+          </Button>
         </div>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-4">Tabs</h2>
+        <Tabs>
+          <Tab>First</Tab>
+          <Tab>Second</Tab>
+          <Tab>Third</Tab>
+        </Tabs>
       </section>
     </main>
   );

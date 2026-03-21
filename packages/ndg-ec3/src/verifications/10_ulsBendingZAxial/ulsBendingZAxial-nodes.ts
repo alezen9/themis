@@ -9,7 +9,7 @@ export const nodes = defineNodes([
     name: "Bending and axial resistance check about z-z",
     verificationExpression:
       "\\text{class 1/2: }\\frac{\\left|M_{z,Ed}\\right|}{M_{N,z,Rd}}\\leq1.0\\ ;\\ \\text{class 3: }\\frac{\\sigma_{x,Ed}}{f_y/\\gamma_{M0}}\\leq1.0",
-    meta: { sectionRef: "6.2.9", verificationRef: "(6.31),(6.42)" },
+    meta: { sectionRef: "6.2.9", verificationRef: "(6.38),(6.42)" },
     children: [
       {
         nodeId: "utilization_class12",
@@ -62,16 +62,35 @@ export const nodes = defineNodes([
     key: "k_z",
     valueType: { type: "number" },
     name: "Axial reduction factor for z-z branch",
-    expression: "n \\leq a_f ? 1 : 1-((n-a_f)/(1-a_f))^2",
-    children: [{ nodeId: "is_n_le_a_f" }, { nodeId: "n" }, { nodeId: "a_f" }],
+    children: [
+      { nodeId: "k_z_i", when: { eq: ["section_shape", { value: "I" }] } },
+      {
+        nodeId: "k_z_rhs_chs",
+        when: {
+          or: [
+            { eq: ["section_shape", { value: "RHS" }] },
+            { eq: ["section_shape", { value: "CHS" }] },
+          ],
+        },
+      },
+    ],
   },
   {
-    id: "is_n_le_a_f",
+    id: "k_z_i",
     type: "derived",
-    key: "is_n_le_a_f",
+    key: "k_z_i",
     valueType: { type: "number" },
-    name: "Threshold indicator for n <= a_f",
-    expression: "n \\leq a_f",
+    name: "I-section axial reduction factor for z-z",
+    expression: "n \\leq a_f \\Rightarrow 1,\\ \\text{else}\\ 1-\\left(\\frac{n-a_f}{1-a_f}\\right)^2",
+    children: [{ nodeId: "n" }, { nodeId: "a_f" }],
+  },
+  {
+    id: "k_z_rhs_chs",
+    type: "derived",
+    key: "k_z_rhs_chs",
+    valueType: { type: "number" },
+    name: "RHS/CHS axial reduction factor for z-z",
+    expression: "\\min\\left(1,\\frac{1-n}{1-0.5a_f}\\right)",
     children: [{ nodeId: "n" }, { nodeId: "a_f" }],
   },
   {
@@ -80,9 +99,7 @@ export const nodes = defineNodes([
     key: "a_f",
     valueType: { type: "number" },
     name: "Limited reduction parameter for z-z branch",
-    expression: "\\min(a_f,0.5)",
     children: [
-      { nodeId: "section_shape" },
       { nodeId: "a_f_i", when: { eq: ["section_shape", { value: "I" }] } },
       { nodeId: "a_f_rhs", when: { eq: ["section_shape", { value: "RHS" }] } },
       { nodeId: "a_f_chs", when: { eq: ["section_shape", { value: "CHS" }] } },
@@ -113,7 +130,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "CHS section reduction parameter for z-z branch",
     expression: "0.5",
-    children: [{ nodeId: "section_shape" }],
+    children: [],
   },
   {
     id: "n",

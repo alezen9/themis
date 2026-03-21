@@ -156,7 +156,12 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
   Cm_y: ({ psi_y_eff }) => Math.max(0.4, 0.6 + 0.4 * psi_y_eff),
   Cm_z: ({ psi_z_eff }) => Math.max(0.4, 0.6 + 0.4 * psi_z_eff),
   Cm_LT: ({ psi_LT_eff }) => Math.max(0.4, 0.6 + 0.4 * psi_LT_eff),
-  M_cr: ({ L, k_LT, Iz, It, Iw, C1, pi, E, G }) => {
+  M_cr: ({ L, k_LT, Iz, It, Iw, C1, pi, E, G, section_shape }) => {
+    if (section_shape === "RHS" || section_shape === "CHS") {
+      // Closed sections are treated as not susceptible to LTB in this path,
+      // so use a very large finite critical moment instead of Infinity.
+      return Number.MAX_VALUE;
+    }
     if (Iz <= 0 || It <= 0 || Iw <= 0)
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -183,8 +188,10 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return C1 * eulerTerm * Math.sqrt(torsionTerm);
   },
   N_Rk: ({ A, fy }) => A * fy,
-  M_y_Rk: ({ Wpl_y, fy }) => Wpl_y * fy,
-  M_z_Rk: ({ Wpl_z, fy }) => Wpl_z * fy,
+  M_y_Rk: ({ Wpl_y, Wel_y, fy, section_class }) =>
+    (section_class >= 3 ? Wel_y : Wpl_y) * fy,
+  M_z_Rk: ({ Wpl_z, Wel_z, fy, section_class }) =>
+    (section_class >= 3 ? Wel_z : Wpl_z) * fy,
   N_cr_y: ({ pi, E, Iy, L, k_y }) => {
     const denominator = L * k_y;
     if (!Number.isFinite(denominator) || denominator <= 0) {
@@ -206,6 +213,16 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
     return (pi ** 2 * E * Iz) / denominator ** 2;
+  },
+  lambda_bar_y: ({ A, fy, N_cr_y }) => {
+    const value = (A * fy) / N_cr_y;
+    if (!Number.isFinite(value) || value < 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "beam-column-62-m2: lambda_bar_y_sq must be >= 0",
+      });
+    }
+    return Math.sqrt(value);
   },
   lambda_bar_z: ({ A, fy, N_cr_z }) => {
     const value = (A * fy) / N_cr_z;
@@ -259,13 +276,14 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
     return Math.min(1, 1 / denominator);
   },
-  lambda_LT: ({ Wpl_y, fy, M_cr }) => {
+  lambda_LT: ({ Wpl_y, Wel_y, fy, M_cr, section_class }) => {
     if (M_cr <= 0)
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message: "beam-column-62-m2: M_cr must be > 0",
       });
-    const value = (Wpl_y * fy) / M_cr;
+    const W_y = section_class >= 3 ? Wel_y : Wpl_y;
+    const value = (W_y * fy) / M_cr;
     if (!Number.isFinite(value) || value < 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -280,6 +298,9 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     0.5 *
     (1 + alpha_LT_eff * (lambda_LT - lambda_LT_0) + beta_LT * lambda_LT ** 2),
   chi_LT: ({ phi_LT, beta_LT, lambda_LT }) => {
+    if (lambda_LT === 0) {
+      return 1;
+    }
     const radicand = phi_LT ** 2 - beta_LT * lambda_LT ** 2;
     if (!Number.isFinite(radicand) || radicand < 0) {
       throw new Ec3VerificationError({
@@ -334,6 +355,38 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     return Math.min(1, chi_LT / f_LT);
   },
+  N_b_y_Rd: ({ chi_y, N_Rk, gamma_M1 }) => (chi_y * N_Rk) / gamma_M1,
+  n_y: ({ N_Ed, N_b_y_Rd }) => {
+    if (N_b_y_Rd <= 0)
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "beam-column-62-m2: NbyRd must be > 0",
+      });
+    if (N_Ed > 0) {
+      throw new Ec3VerificationError({
+        type: "not-applicable-load-case",
+        message:
+          "beam-column-62-m2: check is only applicable for compression (N_Ed < 0)",
+        details: {
+          N_Ed,
+          sectionRef: "6.3.3",
+        },
+      });
+    }
+    return -N_Ed / N_b_y_Rd;
+  },
+  k_yy_closed: ({ Cm_y, lambda_bar_y, n_y, section_class }) => {
+    if (section_class >= 3) {
+      return Math.min(
+        Cm_y * (1 + 0.6 * lambda_bar_y * n_y),
+        Cm_y * (1 + 0.6 * n_y),
+      );
+    }
+    return Math.min(
+      Cm_y * (1 + (lambda_bar_y - 0.2) * n_y),
+      Cm_y * (1 + 0.8 * n_y),
+    );
+  },
   N_b_z_Rd: ({ chi_z, N_Rk, gamma_M1 }) => (chi_z * N_Rk) / gamma_M1,
   n_z: ({
     N_Ed,
@@ -379,27 +432,50 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
     return -N_Ed / N_b_z_Rd;
   },
-  k_zz: ({ Cm_z, lambda_bar_z, n_z }) =>
-    Math.min(
-      Cm_z * (1 + (2 * Math.min(lambda_bar_z, 1) - 0.6) * n_z),
-      Cm_z * (1 + 1.4 * n_z),
-    ),
-  k_zy: ({ lambda_bar_z, Cm_LT, n_z }) => {
+  k_zz: ({ Cm_z, lambda_bar_z, n_z, section_shape, section_class }) => {
+    if (section_class >= 3) {
+      return Math.min(
+        Cm_z * (1 + 0.6 * lambda_bar_z * n_z),
+        Cm_z * (1 + 0.6 * n_z),
+      );
+    }
+    if (section_shape === "I") {
+      return Math.min(
+        Cm_z * (1 + (2 * lambda_bar_z - 0.6) * n_z),
+        Cm_z * (1 + 1.4 * n_z),
+      );
+    }
+    return Math.min(
+      Cm_z * (1 + (lambda_bar_z - 0.2) * n_z),
+      Cm_z * (1 + 0.8 * n_z),
+    );
+  },
+  k_zy_i: ({ lambda_bar_z, Cm_LT, n_z, section_class }) => {
     const reserve = Cm_LT - 0.25;
     if (reserve === 0)
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message: "beam-column-62-m2: Cm_LT = 0.25 causes division by zero",
       });
+    const coeff = section_class >= 3 ? 0.05 : 0.1;
     if (lambda_bar_z < 0.4) {
       const lowA = 0.6 + lambda_bar_z;
-      const lowB = 1 - ((0.1 * lambda_bar_z) / reserve) * n_z;
-      return Math.max(lowA, lowB);
+      const lowB = 1 - ((coeff * lambda_bar_z) / reserve) * n_z;
+      return Math.min(lowA, lowB);
     }
-    const cap = Math.min(lambda_bar_z, 1);
-    const highA = 1 - ((0.1 * cap) / reserve) * n_z;
-    const highB = 1 - (0.1 / reserve) * n_z;
+    const highA = 1 - ((coeff * lambda_bar_z) / reserve) * n_z;
+    const highB = 1 - (coeff / reserve) * n_z;
     return Math.max(highA, highB);
+  },
+  k_zy_closed: ({ k_yy_closed, section_class }) =>
+    section_class >= 3 ? k_yy_closed : 0.6 * k_yy_closed,
+  k_zy: ({ k_zy_i, k_zy_closed }) => {
+    if (typeof k_zy_i === "number") return k_zy_i;
+    if (typeof k_zy_closed === "number") return k_zy_closed;
+    throw new Ec3VerificationError({
+      type: "evaluation-error",
+      message: "beam-column-62-m2: no active k_zy branch",
+    });
   },
   bc_62_term1: ({ N_Ed, chi_z, N_Rk, gamma_M1 }) => {
     if (N_Ed > 0) {

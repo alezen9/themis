@@ -369,7 +369,7 @@ const INITIAL_EDITABLE_INPUTS: Ec3EditableInputs = {
   k_z: 1,
   LLT_over_L: 1,
   LcrT_over_L: 1,
-  torsional_deformations: "no",
+  torsional_deformations: "yes",
   interaction_factor_method: "both",
   coefficient_f_method: "default-equation",
   buckling_curves_LT_policy: "default",

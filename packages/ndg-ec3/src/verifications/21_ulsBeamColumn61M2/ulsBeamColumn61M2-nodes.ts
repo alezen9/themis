@@ -60,6 +60,24 @@ export const nodes = defineNodes([
   },
   {
     type: "user-input",
+    key: "Wel_y",
+    valueType: { type: "number" },
+    id: "Wel_y",
+    name: "Elastic modulus y",
+    unit: "\\mathrm{mm^{3}}",
+    children: [],
+  },
+  {
+    type: "user-input",
+    key: "Wel_z",
+    valueType: { type: "number" },
+    id: "Wel_z",
+    name: "Elastic modulus z",
+    unit: "\\mathrm{mm^{3}}",
+    children: [],
+  },
+  {
+    type: "user-input",
     key: "fy",
     valueType: { type: "number" },
     id: "fy",
@@ -564,7 +582,13 @@ export const nodes = defineNodes([
         nodeId: "Wpl_y",
       },
       {
+        nodeId: "Wel_y",
+      },
+      {
         nodeId: "fy",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },
@@ -579,7 +603,13 @@ export const nodes = defineNodes([
         nodeId: "Wpl_z",
       },
       {
+        nodeId: "Wel_z",
+      },
+      {
         nodeId: "fy",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },
@@ -740,10 +770,16 @@ export const nodes = defineNodes([
         nodeId: "Wpl_y",
       },
       {
+        nodeId: "Wel_y",
+      },
+      {
         nodeId: "fy",
       },
       {
         nodeId: "M_cr",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },
@@ -896,6 +932,9 @@ export const nodes = defineNodes([
       {
         nodeId: "n_y",
       },
+      {
+        nodeId: "section_class",
+      },
     ],
   },
   {
@@ -947,6 +986,12 @@ export const nodes = defineNodes([
       {
         nodeId: "n_z",
       },
+      {
+        nodeId: "section_shape",
+      },
+      {
+        nodeId: "section_class",
+      },
     ],
   },
   {
@@ -969,6 +1014,12 @@ export const nodes = defineNodes([
       },
       {
         nodeId: "n_z",
+      },
+      {
+        nodeId: "section_shape",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },

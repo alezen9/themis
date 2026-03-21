@@ -55,7 +55,7 @@ export const nodes = defineNodes([
     name: "I-section reduced bending resistance about z-z under shear",
     symbol: "M_{z,V,Rd,i}",
     expression:
-      "\\frac{\\left(W_{z,res} - \\rho_y\\left(W_{z,res} - W_{z,web}\\right)\\right) \\cdot f_y}{\\gamma_{M0}}",
+      "\\frac{\\left(W_{z,res} - \\rho_y\\left(W_{z,res} - W_{z,web}\\right)\\right) \\cdot f_y}{\\gamma_{M0}} \\leq M_{c,z,Rd}",
     unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.8", paragraphRef: "(3)" },
     children: [

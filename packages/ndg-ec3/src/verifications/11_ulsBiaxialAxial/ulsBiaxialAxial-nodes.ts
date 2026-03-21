@@ -82,10 +82,9 @@ export const nodes = defineNodes([
     key: "W_y_res",
     valueType: { type: "number" },
     name: "Class-dependent resistance modulus about y-y",
-    expression: "\\text{class 1/2 ? }W_{pl,y}:W_{el,y}",
+    symbol: "W_{y,res}",
     unit: "\\mathrm{mm^{3}}",
     children: [
-      { nodeId: "section_class" },
       {
         nodeId: "W_y_res_class12",
         when: {
@@ -153,7 +152,40 @@ export const nodes = defineNodes([
     key: "k_y",
     valueType: { type: "number" },
     name: "Axial reduction factor about y-y",
-    expression: "min(1,(1-n)/(1-0.5*a_w))",
+    children: [
+      { nodeId: "k_y_i", when: { eq: ["section_shape", { value: "I" }] } },
+      {
+        nodeId: "k_y_rhs_chs",
+        when: {
+          or: [
+            { eq: ["section_shape", { value: "RHS" }] },
+            { eq: ["section_shape", { value: "CHS" }] },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    id: "k_y_i",
+    type: "derived",
+    key: "k_y_i",
+    valueType: { type: "number" },
+    name: "I-section axial reduction factor for y-y",
+    symbol: "k_{y,I}",
+    expression:
+      "n \\leq 0.5a_w \\Rightarrow 1,\\ \\text{else}\\ 1-\\left(\\frac{n-0.5a_w}{1-0.5a_w}\\right)^2",
+    meta: { sectionRef: "6.2.9.1", formulaRef: "(6.33)" },
+    children: [{ nodeId: "n" }, { nodeId: "a_w" }],
+  },
+  {
+    id: "k_y_rhs_chs",
+    type: "derived",
+    key: "k_y_rhs_chs",
+    valueType: { type: "number" },
+    name: "RHS/CHS axial reduction factor for y-y",
+    symbol: "k_{y,RHS}",
+    expression: "\\min\\left(1,\\dfrac{1-n}{1-0.5a_w}\\right)",
+    meta: { sectionRef: "6.2.9.1", formulaRef: "(6.35)" },
     children: [{ nodeId: "n" }, { nodeId: "a_w" }],
   },
   {
@@ -162,21 +194,10 @@ export const nodes = defineNodes([
     key: "a_w",
     valueType: { type: "number" },
     name: "Limited web ratio for y-y branch",
-    expression: "min(a_w,0.5)",
     children: [
-      { nodeId: "section_shape" },
-      {
-        nodeId: "a_w_i",
-        when: { eq: ["section_shape", { value: "I" }] },
-      },
-      {
-        nodeId: "a_w_rhs",
-        when: { eq: ["section_shape", { value: "RHS" }] },
-      },
-      {
-        nodeId: "a_w_chs",
-        when: { eq: ["section_shape", { value: "CHS" }] },
-      },
+      { nodeId: "a_w_i", when: { eq: ["section_shape", { value: "I" }] } },
+      { nodeId: "a_w_rhs", when: { eq: ["section_shape", { value: "RHS" }] } },
+      { nodeId: "a_w_chs", when: { eq: ["section_shape", { value: "CHS" }] } },
     ],
   },
   {
@@ -204,7 +225,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "CHS section y-y raw reduction ratio",
     expression: "0.5",
-    children: [{ nodeId: "section_shape" }],
+    children: [],
   },
   {
     id: "n",
@@ -390,10 +411,9 @@ export const nodes = defineNodes([
     key: "W_z_res",
     valueType: { type: "number" },
     name: "Class-dependent resistance modulus about z-z",
-    expression: "\\text{class 1/2 ? }W_{pl,z}:W_{el,z}",
+    symbol: "W_{z,res}",
     unit: "\\mathrm{mm^{3}}",
     children: [
-      { nodeId: "section_class" },
       {
         nodeId: "W_z_res_class12",
         when: {
@@ -452,7 +472,35 @@ export const nodes = defineNodes([
     key: "k_z",
     valueType: { type: "number" },
     name: "Axial reduction factor about z-z",
-    expression: "n<=a_f ? 1 : 1-((n-a_f)/(1-a_f))^2",
+    children: [
+      { nodeId: "k_z_i", when: { eq: ["section_shape", { value: "I" }] } },
+      {
+        nodeId: "k_z_rhs_chs",
+        when: {
+          or: [
+            { eq: ["section_shape", { value: "RHS" }] },
+            { eq: ["section_shape", { value: "CHS" }] },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    id: "k_z_i",
+    type: "derived",
+    key: "k_z_i",
+    valueType: { type: "number" },
+    name: "I-section axial reduction factor for z-z",
+    expression: "n \\leq a_f \\Rightarrow 1,\\ \\text{else}\\ 1-\\left(\\frac{n-a_f}{1-a_f}\\right)^2",
+    children: [{ nodeId: "n" }, { nodeId: "a_f" }],
+  },
+  {
+    id: "k_z_rhs_chs",
+    type: "derived",
+    key: "k_z_rhs_chs",
+    valueType: { type: "number" },
+    name: "RHS/CHS axial reduction factor for z-z",
+    expression: "\\min\\left(1,\\frac{1-n}{1-0.5a_f}\\right)",
     children: [{ nodeId: "n" }, { nodeId: "a_f" }],
   },
   {
@@ -460,22 +508,11 @@ export const nodes = defineNodes([
     type: "derived",
     key: "a_f",
     valueType: { type: "number" },
-    name: "Limited web ratio for z-z branch",
-    expression: "min(a_f,0.5)",
+    name: "Limited reduction parameter for z-z branch",
     children: [
-      { nodeId: "section_shape" },
-      {
-        nodeId: "a_f_i",
-        when: { eq: ["section_shape", { value: "I" }] },
-      },
-      {
-        nodeId: "a_f_rhs",
-        when: { eq: ["section_shape", { value: "RHS" }] },
-      },
-      {
-        nodeId: "a_f_chs",
-        when: { eq: ["section_shape", { value: "CHS" }] },
-      },
+      { nodeId: "a_f_i", when: { eq: ["section_shape", { value: "I" }] } },
+      { nodeId: "a_f_rhs", when: { eq: ["section_shape", { value: "RHS" }] } },
+      { nodeId: "a_f_chs", when: { eq: ["section_shape", { value: "CHS" }] } },
     ],
   },
   {
@@ -503,7 +540,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "CHS section z-z raw reduction ratio",
     expression: "0.5",
-    children: [{ nodeId: "section_shape" }],
+    children: [],
   },
   {
     id: "alpha_biax",
@@ -512,7 +549,6 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Biaxial interaction exponent alpha",
     symbol: "\\alpha",
-    expression: "\\text{shape branch value}",
     children: [
       {
         nodeId: "alpha_biax_i",
@@ -536,7 +572,7 @@ export const nodes = defineNodes([
     name: "I-section alpha exponent",
     symbol: "\\alpha_I",
     expression: "2",
-    children: [{ nodeId: "section_shape" }],
+    children: [],
   },
   {
     id: "alpha_biax_rhs",
@@ -556,7 +592,7 @@ export const nodes = defineNodes([
     name: "CHS alpha exponent",
     symbol: "\\alpha_{CHS}",
     expression: "2",
-    children: [{ nodeId: "section_shape" }],
+    children: [],
   },
   {
     id: "beta_biax",
@@ -565,7 +601,6 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Biaxial interaction exponent beta",
     symbol: "\\beta",
-    expression: "\\text{shape branch value}",
     children: [
       {
         nodeId: "beta_biax_i",
@@ -609,7 +644,7 @@ export const nodes = defineNodes([
     name: "CHS beta exponent",
     symbol: "\\beta_{CHS}",
     expression: "2",
-    children: [{ nodeId: "section_shape" }],
+    children: [],
   },
   {
     id: "rhs_exp",

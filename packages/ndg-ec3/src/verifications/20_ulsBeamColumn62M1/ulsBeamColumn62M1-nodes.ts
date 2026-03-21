@@ -663,6 +663,9 @@ export const nodes = defineNodes([
         nodeId: "Wpl_y",
       },
       {
+        nodeId: "Wel_y",
+      },
+      {
         nodeId: "fy",
       },
       {
@@ -670,6 +673,9 @@ export const nodes = defineNodes([
       },
       {
         nodeId: "M_cr",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },
@@ -727,13 +733,13 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "eta_y_area_ratio",
     name: "Area-to-modulus ratio in eta_y",
-    expression: "A/W_{pl,y}",
+    expression: "A/W_{el,y}",
     children: [
       {
         nodeId: "A",
       },
       {
-        nodeId: "Wpl_y",
+        nodeId: "Wel_y",
       },
     ],
   },
@@ -743,7 +749,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "eta_y",
     name: "Annex A auxiliary term eta_y",
-    expression: "\\left|\\frac{M_{y,Ed}}{N_{Ed}}\\right|\\frac{A}{W_{pl,y}}",
+    expression: "\\left|\\frac{M_{y,Ed}}{N_{Ed}}\\right|\\frac{A}{W_{el,y}}",
     meta: {
       sectionRef: "Annex A",
     },
@@ -898,13 +904,16 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "cm_branch_limit",
     name: "Annex A branch limit",
-    expression: "0.4(1-n_{cr,z})(1-n_{cr,TF})",
+    expression: "0.2\\sqrt{C_1}\\sqrt[4]{(1-n_{cr,z})(1-n_{cr,TF})}",
     children: [
       {
         nodeId: "ncr_z_ratio",
       },
       {
         nodeId: "ncr_tf_ratio",
+      },
+      {
+        nodeId: "C1",
       },
     ],
   },
@@ -914,13 +923,10 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "cm_branch_active",
     name: "Annex A branch selector for Cm adjustments",
-    expression: "\\bar{\\lambda}_0>0.2\\land C_1<\\text{limit}",
+    expression: "\\bar{\\lambda}_0>\\text{limit}",
     children: [
       {
         nodeId: "lambda_bar_0",
-      },
-      {
-        nodeId: "C1",
       },
       {
         nodeId: "cm_branch_limit",
@@ -1070,7 +1076,13 @@ export const nodes = defineNodes([
         nodeId: "Wpl_y",
       },
       {
+        nodeId: "Wel_y",
+      },
+      {
         nodeId: "fy",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },
@@ -1085,7 +1097,13 @@ export const nodes = defineNodes([
         nodeId: "Wpl_z",
       },
       {
+        nodeId: "Wel_z",
+      },
+      {
         nodeId: "fy",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },
@@ -1206,6 +1224,9 @@ export const nodes = defineNodes([
         nodeId: "Wpl_y",
       },
       {
+        nodeId: "Wel_y",
+      },
+      {
         nodeId: "fy",
       },
       {
@@ -1219,6 +1240,9 @@ export const nodes = defineNodes([
       },
       {
         nodeId: "beta_LT",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },
@@ -1242,6 +1266,9 @@ export const nodes = defineNodes([
         nodeId: "Wpl_y",
       },
       {
+        nodeId: "Wel_y",
+      },
+      {
         nodeId: "fy",
       },
       {
@@ -1249,6 +1276,9 @@ export const nodes = defineNodes([
       },
       {
         nodeId: "k_c",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },
@@ -1543,10 +1573,34 @@ export const nodes = defineNodes([
     key: "C_zy",
     valueType: { type: "number" },
     id: "C_zy",
-    name: "Method 1 interaction coefficient C_zy",
+    name: "Annex A interaction coefficient C_zy",
     children: [
       {
-        nodeId: "abs_N_Ed",
+        nodeId: "Cm_y",
+      },
+      {
+        nodeId: "n_pl",
+      },
+      {
+        nodeId: "lambda_bar_y",
+      },
+      {
+        nodeId: "lambda_bar_z",
+      },
+      {
+        nodeId: "wy",
+      },
+      {
+        nodeId: "d_LT",
+      },
+      {
+        nodeId: "Wel_y",
+      },
+      {
+        nodeId: "wz",
+      },
+      {
+        nodeId: "Wpl_y",
       },
     ],
   },
@@ -1589,10 +1643,13 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "k_yyReserve",
     name: "Denominator of k_yy",
-    expression: "1-n_{cr,y}",
+    expression: "1-\\chi_y\\cdot n_{cr,y}",
     children: [
       {
         nodeId: "ncr_y_ratio",
+      },
+      {
+        nodeId: "chi_y",
       },
     ],
   },
@@ -1610,7 +1667,13 @@ export const nodes = defineNodes([
         nodeId: "Cm_LT",
       },
       {
+        nodeId: "C_yy",
+      },
+      {
         nodeId: "k_yyReserve",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },
@@ -1620,10 +1683,13 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "k_zzReserve",
     name: "Denominator of k_zz",
-    expression: "1-n_{cr,z}",
+    expression: "1-\\chi_z\\cdot n_{cr,z}",
     children: [
       {
         nodeId: "ncr_z_ratio",
+      },
+      {
+        nodeId: "chi_z",
       },
     ],
   },
@@ -1638,7 +1704,13 @@ export const nodes = defineNodes([
         nodeId: "Cm_z",
       },
       {
+        nodeId: "C_zz",
+      },
+      {
         nodeId: "k_zzReserve",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },
@@ -1650,16 +1722,10 @@ export const nodes = defineNodes([
     name: "Interaction factor k_zy",
     children: [
       {
-        nodeId: "abs_N_Ed",
-      },
-      {
         nodeId: "Cm_y",
       },
       {
         nodeId: "Cm_LT",
-      },
-      {
-        nodeId: "k_yyReserve",
       },
       {
         nodeId: "C_zy",
@@ -1671,7 +1737,16 @@ export const nodes = defineNodes([
         nodeId: "wz",
       },
       {
-        nodeId: "k_yy",
+        nodeId: "ncr_y_ratio",
+      },
+      {
+        nodeId: "ncr_z_ratio",
+      },
+      {
+        nodeId: "chi_z",
+      },
+      {
+        nodeId: "section_class",
       },
     ],
   },

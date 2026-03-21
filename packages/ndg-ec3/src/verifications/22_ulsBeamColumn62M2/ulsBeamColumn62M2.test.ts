@@ -18,6 +18,8 @@ const baseInputs = {
   A: 5381,
   Wpl_y: 628_356,
   Wpl_z: 125_219,
+  Wel_y: 557_074,
+  Wel_z: 80_504,
   fy: 235,
   E: 210_000,
   G: 80_769,
@@ -92,6 +94,8 @@ const baseInputs = {
   A: 5381,
   Wpl_y: 628_356,
   Wpl_z: 125_219,
+  Wel_y: 557_074,
+  Wel_z: 80_504,
   fy: 235,
   E: 210_000,
   G: 80_769,
@@ -143,6 +147,63 @@ describe("check-22 parity", () => {
 
     expect(result.ratio).toBeCloseTo(5.105, 3);
     expect(result.passed).toBe(false);
+  });
+
+  it("matches Test_RHS.pdf for the Eq. 6.62 branch", () => {
+    const result = evaluate(check_22_ulsBeamColumn62M2, {
+      inputs: {
+        ...baseInputs,
+        N_Ed: -30_000,
+        M_y_Ed: 7_000_000,
+        M_z_Ed: 3_000_000,
+        A: 1915,
+        Wpl_y: 51_407,
+        Wpl_z: 32_941,
+        Wel_y: 38_569,
+        Wel_z: 25_830,
+        Iy: 1_735_604,
+        Iz: 645_759,
+        It: 1_602_747,
+        Iw: 1,
+        L: 2000,
+        section_shape: "RHS",
+        alpha_y: 0.21,
+        alpha_z: 0.21,
+      },
+      annex,
+    });
+
+    expect(result.ratio).toBeCloseTo(0.954, 3);
+    expect(result.passed).toBe(true);
+  });
+
+  it("matches the CHS closed-section Method 2 symmetry branch", () => {
+    const result = evaluate(check_22_ulsBeamColumn62M2, {
+      inputs: {
+        ...baseInputs,
+        N_Ed: -3_000,
+        M_y_Ed: 0,
+        M_z_Ed: 1_500_000,
+        A: 680,
+        Wpl_y: 9_416,
+        Wpl_z: 9_416,
+        Wel_y: 6_689,
+        Wel_z: 6_689,
+        Iy: 161_527,
+        Iz: 161_527,
+        It: 323_055,
+        Iw: 1,
+        L: 2000,
+        section_shape: "CHS",
+        alpha_y: 0.21,
+        alpha_z: 0.21,
+        alpha_LT: 0.21,
+      },
+      annex,
+    });
+
+    expect(result.ratio).toBeCloseTo(0.784, 3);
+    expect(result.passed).toBe(true);
   });
 });
 

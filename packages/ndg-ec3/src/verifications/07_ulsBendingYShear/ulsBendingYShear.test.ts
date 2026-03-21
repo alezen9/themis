@@ -13,6 +13,7 @@ const baselineInputs = {
   Wpl_y: 220_600,
   Wel_y: 194_300,
   Av_z: 1_424,
+  hw: 183,
   tw: 5.6,
   fy: 355,
 };
@@ -43,10 +44,12 @@ describe("check-07 bending-y-shear", () => {
       (inputs.Av_z * inputs.fy) / (Math.sqrt(3) * customAnnex.coefficients.gamma_M0);
     const rhoRatio = Math.abs(inputs.V_z_Ed) / vplRd;
     const rhoExpected = (2 * rhoRatio - 1) ** 2;
-    const reductionExpected = (rhoExpected * inputs.Av_z ** 2) / (4 * inputs.tw);
-    const myVRdExpected =
-      ((inputs.Wpl_y - reductionExpected) * inputs.fy) /
-      customAnnex.coefficients.gamma_M0;
+    const A_w = inputs.hw * inputs.tw;
+    const reductionExpected = (rhoExpected * A_w ** 2) / (4 * inputs.tw);
+    const myVRdExpected = Math.min(
+      ((inputs.Wpl_y - reductionExpected) * inputs.fy) / customAnnex.coefficients.gamma_M0,
+      (inputs.Wpl_y * inputs.fy) / customAnnex.coefficients.gamma_M0,
+    );
 
     expect(rhoRatio).toBeGreaterThan(0.5);
     expect(result.cache.rho_z).toBeCloseTo(rhoExpected, 12);
@@ -330,6 +333,7 @@ describe("check-07 reference scenarios", () => {
       Wpl_y: 628_356,
       Wel_y: 557_074,
       Av_z: 2_568,
+      hw: 278.6,
       tw: 7.1,
       fy: 235,
     };
@@ -396,6 +400,7 @@ describe("check-07 reference scenarios", () => {
       Wpl_y: 3_512_400,
       Wel_y: 3_069_449,
       Av_z: 8_378,
+      hw: 652,
       tw: 12,
       fy: 235,
     };

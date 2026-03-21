@@ -7,14 +7,15 @@ This check verifies compression resistance against torsional or flexural-torsion
 ## When it applies
 
 - It applies to compression load cases (`N_Ed < 0`)
+- Closed hollow sections (`RHS`, `CHS`) return `not-applicable-load-case`
 - For non-compression (`N_Ed >= 0`) it throws `not-applicable-load-case`
 
 ## Terms in plain language
 
 - `N_Ed`: Design axial force
-- `N_cr_T`: Elastic critical torsional load
-- `lambda_bar_T`: Non-dimensional torsional slenderness
-- `chi_T`: Torsional buckling reduction factor
+- `N_cr_governing`: Selected critical force for torsional/torsional-flexural buckling
+- `lambda_bar_TF`: Non-dimensional torsional/torsional-flexural slenderness
+- `chi_TF`: Torsional/torsional-flexural buckling reduction factor
 - `torsional_buckling_check`: Final utilization ratio
 
 ## Full node tree (ascii)
@@ -23,7 +24,7 @@ This check verifies compression resistance against torsional or flexural-torsion
 torsional_buckling_check
 |- abs_N_Ed
 |  `- N_Ed
-`- N_b_T_Rd
-   |- chi_T
-   `- N_pl_Rk, gamma_M1
+`- N_b_TF_Rd
+   |- chi_TF
+   `- A, fy, gamma_M1
 ```

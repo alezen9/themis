@@ -55,13 +55,13 @@ export const nodes = defineNodes([
     name: "I-section reduced bending resistance about y-y under shear",
     symbol: "M_{y,V,Rd,i}",
     expression:
-      "\\frac{\\left(W_{y,res} - \\rho \\dfrac{A_{v,z}^2}{4t_w}\\right) \\cdot f_y}{\\gamma_{M0}}",
+      "\\frac{\\left(W_{y,res} - \\rho \\dfrac{A_w^2}{4t_w}\\right) \\cdot f_y}{\\gamma_{M0}} \\leq M_{c,y,Rd}",
     unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.8", formulaRef: "(6.30)" },
     children: [
       { nodeId: "W_y_res" },
       { nodeId: "rho_z" },
-      { nodeId: "Av_z" },
+      { nodeId: "A_w" },
       { nodeId: "tw" },
       { nodeId: "fy" },
       { nodeId: "gamma_M0" },
@@ -75,7 +75,7 @@ export const nodes = defineNodes([
     name: "RHS/CHS reduced bending resistance about y-y under shear",
     symbol: "M_{y,V,Rd,RHS/CHS}",
     expression:
-      "\\frac{\\left(W_{y,res}(1-\\rho)\\right) \\cdot f_y}{\\gamma_{M0}}",
+      "\\frac{\\left(W_{y,res}(1-\\rho)\\right) \\cdot f_y}{\\gamma_{M0}} \\leq M_{c,y,Rd}",
     unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.8", paragraphRef: "(3)" },
     children: [
@@ -209,6 +209,27 @@ export const nodes = defineNodes([
     symbol: "A_{v,z}",
     unit: "\\mathrm{mm^{2}}",
     children: [],
+  },
+  {
+    id: "hw",
+    type: "user-input",
+    key: "hw",
+    valueType: { type: "number" },
+    name: "Web depth",
+    symbol: "h_w",
+    unit: "\\mathrm{mm}",
+    children: [],
+  },
+  {
+    id: "A_w",
+    type: "derived",
+    key: "A_w",
+    valueType: { type: "number" },
+    name: "Web area",
+    symbol: "A_w",
+    expression: "h_w \\cdot t_w",
+    unit: "\\mathrm{mm^{2}}",
+    children: [{ nodeId: "hw" }, { nodeId: "tw" }],
   },
   {
     id: "tw",

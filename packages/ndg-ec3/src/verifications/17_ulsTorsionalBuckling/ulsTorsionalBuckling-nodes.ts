@@ -158,8 +158,8 @@ export const nodes = defineNodes([
     key: "pi",
     valueType: { type: "number" },
     id: "pi",
-    name: "Pi squared",
-    symbol: "\\pi^2",
+    name: "Pi",
+    symbol: "\\pi",
     children: [],
   },
   {
@@ -183,34 +183,6 @@ export const nodes = defineNodes([
   },
   {
     type: "derived",
-    key: "ncr_t_right",
-    valueType: { type: "number" },
-    id: "ncr_t_right",
-    name: "Right summand in N_cr,T numerator",
-    expression: "\\frac{\\pi^2 E I_w}{L_{cr,T}^2}",
-    children: [
-      {
-        nodeId: "pi",
-      },
-      {
-        nodeId: "E",
-      },
-      {
-        nodeId: "Iw",
-      },
-      {
-        nodeId: "L",
-      },
-      {
-        nodeId: "k_T",
-      },
-      {
-        nodeId: "k_z",
-      },
-    ],
-  },
-  {
-    type: "derived",
     key: "N_cr_T",
     valueType: { type: "number" },
     id: "N_cr_T",
@@ -225,59 +197,14 @@ export const nodes = defineNodes([
     },
     children: [
       {
-        nodeId: "section_shape",
-      },
-      {
-        nodeId: "A",
-      },
-      {
-        nodeId: "L",
-      },
-      {
-        nodeId: "k_T",
-      },
-      {
-        nodeId: "k_z",
-      },
-      {
-        nodeId: "Iy",
-      },
-      {
-        nodeId: "Iz",
-      },
-      {
-        nodeId: "It",
-      },
-      {
-        nodeId: "Iw",
-      },
-      {
         nodeId: "ip2",
       },
       {
         nodeId: "G",
       },
       {
-        nodeId: "pi",
+        nodeId: "It",
       },
-      {
-        nodeId: "E",
-      },
-    ],
-  },
-  {
-    type: "derived",
-    key: "N_cr_z",
-    valueType: { type: "number" },
-    id: "N_cr_z",
-    name: "Elastic flexural critical force about z-z",
-    symbol: "N_{cr,z}",
-    expression: "\\frac{\\pi^2 E I_z}{L_{cr,T}^2}",
-    unit: "\\mathrm{N}",
-    meta: {
-      sectionRef: "6.3.1.2",
-    },
-    children: [
       {
         nodeId: "pi",
       },
@@ -285,7 +212,7 @@ export const nodes = defineNodes([
         nodeId: "E",
       },
       {
-        nodeId: "Iz",
+        nodeId: "Iw",
       },
       {
         nodeId: "L",
@@ -295,28 +222,6 @@ export const nodes = defineNodes([
       },
       {
         nodeId: "k_z",
-      },
-    ],
-  },
-  {
-    type: "derived",
-    key: "N_cr_TF",
-    valueType: { type: "number" },
-    id: "N_cr_TF",
-    name: "Elastic torsional-flexural critical force",
-    symbol: "N_{cr,TF}",
-    expression: "\\min(N_{cr,T}, N_{cr,z})",
-    unit: "\\mathrm{N}",
-    meta: {
-      sectionRef: "6.3.1.4",
-      paragraphRef: "(2)",
-    },
-    children: [
-      {
-        nodeId: "N_cr_T",
-      },
-      {
-        nodeId: "N_cr_z",
       },
     ],
   },
@@ -325,9 +230,9 @@ export const nodes = defineNodes([
     key: "N_cr_governing",
     valueType: { type: "number" },
     id: "N_cr_governing",
-    name: "Governing critical force for torsional buckling slenderness",
+    name: "Selected critical force for torsional/torsional-flexural slenderness",
     symbol: "N_{cr}",
-    expression: "N_{cr,T}",
+    expression: "N_{cr,T}=N_{cr,TF}",
     unit: "\\mathrm{N}",
     meta: {
       sectionRef: "6.3.1.4",

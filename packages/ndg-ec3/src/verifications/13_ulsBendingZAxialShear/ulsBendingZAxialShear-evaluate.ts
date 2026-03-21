@@ -106,7 +106,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A - 2 * b * tf) / A;
+    return Math.min((A - 2 * b * tf) / A, 0.5);
   },
 
   a_f_rhs: ({ A, h, t }) => {
@@ -134,40 +134,15 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A - 2 * h * t) / A;
+    return Math.min((A - 2 * h * t) / A, 0.5);
   },
 
   a_f_chs: () => {
     return 0.5;
   },
 
-  a_f: ({ section_shape, a_f_i, a_f_rhs, a_f_chs }) => {
-    const reductionParameter =
-      section_shape === "I"
-        ? a_f_i
-        : section_shape === "RHS"
-          ? a_f_rhs
-          : a_f_chs;
-
-    if (!Number.isFinite(reductionParameter) || reductionParameter < 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-z-axial-shear: reduction parameter must be >= 0",
-        details: { reductionParameter, sectionRef: "6.2.9.1" },
-      });
-    }
-
-    return Math.min(reductionParameter, 0.5);
-  },
-
-  is_n_le_a_f: ({ n, a_f }) => {
-    return n <= a_f ? 1 : 0;
-  },
-
-  k_z: ({ is_n_le_a_f, n, a_f }) => {
-    if (is_n_le_a_f === 1) {
-      return 1;
-    }
+  k_z_i: ({ n, a_f }) => {
+    if (n <= a_f) return 1;
 
     const denominator = 1 - a_f;
     if (!Number.isFinite(denominator) || denominator <= 0) {
@@ -180,6 +155,20 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
 
     return 1 - ((n - a_f) / denominator) ** 2;
+  },
+
+  k_z_rhs_chs: ({ n, a_f }) => {
+    const denominator = 1 - 0.5 * a_f;
+    if (!Number.isFinite(denominator) || denominator <= 0) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message:
+          "bending-z-axial-shear: denominator (1 - 0.5*a_f) must be > 0 (division by zero)",
+        details: { denominator, sectionRef: "6.2.9.1" },
+      });
+    }
+
+    return Math.min(1, (1 - n) / denominator);
   },
 
   V_pl_y_Rd: ({ Av_y, fy, gamma_M0 }) => {
@@ -432,6 +421,17 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return section_class === 3 ? utilization_class3 : utilization_class12;
+    if (typeof utilization_class12 === "number") {
+      return utilization_class12;
+    }
+    if (typeof utilization_class3 === "number") {
+      return utilization_class3;
+    }
+
+    throw new Ec3VerificationError({
+      type: "evaluation-error",
+      message: "bending-z-axial-shear: no active utilization branch was selected",
+      details: { sectionRef: "6.2.10" },
+    });
   },
 });

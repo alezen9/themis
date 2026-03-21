@@ -56,6 +56,20 @@ describe("check_18_ulsLtb", () => {
       expect(failure.type).toBe("invalid-input-domain");
     }
   });
+
+  it("throws not-applicable-load-case for closed hollow sections", () => {
+    try {
+      evaluate(check_18_ulsLtb, {
+        inputs: { ...baseInputs, section_shape: "CHS" },
+        annex,
+      });
+      throw new Error("expected evaluation to fail");
+    } catch (error) {
+      expect(error).toBeInstanceOf(Ec3VerificationError);
+      const failure = error as Ec3VerificationError;
+      expect(failure.type).toBe("not-applicable-load-case");
+    }
+  });
 });
 
 {
