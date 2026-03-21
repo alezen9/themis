@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { hasData, hasError, isNotApplicable } from "./use-ec3-evaluate";
 import type { VerificationRow } from "./use-ec3-evaluate";
 import { Ec3Report } from "./Ec3Report";
@@ -11,6 +11,17 @@ export const Ec3Results = ({ results }: Ec3ResultsProps) => {
   const [reportMode, setReportMode] = useState<"none" | "summary" | "verbose">(
     "none",
   );
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const syncScrollTopVisibility = () => {
+      setShowScrollTop(window.scrollY > 320);
+    };
+
+    syncScrollTopVisibility();
+    window.addEventListener("scroll", syncScrollTopVisibility);
+    return () => window.removeEventListener("scroll", syncScrollTopVisibility);
+  }, []);
 
   return (
     <div>
@@ -84,6 +95,17 @@ export const Ec3Results = ({ results }: Ec3ResultsProps) => {
             ))}
           </tbody>
         </table>
+      )}
+
+      {showScrollTop && (
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="fixed right-6 bottom-6 z-20 rounded-full border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-700 shadow-lg transition hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+          aria-label="Scroll to top"
+        >
+          Top
+        </button>
       )}
     </div>
   );
