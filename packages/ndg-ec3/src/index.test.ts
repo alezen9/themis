@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import verify, { type Ec3Inputs } from "./index";
+import verify, {
+  ec3VerificationDefinitions,
+  type Ec3Inputs,
+} from "./index";
 
 const baseISectionInputs: Ec3Inputs = {
   N_Ed: -30_000,
@@ -54,6 +57,20 @@ const baseISectionInputs: Ec3Inputs = {
 };
 
 describe("verify", () => {
+  it("exports a stable public verification catalog in registry order", () => {
+    expect(ec3VerificationDefinitions).toHaveLength(22);
+    expect(ec3VerificationDefinitions.map((entry) => entry.checkId)).toEqual(
+      Array.from({ length: 22 }, (_, index) => index + 1),
+    );
+
+    for (const entry of ec3VerificationDefinitions) {
+      expect(entry.name.length).toBeGreaterThan(0);
+      expect(entry.check.name).toBe(entry.name);
+      expect(entry.nodes.length).toBeGreaterThan(0);
+      expect(entry.nodes.some((node) => node.type === "check")).toBe(true);
+    }
+  });
+
   it("returns the fixed 22-check contract in registry order", () => {
     const rows = verify(baseISectionInputs);
 

@@ -1,8 +1,13 @@
 import { evaluate, VerificationSchema } from "@ndg/ndg-core";
 import type {
+  CheckNode,
+  Condition,
+  ConditionOperand,
   EvaluationContext,
   EvaluationResult,
   InferCache,
+  Node,
+  TraceEntry,
   VerificationDefinition,
 } from "@ndg/ndg-core";
 import v01_ulsTension from "./verifications/01_ulsTension/ulsTension";
@@ -31,40 +36,63 @@ import { eurocodeAnnex } from "./annexes/eurocode";
 import { Ec3VerificationError } from "./errors";
 
 export { VerificationSchema };
+export { evaluateCondition } from "@ndg/ndg-core";
 export { eurocodeAnnex } from "./annexes/eurocode";
 export { italianAnnex } from "./annexes/italian-na";
+export type { Condition, ConditionOperand, EvaluationResult, Node, TraceEntry };
 // Deprecated transitional exports; scheduled for removal after table logic is embedded in check nodes.
 export { getImperfectionFactor } from "./tables/ec3-table-6.1";
 export { getBucklingCurves } from "./tables/ec3-table-6.2";
 
-const verifications = [
-  v01_ulsTension,
-  v02_ulsCompression,
-  v03_ulsBendingY,
-  v04_ulsBendingZ,
-  v05_ulsShearZ,
-  v06_ulsShearY,
-  v07_ulsBendingYShear,
-  v08_ulsBendingZShear,
-  v09_ulsBendingYAxial,
-  v10_ulsBendingZAxial,
-  v11_ulsBiaxialAxial,
-  v12_ulsBendingYAxialShear,
-  v13_ulsBendingZAxialShear,
-  v14_ulsBiaxialAxialShear,
-  v15_ulsBucklingY,
-  v16_ulsBucklingZ,
-  v17_ulsTorsionalBuckling,
-  v18_ulsLtb,
-  v19_ulsBeamColumn61M1,
-  v20_ulsBeamColumn62M1,
-  v21_ulsBeamColumn61M2,
-  v22_ulsBeamColumn62M2,
-] as const;
+const toRegistryDefinition = (
+  verification: unknown,
+): VerificationDefinition<readonly Node[]> =>
+  verification as VerificationDefinition<readonly Node[]>;
 
-type Nodes = (typeof verifications)[number]["nodes"];
+const verificationRegistry: readonly {
+  checkId: number;
+  verification: VerificationDefinition<readonly Node[]>;
+}[] = [
+  { checkId: 1, verification: toRegistryDefinition(v01_ulsTension) },
+  { checkId: 2, verification: toRegistryDefinition(v02_ulsCompression) },
+  { checkId: 3, verification: toRegistryDefinition(v03_ulsBendingY) },
+  { checkId: 4, verification: toRegistryDefinition(v04_ulsBendingZ) },
+  { checkId: 5, verification: toRegistryDefinition(v05_ulsShearZ) },
+  { checkId: 6, verification: toRegistryDefinition(v06_ulsShearY) },
+  { checkId: 7, verification: toRegistryDefinition(v07_ulsBendingYShear) },
+  { checkId: 8, verification: toRegistryDefinition(v08_ulsBendingZShear) },
+  { checkId: 9, verification: toRegistryDefinition(v09_ulsBendingYAxial) },
+  { checkId: 10, verification: toRegistryDefinition(v10_ulsBendingZAxial) },
+  { checkId: 11, verification: toRegistryDefinition(v11_ulsBiaxialAxial) },
+  { checkId: 12, verification: toRegistryDefinition(v12_ulsBendingYAxialShear) },
+  { checkId: 13, verification: toRegistryDefinition(v13_ulsBendingZAxialShear) },
+  { checkId: 14, verification: toRegistryDefinition(v14_ulsBiaxialAxialShear) },
+  { checkId: 15, verification: toRegistryDefinition(v15_ulsBucklingY) },
+  { checkId: 16, verification: toRegistryDefinition(v16_ulsBucklingZ) },
+  { checkId: 17, verification: toRegistryDefinition(v17_ulsTorsionalBuckling) },
+  { checkId: 18, verification: toRegistryDefinition(v18_ulsLtb) },
+  { checkId: 19, verification: toRegistryDefinition(v19_ulsBeamColumn61M1) },
+  { checkId: 20, verification: toRegistryDefinition(v20_ulsBeamColumn62M1) },
+  { checkId: 21, verification: toRegistryDefinition(v21_ulsBeamColumn61M2) },
+  { checkId: 22, verification: toRegistryDefinition(v22_ulsBeamColumn62M2) },
+];
+
+type Nodes = (typeof verificationRegistry)[number]["verification"]["nodes"];
 type UserInputKeys = Extract<Nodes[number], { type: "user-input" }>["key"];
 export type Ec3Inputs = Pick<InferCache<Nodes>, UserInputKeys>;
+
+export type Ec3VerificationCatalogEntry = {
+  checkId: number;
+  name: string;
+  check: {
+    id: CheckNode["id"];
+    key: CheckNode["key"];
+    name: CheckNode["name"];
+    verificationExpression: CheckNode["verificationExpression"];
+    meta?: CheckNode["meta"];
+  };
+  nodes: readonly Node[];
+};
 
 type VerificationPayload =
   | { data: EvaluationResult; error?: undefined }
@@ -76,18 +104,47 @@ export type VerificationRow = {
   payload: VerificationPayload;
 };
 
-const toVerificationRow = <
-  TNodes extends readonly import("@ndg/ndg-core").Node[],
->(
-  checkId: number,
-  verification: VerificationDefinition<TNodes>,
-  context: EvaluationContext,
-): VerificationRow => {
+const getCheckDetails = (
+  verification: VerificationDefinition<readonly Node[]>,
+) => {
   const checkNode = [...verification.nodes]
     .reverse()
-    .find((node) => node.type === "check");
-  const name =
-    checkNode?.name ?? verification.nodes[verification.nodes.length - 1].key;
+    .find((node): node is CheckNode => node.type === "check");
+  if (!checkNode) {
+    throw new Error(
+      `Verification "${verification.nodes[verification.nodes.length - 1]?.key ?? "unknown"}" is missing a check node`,
+    );
+  }
+
+  return {
+    name: checkNode.name,
+    check: {
+      id: checkNode.id,
+      key: checkNode.key,
+      name: checkNode.name,
+      verificationExpression: checkNode.verificationExpression,
+      meta: checkNode.meta,
+    },
+  };
+};
+
+export const ec3VerificationDefinitions: readonly Ec3VerificationCatalogEntry[] =
+  verificationRegistry.map(({ checkId, verification }) => {
+    const { name, check } = getCheckDetails(verification);
+    return {
+      checkId,
+      name,
+      check,
+      nodes: verification.nodes,
+    };
+  });
+
+const toVerificationRow = (
+  checkId: number,
+  verification: VerificationDefinition<readonly Node[]>,
+  context: EvaluationContext,
+): VerificationRow => {
+  const { name } = getCheckDetails(verification);
 
   try {
     const data = evaluate(verification, context);
@@ -110,36 +167,15 @@ const verify = (
 ): VerificationRow[] => {
   const context: EvaluationContext = { inputs, annex };
 
-  if (verifications.length !== 22) {
+  if (verificationRegistry.length !== 22) {
     throw new Error(
-      `Unexpected verification registry size: ${verifications.length}`,
+      `Unexpected verification registry size: ${verificationRegistry.length}`,
     );
   }
 
-  return [
-    toVerificationRow(1, v01_ulsTension, context),
-    toVerificationRow(2, v02_ulsCompression, context),
-    toVerificationRow(3, v03_ulsBendingY, context),
-    toVerificationRow(4, v04_ulsBendingZ, context),
-    toVerificationRow(5, v05_ulsShearZ, context),
-    toVerificationRow(6, v06_ulsShearY, context),
-    toVerificationRow(7, v07_ulsBendingYShear, context),
-    toVerificationRow(8, v08_ulsBendingZShear, context),
-    toVerificationRow(9, v09_ulsBendingYAxial, context),
-    toVerificationRow(10, v10_ulsBendingZAxial, context),
-    toVerificationRow(11, v11_ulsBiaxialAxial, context),
-    toVerificationRow(12, v12_ulsBendingYAxialShear, context),
-    toVerificationRow(13, v13_ulsBendingZAxialShear, context),
-    toVerificationRow(14, v14_ulsBiaxialAxialShear, context),
-    toVerificationRow(15, v15_ulsBucklingY, context),
-    toVerificationRow(16, v16_ulsBucklingZ, context),
-    toVerificationRow(17, v17_ulsTorsionalBuckling, context),
-    toVerificationRow(18, v18_ulsLtb, context),
-    toVerificationRow(19, v19_ulsBeamColumn61M1, context),
-    toVerificationRow(20, v20_ulsBeamColumn62M1, context),
-    toVerificationRow(21, v21_ulsBeamColumn61M2, context),
-    toVerificationRow(22, v22_ulsBeamColumn62M2, context),
-  ];
+  return verificationRegistry.map(({ checkId, verification }) =>
+    toVerificationRow(checkId, verification, context),
+  );
 };
 
 export default verify;

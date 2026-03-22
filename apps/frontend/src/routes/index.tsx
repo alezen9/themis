@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useVerifications } from "../hooks/use-verifications";
+import { verificationDebuggerEnabled } from "../pages/ec3/ec3-debugger-env";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -14,6 +15,11 @@ function Home() {
         <Link to="/ec3" className="underline hover:no-underline">
           EC3 Verifications
         </Link>
+        {verificationDebuggerEnabled ? (
+          <Link to="/debug/ec3" className="underline hover:no-underline">
+            EC3 Debugger
+          </Link>
+        ) : null}
         <Link to="/about" className="underline hover:no-underline">
           About Us
         </Link>
