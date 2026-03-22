@@ -96,12 +96,7 @@ type VerificationTone = "neutral" | "success" | "error";
 
 const VERIFICATION_TONE_STYLES: Record<
   VerificationTone,
-  {
-    background: string;
-    border: string;
-    pill: string;
-    text: string;
-  }
+  { background: string; border: string; pill: string; text: string }
 > = {
   neutral: {
     background: "bg-gray-50",
@@ -269,7 +264,9 @@ const VerboseVerification = ({
           <div className="bg-gray-50 rounded px-3 py-2 text-center">
             <Formula tex={checkEntry.verificationExpression} display />
             {typeof checkMeta?.formulaRef === "string" && (
-              <p className="text-xs text-gray-400 mt-1">{checkMeta.formulaRef}</p>
+              <p className="text-xs text-gray-400 mt-1">
+                {checkMeta.formulaRef}
+              </p>
             )}
           </div>
         </div>
@@ -498,7 +495,9 @@ const VerboseVerification = ({
                 {result.name}
               </span>
               <SectionRef meta={checkMeta} />
-              <span className="text-xs text-gray-400">EC3 #{result.checkId}</span>
+              <span className="text-xs text-gray-400">
+                EC3 #{result.checkId}
+              </span>
             </div>
             <p className="text-xs text-gray-500">
               {isOpen ? "Hide check details" : "Show check details"}
@@ -516,7 +515,10 @@ const VerboseVerification = ({
           >
             {status.label}
           </span>
-          <span className={`text-sm font-semibold ${tone.text}`} aria-hidden="true">
+          <span
+            className={`text-sm font-semibold ${tone.text}`}
+            aria-hidden="true"
+          >
             {isOpen ? "-" : "+"}
           </span>
         </div>
@@ -735,7 +737,9 @@ const SummaryVerification = ({
   );
 
   return (
-    <div className={`mb-3 overflow-hidden rounded border ${tone.border} bg-white`}>
+    <div
+      className={`mb-3 overflow-hidden rounded border ${tone.border} bg-white`}
+    >
       <button
         type="button"
         onClick={onToggle}
@@ -773,7 +777,10 @@ const SummaryVerification = ({
           >
             {status.badge}
           </span>
-          <span className={`text-sm font-semibold ${tone.text}`} aria-hidden="true">
+          <span
+            className={`text-sm font-semibold ${tone.text}`}
+            aria-hidden="true"
+          >
             {isOpen ? "-" : "+"}
           </span>
         </div>
@@ -835,8 +842,12 @@ export const Ec3Report = ({ results, mode }: Ec3ReportProps) => {
             </h2>
             <div className="text-sm flex gap-4">
               <span className="text-green-700">{passed} passed</span>
-              {failed > 0 && <span className="text-red-600">{failed} failed</span>}
-              {errors > 0 && <span className="text-red-600">{errors} errors</span>}
+              {failed > 0 && (
+                <span className="text-red-600">{failed} failed</span>
+              )}
+              {errors > 0 && (
+                <span className="text-red-600">{errors} errors</span>
+              )}
               {notApplicable > 0 && (
                 <span className="text-gray-600">{notApplicable} n/a</span>
               )}

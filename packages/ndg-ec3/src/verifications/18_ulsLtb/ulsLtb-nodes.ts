@@ -43,7 +43,10 @@ export const nodes = defineNodes([
       {
         nodeId: "Wpl_y",
         when: {
-          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
+          or: [
+            { eq: ["section_class", { value: 1 }] },
+            { eq: ["section_class", { value: 2 }] },
+          ],
         },
       },
       { nodeId: "Wel_y", when: { eq: ["section_class", { value: 3 }] } },
@@ -208,9 +211,7 @@ export const nodes = defineNodes([
     id: "gamma_M1",
     name: "Partial safety factor",
     symbol: "\\gamma_{M1}",
-    meta: {
-      sectionRef: "6.1",
-    },
+    meta: { sectionRef: "6.1" },
     children: [],
   },
   {
@@ -220,9 +221,7 @@ export const nodes = defineNodes([
     id: "lambda_LT_0",
     name: "Plateau length of LTB curves",
     symbol: "\\bar{\\lambda}_{LT,0}",
-    meta: {
-      sectionRef: "6.3.2.3",
-    },
+    meta: { sectionRef: "6.3.2.3" },
     children: [],
   },
   {
@@ -232,9 +231,7 @@ export const nodes = defineNodes([
     id: "beta_LT",
     name: "LTB curve parameter",
     symbol: "\\beta",
-    meta: {
-      sectionRef: "6.3.2.3",
-    },
+    meta: { sectionRef: "6.3.2.3" },
     children: [],
   },
   {
@@ -254,23 +251,12 @@ export const nodes = defineNodes([
     name: "Moment distribution correction factor",
     symbol: "k_c",
     source: "EC3-6.6",
-    meta: {
-      sectionRef: "6.3.2.3",
-      tableRef: "6.6",
-    },
+    meta: { sectionRef: "6.3.2.3", tableRef: "6.6" },
     children: [
-      {
-        nodeId: "moment_shape_LT",
-      },
-      {
-        nodeId: "psi_LT",
-      },
-      {
-        nodeId: "support_condition_LT",
-      },
-      {
-        nodeId: "load_application_LT",
-      },
+      { nodeId: "moment_shape_LT" },
+      { nodeId: "psi_LT" },
+      { nodeId: "support_condition_LT" },
+      { nodeId: "load_application_LT" },
     ],
   },
   {
@@ -280,11 +266,7 @@ export const nodes = defineNodes([
     id: "C1",
     name: "Moment gradient factor C1",
     expression: "\\frac{1}{k_c^2}",
-    children: [
-      {
-        nodeId: "k_c",
-      },
-    ],
+    children: [{ nodeId: "k_c" }],
   },
   {
     type: "derived",
@@ -296,44 +278,19 @@ export const nodes = defineNodes([
     expression:
       "C_1 \\frac{\\pi^2 E I_z}{L_{cr,LT}^2}\\sqrt{\\frac{I_w}{I_z}+\\frac{L_{cr,LT}^2 G I_t}{\\pi^2 E I_z}}",
     unit: "\\mathrm{N\\cdot mm}",
-    meta: {
-      sectionRef: "6.3.2.2",
-      paragraphRef: "(2)",
-    },
+    meta: { sectionRef: "6.3.2.2", paragraphRef: "(2)" },
     children: [
-      {
-        nodeId: "L",
-      },
-      {
-        nodeId: "k_LT",
-      },
-      {
-        nodeId: "C1",
-      },
-      {
-        nodeId: "pi",
-      },
-      {
-        nodeId: "E",
-      },
-      {
-        nodeId: "Iz",
-      },
-      {
-        nodeId: "It",
-      },
-      {
-        nodeId: "Iw",
-      },
-      {
-        nodeId: "G",
-      },
-      {
-        nodeId: "torsional_deformations",
-      },
-      {
-        nodeId: "section_shape",
-      },
+      { nodeId: "L" },
+      { nodeId: "k_LT" },
+      { nodeId: "C1" },
+      { nodeId: "pi" },
+      { nodeId: "E" },
+      { nodeId: "Iz" },
+      { nodeId: "It" },
+      { nodeId: "Iw" },
+      { nodeId: "G" },
+      { nodeId: "torsional_deformations" },
+      { nodeId: "section_shape" },
     ],
   },
   {
@@ -344,17 +301,7 @@ export const nodes = defineNodes([
     name: "Non-dimensional slenderness for LTB",
     symbol: "\\bar{\\lambda}_{LT}",
     expression: "\\sqrt{\\frac{W_{y,res} f_y}{M_{cr}}}",
-    children: [
-      {
-        nodeId: "W_y_res",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "M_cr",
-      },
-    ],
+    children: [{ nodeId: "W_y_res" }, { nodeId: "fy" }, { nodeId: "M_cr" }],
   },
   {
     type: "derived",
@@ -366,18 +313,10 @@ export const nodes = defineNodes([
     expression:
       "0.5(1 + \\alpha_{LT}(\\bar{\\lambda}_{LT} - \\bar{\\lambda}_{LT,0}) + \\beta \\bar{\\lambda}_{LT}^2)",
     children: [
-      {
-        nodeId: "alpha_LT",
-      },
-      {
-        nodeId: "lambda_bar_LT",
-      },
-      {
-        nodeId: "lambda_LT_0",
-      },
-      {
-        nodeId: "beta_LT",
-      },
+      { nodeId: "alpha_LT" },
+      { nodeId: "lambda_bar_LT" },
+      { nodeId: "lambda_LT_0" },
+      { nodeId: "beta_LT" },
     ],
   },
   {
@@ -389,18 +328,10 @@ export const nodes = defineNodes([
     symbol: "\\chi_{LT}",
     expression: "\\min(1,\\min(\\chi_{LT,base}, 1/\\bar{\\lambda}_{LT}^2))",
     children: [
-      {
-        nodeId: "phi_LT",
-      },
-      {
-        nodeId: "beta_LT",
-      },
-      {
-        nodeId: "lambda_bar_LT",
-      },
-      {
-        nodeId: "buckling_curves_LT_policy",
-      },
+      { nodeId: "phi_LT" },
+      { nodeId: "beta_LT" },
+      { nodeId: "lambda_bar_LT" },
+      { nodeId: "buckling_curves_LT_policy" },
     ],
   },
   {
@@ -412,18 +343,8 @@ export const nodes = defineNodes([
     symbol: "f",
     expression:
       "f = \\min\\left(1, 1 - 0.5(1-k_c)[1-2(\\bar{\\lambda}_{LT}-0.8)^2]\\right)",
-    meta: {
-      sectionRef: "6.3.2.3",
-      paragraphRef: "(2)",
-    },
-    children: [
-      {
-        nodeId: "lambda_bar_LT",
-      },
-      {
-        nodeId: "k_c",
-      },
-    ],
+    meta: { sectionRef: "6.3.2.3", paragraphRef: "(2)" },
+    children: [{ nodeId: "lambda_bar_LT" }, { nodeId: "k_c" }],
   },
   {
     type: "formula",
@@ -433,18 +354,8 @@ export const nodes = defineNodes([
     name: "Modified LT reduction factor",
     symbol: "\\chi_{LT,mod}",
     expression: "\\min\\left(1,\\frac{\\chi_{LT}}{f}\\right)",
-    meta: {
-      sectionRef: "6.3.2.3",
-      formulaRef: "(6.58)",
-    },
-    children: [
-      {
-        nodeId: "chi_LT",
-      },
-      {
-        nodeId: "f_LT",
-      },
-    ],
+    meta: { sectionRef: "6.3.2.3", formulaRef: "(6.58)" },
+    children: [{ nodeId: "chi_LT" }, { nodeId: "f_LT" }],
   },
   {
     type: "formula",
@@ -455,23 +366,12 @@ export const nodes = defineNodes([
     symbol: "M_{b,Rd}",
     expression: "\\frac{\\chi_{LT,mod} W_{y,res} f_y}{\\gamma_{M1}}",
     unit: "\\mathrm{N\\cdot mm}",
-    meta: {
-      sectionRef: "6.3.2.1",
-      formulaRef: "(6.55)",
-    },
+    meta: { sectionRef: "6.3.2.1", formulaRef: "(6.55)" },
     children: [
-      {
-        nodeId: "chi_LT_mod",
-      },
-      {
-        nodeId: "W_y_res",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "gamma_M1",
-      },
+      { nodeId: "chi_LT_mod" },
+      { nodeId: "W_y_res" },
+      { nodeId: "fy" },
+      { nodeId: "gamma_M1" },
     ],
   },
   {
@@ -481,11 +381,7 @@ export const nodes = defineNodes([
     id: "abs_M_y_Ed",
     name: "Absolute design moment",
     expression: "\\left|M_{y,Ed}\\right|",
-    children: [
-      {
-        nodeId: "M_y_Ed",
-      },
-    ],
+    children: [{ nodeId: "M_y_Ed" }],
   },
   {
     type: "check",
@@ -494,18 +390,8 @@ export const nodes = defineNodes([
     id: "ltb_check",
     name: "Lateral-torsional buckling check",
     verificationExpression: "\\frac{M_{y,Ed}}{M_{b,Rd}} \\leq 1.0",
-    meta: {
-      sectionRef: "6.3.2.1",
-      verificationRef: "(6.54)",
-    },
-    children: [
-      {
-        nodeId: "abs_M_y_Ed",
-      },
-      {
-        nodeId: "M_b_Rd",
-      },
-    ],
+    meta: { sectionRef: "6.3.2.1", verificationRef: "(6.54)" },
+    children: [{ nodeId: "abs_M_y_Ed" }, { nodeId: "M_b_Rd" }],
   },
 ]);
 

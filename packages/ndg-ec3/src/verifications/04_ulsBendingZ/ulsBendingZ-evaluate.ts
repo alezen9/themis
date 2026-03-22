@@ -44,7 +44,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     if (!Number.isFinite(M_c_z_Rd) || M_c_z_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z: denominator M_c_z_Rd must be > 0 (division by zero)",
+        message:
+          "bending-z: denominator M_c_z_Rd must be > 0 (division by zero)",
         details: { M_c_z_Rd, sectionRef: "6.2.5" },
       });
     }

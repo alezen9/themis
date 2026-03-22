@@ -14,7 +14,10 @@ export const nodes = defineNodes([
       {
         nodeId: "utilization_class12",
         when: {
-          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
+          or: [
+            { eq: ["section_class", { value: 1 }] },
+            { eq: ["section_class", { value: 2 }] },
+          ],
         },
       },
       {
@@ -88,7 +91,10 @@ export const nodes = defineNodes([
       {
         nodeId: "W_y_res_class12",
         when: {
-          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
+          or: [
+            { eq: ["section_class", { value: 1 }] },
+            { eq: ["section_class", { value: 2 }] },
+          ],
         },
       },
       {
@@ -417,7 +423,10 @@ export const nodes = defineNodes([
       {
         nodeId: "W_z_res_class12",
         when: {
-          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
+          or: [
+            { eq: ["section_class", { value: 1 }] },
+            { eq: ["section_class", { value: 2 }] },
+          ],
         },
       },
       {
@@ -491,7 +500,8 @@ export const nodes = defineNodes([
     key: "k_z_i",
     valueType: { type: "number" },
     name: "I-section axial reduction factor for z-z",
-    expression: "n \\leq a_f \\Rightarrow 1,\\ \\text{else}\\ 1-\\left(\\frac{n-a_f}{1-a_f}\\right)^2",
+    expression:
+      "n \\leq a_f \\Rightarrow 1,\\ \\text{else}\\ 1-\\left(\\frac{n-a_f}{1-a_f}\\right)^2",
     children: [{ nodeId: "n" }, { nodeId: "a_f" }],
   },
   {

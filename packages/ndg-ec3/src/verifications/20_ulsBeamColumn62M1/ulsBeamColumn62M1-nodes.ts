@@ -331,9 +331,7 @@ export const nodes = defineNodes([
     id: "gamma_M1",
     name: "Partial factor",
     symbol: "\\gamma_{M1}",
-    meta: {
-      sectionRef: "6.1",
-    },
+    meta: { sectionRef: "6.1" },
     children: [],
   },
   {
@@ -342,9 +340,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "lambda_LT_0",
     name: "LTB plateau",
-    meta: {
-      sectionRef: "6.3.2.3",
-    },
+    meta: { sectionRef: "6.3.2.3" },
     children: [],
   },
   {
@@ -353,9 +349,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "beta_LT",
     name: "LTB beta",
-    meta: {
-      sectionRef: "6.3.2.3",
-    },
+    meta: { sectionRef: "6.3.2.3" },
     children: [],
   },
   {
@@ -375,23 +369,12 @@ export const nodes = defineNodes([
     name: "Moment distribution correction factor",
     symbol: "k_c",
     source: "EC3-6.6",
-    meta: {
-      sectionRef: "6.3.2.3",
-      tableRef: "6.6",
-    },
+    meta: { sectionRef: "6.3.2.3", tableRef: "6.6" },
     children: [
-      {
-        nodeId: "moment_shape_LT",
-      },
-      {
-        nodeId: "psi_LT",
-      },
-      {
-        nodeId: "support_condition_LT",
-      },
-      {
-        nodeId: "load_application_LT",
-      },
+      { nodeId: "moment_shape_LT" },
+      { nodeId: "psi_LT" },
+      { nodeId: "support_condition_LT" },
+      { nodeId: "load_application_LT" },
     ],
   },
   {
@@ -401,11 +384,7 @@ export const nodes = defineNodes([
     id: "C1",
     name: "Moment gradient factor C1",
     expression: "\\frac{1}{k_c^2}",
-    children: [
-      {
-        nodeId: "k_c",
-      },
-    ],
+    children: [{ nodeId: "k_c" }],
   },
   {
     type: "derived",
@@ -414,11 +393,7 @@ export const nodes = defineNodes([
     id: "abs_N_Ed",
     name: "Absolute design axial force",
     expression: "\\left|N_{Ed}\\right|",
-    children: [
-      {
-        nodeId: "N_Ed",
-      },
-    ],
+    children: [{ nodeId: "N_Ed" }],
   },
   {
     type: "derived",
@@ -427,11 +402,7 @@ export const nodes = defineNodes([
     id: "abs_M_y_Ed",
     name: "Absolute design bending moment y",
     expression: "\\left|M_{y,Ed}\\right|",
-    children: [
-      {
-        nodeId: "M_y_Ed",
-      },
-    ],
+    children: [{ nodeId: "M_y_Ed" }],
   },
   {
     type: "derived",
@@ -440,11 +411,7 @@ export const nodes = defineNodes([
     id: "abs_M_z_Ed",
     name: "Absolute design bending moment z",
     expression: "\\left|M_{z,Ed}\\right|",
-    children: [
-      {
-        nodeId: "M_z_Ed",
-      },
-    ],
+    children: [{ nodeId: "M_z_Ed" }],
   },
   {
     type: "derived",
@@ -454,25 +421,13 @@ export const nodes = defineNodes([
     name: "Elastic critical force y",
     expression: "\\pi^2 E I_y / L_{cr,y}^2",
     unit: "\\mathrm{N}",
-    meta: {
-      sectionRef: "6.3.1.2",
-    },
+    meta: { sectionRef: "6.3.1.2" },
     children: [
-      {
-        nodeId: "pi",
-      },
-      {
-        nodeId: "E",
-      },
-      {
-        nodeId: "Iy",
-      },
-      {
-        nodeId: "L",
-      },
-      {
-        nodeId: "k_y",
-      },
+      { nodeId: "pi" },
+      { nodeId: "E" },
+      { nodeId: "Iy" },
+      { nodeId: "L" },
+      { nodeId: "k_y" },
     ],
   },
   {
@@ -483,25 +438,13 @@ export const nodes = defineNodes([
     name: "Elastic critical force z",
     expression: "\\pi^2 E I_z / L_{cr,z}^2",
     unit: "\\mathrm{N}",
-    meta: {
-      sectionRef: "6.3.1.2",
-    },
+    meta: { sectionRef: "6.3.1.2" },
     children: [
-      {
-        nodeId: "pi",
-      },
-      {
-        nodeId: "E",
-      },
-      {
-        nodeId: "Iz",
-      },
-      {
-        nodeId: "L",
-      },
-      {
-        nodeId: "k_z",
-      },
+      { nodeId: "pi" },
+      { nodeId: "E" },
+      { nodeId: "Iz" },
+      { nodeId: "L" },
+      { nodeId: "k_z" },
     ],
   },
   {
@@ -511,17 +454,7 @@ export const nodes = defineNodes([
     id: "ip2",
     name: "Polar radius denominator term",
     expression: "(I_y+I_z)/A",
-    children: [
-      {
-        nodeId: "Iy",
-      },
-      {
-        nodeId: "Iz",
-      },
-      {
-        nodeId: "A",
-      },
-    ],
+    children: [{ nodeId: "Iy" }, { nodeId: "Iz" }, { nodeId: "A" }],
   },
   {
     type: "derived",
@@ -531,21 +464,11 @@ export const nodes = defineNodes([
     name: "Warping term in Ncr,T",
     expression: "\\pi^2EI_w/L_{cr,z}^2",
     children: [
-      {
-        nodeId: "pi",
-      },
-      {
-        nodeId: "E",
-      },
-      {
-        nodeId: "Iw",
-      },
-      {
-        nodeId: "L",
-      },
-      {
-        nodeId: "k_z",
-      },
+      { nodeId: "pi" },
+      { nodeId: "E" },
+      { nodeId: "Iw" },
+      { nodeId: "L" },
+      { nodeId: "k_z" },
     ],
   },
   {
@@ -555,32 +478,15 @@ export const nodes = defineNodes([
     id: "N_cr_T",
     name: "Elastic torsional critical force",
     unit: "\\mathrm{N}",
-    meta: {
-      sectionRef: "6.3.1.4",
-      paragraphRef: "(2)",
-    },
+    meta: { sectionRef: "6.3.1.4", paragraphRef: "(2)" },
     children: [
-      {
-        nodeId: "Iy",
-      },
-      {
-        nodeId: "Iz",
-      },
-      {
-        nodeId: "It",
-      },
-      {
-        nodeId: "Iw",
-      },
-      {
-        nodeId: "G",
-      },
-      {
-        nodeId: "ncr_t_warp",
-      },
-      {
-        nodeId: "ip2",
-      },
+      { nodeId: "Iy" },
+      { nodeId: "Iz" },
+      { nodeId: "It" },
+      { nodeId: "Iw" },
+      { nodeId: "G" },
+      { nodeId: "ncr_t_warp" },
+      { nodeId: "ip2" },
     ],
   },
   {
@@ -591,18 +497,8 @@ export const nodes = defineNodes([
     name: "Elastic torsional-flexural critical force",
     expression: "\\min(N_{cr,T}, N_{cr,z})",
     unit: "\\mathrm{N}",
-    meta: {
-      sectionRef: "6.3.1.4",
-      paragraphRef: "(2)",
-    },
-    children: [
-      {
-        nodeId: "N_cr_T",
-      },
-      {
-        nodeId: "N_cr_z",
-      },
-    ],
+    meta: { sectionRef: "6.3.1.4", paragraphRef: "(2)" },
+    children: [{ nodeId: "N_cr_T" }, { nodeId: "N_cr_z" }],
   },
   {
     type: "derived",
@@ -611,41 +507,18 @@ export const nodes = defineNodes([
     id: "M_cr",
     name: "Elastic critical moment",
     unit: "\\mathrm{N\\cdot mm}",
-    meta: {
-      sectionRef: "6.3.2.2",
-      paragraphRef: "(2)",
-    },
+    meta: { sectionRef: "6.3.2.2", paragraphRef: "(2)" },
     children: [
-      {
-        nodeId: "section_shape",
-      },
-      {
-        nodeId: "L",
-      },
-      {
-        nodeId: "k_LT",
-      },
-      {
-        nodeId: "Iz",
-      },
-      {
-        nodeId: "It",
-      },
-      {
-        nodeId: "Iw",
-      },
-      {
-        nodeId: "C1",
-      },
-      {
-        nodeId: "pi",
-      },
-      {
-        nodeId: "E",
-      },
-      {
-        nodeId: "G",
-      },
+      { nodeId: "section_shape" },
+      { nodeId: "L" },
+      { nodeId: "k_LT" },
+      { nodeId: "Iz" },
+      { nodeId: "It" },
+      { nodeId: "Iw" },
+      { nodeId: "C1" },
+      { nodeId: "pi" },
+      { nodeId: "E" },
+      { nodeId: "G" },
     ],
   },
   {
@@ -655,28 +528,14 @@ export const nodes = defineNodes([
     id: "lambda_bar_0",
     name: "Reference LT slenderness for uniform moment",
     expression: "\\sqrt{W_{pl,y} f_y C_1 / M_{cr}}",
-    meta: {
-      sectionRef: "Annex A",
-    },
+    meta: { sectionRef: "Annex A" },
     children: [
-      {
-        nodeId: "Wpl_y",
-      },
-      {
-        nodeId: "Wel_y",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "C1",
-      },
-      {
-        nodeId: "M_cr",
-      },
-      {
-        nodeId: "section_class",
-      },
+      { nodeId: "Wpl_y" },
+      { nodeId: "Wel_y" },
+      { nodeId: "fy" },
+      { nodeId: "C1" },
+      { nodeId: "M_cr" },
+      { nodeId: "section_class" },
     ],
   },
   {
@@ -686,14 +545,7 @@ export const nodes = defineNodes([
     id: "it_over_iy",
     name: "It/Iy ratio",
     expression: "I_t/I_y",
-    children: [
-      {
-        nodeId: "It",
-      },
-      {
-        nodeId: "Iy",
-      },
-    ],
+    children: [{ nodeId: "It" }, { nodeId: "Iy" }],
   },
   {
     type: "derived",
@@ -702,14 +554,8 @@ export const nodes = defineNodes([
     id: "a_LT",
     name: "Annex A auxiliary term a_LT",
     expression: "1 - I_t / I_y",
-    meta: {
-      sectionRef: "Annex A",
-    },
-    children: [
-      {
-        nodeId: "it_over_iy",
-      },
-    ],
+    meta: { sectionRef: "Annex A" },
+    children: [{ nodeId: "it_over_iy" }],
   },
   {
     type: "derived",
@@ -718,14 +564,7 @@ export const nodes = defineNodes([
     id: "eta_y_m_over_n",
     name: "Moment-to-force ratio in eta_y",
     expression: "\\left|M_{y,Ed}\\right|/\\left|N_{Ed}\\right|",
-    children: [
-      {
-        nodeId: "abs_M_y_Ed",
-      },
-      {
-        nodeId: "abs_N_Ed",
-      },
-    ],
+    children: [{ nodeId: "abs_M_y_Ed" }, { nodeId: "abs_N_Ed" }],
   },
   {
     type: "derived",
@@ -734,14 +573,7 @@ export const nodes = defineNodes([
     id: "eta_y_area_ratio",
     name: "Area-to-modulus ratio in eta_y",
     expression: "A/W_{el,y}",
-    children: [
-      {
-        nodeId: "A",
-      },
-      {
-        nodeId: "Wel_y",
-      },
-    ],
+    children: [{ nodeId: "A" }, { nodeId: "Wel_y" }],
   },
   {
     type: "derived",
@@ -750,17 +582,8 @@ export const nodes = defineNodes([
     id: "eta_y",
     name: "Annex A auxiliary term eta_y",
     expression: "\\left|\\frac{M_{y,Ed}}{N_{Ed}}\\right|\\frac{A}{W_{el,y}}",
-    meta: {
-      sectionRef: "Annex A",
-    },
-    children: [
-      {
-        nodeId: "eta_y_m_over_n",
-      },
-      {
-        nodeId: "eta_y_area_ratio",
-      },
-    ],
+    meta: { sectionRef: "Annex A" },
+    children: [{ nodeId: "eta_y_m_over_n" }, { nodeId: "eta_y_area_ratio" }],
   },
   {
     type: "derived",
@@ -769,14 +592,7 @@ export const nodes = defineNodes([
     id: "psi_y_eff",
     name: "Effective psi for y-axis moment shape",
     expression: "\\psi_{y,eff}",
-    children: [
-      {
-        nodeId: "moment_shape_y",
-      },
-      {
-        nodeId: "psi_y",
-      },
-    ],
+    children: [{ nodeId: "moment_shape_y" }, { nodeId: "psi_y" }],
   },
   {
     type: "derived",
@@ -785,14 +601,7 @@ export const nodes = defineNodes([
     id: "psi_z_eff",
     name: "Effective psi for z-axis moment shape",
     expression: "\\psi_{z,eff}",
-    children: [
-      {
-        nodeId: "moment_shape_z",
-      },
-      {
-        nodeId: "psi_z",
-      },
-    ],
+    children: [{ nodeId: "moment_shape_z" }, { nodeId: "psi_z" }],
   },
   {
     type: "derived",
@@ -801,14 +610,7 @@ export const nodes = defineNodes([
     id: "ncr_y_ratio",
     name: "N_Ed/N_cr,y ratio",
     expression: "\\left|N_{Ed}\\right|/N_{cr,y}",
-    children: [
-      {
-        nodeId: "abs_N_Ed",
-      },
-      {
-        nodeId: "N_cr_y",
-      },
-    ],
+    children: [{ nodeId: "abs_N_Ed" }, { nodeId: "N_cr_y" }],
   },
   {
     type: "derived",
@@ -817,14 +619,7 @@ export const nodes = defineNodes([
     id: "ncr_z_ratio",
     name: "N_Ed/N_cr,z ratio",
     expression: "\\left|N_{Ed}\\right|/N_{cr,z}",
-    children: [
-      {
-        nodeId: "abs_N_Ed",
-      },
-      {
-        nodeId: "N_cr_z",
-      },
-    ],
+    children: [{ nodeId: "abs_N_Ed" }, { nodeId: "N_cr_z" }],
   },
   {
     type: "table",
@@ -833,18 +628,8 @@ export const nodes = defineNodes([
     id: "Cmy_0",
     name: "Equivalent moment factor C_m,y,0",
     source: "EC3-A.2",
-    meta: {
-      sectionRef: "Annex A",
-      tableRef: "A.2",
-    },
-    children: [
-      {
-        nodeId: "psi_y_eff",
-      },
-      {
-        nodeId: "ncr_y_ratio",
-      },
-    ],
+    meta: { sectionRef: "Annex A", tableRef: "A.2" },
+    children: [{ nodeId: "psi_y_eff" }, { nodeId: "ncr_y_ratio" }],
   },
   {
     type: "table",
@@ -853,18 +638,8 @@ export const nodes = defineNodes([
     id: "Cmz_0",
     name: "Equivalent moment factor C_m,z,0",
     source: "EC3-A.2",
-    meta: {
-      sectionRef: "Annex A",
-      tableRef: "A.2",
-    },
-    children: [
-      {
-        nodeId: "psi_z_eff",
-      },
-      {
-        nodeId: "ncr_z_ratio",
-      },
-    ],
+    meta: { sectionRef: "Annex A", tableRef: "A.2" },
+    children: [{ nodeId: "psi_z_eff" }, { nodeId: "ncr_z_ratio" }],
   },
   {
     type: "derived",
@@ -873,14 +648,7 @@ export const nodes = defineNodes([
     id: "ncr_t_ratio",
     name: "N_Ed/N_cr,T ratio",
     expression: "\\left|N_{Ed}\\right|/N_{cr,T}",
-    children: [
-      {
-        nodeId: "abs_N_Ed",
-      },
-      {
-        nodeId: "N_cr_T",
-      },
-    ],
+    children: [{ nodeId: "abs_N_Ed" }, { nodeId: "N_cr_T" }],
   },
   {
     type: "derived",
@@ -889,14 +657,7 @@ export const nodes = defineNodes([
     id: "ncr_tf_ratio",
     name: "N_Ed/N_cr,TF ratio",
     expression: "\\left|N_{Ed}\\right|/N_{cr,TF}",
-    children: [
-      {
-        nodeId: "abs_N_Ed",
-      },
-      {
-        nodeId: "N_cr_TF",
-      },
-    ],
+    children: [{ nodeId: "abs_N_Ed" }, { nodeId: "N_cr_TF" }],
   },
   {
     type: "derived",
@@ -906,15 +667,9 @@ export const nodes = defineNodes([
     name: "Annex A branch limit",
     expression: "0.2\\sqrt{C_1}\\sqrt[4]{(1-n_{cr,z})(1-n_{cr,TF})}",
     children: [
-      {
-        nodeId: "ncr_z_ratio",
-      },
-      {
-        nodeId: "ncr_tf_ratio",
-      },
-      {
-        nodeId: "C1",
-      },
+      { nodeId: "ncr_z_ratio" },
+      { nodeId: "ncr_tf_ratio" },
+      { nodeId: "C1" },
     ],
   },
   {
@@ -924,14 +679,7 @@ export const nodes = defineNodes([
     id: "cm_branch_active",
     name: "Annex A branch selector for Cm adjustments",
     expression: "\\bar{\\lambda}_0>\\text{limit}",
-    children: [
-      {
-        nodeId: "lambda_bar_0",
-      },
-      {
-        nodeId: "cm_branch_limit",
-      },
-    ],
+    children: [{ nodeId: "lambda_bar_0" }, { nodeId: "cm_branch_limit" }],
   },
   {
     type: "derived",
@@ -940,14 +688,7 @@ export const nodes = defineNodes([
     id: "cm_amp",
     name: "Annex A amplification factor",
     expression: "\\eta_ya_{LT}/(1+\\eta_ya_{LT})",
-    children: [
-      {
-        nodeId: "eta_y",
-      },
-      {
-        nodeId: "a_LT",
-      },
-    ],
+    children: [{ nodeId: "eta_y" }, { nodeId: "a_LT" }],
   },
   {
     type: "derived",
@@ -956,14 +697,7 @@ export const nodes = defineNodes([
     id: "cmReserve",
     name: "Annex A denominator term",
     expression: "(1-n_{cr,z})(1-n_{cr,T})",
-    children: [
-      {
-        nodeId: "ncr_z_ratio",
-      },
-      {
-        nodeId: "ncr_t_ratio",
-      },
-    ],
+    children: [{ nodeId: "ncr_z_ratio" }, { nodeId: "ncr_t_ratio" }],
   },
   {
     type: "table",
@@ -972,23 +706,12 @@ export const nodes = defineNodes([
     id: "Cm_y",
     name: "Equivalent moment factor y",
     source: "EC3-A.1",
-    meta: {
-      sectionRef: "Annex A",
-      tableRef: "A.1",
-    },
+    meta: { sectionRef: "Annex A", tableRef: "A.1" },
     children: [
-      {
-        nodeId: "Cmy_0",
-      },
-      {
-        nodeId: "cm_branch_active",
-      },
-      {
-        nodeId: "cm_amp",
-      },
-      {
-        nodeId: "cmReserve",
-      },
+      { nodeId: "Cmy_0" },
+      { nodeId: "cm_branch_active" },
+      { nodeId: "cm_amp" },
+      { nodeId: "cmReserve" },
     ],
   },
   {
@@ -998,15 +721,8 @@ export const nodes = defineNodes([
     id: "Cm_z",
     name: "Equivalent moment factor z",
     source: "EC3-A.1",
-    meta: {
-      sectionRef: "Annex A",
-      tableRef: "A.1",
-    },
-    children: [
-      {
-        nodeId: "Cmz_0",
-      },
-    ],
+    meta: { sectionRef: "Annex A", tableRef: "A.1" },
+    children: [{ nodeId: "Cmz_0" }],
   },
   {
     type: "derived",
@@ -1015,14 +731,7 @@ export const nodes = defineNodes([
     id: "Cm_y_aug",
     name: "Augmented Cm_y for LT branch",
     expression: "C_{m,y,0}+(1-C_{m,y,0})\\,\\text{amp}",
-    children: [
-      {
-        nodeId: "Cmy_0",
-      },
-      {
-        nodeId: "cm_amp",
-      },
-    ],
+    children: [{ nodeId: "Cmy_0" }, { nodeId: "cm_amp" }],
   },
   {
     type: "table",
@@ -1031,23 +740,12 @@ export const nodes = defineNodes([
     id: "Cm_LT",
     name: "Equivalent moment factor LT",
     source: "EC3-A.1",
-    meta: {
-      sectionRef: "Annex A",
-      tableRef: "A.1",
-    },
+    meta: { sectionRef: "Annex A", tableRef: "A.1" },
     children: [
-      {
-        nodeId: "cm_branch_active",
-      },
-      {
-        nodeId: "Cm_y_aug",
-      },
-      {
-        nodeId: "a_LT",
-      },
-      {
-        nodeId: "cmReserve",
-      },
+      { nodeId: "cm_branch_active" },
+      { nodeId: "Cm_y_aug" },
+      { nodeId: "a_LT" },
+      { nodeId: "cmReserve" },
     ],
   },
   {
@@ -1056,14 +754,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "N_Rk",
     name: "Characteristic axial resistance",
-    children: [
-      {
-        nodeId: "A",
-      },
-      {
-        nodeId: "fy",
-      },
-    ],
+    children: [{ nodeId: "A" }, { nodeId: "fy" }],
   },
   {
     type: "derived",
@@ -1072,18 +763,10 @@ export const nodes = defineNodes([
     id: "M_y_Rk",
     name: "Characteristic bending resistance y",
     children: [
-      {
-        nodeId: "Wpl_y",
-      },
-      {
-        nodeId: "Wel_y",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "section_class",
-      },
+      { nodeId: "Wpl_y" },
+      { nodeId: "Wel_y" },
+      { nodeId: "fy" },
+      { nodeId: "section_class" },
     ],
   },
   {
@@ -1093,18 +776,10 @@ export const nodes = defineNodes([
     id: "M_z_Rk",
     name: "Characteristic bending resistance z",
     children: [
-      {
-        nodeId: "Wpl_z",
-      },
-      {
-        nodeId: "Wel_z",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "section_class",
-      },
+      { nodeId: "Wpl_z" },
+      { nodeId: "Wel_z" },
+      { nodeId: "fy" },
+      { nodeId: "section_class" },
     ],
   },
   {
@@ -1113,14 +788,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "wy",
     name: "Annex A factor w_y",
-    children: [
-      {
-        nodeId: "Wpl_y",
-      },
-      {
-        nodeId: "Wel_y",
-      },
-    ],
+    children: [{ nodeId: "Wpl_y" }, { nodeId: "Wel_y" }],
   },
   {
     type: "derived",
@@ -1128,14 +796,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "wz",
     name: "Annex A factor w_z",
-    children: [
-      {
-        nodeId: "Wpl_z",
-      },
-      {
-        nodeId: "Wel_z",
-      },
-    ],
+    children: [{ nodeId: "Wpl_z" }, { nodeId: "Wel_z" }],
   },
   {
     type: "derived",
@@ -1144,27 +805,13 @@ export const nodes = defineNodes([
     id: "chi_y",
     name: "Reduction factor y",
     children: [
-      {
-        nodeId: "A",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "E",
-      },
-      {
-        nodeId: "Iy",
-      },
-      {
-        nodeId: "L",
-      },
-      {
-        nodeId: "k_y",
-      },
-      {
-        nodeId: "alpha_y",
-      },
+      { nodeId: "A" },
+      { nodeId: "fy" },
+      { nodeId: "E" },
+      { nodeId: "Iy" },
+      { nodeId: "L" },
+      { nodeId: "k_y" },
+      { nodeId: "alpha_y" },
     ],
   },
   {
@@ -1174,27 +821,13 @@ export const nodes = defineNodes([
     id: "chi_z",
     name: "Reduction factor z",
     children: [
-      {
-        nodeId: "A",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "E",
-      },
-      {
-        nodeId: "Iz",
-      },
-      {
-        nodeId: "L",
-      },
-      {
-        nodeId: "k_z",
-      },
-      {
-        nodeId: "alpha_z",
-      },
+      { nodeId: "A" },
+      { nodeId: "fy" },
+      { nodeId: "E" },
+      { nodeId: "Iz" },
+      { nodeId: "L" },
+      { nodeId: "k_z" },
+      { nodeId: "alpha_z" },
     ],
   },
   {
@@ -1204,14 +837,7 @@ export const nodes = defineNodes([
     id: "alpha_LT_eff",
     name: "Effective LT imperfection factor",
     expression: "\\alpha_{LT,eff}",
-    children: [
-      {
-        nodeId: "alpha_LT",
-      },
-      {
-        nodeId: "buckling_curves_LT_policy",
-      },
-    ],
+    children: [{ nodeId: "alpha_LT" }, { nodeId: "buckling_curves_LT_policy" }],
   },
   {
     type: "derived",
@@ -1220,30 +846,14 @@ export const nodes = defineNodes([
     id: "chi_LT",
     name: "LTB reduction factor",
     children: [
-      {
-        nodeId: "Wpl_y",
-      },
-      {
-        nodeId: "Wel_y",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "M_cr",
-      },
-      {
-        nodeId: "alpha_LT_eff",
-      },
-      {
-        nodeId: "lambda_LT_0",
-      },
-      {
-        nodeId: "beta_LT",
-      },
-      {
-        nodeId: "section_class",
-      },
+      { nodeId: "Wpl_y" },
+      { nodeId: "Wel_y" },
+      { nodeId: "fy" },
+      { nodeId: "M_cr" },
+      { nodeId: "alpha_LT_eff" },
+      { nodeId: "lambda_LT_0" },
+      { nodeId: "beta_LT" },
+      { nodeId: "section_class" },
     ],
   },
   {
@@ -1254,32 +864,15 @@ export const nodes = defineNodes([
     name: "LT correction factor",
     expression:
       "f = \\min\\left(1, 1 - 0.5(1-k_c)[1-2(\\bar{\\lambda}_{LT}-0.8)^2]\\right)",
-    meta: {
-      sectionRef: "6.3.2.3",
-      paragraphRef: "(2)",
-    },
+    meta: { sectionRef: "6.3.2.3", paragraphRef: "(2)" },
     children: [
-      {
-        nodeId: "chi_LT",
-      },
-      {
-        nodeId: "Wpl_y",
-      },
-      {
-        nodeId: "Wel_y",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "M_cr",
-      },
-      {
-        nodeId: "k_c",
-      },
-      {
-        nodeId: "section_class",
-      },
+      { nodeId: "chi_LT" },
+      { nodeId: "Wpl_y" },
+      { nodeId: "Wel_y" },
+      { nodeId: "fy" },
+      { nodeId: "M_cr" },
+      { nodeId: "k_c" },
+      { nodeId: "section_class" },
     ],
   },
   {
@@ -1289,17 +882,8 @@ export const nodes = defineNodes([
     id: "chi_LT_mod",
     name: "Modified LTB reduction factor",
     expression: "\\min\\left(1,\\frac{\\chi_{LT}}{f}\\right)",
-    meta: {
-      sectionRef: "6.3.2.3",
-    },
-    children: [
-      {
-        nodeId: "chi_LT",
-      },
-      {
-        nodeId: "f_LT",
-      },
-    ],
+    meta: { sectionRef: "6.3.2.3" },
+    children: [{ nodeId: "chi_LT" }, { nodeId: "f_LT" }],
   },
   {
     type: "derived",
@@ -1307,17 +891,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "lambda_bar_y",
     name: "Non-dimensional slenderness y",
-    children: [
-      {
-        nodeId: "A",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "N_cr_y",
-      },
-    ],
+    children: [{ nodeId: "A" }, { nodeId: "fy" }, { nodeId: "N_cr_y" }],
   },
   {
     type: "derived",
@@ -1325,17 +899,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "lambda_bar_z",
     name: "Non-dimensional slenderness z",
-    children: [
-      {
-        nodeId: "A",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "N_cr_z",
-      },
-    ],
+    children: [{ nodeId: "A" }, { nodeId: "fy" }, { nodeId: "N_cr_z" }],
   },
   {
     type: "derived",
@@ -1344,15 +908,9 @@ export const nodes = defineNodes([
     id: "n_pl",
     name: "Annex A axial ratio n_pl",
     children: [
-      {
-        nodeId: "abs_N_Ed",
-      },
-      {
-        nodeId: "N_Rk",
-      },
-      {
-        nodeId: "gamma_M1",
-      },
+      { nodeId: "abs_N_Ed" },
+      { nodeId: "N_Rk" },
+      { nodeId: "gamma_M1" },
     ],
   },
   {
@@ -1361,14 +919,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "lambda_bar_max",
     name: "Annex A λ_max",
-    children: [
-      {
-        nodeId: "lambda_bar_y",
-      },
-      {
-        nodeId: "lambda_bar_z",
-      },
-    ],
+    children: [{ nodeId: "lambda_bar_y" }, { nodeId: "lambda_bar_z" }],
   },
   {
     type: "derived",
@@ -1377,27 +928,13 @@ export const nodes = defineNodes([
     id: "b_LT",
     name: "Annex A auxiliary b_LT",
     children: [
-      {
-        nodeId: "a_LT",
-      },
-      {
-        nodeId: "lambda_bar_0",
-      },
-      {
-        nodeId: "abs_M_y_Ed",
-      },
-      {
-        nodeId: "abs_M_z_Ed",
-      },
-      {
-        nodeId: "chi_LT",
-      },
-      {
-        nodeId: "M_y_Rk",
-      },
-      {
-        nodeId: "M_z_Rk",
-      },
+      { nodeId: "a_LT" },
+      { nodeId: "lambda_bar_0" },
+      { nodeId: "abs_M_y_Ed" },
+      { nodeId: "abs_M_z_Ed" },
+      { nodeId: "chi_LT" },
+      { nodeId: "M_y_Rk" },
+      { nodeId: "M_z_Rk" },
     ],
   },
   {
@@ -1407,27 +944,13 @@ export const nodes = defineNodes([
     id: "c_LT",
     name: "Annex A auxiliary c_LT",
     children: [
-      {
-        nodeId: "a_LT",
-      },
-      {
-        nodeId: "lambda_bar_0",
-      },
-      {
-        nodeId: "abs_M_y_Ed",
-      },
-      {
-        nodeId: "lambda_bar_z",
-      },
-      {
-        nodeId: "Cm_y",
-      },
-      {
-        nodeId: "chi_LT",
-      },
-      {
-        nodeId: "M_y_Rk",
-      },
+      { nodeId: "a_LT" },
+      { nodeId: "lambda_bar_0" },
+      { nodeId: "abs_M_y_Ed" },
+      { nodeId: "lambda_bar_z" },
+      { nodeId: "Cm_y" },
+      { nodeId: "chi_LT" },
+      { nodeId: "M_y_Rk" },
     ],
   },
   {
@@ -1437,36 +960,16 @@ export const nodes = defineNodes([
     id: "d_LT",
     name: "Annex A auxiliary d_LT",
     children: [
-      {
-        nodeId: "a_LT",
-      },
-      {
-        nodeId: "lambda_bar_0",
-      },
-      {
-        nodeId: "abs_M_y_Ed",
-      },
-      {
-        nodeId: "abs_M_z_Ed",
-      },
-      {
-        nodeId: "lambda_bar_z",
-      },
-      {
-        nodeId: "Cm_y",
-      },
-      {
-        nodeId: "Cm_z",
-      },
-      {
-        nodeId: "chi_LT",
-      },
-      {
-        nodeId: "M_y_Rk",
-      },
-      {
-        nodeId: "M_z_Rk",
-      },
+      { nodeId: "a_LT" },
+      { nodeId: "lambda_bar_0" },
+      { nodeId: "abs_M_y_Ed" },
+      { nodeId: "abs_M_z_Ed" },
+      { nodeId: "lambda_bar_z" },
+      { nodeId: "Cm_y" },
+      { nodeId: "Cm_z" },
+      { nodeId: "chi_LT" },
+      { nodeId: "M_y_Rk" },
+      { nodeId: "M_z_Rk" },
     ],
   },
   {
@@ -1476,27 +979,13 @@ export const nodes = defineNodes([
     id: "e_LT",
     name: "Annex A auxiliary e_LT",
     children: [
-      {
-        nodeId: "a_LT",
-      },
-      {
-        nodeId: "lambda_bar_0",
-      },
-      {
-        nodeId: "abs_M_y_Ed",
-      },
-      {
-        nodeId: "lambda_bar_z",
-      },
-      {
-        nodeId: "Cm_y",
-      },
-      {
-        nodeId: "chi_LT",
-      },
-      {
-        nodeId: "M_y_Rk",
-      },
+      { nodeId: "a_LT" },
+      { nodeId: "lambda_bar_0" },
+      { nodeId: "abs_M_y_Ed" },
+      { nodeId: "lambda_bar_z" },
+      { nodeId: "Cm_y" },
+      { nodeId: "chi_LT" },
+      { nodeId: "M_y_Rk" },
     ],
   },
   {
@@ -1506,30 +995,14 @@ export const nodes = defineNodes([
     id: "C_yy",
     name: "Annex A interaction coefficient C_yy",
     children: [
-      {
-        nodeId: "Cm_y",
-      },
-      {
-        nodeId: "n_pl",
-      },
-      {
-        nodeId: "lambda_bar_y",
-      },
-      {
-        nodeId: "lambda_bar_z",
-      },
-      {
-        nodeId: "wy",
-      },
-      {
-        nodeId: "b_LT",
-      },
-      {
-        nodeId: "Wel_y",
-      },
-      {
-        nodeId: "Wpl_y",
-      },
+      { nodeId: "Cm_y" },
+      { nodeId: "n_pl" },
+      { nodeId: "lambda_bar_y" },
+      { nodeId: "lambda_bar_z" },
+      { nodeId: "wy" },
+      { nodeId: "b_LT" },
+      { nodeId: "Wel_y" },
+      { nodeId: "Wpl_y" },
     ],
   },
   {
@@ -1539,33 +1012,15 @@ export const nodes = defineNodes([
     id: "C_yz",
     name: "Annex A interaction coefficient C_yz",
     children: [
-      {
-        nodeId: "Cm_z",
-      },
-      {
-        nodeId: "n_pl",
-      },
-      {
-        nodeId: "lambda_bar_y",
-      },
-      {
-        nodeId: "lambda_bar_z",
-      },
-      {
-        nodeId: "wz",
-      },
-      {
-        nodeId: "c_LT",
-      },
-      {
-        nodeId: "Wel_z",
-      },
-      {
-        nodeId: "wy",
-      },
-      {
-        nodeId: "Wpl_z",
-      },
+      { nodeId: "Cm_z" },
+      { nodeId: "n_pl" },
+      { nodeId: "lambda_bar_y" },
+      { nodeId: "lambda_bar_z" },
+      { nodeId: "wz" },
+      { nodeId: "c_LT" },
+      { nodeId: "Wel_z" },
+      { nodeId: "wy" },
+      { nodeId: "Wpl_z" },
     ],
   },
   {
@@ -1575,33 +1030,15 @@ export const nodes = defineNodes([
     id: "C_zy",
     name: "Annex A interaction coefficient C_zy",
     children: [
-      {
-        nodeId: "Cm_y",
-      },
-      {
-        nodeId: "n_pl",
-      },
-      {
-        nodeId: "lambda_bar_y",
-      },
-      {
-        nodeId: "lambda_bar_z",
-      },
-      {
-        nodeId: "wy",
-      },
-      {
-        nodeId: "d_LT",
-      },
-      {
-        nodeId: "Wel_y",
-      },
-      {
-        nodeId: "wz",
-      },
-      {
-        nodeId: "Wpl_y",
-      },
+      { nodeId: "Cm_y" },
+      { nodeId: "n_pl" },
+      { nodeId: "lambda_bar_y" },
+      { nodeId: "lambda_bar_z" },
+      { nodeId: "wy" },
+      { nodeId: "d_LT" },
+      { nodeId: "Wel_y" },
+      { nodeId: "wz" },
+      { nodeId: "Wpl_y" },
     ],
   },
   {
@@ -1611,30 +1048,14 @@ export const nodes = defineNodes([
     id: "C_zz",
     name: "Annex A interaction coefficient C_zz",
     children: [
-      {
-        nodeId: "Cm_z",
-      },
-      {
-        nodeId: "n_pl",
-      },
-      {
-        nodeId: "lambda_bar_y",
-      },
-      {
-        nodeId: "lambda_bar_z",
-      },
-      {
-        nodeId: "wz",
-      },
-      {
-        nodeId: "e_LT",
-      },
-      {
-        nodeId: "Wel_z",
-      },
-      {
-        nodeId: "Wpl_z",
-      },
+      { nodeId: "Cm_z" },
+      { nodeId: "n_pl" },
+      { nodeId: "lambda_bar_y" },
+      { nodeId: "lambda_bar_z" },
+      { nodeId: "wz" },
+      { nodeId: "e_LT" },
+      { nodeId: "Wel_z" },
+      { nodeId: "Wpl_z" },
     ],
   },
   {
@@ -1644,14 +1065,7 @@ export const nodes = defineNodes([
     id: "k_yyReserve",
     name: "Denominator of k_yy",
     expression: "1-\\chi_y\\cdot n_{cr,y}",
-    children: [
-      {
-        nodeId: "ncr_y_ratio",
-      },
-      {
-        nodeId: "chi_y",
-      },
-    ],
+    children: [{ nodeId: "ncr_y_ratio" }, { nodeId: "chi_y" }],
   },
   {
     type: "derived",
@@ -1660,21 +1074,11 @@ export const nodes = defineNodes([
     id: "k_yy",
     name: "Interaction factor k_yy",
     children: [
-      {
-        nodeId: "Cm_y",
-      },
-      {
-        nodeId: "Cm_LT",
-      },
-      {
-        nodeId: "C_yy",
-      },
-      {
-        nodeId: "k_yyReserve",
-      },
-      {
-        nodeId: "section_class",
-      },
+      { nodeId: "Cm_y" },
+      { nodeId: "Cm_LT" },
+      { nodeId: "C_yy" },
+      { nodeId: "k_yyReserve" },
+      { nodeId: "section_class" },
     ],
   },
   {
@@ -1684,14 +1088,7 @@ export const nodes = defineNodes([
     id: "k_zzReserve",
     name: "Denominator of k_zz",
     expression: "1-\\chi_z\\cdot n_{cr,z}",
-    children: [
-      {
-        nodeId: "ncr_z_ratio",
-      },
-      {
-        nodeId: "chi_z",
-      },
-    ],
+    children: [{ nodeId: "ncr_z_ratio" }, { nodeId: "chi_z" }],
   },
   {
     type: "derived",
@@ -1700,18 +1097,10 @@ export const nodes = defineNodes([
     id: "k_zz",
     name: "Interaction factor k_zz",
     children: [
-      {
-        nodeId: "Cm_z",
-      },
-      {
-        nodeId: "C_zz",
-      },
-      {
-        nodeId: "k_zzReserve",
-      },
-      {
-        nodeId: "section_class",
-      },
+      { nodeId: "Cm_z" },
+      { nodeId: "C_zz" },
+      { nodeId: "k_zzReserve" },
+      { nodeId: "section_class" },
     ],
   },
   {
@@ -1721,33 +1110,15 @@ export const nodes = defineNodes([
     id: "k_zy",
     name: "Interaction factor k_zy",
     children: [
-      {
-        nodeId: "Cm_y",
-      },
-      {
-        nodeId: "Cm_LT",
-      },
-      {
-        nodeId: "C_zy",
-      },
-      {
-        nodeId: "wy",
-      },
-      {
-        nodeId: "wz",
-      },
-      {
-        nodeId: "ncr_y_ratio",
-      },
-      {
-        nodeId: "ncr_z_ratio",
-      },
-      {
-        nodeId: "chi_z",
-      },
-      {
-        nodeId: "section_class",
-      },
+      { nodeId: "Cm_y" },
+      { nodeId: "Cm_LT" },
+      { nodeId: "C_zy" },
+      { nodeId: "wy" },
+      { nodeId: "wz" },
+      { nodeId: "ncr_y_ratio" },
+      { nodeId: "ncr_z_ratio" },
+      { nodeId: "chi_z" },
+      { nodeId: "section_class" },
     ],
   },
   {
@@ -1757,18 +1128,10 @@ export const nodes = defineNodes([
     id: "bc_62_term1",
     name: "Eq.6.62 term 1",
     children: [
-      {
-        nodeId: "abs_N_Ed",
-      },
-      {
-        nodeId: "chi_z",
-      },
-      {
-        nodeId: "N_Rk",
-      },
-      {
-        nodeId: "gamma_M1",
-      },
+      { nodeId: "abs_N_Ed" },
+      { nodeId: "chi_z" },
+      { nodeId: "N_Rk" },
+      { nodeId: "gamma_M1" },
     ],
   },
   {
@@ -1778,21 +1141,11 @@ export const nodes = defineNodes([
     id: "bc_62_term2",
     name: "Eq.6.62 term 2",
     children: [
-      {
-        nodeId: "k_zy",
-      },
-      {
-        nodeId: "abs_M_y_Ed",
-      },
-      {
-        nodeId: "chi_LT_mod",
-      },
-      {
-        nodeId: "M_y_Rk",
-      },
-      {
-        nodeId: "gamma_M1",
-      },
+      { nodeId: "k_zy" },
+      { nodeId: "abs_M_y_Ed" },
+      { nodeId: "chi_LT_mod" },
+      { nodeId: "M_y_Rk" },
+      { nodeId: "gamma_M1" },
     ],
   },
   {
@@ -1802,18 +1155,10 @@ export const nodes = defineNodes([
     id: "bc_62_term3",
     name: "Eq.6.62 term 3",
     children: [
-      {
-        nodeId: "k_zz",
-      },
-      {
-        nodeId: "abs_M_z_Ed",
-      },
-      {
-        nodeId: "M_z_Rk",
-      },
-      {
-        nodeId: "gamma_M1",
-      },
+      { nodeId: "k_zz" },
+      { nodeId: "abs_M_z_Ed" },
+      { nodeId: "M_z_Rk" },
+      { nodeId: "gamma_M1" },
     ],
   },
   {
@@ -1824,20 +1169,11 @@ export const nodes = defineNodes([
     name: "Beam-column Eq.6.62 Method 1",
     verificationExpression:
       "\\frac{N_{Ed}}{\\chi_z N_{Rk}/\\gamma_{M1}} + k_{zy}\\frac{M_{y,Ed}}{\\chi_{LT} M_{y,Rk}/\\gamma_{M1}} + k_{zz}\\frac{M_{z,Ed}}{M_{z,Rk}/\\gamma_{M1}} \\leq 1.0",
-    meta: {
-      sectionRef: "6.3.3",
-      verificationRef: "(6.62)",
-    },
+    meta: { sectionRef: "6.3.3", verificationRef: "(6.62)" },
     children: [
-      {
-        nodeId: "bc_62_term1",
-      },
-      {
-        nodeId: "bc_62_term2",
-      },
-      {
-        nodeId: "bc_62_term3",
-      },
+      { nodeId: "bc_62_term1" },
+      { nodeId: "bc_62_term2" },
+      { nodeId: "bc_62_term3" },
     ],
   },
 ]);

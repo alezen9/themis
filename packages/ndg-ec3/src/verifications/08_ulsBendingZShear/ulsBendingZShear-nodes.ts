@@ -32,10 +32,7 @@ export const nodes = defineNodes([
     unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.8", paragraphRef: "(3)" },
     children: [
-      {
-        nodeId: "M_z_V_Rd_i",
-        when: { eq: ["section_shape", { value: "I" }] },
-      },
+      { nodeId: "M_z_V_Rd_i", when: { eq: ["section_shape", { value: "I" }] } },
       {
         nodeId: "M_z_V_Rd_rhs_chs",
         when: {
@@ -96,13 +93,13 @@ export const nodes = defineNodes([
       {
         nodeId: "Wpl_z",
         when: {
-          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
+          or: [
+            { eq: ["section_class", { value: 1 }] },
+            { eq: ["section_class", { value: 2 }] },
+          ],
         },
       },
-      {
-        nodeId: "Wel_z",
-        when: { eq: ["section_class", { value: 3 }] },
-      },
+      { nodeId: "Wel_z", when: { eq: ["section_class", { value: 3 }] } },
     ],
   },
   {
@@ -174,14 +171,8 @@ export const nodes = defineNodes([
     name: "Shear reduction factor",
     symbol: "\\rho_y",
     children: [
-      {
-        nodeId: "rho_y_1",
-        when: { lte: ["u_y", { value: 0.5 }] },
-      },
-      {
-        nodeId: "rho_y_2",
-        when: { gt: ["u_y", { value: 0.5 }] },
-      },
+      { nodeId: "rho_y_1", when: { lte: ["u_y", { value: 0.5 }] } },
+      { nodeId: "rho_y_2", when: { gt: ["u_y", { value: 0.5 }] } },
     ],
   },
   {
@@ -224,11 +215,7 @@ export const nodes = defineNodes([
     expression: "\\frac{A_{v,y} \\cdot f_y}{\\sqrt{3}\\,\\gamma_{M0}}",
     unit: "\\mathrm{N}",
     meta: { sectionRef: "6.2.6", formulaRef: "(6.18)" },
-    children: [
-      { nodeId: "Av_y" },
-      { nodeId: "fy" },
-      { nodeId: "gamma_M0" },
-    ],
+    children: [{ nodeId: "Av_y" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
   },
   {
     id: "u_y",

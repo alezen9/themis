@@ -404,9 +404,18 @@ export const nodes = defineNodes([
     name: "Effective plastic modulus y",
     children: [
       { nodeId: "section_shape" },
-      { nodeId: "Wpl_y_eff_i", when: { eq: ["section_shape", { value: "I" }] } },
-      { nodeId: "Wpl_y_eff_rhs", when: { eq: ["section_shape", { value: "RHS" }] } },
-      { nodeId: "Wpl_y_eff_chs", when: { eq: ["section_shape", { value: "CHS" }] } },
+      {
+        nodeId: "Wpl_y_eff_i",
+        when: { eq: ["section_shape", { value: "I" }] },
+      },
+      {
+        nodeId: "Wpl_y_eff_rhs",
+        when: { eq: ["section_shape", { value: "RHS" }] },
+      },
+      {
+        nodeId: "Wpl_y_eff_chs",
+        when: { eq: ["section_shape", { value: "CHS" }] },
+      },
     ],
   },
   {
@@ -431,7 +440,12 @@ export const nodes = defineNodes([
     key: "Wpl_y_eff_rhs",
     valueType: { type: "number" },
     name: "RHS effective plastic modulus y",
-    children: [{ nodeId: "Wpl_y" }, { nodeId: "rho_z" }, { nodeId: "Av_z" }, { nodeId: "tw" }],
+    children: [
+      { nodeId: "Wpl_y" },
+      { nodeId: "rho_z" },
+      { nodeId: "Av_z" },
+      { nodeId: "tw" },
+    ],
   },
   {
     id: "Wpl_y_eff_chs",
@@ -439,7 +453,12 @@ export const nodes = defineNodes([
     key: "Wpl_y_eff_chs",
     valueType: { type: "number" },
     name: "CHS effective plastic modulus y",
-    children: [{ nodeId: "Wpl_y" }, { nodeId: "rho_z" }, { nodeId: "Av_z" }, { nodeId: "tw" }],
+    children: [
+      { nodeId: "Wpl_y" },
+      { nodeId: "rho_z" },
+      { nodeId: "Av_z" },
+      { nodeId: "tw" },
+    ],
   },
   {
     id: "M_y_V_Rd",
@@ -451,7 +470,11 @@ export const nodes = defineNodes([
     expression: "W_{pl,y,eff}f_y/\\gamma_{M0}",
     unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.10", formulaRef: "(6.45)" },
-    children: [{ nodeId: "Wpl_y_eff" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
+    children: [
+      { nodeId: "Wpl_y_eff" },
+      { nodeId: "fy" },
+      { nodeId: "gamma_M0" },
+    ],
   },
   {
     id: "M_NV_y_Rd",
@@ -485,10 +508,16 @@ export const nodes = defineNodes([
       {
         nodeId: "W_z_res_class12",
         when: {
-          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
+          or: [
+            { eq: ["section_class", { value: 1 }] },
+            { eq: ["section_class", { value: 2 }] },
+          ],
         },
       },
-      { nodeId: "W_z_res_class3", when: { eq: ["section_class", { value: 3 }] } },
+      {
+        nodeId: "W_z_res_class3",
+        when: { eq: ["section_class", { value: 3 }] },
+      },
     ],
   },
   {
@@ -514,7 +543,11 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Effective plastic modulus z",
     expression: "W_{z,res}-\\rho_y(W_{z,res}-W_{pl,z,web})",
-    children: [{ nodeId: "W_z_res" }, { nodeId: "rho_y" }, { nodeId: "Wpl_z_web" }],
+    children: [
+      { nodeId: "W_z_res" },
+      { nodeId: "rho_y" },
+      { nodeId: "Wpl_z_web" },
+    ],
   },
   {
     id: "M_z_V_Rd",
@@ -526,7 +559,11 @@ export const nodes = defineNodes([
     expression: "W_{pl,z,eff}f_y/\\gamma_{M0}",
     unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.8", formulaRef: "(6.30)" },
-    children: [{ nodeId: "Wpl_z_eff" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
+    children: [
+      { nodeId: "Wpl_z_eff" },
+      { nodeId: "fy" },
+      { nodeId: "gamma_M0" },
+    ],
   },
   {
     id: "k_z",
@@ -553,7 +590,8 @@ export const nodes = defineNodes([
     key: "k_z_i",
     valueType: { type: "number" },
     name: "I-section axial reduction factor for z-z",
-    expression: "n \\leq a_f \\Rightarrow 1,\\ \\text{else}\\ 1-\\left(\\frac{n-a_f}{1-a_f}\\right)^2",
+    expression:
+      "n \\leq a_f \\Rightarrow 1,\\ \\text{else}\\ 1-\\left(\\frac{n-a_f}{1-a_f}\\right)^2",
     children: [{ nodeId: "n" }, { nodeId: "a_f" }],
   },
   {
@@ -585,9 +623,18 @@ export const nodes = defineNodes([
     name: "Biaxial exponent alpha",
     symbol: "\\alpha",
     children: [
-      { nodeId: "alpha_biax_i", when: { eq: ["section_shape", { value: "I" }] } },
-      { nodeId: "alpha_biax_rhs", when: { eq: ["section_shape", { value: "RHS" }] } },
-      { nodeId: "alpha_biax_chs", when: { eq: ["section_shape", { value: "CHS" }] } },
+      {
+        nodeId: "alpha_biax_i",
+        when: { eq: ["section_shape", { value: "I" }] },
+      },
+      {
+        nodeId: "alpha_biax_rhs",
+        when: { eq: ["section_shape", { value: "RHS" }] },
+      },
+      {
+        nodeId: "alpha_biax_chs",
+        when: { eq: ["section_shape", { value: "CHS" }] },
+      },
     ],
   },
   {
@@ -625,9 +672,18 @@ export const nodes = defineNodes([
     name: "Biaxial exponent beta",
     symbol: "\\beta",
     children: [
-      { nodeId: "beta_biax_i", when: { eq: ["section_shape", { value: "I" }] } },
-      { nodeId: "beta_biax_rhs", when: { eq: ["section_shape", { value: "RHS" }] } },
-      { nodeId: "beta_biax_chs", when: { eq: ["section_shape", { value: "CHS" }] } },
+      {
+        nodeId: "beta_biax_i",
+        when: { eq: ["section_shape", { value: "I" }] },
+      },
+      {
+        nodeId: "beta_biax_rhs",
+        when: { eq: ["section_shape", { value: "RHS" }] },
+      },
+      {
+        nodeId: "beta_biax_chs",
+        when: { eq: ["section_shape", { value: "CHS" }] },
+      },
     ],
   },
   {

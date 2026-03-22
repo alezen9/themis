@@ -383,7 +383,10 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     const reducedFlangeThickness = (1 - rho_y) * tf;
     const reducedWebThickness = (1 - rho_z) * tw;
 
-    if (!Number.isFinite(reducedFlangeThickness) || reducedFlangeThickness <= 0) {
+    if (
+      !Number.isFinite(reducedFlangeThickness) ||
+      reducedFlangeThickness <= 0
+    ) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message: "biaxial-axial-shear: reduced flange thickness must be > 0",
@@ -399,8 +402,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    const unreducedReference =
-      b * tf * (h - tf) + (tw * (h - 2 * tf) ** 2) / 4;
+    const unreducedReference = b * tf * (h - tf) + (tw * (h - 2 * tf) ** 2) / 4;
     const reducedReference =
       b * reducedFlangeThickness * (h - reducedFlangeThickness) +
       (reducedWebThickness * (h - 2 * reducedFlangeThickness) ** 2) / 4;
@@ -499,7 +501,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
 
     throw new Ec3VerificationError({
       type: "evaluation-error",
-      message: "biaxial-axial-shear: no active section-shape branch was selected",
+      message:
+        "biaxial-axial-shear: no active section-shape branch was selected",
       details: { sectionRef: "6.2.10" },
     });
   },
@@ -617,7 +620,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
 
     throw new Ec3VerificationError({
       type: "evaluation-error",
-      message: "biaxial-axial-shear: no active section-class branch was selected",
+      message:
+        "biaxial-axial-shear: no active section-class branch was selected",
       details: { sectionRef: "6.2.10" },
     });
   },
@@ -785,7 +789,9 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (abs_M_y_Ed / M_NV_y_Rd) ** alpha_biax +
-      (abs_M_z_Ed / M_NV_z_Rd) ** beta_biax;
+    return (
+      (abs_M_y_Ed / M_NV_y_Rd) ** alpha_biax +
+      (abs_M_z_Ed / M_NV_z_Rd) ** beta_biax
+    );
   },
 });

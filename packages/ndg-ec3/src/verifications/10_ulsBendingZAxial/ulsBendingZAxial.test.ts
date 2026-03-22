@@ -31,7 +31,8 @@ describe("check-10 bending-z-axial", () => {
     const a = Math.min(aRaw, 0.5);
     const axialRatio = (n - a) / (1 - a);
     const axialFactor = n <= a ? 1 : 1 - axialRatio ** 2;
-    const mPlRd = (inputs.Wpl_z * inputs.fy) / customAnnex.coefficients.gamma_M0;
+    const mPlRd =
+      (inputs.Wpl_z * inputs.fy) / customAnnex.coefficients.gamma_M0;
     const mNzRd = mPlRd * axialFactor;
     const ratio = Math.abs(inputs.M_z_Ed) / mNzRd;
 
@@ -57,7 +58,8 @@ describe("check-10 bending-z-axial", () => {
     const expectedClass2MplRd =
       (baselineInputs.Wpl_z * baselineInputs.fy) /
       customAnnex.coefficients.gamma_M0;
-    const expectedClass3SigmaN = Math.abs(baselineInputs.N_Ed) / baselineInputs.A;
+    const expectedClass3SigmaN =
+      Math.abs(baselineInputs.N_Ed) / baselineInputs.A;
     const expectedClass3SigmaMz =
       Math.abs(baselineInputs.M_z_Ed) / baselineInputs.Wel_z;
     const expectedClass3 =
@@ -75,7 +77,8 @@ describe("check-10 bending-z-axial", () => {
 
   it("keeps axial_factor = 1 at the n = a_f threshold", () => {
     const nPlRd =
-      (baselineInputs.A * baselineInputs.fy) / customAnnex.coefficients.gamma_M0;
+      (baselineInputs.A * baselineInputs.fy) /
+      customAnnex.coefficients.gamma_M0;
     const aFRaw =
       (baselineInputs.A - 2 * baselineInputs.b * baselineInputs.tf) /
       baselineInputs.A;
@@ -92,7 +95,8 @@ describe("check-10 bending-z-axial", () => {
 
   it("reduces axial_factor when n is just above a_f", () => {
     const nPlRd =
-      (baselineInputs.A * baselineInputs.fy) / customAnnex.coefficients.gamma_M0;
+      (baselineInputs.A * baselineInputs.fy) /
+      customAnnex.coefficients.gamma_M0;
     const aFRaw =
       (baselineInputs.A - 2 * baselineInputs.b * baselineInputs.tf) /
       baselineInputs.A;
@@ -348,10 +352,7 @@ describe("check-10 bending-z-axial", () => {
     const brokenAnnex = { id: "custom", coefficients: { gamma_M0: 0 } };
 
     try {
-      evaluate(check, {
-        inputs: baselineInputs,
-        annex: brokenAnnex,
-      });
+      evaluate(check, { inputs: baselineInputs, annex: brokenAnnex });
       throw new Error("expected evaluation to fail");
     } catch (error) {
       expect(error).toBeInstanceOf(Ec3VerificationError);

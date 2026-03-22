@@ -29,9 +29,9 @@ describe("check-09 bending-y-axial", () => {
     const aRaw = (inputs.A - 2 * inputs.b * inputs.tf) / inputs.A;
     const a = Math.min(aRaw, 0.5);
     const aHalf = 0.5 * a;
-    const axialFactor =
-      n <= aHalf ? 1 : 1 - ((n - aHalf) / (1 - aHalf)) ** 2;
-    const mPlRd = (inputs.Wpl_y * inputs.fy) / customAnnex.coefficients.gamma_M0;
+    const axialFactor = n <= aHalf ? 1 : 1 - ((n - aHalf) / (1 - aHalf)) ** 2;
+    const mPlRd =
+      (inputs.Wpl_y * inputs.fy) / customAnnex.coefficients.gamma_M0;
     const mNyRd = mPlRd * axialFactor;
     const ratio = Math.abs(inputs.M_y_Ed) / mNyRd;
 
@@ -57,7 +57,8 @@ describe("check-09 bending-y-axial", () => {
     const expectedClass2MplRd =
       (baselineInputs.Wpl_y * baselineInputs.fy) /
       customAnnex.coefficients.gamma_M0;
-    const expectedClass3SigmaN = Math.abs(baselineInputs.N_Ed) / baselineInputs.A;
+    const expectedClass3SigmaN =
+      Math.abs(baselineInputs.N_Ed) / baselineInputs.A;
     const expectedClass3SigmaMy =
       Math.abs(baselineInputs.M_y_Ed) / baselineInputs.Wel_y;
     const expectedClass3 =
@@ -75,7 +76,8 @@ describe("check-09 bending-y-axial", () => {
 
   it("keeps axial_factor = 1 at the n = 0.5*a_w threshold", () => {
     const nPlRd =
-      (baselineInputs.A * baselineInputs.fy) / customAnnex.coefficients.gamma_M0;
+      (baselineInputs.A * baselineInputs.fy) /
+      customAnnex.coefficients.gamma_M0;
     const aWRaw =
       (baselineInputs.A - 2 * baselineInputs.b * baselineInputs.tf) /
       baselineInputs.A;
@@ -92,7 +94,8 @@ describe("check-09 bending-y-axial", () => {
 
   it("reduces axial_factor when n is just above 0.5*a_w", () => {
     const nPlRd =
-      (baselineInputs.A * baselineInputs.fy) / customAnnex.coefficients.gamma_M0;
+      (baselineInputs.A * baselineInputs.fy) /
+      customAnnex.coefficients.gamma_M0;
     const aWRaw =
       (baselineInputs.A - 2 * baselineInputs.b * baselineInputs.tf) /
       baselineInputs.A;
@@ -342,10 +345,7 @@ describe("check-09 bending-y-axial", () => {
     const brokenAnnex = { id: "custom", coefficients: { gamma_M0: 0 } };
 
     try {
-      evaluate(check, {
-        inputs: baselineInputs,
-        annex: brokenAnnex,
-      });
+      evaluate(check, { inputs: baselineInputs, annex: brokenAnnex });
       throw new Error("expected evaluation to fail");
     } catch (error) {
       expect(error).toBeInstanceOf(Ec3VerificationError);

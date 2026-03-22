@@ -26,7 +26,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return Wel_y;
   },
 
-
   W_z_res_class12: ({ Wpl_z }) => {
     if (!Number.isFinite(Wpl_z) || Wpl_z <= 0) {
       throw new Ec3VerificationError({
@@ -48,7 +47,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
     return Wel_z;
   },
-
 
   N_pl_Rd: ({ A, fy, gamma_M0 }) => {
     if (!Number.isFinite(A) || A <= 0) {
@@ -379,7 +377,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return 2;
   },
 
-
   beta_biax_i: ({ n }) => {
     return Math.max(1, 5 * n);
   },
@@ -391,7 +388,6 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
   beta_biax_chs: () => {
     return 2;
   },
-
 
   abs_M_y_Ed: ({ M_y_Ed }) => {
     if (!Number.isFinite(M_y_Ed)) {
@@ -443,7 +439,12 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return abs_M_z_Ed / M_N_z_Rd;
   },
 
-  utilization_class12: ({ utilization_y, alpha_biax, utilization_z, beta_biax }) => {
+  utilization_class12: ({
+    utilization_y,
+    alpha_biax,
+    utilization_z,
+    beta_biax,
+  }) => {
     return utilization_y ** alpha_biax + utilization_z ** beta_biax;
   },
 
@@ -515,7 +516,11 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return sigma_x_class3 / sigma_limit;
   },
 
-  biaxial_axial_check: ({ section_class, utilization_class12, utilization_class3 }) => {
+  biaxial_axial_check: ({
+    section_class,
+    utilization_class12,
+    utilization_class3,
+  }) => {
     if (!Number.isFinite(section_class) || !Number.isInteger(section_class)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",

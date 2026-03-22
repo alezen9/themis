@@ -14,10 +14,16 @@ export const nodes = defineNodes([
       {
         nodeId: "utilization_class12",
         when: {
-          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
+          or: [
+            { eq: ["section_class", { value: 1 }] },
+            { eq: ["section_class", { value: 2 }] },
+          ],
         },
       },
-      { nodeId: "utilization_class3", when: { eq: ["section_class", { value: 3 }] } },
+      {
+        nodeId: "utilization_class3",
+        when: { eq: ["section_class", { value: 3 }] },
+      },
     ],
   },
   {
@@ -51,7 +57,11 @@ export const nodes = defineNodes([
     expression: "\\frac{W_{pl,z,eff} \\cdot f_y}{\\gamma_{M0}}",
     unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.8", formulaRef: "(6.30)" },
-    children: [{ nodeId: "Wpl_z_eff" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
+    children: [
+      { nodeId: "Wpl_z_eff" },
+      { nodeId: "fy" },
+      { nodeId: "gamma_M0" },
+    ],
   },
   {
     id: "Wpl_z_eff",
@@ -61,7 +71,11 @@ export const nodes = defineNodes([
     name: "Effective plastic section modulus about z-z under shear",
     expression: "W_{pl,z} - \\rho_y (W_{pl,z} - W_{pl,z,web})",
     unit: "\\mathrm{mm^{3}}",
-    children: [{ nodeId: "Wpl_z" }, { nodeId: "rho_y" }, { nodeId: "Wpl_z_web" }],
+    children: [
+      { nodeId: "Wpl_z" },
+      { nodeId: "rho_y" },
+      { nodeId: "Wpl_z_web" },
+    ],
   },
   {
     id: "Wpl_z_web",
@@ -98,7 +112,8 @@ export const nodes = defineNodes([
     key: "k_z_i",
     valueType: { type: "number" },
     name: "I-section axial reduction factor for z-z",
-    expression: "n \\leq a_f \\Rightarrow 1,\\ \\text{else}\\ 1-\\left(\\frac{n-a_f}{1-a_f}\\right)^2",
+    expression:
+      "n \\leq a_f \\Rightarrow 1,\\ \\text{else}\\ 1-\\left(\\frac{n-a_f}{1-a_f}\\right)^2",
     children: [{ nodeId: "n" }, { nodeId: "a_f" }],
   },
   {

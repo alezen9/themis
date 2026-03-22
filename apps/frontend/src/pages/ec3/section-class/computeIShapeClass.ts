@@ -79,7 +79,8 @@ const computeWeldedOutstandKSigma = (webStress: number, tipStress: number) => {
     const stressRatio = webStress / tipStress;
     if (stressRatio >= 1) return 0.43;
     if (stressRatio > 0) return 0.578 / (stressRatio + 0.34);
-    if (stressRatio > -1) return 1.7 - 5 * stressRatio + 17.1 * stressRatio ** 2;
+    if (stressRatio > -1)
+      return 1.7 - 5 * stressRatio + 17.1 * stressRatio ** 2;
     return 23.8;
   }
 
@@ -141,30 +142,18 @@ export const computeIShapeClass = (input: IShapeClassInput): SectionClass => {
   const epsilon = Math.sqrt(235 / yieldStrength);
   const radius = rootRadius;
 
-  const flangeOutstand = Math.max(
-    (width - webThickness - 2 * radius) / 2,
-    0,
-  );
+  const flangeOutstand = Math.max((width - webThickness - 2 * radius) / 2, 0);
   const flangeSlenderness = flangeOutstand / flangeThickness;
 
-  const webHeight = Math.max(
-    depth - 2 * flangeThickness - 2 * radius,
-    0,
-  );
+  const webHeight = Math.max(depth - 2 * flangeThickness - 2 * radius, 0);
   const webSlenderness = webHeight / webThickness;
 
   const compressionFromAxialForce =
-    crossSectionArea > 0
-      ? -axialForceEd / crossSectionArea
-      : 0;
+    crossSectionArea > 0 ? -axialForceEd / crossSectionArea : 0;
   const compressionFromBendingY =
-    elasticSectionModulusY > 0
-      ? -bendingMomentYEd / elasticSectionModulusY
-      : 0;
+    elasticSectionModulusY > 0 ? -bendingMomentYEd / elasticSectionModulusY : 0;
   const tipCompressionFromBendingZ =
-    elasticSectionModulusZ > 0
-      ? -bendingMomentZEd / elasticSectionModulusZ
-      : 0;
+    elasticSectionModulusZ > 0 ? -bendingMomentZEd / elasticSectionModulusZ : 0;
   const tipDistanceFromCentroid = width / 2;
   const webDistanceFromCentroid = webThickness / 2 + radius;
   const webToTipDistanceRatio =
@@ -226,7 +215,8 @@ export const computeIShapeClass = (input: IShapeClassInput): SectionClass => {
   let flangeClass = topLeftFlangeClass;
   if (topRightFlangeClass > flangeClass) flangeClass = topRightFlangeClass;
   if (bottomLeftFlangeClass > flangeClass) flangeClass = bottomLeftFlangeClass;
-  if (bottomRightFlangeClass > flangeClass) flangeClass = bottomRightFlangeClass;
+  if (bottomRightFlangeClass > flangeClass)
+    flangeClass = bottomRightFlangeClass;
 
   if (flangeClass > webClass) return flangeClass;
   return webClass;

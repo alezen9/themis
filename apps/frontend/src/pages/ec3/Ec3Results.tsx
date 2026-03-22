@@ -3,9 +3,7 @@ import { hasData, hasError, isNotApplicable } from "./use-ec3-evaluate";
 import type { VerificationRow } from "./use-ec3-evaluate";
 import { Ec3Report } from "./Ec3Report";
 
-type Ec3ResultsProps = {
-  results: VerificationRow[];
-};
+type Ec3ResultsProps = { results: VerificationRow[] };
 
 export const Ec3Results = ({ results }: Ec3ResultsProps) => {
   const [reportMode, setReportMode] = useState<"none" | "summary" | "verbose">(

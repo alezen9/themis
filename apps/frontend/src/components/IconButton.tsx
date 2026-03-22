@@ -13,16 +13,9 @@ const iconButtonVariants = cva(
         ghost: "bg-transparent hover:bg-neutral-100",
         destructive: "bg-red-600 text-white hover:bg-red-500",
       },
-      size: {
-        sm: "h-8 w-8",
-        md: "h-10 w-10",
-        lg: "h-12 w-12",
-      },
+      size: { sm: "h-8 w-8", md: "h-10 w-10", lg: "h-12 w-12" },
     },
-    defaultVariants: {
-      variant: "default",
-      size: "md",
-    },
+    defaultVariants: { variant: "default", size: "md" },
   },
 );
 

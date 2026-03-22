@@ -148,9 +148,7 @@ export const nodes = defineNodes([
     id: "gamma_M1",
     name: "Partial safety factor",
     symbol: "\\gamma_{M1}",
-    meta: {
-      sectionRef: "6.1",
-    },
+    meta: { sectionRef: "6.1" },
     children: [],
   },
   {
@@ -169,17 +167,7 @@ export const nodes = defineNodes([
     id: "ip2",
     name: "Polar radius term",
     expression: "\\frac{I_y+I_z}{A}",
-    children: [
-      {
-        nodeId: "Iy",
-      },
-      {
-        nodeId: "Iz",
-      },
-      {
-        nodeId: "A",
-      },
-    ],
+    children: [{ nodeId: "Iy" }, { nodeId: "Iz" }, { nodeId: "A" }],
   },
   {
     type: "derived",
@@ -191,38 +179,17 @@ export const nodes = defineNodes([
     expression:
       "\\frac{1}{i_p^2}\\left(G I_t + \\frac{\\pi^2 E I_w}{L_{cr,T}^2}\\right)",
     unit: "\\mathrm{N}",
-    meta: {
-      sectionRef: "6.3.1.4",
-      paragraphRef: "(2)",
-    },
+    meta: { sectionRef: "6.3.1.4", paragraphRef: "(2)" },
     children: [
-      {
-        nodeId: "ip2",
-      },
-      {
-        nodeId: "G",
-      },
-      {
-        nodeId: "It",
-      },
-      {
-        nodeId: "pi",
-      },
-      {
-        nodeId: "E",
-      },
-      {
-        nodeId: "Iw",
-      },
-      {
-        nodeId: "L",
-      },
-      {
-        nodeId: "k_T",
-      },
-      {
-        nodeId: "k_z",
-      },
+      { nodeId: "ip2" },
+      { nodeId: "G" },
+      { nodeId: "It" },
+      { nodeId: "pi" },
+      { nodeId: "E" },
+      { nodeId: "Iw" },
+      { nodeId: "L" },
+      { nodeId: "k_T" },
+      { nodeId: "k_z" },
     ],
   },
   {
@@ -234,15 +201,8 @@ export const nodes = defineNodes([
     symbol: "N_{cr}",
     expression: "N_{cr,T}=N_{cr,TF}",
     unit: "\\mathrm{N}",
-    meta: {
-      sectionRef: "6.3.1.4",
-      paragraphRef: "(2)",
-    },
-    children: [
-      {
-        nodeId: "N_cr_T",
-      },
-    ],
+    meta: { sectionRef: "6.3.1.4", paragraphRef: "(2)" },
+    children: [{ nodeId: "N_cr_T" }],
   },
   {
     type: "derived",
@@ -252,21 +212,8 @@ export const nodes = defineNodes([
     name: "Non-dimensional slenderness (torsional-flexural)",
     symbol: "\\bar{\\lambda}_{TF}",
     expression: "\\sqrt{\\frac{Af_y}{N_{cr}}}",
-    meta: {
-      sectionRef: "6.3.1.4",
-      paragraphRef: "(2)",
-    },
-    children: [
-      {
-        nodeId: "A",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "N_cr_governing",
-      },
-    ],
+    meta: { sectionRef: "6.3.1.4", paragraphRef: "(2)" },
+    children: [{ nodeId: "A" }, { nodeId: "fy" }, { nodeId: "N_cr_governing" }],
   },
   {
     type: "derived",
@@ -277,14 +224,7 @@ export const nodes = defineNodes([
     symbol: "\\Phi_{TF}",
     expression:
       "0.5(1 + \\alpha(\\bar{\\lambda}_{TF}-0.2) + \\bar{\\lambda}_{TF}^2)",
-    children: [
-      {
-        nodeId: "alpha_z",
-      },
-      {
-        nodeId: "lambda_bar_TF",
-      },
-    ],
+    children: [{ nodeId: "alpha_z" }, { nodeId: "lambda_bar_TF" }],
   },
   {
     type: "derived",
@@ -293,14 +233,7 @@ export const nodes = defineNodes([
     id: "chi_TF",
     name: "Capped torsional-flexural reduction factor",
     expression: "\\min(1,\\chi_{TF,base})",
-    children: [
-      {
-        nodeId: "phi_TF",
-      },
-      {
-        nodeId: "lambda_bar_TF",
-      },
-    ],
+    children: [{ nodeId: "phi_TF" }, { nodeId: "lambda_bar_TF" }],
   },
   {
     type: "formula",
@@ -311,23 +244,12 @@ export const nodes = defineNodes([
     symbol: "N_{b,TF,Rd}",
     expression: "\\frac{\\chi_{TF} A f_y}{\\gamma_{M1}}",
     unit: "\\mathrm{N}",
-    meta: {
-      sectionRef: "6.3.1.1",
-      formulaRef: "(6.47)",
-    },
+    meta: { sectionRef: "6.3.1.1", formulaRef: "(6.47)" },
     children: [
-      {
-        nodeId: "chi_TF",
-      },
-      {
-        nodeId: "A",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "gamma_M1",
-      },
+      { nodeId: "chi_TF" },
+      { nodeId: "A" },
+      { nodeId: "fy" },
+      { nodeId: "gamma_M1" },
     ],
   },
   {
@@ -337,11 +259,7 @@ export const nodes = defineNodes([
     id: "abs_N_Ed",
     name: "Absolute design axial force",
     expression: "\\left|N_{Ed}\\right|",
-    children: [
-      {
-        nodeId: "N_Ed",
-      },
-    ],
+    children: [{ nodeId: "N_Ed" }],
   },
   {
     type: "check",
@@ -350,18 +268,8 @@ export const nodes = defineNodes([
     id: "torsional_buckling_check",
     name: "Torsional-flexural buckling check",
     verificationExpression: "\\frac{N_{Ed}}{N_{b,TF,Rd}} \\leq 1.0",
-    meta: {
-      sectionRef: "6.3.1.1",
-      verificationRef: "(6.46)",
-    },
-    children: [
-      {
-        nodeId: "abs_N_Ed",
-      },
-      {
-        nodeId: "N_b_TF_Rd",
-      },
-    ],
+    meta: { sectionRef: "6.3.1.1", verificationRef: "(6.46)" },
+    children: [{ nodeId: "abs_N_Ed" }, { nodeId: "N_b_TF_Rd" }],
   },
 ]);
 

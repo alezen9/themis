@@ -9,9 +9,7 @@ const LazyPageEc3Debugger = verificationDebuggerEnabled
     })
   : null;
 
-type DebugEc3Search = {
-  session?: string;
-};
+type DebugEc3Search = { session?: string };
 
 export const Route = createFileRoute("/debug/ec3")({
   validateSearch: (search: Record<string, unknown>): DebugEc3Search => ({

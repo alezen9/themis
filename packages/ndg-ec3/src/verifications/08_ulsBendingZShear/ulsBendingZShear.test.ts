@@ -21,7 +21,10 @@ const baselineInputs = {
 
 describe("check-08 bending-z-shear", () => {
   it("computes reduced bending resistance and utilization when rho_y = 0", () => {
-    const result = evaluate(check, { inputs: baselineInputs, annex: customAnnex });
+    const result = evaluate(check, {
+      inputs: baselineInputs,
+      annex: customAnnex,
+    });
     const expectedVplRd =
       (baselineInputs.Av_y * baselineInputs.fy) /
       (Math.sqrt(3) * customAnnex.coefficients.gamma_M0);
@@ -42,7 +45,8 @@ describe("check-08 bending-z-shear", () => {
     const inputs = { ...baselineInputs, V_y_Ed: 200_000 };
     const result = evaluate(check, { inputs, annex: customAnnex });
     const vplRd =
-      (inputs.Av_y * inputs.fy) / (Math.sqrt(3) * customAnnex.coefficients.gamma_M0);
+      (inputs.Av_y * inputs.fy) /
+      (Math.sqrt(3) * customAnnex.coefficients.gamma_M0);
     const rhoRatio = Math.abs(inputs.V_y_Ed) / vplRd;
     const rhoExpected = (2 * rhoRatio - 1) ** 2;
     const hw = inputs.h - 2 * inputs.tf;
@@ -65,10 +69,7 @@ describe("check-08 bending-z-shear", () => {
     const V_pl_y_Rd =
       (baselineInputs.Av_y * baselineInputs.fy) /
       (Math.sqrt(3) * customAnnex.coefficients.gamma_M0);
-    const inputs = {
-      ...baselineInputs,
-      V_y_Ed: 0.5 * V_pl_y_Rd,
-    };
+    const inputs = { ...baselineInputs, V_y_Ed: 0.5 * V_pl_y_Rd };
     const result = evaluate(check, { inputs, annex: customAnnex });
     const expectedMzVRd =
       (inputs.Wpl_z * inputs.fy) / customAnnex.coefficients.gamma_M0;
@@ -93,7 +94,8 @@ describe("check-08 bending-z-shear", () => {
     };
     const result = evaluate(check, { inputs, annex: customAnnex });
     const V_pl_y_Rd =
-      (inputs.Av_y * inputs.fy) / (Math.sqrt(3) * customAnnex.coefficients.gamma_M0);
+      (inputs.Av_y * inputs.fy) /
+      (Math.sqrt(3) * customAnnex.coefficients.gamma_M0);
     const rhoRatio = Math.abs(inputs.V_y_Ed) / V_pl_y_Rd;
     const rhoExpected = (2 * rhoRatio - 1) ** 2;
     const W_z_eff_expected = inputs.Wpl_z * (1 - rhoExpected);
@@ -138,7 +140,10 @@ describe("check-08 bending-z-shear", () => {
   });
 
   it("passes at ratio = 1", () => {
-    const initial = evaluate(check, { inputs: baselineInputs, annex: customAnnex });
+    const initial = evaluate(check, {
+      inputs: baselineInputs,
+      annex: customAnnex,
+    });
     const atLimit = evaluate(check, {
       inputs: { ...baselineInputs, M_z_Ed: initial.cache.M_z_V_Rd },
       annex: customAnnex,
@@ -149,7 +154,10 @@ describe("check-08 bending-z-shear", () => {
   });
 
   it("fails when ratio is above 1", () => {
-    const initial = evaluate(check, { inputs: baselineInputs, annex: customAnnex });
+    const initial = evaluate(check, {
+      inputs: baselineInputs,
+      annex: customAnnex,
+    });
     const result = evaluate(check, {
       inputs: { ...baselineInputs, M_z_Ed: 1.01 * initial.cache.M_z_V_Rd },
       annex: customAnnex,
@@ -311,10 +319,7 @@ describe("check-08 bending-z-shear", () => {
     const brokenAnnex = { id: "custom", coefficients: { gamma_M0: 0 } };
 
     try {
-      evaluate(check, {
-        inputs: baselineInputs,
-        annex: brokenAnnex,
-      });
+      evaluate(check, { inputs: baselineInputs, annex: brokenAnnex });
       throw new Error("expected evaluation to fail");
     } catch (error) {
       expect(error).toBeInstanceOf(Ec3VerificationError);
@@ -370,7 +375,8 @@ describe("check-08 reference scenarios", () => {
       fy: 235,
     };
     const result = evaluate(check, { inputs, annex: parityAnnex });
-    const expectedMzVRd = (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
+    const expectedMzVRd =
+      (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
 
     expect(result.cache.rho_y).toBe(0);
     expect(result.cache.M_z_V_Rd).toBeCloseTo(expectedMzVRd, 12);
@@ -394,7 +400,8 @@ describe("check-08 reference scenarios", () => {
       fy: 235,
     };
     const result = evaluate(check, { inputs, annex: parityAnnex });
-    const expectedMzVRd = (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
+    const expectedMzVRd =
+      (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
 
     expect(result.cache.rho_y).toBe(0);
     expect(result.cache.M_z_V_Rd).toBeCloseTo(expectedMzVRd, 12);
@@ -418,7 +425,8 @@ describe("check-08 reference scenarios", () => {
       fy: 235,
     };
     const result = evaluate(check, { inputs, annex: parityAnnex });
-    const expectedMzVRd = (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
+    const expectedMzVRd =
+      (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
 
     expect(result.cache.rho_y).toBe(0);
     expect(result.cache.M_z_V_Rd).toBeCloseTo(expectedMzVRd, 12);
@@ -442,7 +450,8 @@ describe("check-08 reference scenarios", () => {
       fy: 235,
     };
     const result = evaluate(check, { inputs, annex: parityAnnex });
-    const expectedMzVRd = (inputs.Wel_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
+    const expectedMzVRd =
+      (inputs.Wel_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
 
     expect(result.cache.rho_y).toBe(0);
     expect(result.cache.M_z_V_Rd).toBeCloseTo(expectedMzVRd, 12);

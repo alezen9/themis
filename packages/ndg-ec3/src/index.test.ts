@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import verify, {
-  ec3VerificationDefinitions,
-  type Ec3Inputs,
-} from "./index";
+import verify, { ec3VerificationDefinitions, type Ec3Inputs } from "./index";
 
 const baseISectionInputs: Ec3Inputs = {
   N_Ed: -30_000,

@@ -78,20 +78,14 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       throw new Ec3VerificationError({
         type: "not-applicable-load-case",
         message: "beam-column-62-m1: torsional deformations are disabled",
-        details: {
-          torsional_deformations,
-          sectionRef: "6.3.3",
-        },
+        details: { torsional_deformations, sectionRef: "6.3.3" },
       });
     }
     if ((interaction_factor_method ?? "both") === "method2") {
       throw new Ec3VerificationError({
         type: "not-applicable-load-case",
         message: "beam-column-62-m1: interaction factor method set to method2",
-        details: {
-          interaction_factor_method,
-          sectionRef: "6.3.3(5)",
-        },
+        details: { interaction_factor_method, sectionRef: "6.3.3(5)" },
       });
     }
     if (N_Ed > 0) {
@@ -99,10 +93,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         type: "not-applicable-load-case",
         message:
           "beam-column-62-m1: check is only applicable for compression (N_Ed < 0)",
-        details: {
-          N_Ed,
-          sectionRef: "6.3.3",
-        },
+        details: { N_Ed, sectionRef: "6.3.3" },
       });
     }
     return -N_Ed;
@@ -395,7 +386,16 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
   },
   alpha_LT_eff: ({ alpha_LT, buckling_curves_LT_policy }) =>
     (buckling_curves_LT_policy ?? "default") === "general" ? 0.34 : alpha_LT,
-  chi_LT: ({ Wpl_y, Wel_y, fy, M_cr, alpha_LT_eff, lambda_LT_0, beta_LT, section_class }) => {
+  chi_LT: ({
+    Wpl_y,
+    Wel_y,
+    fy,
+    M_cr,
+    alpha_LT_eff,
+    lambda_LT_0,
+    beta_LT,
+    section_class,
+  }) => {
     if (M_cr <= 0)
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -409,7 +409,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return Math.min(1, Math.min(val, 1 / lb ** 2));
   },
   f_LT: (args) => {
-    const { coefficient_f_method, Wpl_y, Wel_y, fy, M_cr, k_c, section_class } = args;
+    const { coefficient_f_method, Wpl_y, Wel_y, fy, M_cr, k_c, section_class } =
+      args;
     if ((coefficient_f_method ?? "default-equation") === "force-1.0") return 1;
     if (M_cr <= 0) {
       throw new Ec3VerificationError({
@@ -491,7 +492,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     M_y_Rk,
     M_z_Rk,
   }) => {
-    const denom = (0.1 + lambda_bar_z ** 4) * Cm_y * chi_LT * M_y_Rk * Cm_z * M_z_Rk;
+    const denom =
+      (0.1 + lambda_bar_z ** 4) * Cm_y * chi_LT * M_y_Rk * Cm_z * M_z_Rk;
     if (denom <= 0)
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -554,8 +556,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     const raw =
       1 +
       (wz - 1) *
-        ((2 - (14 * Cm_z ** 2 * lambda_bar_max ** 2) / wz ** 5) * n_pl -
-          c_LT);
+        ((2 - (14 * Cm_z ** 2 * lambda_bar_max ** 2) / wz ** 5) * n_pl - c_LT);
     return Math.max(raw, (0.6 * Math.sqrt(wz / wy) * Wel_z) / Wpl_z);
   },
   C_zy: ({
@@ -574,8 +575,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     const raw =
       1 +
       (wy - 1) *
-        ((2 - (14 * Cm_y ** 2 * lambda_bar_max ** 2) / wy ** 5) * n_pl -
-          d_LT);
+        ((2 - (14 * Cm_y ** 2 * lambda_bar_max ** 2) / wy ** 5) * n_pl - d_LT);
     return Math.max(raw, (0.6 * Math.sqrt(wy / wz) * Wel_y) / Wpl_y);
   },
   C_zz: ({
@@ -626,7 +626,17 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     if (section_class >= 3) return Cm_z / k_zzReserve;
     return (Cm_z * (1 / C_zz)) / k_zzReserve;
   },
-  k_zy: ({ Cm_y, Cm_LT, C_zy, wy, wz, ncr_y_ratio, ncr_z_ratio, chi_z, section_class }) => {
+  k_zy: ({
+    Cm_y,
+    Cm_LT,
+    C_zy,
+    wy,
+    wz,
+    ncr_y_ratio,
+    ncr_z_ratio,
+    chi_z,
+    section_class,
+  }) => {
     const mu_z = (1 - ncr_z_ratio) / (1 - chi_z * ncr_z_ratio);
     const denom = 1 - ncr_y_ratio;
     if (!Number.isFinite(denom) || denom <= 0)
@@ -635,7 +645,9 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         message: "beam-column-62-m1: invalid k_zy denominator",
       });
     if (section_class >= 3) return (Cm_y * Cm_LT * mu_z) / denom;
-    return (Cm_y * Cm_LT * mu_z * (1 / C_zy) * 0.6 * Math.sqrt(wy / wz)) / denom;
+    return (
+      (Cm_y * Cm_LT * mu_z * (1 / C_zy) * 0.6 * Math.sqrt(wy / wz)) / denom
+    );
   },
   bc_62_term1: ({ abs_N_Ed, chi_z, N_Rk, gamma_M1 }) => {
     const denominator = (chi_z * N_Rk) / gamma_M1;

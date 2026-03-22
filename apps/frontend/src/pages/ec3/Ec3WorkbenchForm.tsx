@@ -1,5 +1,8 @@
 import type { Ec3EditableInputs } from "./use-ec3-evaluate";
-import { computeSectionProperties, type SectionInput } from "./compute-section-properties";
+import {
+  computeSectionProperties,
+  type SectionInput,
+} from "./compute-section-properties";
 import {
   ANNEXES,
   ANNEX_FIELDS,
@@ -130,7 +133,8 @@ function SectionSummary({
 
         <span className="font-medium text-gray-600">Curves</span>
         <span>
-          y/z/LT: {computed.bucklingY}/{computed.bucklingZ}/{computed.bucklingLT}
+          y/z/LT: {computed.bucklingY}/{computed.bucklingZ}/
+          {computed.bucklingLT}
         </span>
       </div>
     </div>
@@ -404,7 +408,9 @@ export function Ec3WorkbenchForm({
                 const rawValue = event.target.value;
                 setEditableValue(
                   "section_class_mode",
-                  rawValue === "auto" ? "auto" : Number(rawValue) as 1 | 2 | 3,
+                  rawValue === "auto"
+                    ? "auto"
+                    : (Number(rawValue) as 1 | 2 | 3),
                 );
               }}
               className="w-36 border px-1 py-0.5"
@@ -469,7 +475,9 @@ export function Ec3WorkbenchForm({
       ))}
 
       <fieldset className="border p-3">
-        <legend className="px-1 text-xs font-semibold">Stability Options</legend>
+        <legend className="px-1 text-xs font-semibold">
+          Stability Options
+        </legend>
         <div className="space-y-2">
           <label className="flex items-center gap-2 text-sm">
             <span className="w-20 shrink-0">torsional</span>
@@ -478,7 +486,8 @@ export function Ec3WorkbenchForm({
               onChange={(event) =>
                 setEditableValue(
                   "torsional_deformations",
-                  event.target.value as Ec3EditableInputs["torsional_deformations"],
+                  event.target
+                    .value as Ec3EditableInputs["torsional_deformations"],
                 )
               }
               className="w-36 border px-1 py-0.5"
@@ -519,7 +528,8 @@ export function Ec3WorkbenchForm({
               onChange={(event) =>
                 setEditableValue(
                   "coefficient_f_method",
-                  event.target.value as Ec3EditableInputs["coefficient_f_method"],
+                  event.target
+                    .value as Ec3EditableInputs["coefficient_f_method"],
                 )
               }
               className="w-36 border px-1 py-0.5"
@@ -595,7 +605,8 @@ export function Ec3WorkbenchForm({
                 onChange={(event) =>
                   setEditableValue(
                     "support_condition_y",
-                    event.target.value as Ec3EditableInputs["support_condition_y"],
+                    event.target
+                      .value as Ec3EditableInputs["support_condition_y"],
                   )
                 }
                 className="w-36 border px-1 py-0.5"
@@ -646,7 +657,8 @@ export function Ec3WorkbenchForm({
                 onChange={(event) =>
                   setEditableValue(
                     "support_condition_z",
-                    event.target.value as Ec3EditableInputs["support_condition_z"],
+                    event.target
+                      .value as Ec3EditableInputs["support_condition_z"],
                   )
                 }
                 className="w-36 border px-1 py-0.5"
@@ -669,7 +681,8 @@ export function Ec3WorkbenchForm({
                   onChange={(event) =>
                     setEditableValue(
                       "moment_shape_LT",
-                      event.target.value as Ec3EditableInputs["moment_shape_LT"],
+                      event.target
+                        .value as Ec3EditableInputs["moment_shape_LT"],
                     )
                   }
                   className="w-36 border px-1 py-0.5"

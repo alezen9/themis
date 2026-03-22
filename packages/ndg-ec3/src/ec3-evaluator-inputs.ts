@@ -51,8 +51,6 @@ type Ec3InputKey =
 
 type Ec3KnownInputs = {
   [K in Exclude<Ec3InputKey, "section_shape">]?: number | string;
-} & {
-  section_shape?: "I" | "RHS" | "CHS";
-};
+} & { section_shape?: "I" | "RHS" | "CHS" };
 
 export type Ec3EvaluatorInputs = Ec3KnownInputs;

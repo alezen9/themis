@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { decodeEc3DebugSession, encodeEc3DebugSession } from "./ec3-debug-session";
+import {
+  decodeEc3DebugSession,
+  encodeEc3DebugSession,
+} from "./ec3-debug-session";
 import { createDefaultEc3WorkbenchSessionState } from "./use-ec3-workbench";
 
 describe("ec3 debug session", () => {

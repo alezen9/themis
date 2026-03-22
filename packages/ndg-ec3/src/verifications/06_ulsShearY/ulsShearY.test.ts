@@ -5,15 +5,14 @@ import { Ec3VerificationError } from "../../errors";
 
 const customAnnex = { id: "custom", coefficients: { gamma_M0: 1.05 } };
 
-const baselineInputs = {
-  V_y_Ed: 10_000,
-  Av_y: 1_700,
-  fy: 355,
-};
+const baselineInputs = { V_y_Ed: 10_000, Av_y: 1_700, fy: 355 };
 
 describe("check-06 shear-y", () => {
   it("computes resistance and utilization from EC3 formula inputs", () => {
-    const result = evaluate(check, { inputs: baselineInputs, annex: customAnnex });
+    const result = evaluate(check, {
+      inputs: baselineInputs,
+      annex: customAnnex,
+    });
     const expectedVplRd =
       (baselineInputs.Av_y * baselineInputs.fy) /
       (Math.sqrt(3) * customAnnex.coefficients.gamma_M0);
@@ -137,10 +136,7 @@ describe("check-06 shear-y", () => {
     const brokenAnnex = { id: "custom", coefficients: { gamma_M0: 0 } };
 
     try {
-      evaluate(check, {
-        inputs: baselineInputs,
-        annex: brokenAnnex,
-      });
+      evaluate(check, { inputs: baselineInputs, annex: brokenAnnex });
       throw new Error("expected evaluation to fail");
     } catch (error) {
       expect(error).toBeInstanceOf(Ec3VerificationError);
@@ -171,7 +167,8 @@ describe("check-06 reference scenarios", () => {
     const inputs = { V_y_Ed: 5_000, Av_y: 3_210, fy: 235 };
     const result = evaluate(check, { inputs, annex: parityAnnex });
     const expectedVplRd =
-      (inputs.Av_y * inputs.fy) / (Math.sqrt(3) * parityAnnex.coefficients.gamma_M0);
+      (inputs.Av_y * inputs.fy) /
+      (Math.sqrt(3) * parityAnnex.coefficients.gamma_M0);
 
     expect(result.cache.V_pl_y_Rd).toBeCloseTo(expectedVplRd, 12);
     expect(Number(result.cache.V_pl_y_Rd) / 1_000).toBeCloseTo(414.8, 1);
@@ -183,7 +180,8 @@ describe("check-06 reference scenarios", () => {
     const inputs = { V_y_Ed: 5_000, Av_y: 684, fy: 235 };
     const result = evaluate(check, { inputs, annex: parityAnnex });
     const expectedVplRd =
-      (inputs.Av_y * inputs.fy) / (Math.sqrt(3) * parityAnnex.coefficients.gamma_M0);
+      (inputs.Av_y * inputs.fy) /
+      (Math.sqrt(3) * parityAnnex.coefficients.gamma_M0);
 
     expect(result.cache.V_pl_y_Rd).toBeCloseTo(expectedVplRd, 12);
     expect(Number(result.cache.V_pl_y_Rd) / 1_000).toBeCloseTo(88.4, 1);
@@ -195,7 +193,8 @@ describe("check-06 reference scenarios", () => {
     const inputs = { V_y_Ed: 3_000, Av_y: 433, fy: 235 };
     const result = evaluate(check, { inputs, annex: parityAnnex });
     const expectedVplRd =
-      (inputs.Av_y * inputs.fy) / (Math.sqrt(3) * parityAnnex.coefficients.gamma_M0);
+      (inputs.Av_y * inputs.fy) /
+      (Math.sqrt(3) * parityAnnex.coefficients.gamma_M0);
 
     expect(result.cache.V_pl_y_Rd).toBeCloseTo(expectedVplRd, 12);
     expect(Number(result.cache.V_pl_y_Rd) / 1_000).toBeCloseTo(56.0, 1);
@@ -207,7 +206,8 @@ describe("check-06 reference scenarios", () => {
     const inputs = { V_y_Ed: 5_000, Av_y: 8_360, fy: 235 };
     const result = evaluate(check, { inputs, annex: parityAnnex });
     const expectedVplRd =
-      (inputs.Av_y * inputs.fy) / (Math.sqrt(3) * parityAnnex.coefficients.gamma_M0);
+      (inputs.Av_y * inputs.fy) /
+      (Math.sqrt(3) * parityAnnex.coefficients.gamma_M0);
 
     expect(result.cache.V_pl_y_Rd).toBeCloseTo(expectedVplRd, 12);
     expect(Number(result.cache.V_pl_y_Rd) / 1_000).toBeCloseTo(1080.2, 1);

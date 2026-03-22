@@ -32,11 +32,7 @@ export const nodes = defineNodes([
     expression: "\\frac{A_{v,z} \\cdot f_y}{\\sqrt{3}\\,\\gamma_{M0}}",
     unit: "\\mathrm{N}",
     meta: { sectionRef: "6.2.6", formulaRef: "(6.18)" },
-    children: [
-      { nodeId: "Av_z" },
-      { nodeId: "fy" },
-      { nodeId: "gamma_M0" },
-    ],
+    children: [{ nodeId: "Av_z" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
   },
   {
     id: "Av_z",

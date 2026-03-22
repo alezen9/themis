@@ -14,12 +14,7 @@ type DecodeResult = {
 const SECTION_CLASS_MAP: Record<
   string,
   Ec3EditableInputs["section_class_mode"]
-> = {
-  "0": "auto",
-  "1": 1,
-  "2": 2,
-  "3": 3,
-};
+> = { "0": "auto", "1": 1, "2": 2, "3": 3 };
 
 const MOMENT_SHAPE_MAP: Record<string, Ec3EditableInputs["moment_shape_y"]> = {
   "0": "uniform",
@@ -31,51 +26,30 @@ const MOMENT_SHAPE_MAP: Record<string, Ec3EditableInputs["moment_shape_y"]> = {
 const SUPPORT_CONDITION_MAP: Record<
   string,
   Ec3EditableInputs["support_condition_y"]
-> = {
-  "0": "pinned-pinned",
-  "1": "fixed-pinned",
-  "2": "fixed-fixed",
-};
+> = { "0": "pinned-pinned", "1": "fixed-pinned", "2": "fixed-fixed" };
 
 const LOAD_LOCATION_MAP: Record<
   string,
   Ec3EditableInputs["load_application_LT"]
-> = {
-  "0": "top-flange",
-  "1": "centroid",
-  "2": "bottom-flange",
-};
+> = { "0": "top-flange", "1": "centroid", "2": "bottom-flange" };
 
 const TORSIONAL_DEFORMATION_MAP: Record<
   string,
   Ec3EditableInputs["torsional_deformations"]
-> = {
-  "0": "yes",
-  "1": "no",
-};
+> = { "0": "yes", "1": "no" };
 
 const INTERACTION_METHOD_MAP: Record<
   string,
   Ec3EditableInputs["interaction_factor_method"]
-> = {
-  "0": "both",
-  "1": "method1",
-  "2": "method2",
-  "3": "any",
-};
+> = { "0": "both", "1": "method1", "2": "method2", "3": "any" };
 
 const F_METHOD_MAP: Record<string, Ec3EditableInputs["coefficient_f_method"]> =
-  {
-    "0": "default-equation",
-    "1": "force-1.0",
-  };
+  { "0": "default-equation", "1": "force-1.0" };
 
 const LT_CURVE_POLICY_MAP: Record<
   string,
   Ec3EditableInputs["buckling_curves_LT_policy"]
-> = {
-  "0": "default",
-};
+> = { "0": "default" };
 
 const STEEL_CLASS_CODE_TO_GRADE_ID: Record<string, string> = {
   "1": "EN10025-2:S235",

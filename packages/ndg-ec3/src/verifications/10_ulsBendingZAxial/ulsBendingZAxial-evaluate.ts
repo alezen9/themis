@@ -291,12 +291,15 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return sigma_x_class3 / sigma_limit;
   },
 
-  bending_z_axial_check: ({ section_class, utilization_class12, utilization_class3 }) => {
+  bending_z_axial_check: ({
+    section_class,
+    utilization_class12,
+    utilization_class3,
+  }) => {
     if (!Number.isFinite(section_class) || !Number.isInteger(section_class)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message:
-          "bending-z-axial: section_class must be an integer in {1,2,3}",
+        message: "bending-z-axial: section_class must be an integer in {1,2,3}",
         details: { section_class, sectionRef: "6.2.9" },
       });
     }

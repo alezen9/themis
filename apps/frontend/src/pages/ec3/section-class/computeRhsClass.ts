@@ -82,26 +82,28 @@ export const computeRhsClass = (input: RhsClassInput): SectionClass => {
   const widthSlenderness = wallWidth / wallThickness;
 
   const compressionFromAxialForce =
-    crossSectionArea > 0
-      ? -axialForceEd / crossSectionArea
-      : 0;
+    crossSectionArea > 0 ? -axialForceEd / crossSectionArea : 0;
   const compressionFromBendingY =
-    elasticSectionModulusY > 0
-      ? -bendingMomentYEd / elasticSectionModulusY
-      : 0;
+    elasticSectionModulusY > 0 ? -bendingMomentYEd / elasticSectionModulusY : 0;
   const compressionFromBendingZ =
-    elasticSectionModulusZ > 0
-      ? -bendingMomentZEd / elasticSectionModulusZ
-      : 0;
+    elasticSectionModulusZ > 0 ? -bendingMomentZEd / elasticSectionModulusZ : 0;
 
   const topLeftStress =
-    compressionFromAxialForce + compressionFromBendingY - compressionFromBendingZ;
+    compressionFromAxialForce +
+    compressionFromBendingY -
+    compressionFromBendingZ;
   const topRightStress =
-    compressionFromAxialForce + compressionFromBendingY + compressionFromBendingZ;
+    compressionFromAxialForce +
+    compressionFromBendingY +
+    compressionFromBendingZ;
   const bottomLeftStress =
-    compressionFromAxialForce - compressionFromBendingY - compressionFromBendingZ;
+    compressionFromAxialForce -
+    compressionFromBendingY -
+    compressionFromBendingZ;
   const bottomRightStress =
-    compressionFromAxialForce - compressionFromBendingY + compressionFromBendingZ;
+    compressionFromAxialForce -
+    compressionFromBendingY +
+    compressionFromBendingZ;
 
   const topWallClass = resolveInternalPartClass(
     widthSlenderness,

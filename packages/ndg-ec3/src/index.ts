@@ -64,8 +64,14 @@ const verificationRegistry: readonly {
   { checkId: 9, verification: toRegistryDefinition(v09_ulsBendingYAxial) },
   { checkId: 10, verification: toRegistryDefinition(v10_ulsBendingZAxial) },
   { checkId: 11, verification: toRegistryDefinition(v11_ulsBiaxialAxial) },
-  { checkId: 12, verification: toRegistryDefinition(v12_ulsBendingYAxialShear) },
-  { checkId: 13, verification: toRegistryDefinition(v13_ulsBendingZAxialShear) },
+  {
+    checkId: 12,
+    verification: toRegistryDefinition(v12_ulsBendingYAxialShear),
+  },
+  {
+    checkId: 13,
+    verification: toRegistryDefinition(v13_ulsBendingZAxialShear),
+  },
   { checkId: 14, verification: toRegistryDefinition(v14_ulsBiaxialAxialShear) },
   { checkId: 15, verification: toRegistryDefinition(v15_ulsBucklingY) },
   { checkId: 16, verification: toRegistryDefinition(v16_ulsBucklingZ) },
@@ -131,12 +137,7 @@ const getCheckDetails = (
 export const ec3VerificationDefinitions: readonly Ec3VerificationCatalogEntry[] =
   verificationRegistry.map(({ checkId, verification }) => {
     const { name, check } = getCheckDetails(verification);
-    return {
-      checkId,
-      name,
-      check,
-      nodes: verification.nodes,
-    };
+    return { checkId, name, check, nodes: verification.nodes };
   });
 
 const toVerificationRow = (

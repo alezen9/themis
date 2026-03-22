@@ -113,10 +113,7 @@ describe("check-02 compression", () => {
     const brokenAnnex = { id: "custom", coefficients: { gamma_M0: 0 } };
 
     try {
-      evaluate(check, {
-        inputs: baselineInputs,
-        annex: brokenAnnex,
-      });
+      evaluate(check, { inputs: baselineInputs, annex: brokenAnnex });
       throw new Error("expected evaluation to fail");
     } catch (error) {
       expect(error).toBeInstanceOf(Ec3VerificationError);

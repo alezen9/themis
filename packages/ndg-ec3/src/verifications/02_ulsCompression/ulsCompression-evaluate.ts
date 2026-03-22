@@ -52,7 +52,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     if (!Number.isFinite(N_c_Rd) || N_c_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "compression: denominator N_c_Rd must be > 0 (division by zero)",
+        message:
+          "compression: denominator N_c_Rd must be > 0 (division by zero)",
         details: { N_c_Rd, sectionRef: "6.2.4" },
       });
     }

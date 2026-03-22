@@ -4,9 +4,6 @@ import { nodes, type Nodes } from "./ulsBendingZAxial-nodes";
 
 type Verification = VerificationDefinition<Nodes>;
 
-const verification: Verification = {
-  nodes,
-  evaluate,
-};
+const verification: Verification = { nodes, evaluate };
 
 export default verification;

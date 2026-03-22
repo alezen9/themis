@@ -343,11 +343,13 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     const reducedFlangeThickness = (1 - rho_y) * tf;
     const reducedWebThickness = (1 - rho_z) * tw;
 
-    if (!Number.isFinite(reducedFlangeThickness) || reducedFlangeThickness <= 0) {
+    if (
+      !Number.isFinite(reducedFlangeThickness) ||
+      reducedFlangeThickness <= 0
+    ) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message:
-          "bending-y-axial-shear: reduced flange thickness must be > 0",
+        message: "bending-y-axial-shear: reduced flange thickness must be > 0",
         details: { reducedFlangeThickness, sectionRef: "6.2.10" },
       });
     }
@@ -360,8 +362,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    const unreducedReference =
-      b * tf * (h - tf) + (tw * (h - 2 * tf) ** 2) / 4;
+    const unreducedReference = b * tf * (h - tf) + (tw * (h - 2 * tf) ** 2) / 4;
     const reducedReference =
       b * reducedFlangeThickness * (h - reducedFlangeThickness) +
       (reducedWebThickness * (h - 2 * reducedFlangeThickness) ** 2) / 4;
@@ -476,7 +477,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
 
     throw new Ec3VerificationError({
       type: "evaluation-error",
-      message: "bending-y-axial-shear: no active section-shape branch was selected",
+      message:
+        "bending-y-axial-shear: no active section-shape branch was selected",
       details: { sectionRef: "6.2.10" },
     });
   },
@@ -637,7 +639,11 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return sigma_v_class3 / sigma_limit;
   },
 
-  bending_y_axial_shear_check: ({ section_class, utilization_class12, utilization_class3 }) => {
+  bending_y_axial_shear_check: ({
+    section_class,
+    utilization_class12,
+    utilization_class3,
+  }) => {
     if (!Number.isFinite(section_class) || !Number.isInteger(section_class)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -664,7 +670,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
 
     throw new Ec3VerificationError({
       type: "evaluation-error",
-      message: "bending-y-axial-shear: no active utilization branch was selected",
+      message:
+        "bending-y-axial-shear: no active utilization branch was selected",
       details: { sectionRef: "6.2.10" },
     });
   },

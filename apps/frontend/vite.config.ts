@@ -5,9 +5,7 @@ import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
   base: "/themis/",
-  resolve: {
-    conditions: ["development"],
-  },
+  resolve: { conditions: ["development"] },
   plugins: [
     TanStackRouterVite({
       routesDirectory: "./src/routes",

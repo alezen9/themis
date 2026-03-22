@@ -43,7 +43,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     if (!Number.isFinite(V_pl_z_Rd) || V_pl_z_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "shear-z: denominator V_pl_z_Rd must be > 0 (division by zero)",
+        message:
+          "shear-z: denominator V_pl_z_Rd must be > 0 (division by zero)",
         details: { V_pl_z_Rd, sectionRef: "6.2.6" },
       });
     }

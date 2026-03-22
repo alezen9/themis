@@ -16,7 +16,10 @@ const toBase64Url = (value: string) => {
     binary += String.fromCharCode(byte);
   }
 
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/u, "");
+  return btoa(binary)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/u, "");
 };
 
 const fromBase64Url = (value: string) => {
@@ -52,7 +55,9 @@ export const decodeEc3DebugSession = (
   if (!value) return null;
 
   try {
-    const parsed = JSON.parse(fromBase64Url(value)) as Partial<Ec3DebugSessionEnvelope>;
+    const parsed = JSON.parse(
+      fromBase64Url(value),
+    ) as Partial<Ec3DebugSessionEnvelope>;
 
     if (
       parsed.kind !== EC3_DEBUG_SESSION_KIND ||

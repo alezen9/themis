@@ -199,10 +199,7 @@ describe("check-04 bending-z", () => {
     const brokenAnnex = { id: "custom", coefficients: { gamma_M0: 0 } };
 
     try {
-      evaluate(check, {
-        inputs: baselineInputs,
-        annex: brokenAnnex,
-      });
+      evaluate(check, { inputs: baselineInputs, annex: brokenAnnex });
       throw new Error("expected evaluation to fail");
     } catch (error) {
       expect(error).toBeInstanceOf(Ec3VerificationError);
@@ -238,7 +235,8 @@ describe("check-04 reference scenarios", () => {
       fy: 235,
     };
     const result = evaluate(check, { inputs, annex: parityAnnex });
-    const expectedMcRd = (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
+    const expectedMcRd =
+      (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
 
     expect(result.cache.M_c_z_Rd).toBeCloseTo(expectedMcRd, 12);
     expect(Number(result.cache.M_c_z_Rd) / 1_000_000).toBeCloseTo(2.1, 1);
@@ -255,7 +253,8 @@ describe("check-04 reference scenarios", () => {
       fy: 235,
     };
     const result = evaluate(check, { inputs, annex: parityAnnex });
-    const expectedMcRd = (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
+    const expectedMcRd =
+      (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
 
     expect(result.cache.M_c_z_Rd).toBeCloseTo(expectedMcRd, 12);
     expect(Number(result.cache.M_c_z_Rd) / 1_000_000).toBeCloseTo(7.4, 1);
@@ -272,7 +271,8 @@ describe("check-04 reference scenarios", () => {
       fy: 235,
     };
     const result = evaluate(check, { inputs, annex: parityAnnex });
-    const expectedMcRd = (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
+    const expectedMcRd =
+      (inputs.Wpl_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
 
     expect(result.cache.M_c_z_Rd).toBeCloseTo(expectedMcRd, 12);
     expect(Number(result.cache.M_c_z_Rd) / 1_000_000).toBeCloseTo(28.0, 1);
@@ -289,7 +289,8 @@ describe("check-04 reference scenarios", () => {
       fy: 235,
     };
     const result = evaluate(check, { inputs, annex: parityAnnex });
-    const expectedMcRd = (inputs.Wel_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
+    const expectedMcRd =
+      (inputs.Wel_z * inputs.fy) / parityAnnex.coefficients.gamma_M0;
 
     expect(result.cache.M_c_z_Rd).toBeCloseTo(expectedMcRd, 12);
     expect(Number(result.cache.M_c_z_Rd) / 1_000_000).toBeCloseTo(68.9, 1);

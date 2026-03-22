@@ -63,7 +63,9 @@ const getSectionsByShape = (shape: ShapeKey): readonly CatalogSection[] => {
 };
 
 const DEFAULT_SHAPE: ShapeKey = "I";
-const DEFAULT_I_SECTION = flangedSections.find((section) => section.id === "IPE300")!;
+const DEFAULT_I_SECTION = flangedSections.find(
+  (section) => section.id === "IPE300",
+)!;
 const DEFAULT_RHS_SECTION = hollowSections[0]!;
 const DEFAULT_CHS_SECTION = circularSections[0]!;
 const DEFAULT_SECTION = DEFAULT_I_SECTION;
@@ -88,10 +90,7 @@ export type CustomRhsSectionGeometry = {
   ri: number;
 };
 
-export type CustomChsSectionGeometry = {
-  d: number;
-  t: number;
-};
+export type CustomChsSectionGeometry = { d: number; t: number };
 
 const INITIAL_CUSTOM_I_GEOMETRY: CustomISectionGeometry = {
   h: DEFAULT_I_SECTION.h,
@@ -265,10 +264,7 @@ const validateCustomSectionGeometry = (
 
   const { d, t } = customChsSectionGeometry;
   const hasInvalidInput =
-    !Number.isFinite(d) ||
-    !Number.isFinite(t) ||
-    d <= 0 ||
-    t <= 0;
+    !Number.isFinite(d) || !Number.isFinite(t) || d <= 0 || t <= 0;
 
   if (hasInvalidInput) {
     return "Custom CHS geometry must use positive finite values for d and t.";
@@ -488,12 +484,9 @@ const isShapeKey = (value: unknown): value is ShapeKey =>
 
 const isSupportCondition = (value: unknown): value is SupportCondition =>
   typeof value === "string" &&
-  ([
-    "pinned-pinned",
-    "fixed-pinned",
-    "pinned-fixed",
-    "fixed-fixed",
-  ] as const).includes(value as SupportCondition);
+  (
+    ["pinned-pinned", "fixed-pinned", "pinned-fixed", "fixed-fixed"] as const
+  ).includes(value as SupportCondition);
 
 const coerceShape = (value: unknown): ShapeKey =>
   isShapeKey(value) ? value : DEFAULT_SHAPE;
@@ -562,11 +555,11 @@ const coerceEditableInputs = (
   value: Partial<Ec3EditableInputs> | undefined,
 ): Ec3EditableInputs => {
   if (!value) return { ...INITIAL_EDITABLE_INPUTS };
-  const candidate = {
-    ...INITIAL_EDITABLE_INPUTS,
-    ...value,
-  };
-  candidate.N_Ed = pickFiniteNumber(candidate.N_Ed, INITIAL_EDITABLE_INPUTS.N_Ed);
+  const candidate = { ...INITIAL_EDITABLE_INPUTS, ...value };
+  candidate.N_Ed = pickFiniteNumber(
+    candidate.N_Ed,
+    INITIAL_EDITABLE_INPUTS.N_Ed,
+  );
   candidate.M_y_Ed = pickFiniteNumber(
     candidate.M_y_Ed,
     INITIAL_EDITABLE_INPUTS.M_y_Ed,
@@ -594,8 +587,14 @@ const coerceEditableInputs = (
     candidate.LcrT_over_L,
     INITIAL_EDITABLE_INPUTS.LcrT_over_L,
   );
-  candidate.psi_y = pickFiniteNumber(candidate.psi_y, INITIAL_EDITABLE_INPUTS.psi_y);
-  candidate.psi_z = pickFiniteNumber(candidate.psi_z, INITIAL_EDITABLE_INPUTS.psi_z);
+  candidate.psi_y = pickFiniteNumber(
+    candidate.psi_y,
+    INITIAL_EDITABLE_INPUTS.psi_y,
+  );
+  candidate.psi_z = pickFiniteNumber(
+    candidate.psi_z,
+    INITIAL_EDITABLE_INPUTS.psi_z,
+  );
   candidate.psi_LT = pickFiniteNumber(
     candidate.psi_LT,
     INITIAL_EDITABLE_INPUTS.psi_LT,
@@ -607,12 +606,16 @@ const coerceEditableInputs = (
     candidate.support_condition_z = INITIAL_EDITABLE_INPUTS.support_condition_z;
   }
   if (!isSupportCondition(candidate.support_condition_LT)) {
-    candidate.support_condition_LT = INITIAL_EDITABLE_INPUTS.support_condition_LT;
+    candidate.support_condition_LT =
+      INITIAL_EDITABLE_INPUTS.support_condition_LT;
   }
   return candidate;
 };
 
-const coerceAnnexCoeffs = (selectedAnnexId: string, value: Partial<AnnexCoeffs> | undefined) => {
+const coerceAnnexCoeffs = (
+  selectedAnnexId: string,
+  value: Partial<AnnexCoeffs> | undefined,
+) => {
   const annexDefaults =
     ANNEXES.find((annex) => annex.id === selectedAnnexId) ?? DEFAULT_ANNEX;
   return {
@@ -643,7 +646,10 @@ const normalizeInitialState = (
 
   return {
     shape,
-    selectedSectionId: coerceSectionId(shape, initialSession?.selectedSectionId),
+    selectedSectionId: coerceSectionId(
+      shape,
+      initialSession?.selectedSectionId,
+    ),
     customFabricationType:
       initialSession?.customFabricationType === "welded" ? "welded" : "rolled",
     customISectionGeometry: coerceCustomISectionGeometry(
@@ -809,8 +815,12 @@ export const useEc3Workbench = (
     setSelectedSectionId(normalizedInitialState.selectedSectionId);
     setCustomFabricationType(normalizedInitialState.customFabricationType);
     setCustomISectionGeometry(normalizedInitialState.customISectionGeometry);
-    setCustomRhsSectionGeometry(normalizedInitialState.customRhsSectionGeometry);
-    setCustomChsSectionGeometry(normalizedInitialState.customChsSectionGeometry);
+    setCustomRhsSectionGeometry(
+      normalizedInitialState.customRhsSectionGeometry,
+    );
+    setCustomChsSectionGeometry(
+      normalizedInitialState.customChsSectionGeometry,
+    );
     setGradeId(normalizedInitialState.gradeId);
     setEditableInputs(normalizedInitialState.editableInputs);
     setSelectedAnnexId(normalizedInitialState.selectedAnnexId);

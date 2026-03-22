@@ -483,7 +483,12 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "M_y_Rk",
     name: "Characteristic bending resistance y",
-    children: [{ nodeId: "Wpl_y" }, { nodeId: "Wel_y" }, { nodeId: "fy" }, { nodeId: "section_class" }],
+    children: [
+      { nodeId: "Wpl_y" },
+      { nodeId: "Wel_y" },
+      { nodeId: "fy" },
+      { nodeId: "section_class" },
+    ],
   },
   {
     type: "derived",
@@ -491,7 +496,12 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "M_z_Rk",
     name: "Characteristic bending resistance z",
-    children: [{ nodeId: "Wpl_z" }, { nodeId: "Wel_z" }, { nodeId: "fy" }, { nodeId: "section_class" }],
+    children: [
+      { nodeId: "Wpl_z" },
+      { nodeId: "Wel_z" },
+      { nodeId: "fy" },
+      { nodeId: "section_class" },
+    ],
   },
   {
     type: "derived",
@@ -587,7 +597,13 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     id: "lambda_LT",
     name: "LT slenderness",
-    children: [{ nodeId: "Wpl_y" }, { nodeId: "Wel_y" }, { nodeId: "fy" }, { nodeId: "M_cr" }, { nodeId: "section_class" }],
+    children: [
+      { nodeId: "Wpl_y" },
+      { nodeId: "Wel_y" },
+      { nodeId: "fy" },
+      { nodeId: "M_cr" },
+      { nodeId: "section_class" },
+    ],
   },
   {
     type: "derived",

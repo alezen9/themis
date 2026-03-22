@@ -81,20 +81,14 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         type: "not-applicable-load-case",
         message:
           "torsional-buckling: closed hollow sections are covered by flexural buckling for this check",
-        details: {
-          section_shape,
-          sectionRef: "6.3.1.4(1)",
-        },
+        details: { section_shape, sectionRef: "6.3.1.4(1)" },
       });
     }
     if ((torsional_deformations ?? "yes") !== "yes") {
       throw new Ec3VerificationError({
         type: "not-applicable-load-case",
         message: "torsional-buckling: torsional deformations are disabled",
-        details: {
-          torsional_deformations,
-          sectionRef: "6.3.1.4",
-        },
+        details: { torsional_deformations, sectionRef: "6.3.1.4" },
       });
     }
     if (N_Ed >= 0) {
@@ -102,10 +96,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         type: "not-applicable-load-case",
         message:
           "torsional-buckling: verification is only applicable for compression (N_Ed < 0)",
-        details: {
-          N_Ed,
-          sectionRef: "6.3.1.4",
-        },
+        details: { N_Ed, sectionRef: "6.3.1.4" },
       });
     }
     return -N_Ed;

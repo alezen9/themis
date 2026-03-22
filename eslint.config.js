@@ -7,10 +7,7 @@ import prettier from "eslint-config-prettier";
 
 export default tseslint.config(
   { ignores: ["**/dist/**", "**/routeTree.gen.ts"] },
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [...tseslint.configs.recommended],
-  },
+  { files: ["**/*.{ts,tsx}"], extends: [...tseslint.configs.recommended] },
   {
     files: ["apps/frontend/**/*.{ts,tsx}"],
     plugins: {

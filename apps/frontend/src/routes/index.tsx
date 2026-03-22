@@ -2,9 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useVerifications } from "../hooks/use-verifications";
 import { verificationDebuggerEnabled } from "../pages/ec3/ec3-debugger-env";
 
-export const Route = createFileRoute("/")({
-  component: Home,
-});
+export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
   const results = useVerifications("ec3");

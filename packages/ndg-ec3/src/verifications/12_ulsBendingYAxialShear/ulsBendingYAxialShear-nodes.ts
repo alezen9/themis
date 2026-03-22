@@ -14,7 +14,10 @@ export const nodes = defineNodes([
       {
         nodeId: "utilization_class12",
         when: {
-          or: [{ eq: ["section_class", { value: 1 }] }, { eq: ["section_class", { value: 2 }] }],
+          or: [
+            { eq: ["section_class", { value: 1 }] },
+            { eq: ["section_class", { value: 2 }] },
+          ],
         },
       },
       {
@@ -54,7 +57,11 @@ export const nodes = defineNodes([
     expression: "\\frac{W_{pl,y,eff} \\cdot f_y}{\\gamma_{M0}}",
     unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.10", formulaRef: "(6.45)" },
-    children: [{ nodeId: "Wpl_y_eff" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
+    children: [
+      { nodeId: "Wpl_y_eff" },
+      { nodeId: "fy" },
+      { nodeId: "gamma_M0" },
+    ],
   },
   {
     id: "Wpl_y_eff",
@@ -105,7 +112,12 @@ export const nodes = defineNodes([
     name: "RHS section effective plastic modulus about y-y",
     expression: "W_{pl,y} - \\rho_z \\frac{A_{v,z}^2}{4 t_w}",
     unit: "\\mathrm{mm^{3}}",
-    children: [{ nodeId: "Wpl_y" }, { nodeId: "rho_z" }, { nodeId: "Av_z" }, { nodeId: "tw" }],
+    children: [
+      { nodeId: "Wpl_y" },
+      { nodeId: "rho_z" },
+      { nodeId: "Av_z" },
+      { nodeId: "tw" },
+    ],
   },
   {
     id: "Wpl_y_eff_chs",
@@ -115,7 +127,12 @@ export const nodes = defineNodes([
     name: "CHS section effective plastic modulus about y-y",
     expression: "W_{pl,y} - \\rho_z \\frac{A_{v,z}^2}{4 t_w}",
     unit: "\\mathrm{mm^{3}}",
-    children: [{ nodeId: "Wpl_y" }, { nodeId: "rho_z" }, { nodeId: "Av_z" }, { nodeId: "tw" }],
+    children: [
+      { nodeId: "Wpl_y" },
+      { nodeId: "rho_z" },
+      { nodeId: "Av_z" },
+      { nodeId: "tw" },
+    ],
   },
   {
     id: "k_y",
@@ -294,7 +311,11 @@ export const nodes = defineNodes([
     name: "Equivalent Von Mises stress for class 3",
     expression: "\\sqrt{\\sigma_x^2+3(\\tau_y^2+\\tau_z^2)}",
     unit: "\\mathrm{MPa}",
-    children: [{ nodeId: "sigma_x_class3" }, { nodeId: "tau_y" }, { nodeId: "tau_z" }],
+    children: [
+      { nodeId: "sigma_x_class3" },
+      { nodeId: "tau_y" },
+      { nodeId: "tau_z" },
+    ],
   },
   {
     id: "sigma_x_class3",

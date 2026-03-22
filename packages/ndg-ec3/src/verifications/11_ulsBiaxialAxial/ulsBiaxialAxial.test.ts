@@ -32,7 +32,8 @@ describe("check-11 biaxial-axial", () => {
     });
 
     const nPlRd =
-      (baselineInputs.A * baselineInputs.fy) / customAnnex.coefficients.gamma_M0;
+      (baselineInputs.A * baselineInputs.fy) /
+      customAnnex.coefficients.gamma_M0;
     const n = Math.abs(baselineInputs.N_Ed) / nPlRd;
 
     const aWRaw =
@@ -159,14 +160,8 @@ describe("check-11 biaxial-axial", () => {
     });
 
     expect(tension.cache.n).toBeCloseTo(compression.cache.n, 12);
-    expect(tension.cache.k_y).toBeCloseTo(
-      compression.cache.k_y,
-      12,
-    );
-    expect(tension.cache.k_z).toBeCloseTo(
-      compression.cache.k_z,
-      12,
-    );
+    expect(tension.cache.k_y).toBeCloseTo(compression.cache.k_y, 12);
+    expect(tension.cache.k_z).toBeCloseTo(compression.cache.k_z, 12);
     expect(tension.ratio).toBeCloseTo(compression.ratio, 12);
   });
 
@@ -397,10 +392,7 @@ describe("check-11 biaxial-axial", () => {
     const brokenAnnex = { id: "custom", coefficients: { gamma_M0: 0 } };
 
     try {
-      evaluate(check, {
-        inputs: baselineInputs,
-        annex: brokenAnnex,
-      });
+      evaluate(check, { inputs: baselineInputs, annex: brokenAnnex });
       throw new Error("expected evaluation to fail");
     } catch (error) {
       expect(error).toBeInstanceOf(Ec3VerificationError);

@@ -357,20 +357,14 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       throw new Ec3VerificationError({
         type: "not-applicable-load-case",
         message: "beam-column-61-m2: torsional deformations are disabled",
-        details: {
-          torsional_deformations,
-          sectionRef: "6.3.3",
-        },
+        details: { torsional_deformations, sectionRef: "6.3.3" },
       });
     }
     if ((interaction_factor_method ?? "both") === "method1") {
       throw new Ec3VerificationError({
         type: "not-applicable-load-case",
         message: "beam-column-61-m2: interaction factor method set to method1",
-        details: {
-          interaction_factor_method,
-          sectionRef: "6.3.3(5)",
-        },
+        details: { interaction_factor_method, sectionRef: "6.3.3(5)" },
       });
     }
     if (N_Ed > 0) {
@@ -378,10 +372,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         type: "not-applicable-load-case",
         message:
           "beam-column-61-m2: check is only applicable for compression (N_Ed < 0)",
-        details: {
-          N_Ed,
-          sectionRef: "6.3.3",
-        },
+        details: { N_Ed, sectionRef: "6.3.3" },
       });
     }
     return -N_Ed / N_b_y_Rd;
@@ -410,10 +401,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         type: "not-applicable-load-case",
         message:
           "beam-column-61-m2: check is only applicable for compression (N_Ed < 0)",
-        details: {
-          N_Ed,
-          sectionRef: "6.3.3",
-        },
+        details: { N_Ed, sectionRef: "6.3.3" },
       });
     }
     return -N_Ed / N_b_z_Rd;
@@ -446,14 +434,17 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
     // Plastic (class 1/2): k_yz = 0.6 * k_zz
     if (section_shape === "I") {
-      return 0.6 * Math.min(
-        Cm_z * (1 + (2 * lambda_bar_z - 0.6) * n_z),
-        Cm_z * (1 + 1.4 * n_z),
+      return (
+        0.6 *
+        Math.min(
+          Cm_z * (1 + (2 * lambda_bar_z - 0.6) * n_z),
+          Cm_z * (1 + 1.4 * n_z),
+        )
       );
     }
-    return 0.6 * Math.min(
-      Cm_z * (1 + (lambda_bar_z - 0.2) * n_z),
-      Cm_z * (1 + 0.8 * n_z),
+    return (
+      0.6 *
+      Math.min(Cm_z * (1 + (lambda_bar_z - 0.2) * n_z), Cm_z * (1 + 0.8 * n_z))
     );
   },
   bc_61_term1: ({ N_Ed, chi_y, N_Rk, gamma_M1 }) => {
@@ -462,10 +453,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         type: "not-applicable-load-case",
         message:
           "beam-column-61-m2: check is only applicable for compression (N_Ed < 0)",
-        details: {
-          N_Ed,
-          sectionRef: "6.3.3",
-        },
+        details: { N_Ed, sectionRef: "6.3.3" },
       });
     }
     return -N_Ed / ((chi_y * N_Rk) / gamma_M1);

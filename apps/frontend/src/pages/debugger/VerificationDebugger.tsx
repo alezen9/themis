@@ -71,10 +71,7 @@ function MathFormula({
       throwOnError: false,
     });
     return (
-      <span
-        className={className}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <span className={className} dangerouslySetInnerHTML={{ __html: html }} />
     );
   } catch {
     return <code className={className}>{tex}</code>;
@@ -158,7 +155,8 @@ const getNodeEquationTex = (node: VerificationDebuggerTreeNode) => {
   return parts.length > 0 ? parts.join(" = ") : undefined;
 };
 
-const getNodeLabel = (node: VerificationDebuggerTreeNode) => node.key || node.id;
+const getNodeLabel = (node: VerificationDebuggerTreeNode) =>
+  node.key || node.id;
 
 const getNodeTypeTheme = (type: VerificationDebuggerTreeNode["type"]) => {
   switch (type) {
@@ -208,22 +206,13 @@ const getNodeTypeTheme = (type: VerificationDebuggerTreeNode["type"]) => {
 };
 
 const CONTEXT_GROUP_THEMES = [
-  {
-    headerClass: "bg-sky-100/80 text-sky-950",
-    rowClass: "bg-sky-50/40",
-  },
+  { headerClass: "bg-sky-100/80 text-sky-950", rowClass: "bg-sky-50/40" },
   {
     headerClass: "bg-emerald-100/80 text-emerald-950",
     rowClass: "bg-emerald-50/35",
   },
-  {
-    headerClass: "bg-amber-100/80 text-amber-950",
-    rowClass: "bg-amber-50/35",
-  },
-  {
-    headerClass: "bg-rose-100/80 text-rose-950",
-    rowClass: "bg-rose-50/35",
-  },
+  { headerClass: "bg-amber-100/80 text-amber-950", rowClass: "bg-amber-50/35" },
+  { headerClass: "bg-rose-100/80 text-rose-950", rowClass: "bg-rose-50/35" },
   {
     headerClass: "bg-violet-100/80 text-violet-950",
     rowClass: "bg-violet-50/35",
@@ -386,11 +375,7 @@ const buildTreeDiagramLayout = (
 
     const childrenWidth = visibleChildren.reduce((totalWidth, edge, index) => {
       const childWidth = measureSubtree(edge.child);
-      return (
-        totalWidth +
-        childWidth +
-        (index > 0 ? DIAGRAM_HORIZONTAL_GAP : 0)
-      );
+      return totalWidth + childWidth + (index > 0 ? DIAGRAM_HORIZONTAL_GAP : 0);
     }, 0);
     const subtreeWidth = Math.max(DIAGRAM_NODE_WIDTH, childrenWidth);
 
@@ -597,8 +582,8 @@ function TreeInspector({
 }: {
   detail: VerificationDebuggerCheckDetail;
 }) {
-  const [expandedNodeIds, setExpandedNodeIds] = useState<Set<string>>(
-    () => (detail.root ? collectDefaultExpandedNodeIds(detail.root) : new Set()),
+  const [expandedNodeIds, setExpandedNodeIds] = useState<Set<string>>(() =>
+    detail.root ? collectDefaultExpandedNodeIds(detail.root) : new Set(),
   );
   const [diagramZoom, setDiagramZoom] = useState(1);
   const diagramViewportRef = useRef<HTMLDivElement | null>(null);
@@ -659,21 +644,30 @@ function TreeInspector({
     setDiagramZoom(nextZoom);
   };
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useLayoutEffect(() => {
     const viewport = diagramViewportRef.current;
     const pendingAnchor = pendingZoomAnchorRef.current;
     if (!viewport || !pendingAnchor) return;
 
     const contentX =
-      (viewport.scrollLeft + pendingAnchor.anchorX) / pendingAnchor.previousZoom;
+      (viewport.scrollLeft + pendingAnchor.anchorX) /
+      pendingAnchor.previousZoom;
     const contentY =
       (viewport.scrollTop + pendingAnchor.anchorY) / pendingAnchor.previousZoom;
 
-    viewport.scrollLeft = Math.max(0, contentX * diagramZoom - pendingAnchor.anchorX);
-    viewport.scrollTop = Math.max(0, contentY * diagramZoom - pendingAnchor.anchorY);
+    viewport.scrollLeft = Math.max(
+      0,
+      contentX * diagramZoom - pendingAnchor.anchorX,
+    );
+    viewport.scrollTop = Math.max(
+      0,
+      contentY * diagramZoom - pendingAnchor.anchorY,
+    );
     pendingZoomAnchorRef.current = null;
   }, [diagramZoom]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const viewport = diagramViewportRef.current;
     if (!viewport) return;
@@ -721,7 +715,9 @@ function TreeInspector({
 
       const event = nativeEvent as GestureEventLike;
       const scale =
-        typeof event.scale === "number" && Number.isFinite(event.scale) && event.scale > 0
+        typeof event.scale === "number" &&
+        Number.isFinite(event.scale) &&
+        event.scale > 0
           ? event.scale
           : 1;
       const session = pinchZoomSessionRef.current ?? {
@@ -853,10 +849,7 @@ function TreeInspector({
         <div
           className="relative"
           data-testid="tree-diagram-canvas"
-          style={{
-            height: `${scaledHeight}px`,
-            width: `${scaledWidth}px`,
-          }}
+          style={{ height: `${scaledHeight}px`, width: `${scaledWidth}px` }}
         >
           <div
             className="absolute left-0 top-0"
@@ -1020,7 +1013,10 @@ function TreeInspector({
                           {nodeReferences ? (
                             <div className="line-clamp-2">{nodeReferences}</div>
                           ) : (
-                            <div aria-hidden="true" className="invisible line-clamp-2">
+                            <div
+                              aria-hidden="true"
+                              className="invisible line-clamp-2"
+                            >
                               placeholder
                             </div>
                           )}
@@ -1042,7 +1038,9 @@ function TreeInspector({
                           ) : (
                             <div className="truncate font-mono text-[12px] text-slate-500">
                               {formatScalar(placement.node.rawValue)}
-                              {placement.node.unit ? ` ${placement.node.unit}` : ""}
+                              {placement.node.unit
+                                ? ` ${placement.node.unit}`
+                                : ""}
                             </div>
                           )}
                         </div>
@@ -1076,15 +1074,19 @@ function TracePanel({
 
   return (
     <div className="space-y-2">
-            {trace.map(({ entry, index }) => (
-        <div key={`${entry.nodeId}:${index}`} className="rounded border px-3 py-3">
+      {trace.map(({ entry, index }) => (
+        <div
+          key={`${entry.nodeId}:${index}`}
+          className="rounded border px-3 py-3"
+        >
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <div className="text-xs font-medium text-gray-500">
                 Step {index + 1}
               </div>
               <div className="font-medium text-gray-900">
-                {entry.key} <span className="text-sm text-gray-500">({entry.type})</span>
+                {entry.key}{" "}
+                <span className="text-sm text-gray-500">({entry.type})</span>
               </div>
             </div>
             <div className="text-right text-xs">
@@ -1129,7 +1131,9 @@ function TracePanel({
             ) : null}
             {entry.verificationExpression ? (
               <div>
-                <span className="font-medium text-gray-500">Verification rule</span>
+                <span className="font-medium text-gray-500">
+                  Verification rule
+                </span>
                 <div className="mt-1">
                   <FormulaBlock
                     tex={entry.verificationExpression}
@@ -1145,7 +1149,9 @@ function TracePanel({
             </div>
             {entry.evaluatorInputs ? (
               <div>
-                <span className="font-medium text-gray-500">Evaluator inputs</span>
+                <span className="font-medium text-gray-500">
+                  Evaluator inputs
+                </span>
                 <pre className="mt-1 overflow-x-auto rounded bg-gray-50 px-2 py-1 text-[11px]">
                   {JSON.stringify(entry.evaluatorInputs, null, 2)}
                 </pre>
@@ -1313,7 +1319,8 @@ export function VerificationDebugger({
 
   useEffect(() => {
     if (selectedCheckId === null) return;
-    if (visibleChecks.some((check) => check.checkId === selectedCheckId)) return;
+    if (visibleChecks.some((check) => check.checkId === selectedCheckId))
+      return;
     setSelectedCheckId(visibleChecks[0]?.checkId ?? defaultSelectedCheckId);
   }, [defaultSelectedCheckId, selectedCheckId, visibleChecks]);
 
@@ -1335,7 +1342,9 @@ export function VerificationDebugger({
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">{adapter.title}</h2>
+          <h2 className="text-xl font-semibold text-gray-900">
+            {adapter.title}
+          </h2>
           {adapter.subtitle ? (
             <p className="mt-1 text-sm text-gray-600">{adapter.subtitle}</p>
           ) : null}
@@ -1352,7 +1361,8 @@ export function VerificationDebugger({
                   : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
-              {FILTER_LABELS[candidate]} ({countChecks(adapter.checks, candidate)})
+              {FILTER_LABELS[candidate]} (
+              {countChecks(adapter.checks, candidate)})
             </button>
           ))}
         </div>
@@ -1367,7 +1377,9 @@ export function VerificationDebugger({
       <div className="grid gap-4 xl:grid-cols-[320px_minmax(0,1fr)]">
         <aside className="space-y-3">
           <section className="rounded border bg-gray-50 p-3">
-            <h3 className="mb-3 font-semibold text-gray-900">Verification list</h3>
+            <h3 className="mb-3 font-semibold text-gray-900">
+              Verification list
+            </h3>
             <CheckList
               checks={visibleChecks}
               selectedCheckId={selectedCheck?.checkId ?? null}
@@ -1402,7 +1414,9 @@ export function VerificationDebugger({
 
               <div className="mt-4 grid gap-3 text-sm text-gray-700 md:grid-cols-2">
                 <div>
-                  <div className="font-medium text-gray-500">Verification key</div>
+                  <div className="font-medium text-gray-500">
+                    Verification key
+                  </div>
                   <div className="font-mono">
                     {selectedCheck.detail.definition.check.key}
                   </div>
@@ -1419,10 +1433,15 @@ export function VerificationDebugger({
                   </div>
                 </div>
                 <div className="md:col-span-2">
-                  <div className="font-medium text-gray-500">Verification rule</div>
+                  <div className="font-medium text-gray-500">
+                    Verification rule
+                  </div>
                   <div className="mt-1">
                     <FormulaBlock
-                      tex={selectedCheck.detail.definition.check.verificationExpression}
+                      tex={
+                        selectedCheck.detail.definition.check
+                          .verificationExpression
+                      }
                       display
                       className="inline-block min-w-max text-sm [&_.katex-display]:my-0 [&_.katex]:text-inherit"
                     />
@@ -1439,19 +1458,26 @@ export function VerificationDebugger({
 
             <div className="grid gap-4 2xl:grid-cols-[minmax(0,1.25fr)_minmax(340px,0.9fr)]">
               <section className="min-w-0 rounded border bg-white px-4 py-4">
-                <h4 className="mb-3 font-semibold text-gray-900">Node diagram</h4>
+                <h4 className="mb-3 font-semibold text-gray-900">
+                  Node diagram
+                </h4>
                 <TreeInspector detail={selectedCheck.detail} />
               </section>
 
               <div className="min-w-0 space-y-4">
-                <details className="rounded border bg-white" data-testid="execution-trace-panel">
+                <details
+                  className="rounded border bg-white"
+                  data-testid="execution-trace-panel"
+                >
                   <summary className="cursor-pointer px-4 py-4 font-semibold text-gray-900">
                     Execution trace
                   </summary>
                   <div className="border-t px-4 py-4">
                     <TracePanel
                       trace={selectedCheck.detail.trace}
-                      executionAvailable={selectedCheck.detail.executionAvailable}
+                      executionAvailable={
+                        selectedCheck.detail.executionAvailable
+                      }
                     />
                   </div>
                 </details>

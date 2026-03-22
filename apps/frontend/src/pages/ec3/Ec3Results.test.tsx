@@ -46,10 +46,7 @@ const createResult = ({
         },
         passed,
         ratio,
-        cache: {
-          N_Ed: 560_000,
-          N_c_Rd: 1_000_000,
-        },
+        cache: { N_Ed: 560_000, N_c_Rd: 1_000_000 },
         trace: [
           {
             nodeId: `check-${checkId}`,
@@ -174,16 +171,12 @@ describe("Ec3Results", () => {
 
     render(<Ec3Results results={sampleResults} />);
 
-    expect(
-      screen.queryByRole("button", { name: /scroll to top/i }),
-    ).toBeNull();
+    expect(screen.queryByRole("button", { name: /scroll to top/i })).toBeNull();
 
     setWindowScrollY(480);
     fireEvent.scroll(window);
 
-    const scrollButton = screen.getByRole("button", {
-      name: /scroll to top/i,
-    });
+    const scrollButton = screen.getByRole("button", { name: /scroll to top/i });
     expect(scrollButton.textContent).toContain("Top");
 
     fireEvent.click(scrollButton);

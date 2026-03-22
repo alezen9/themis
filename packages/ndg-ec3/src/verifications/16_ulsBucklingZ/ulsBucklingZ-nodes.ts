@@ -88,9 +88,7 @@ export const nodes = defineNodes([
     id: "gamma_M1",
     name: "Partial safety factor",
     symbol: "\\gamma_{M1}",
-    meta: {
-      sectionRef: "6.1",
-    },
+    meta: { sectionRef: "6.1" },
     children: [],
   },
   {
@@ -111,25 +109,13 @@ export const nodes = defineNodes([
     symbol: "N_{cr,z}",
     expression: "\\frac{\\pi^2EI_z}{(k_zL)^2}",
     unit: "\\mathrm{N}",
-    meta: {
-      sectionRef: "6.3.1.2",
-    },
+    meta: { sectionRef: "6.3.1.2" },
     children: [
-      {
-        nodeId: "pi",
-      },
-      {
-        nodeId: "E",
-      },
-      {
-        nodeId: "Iz",
-      },
-      {
-        nodeId: "L",
-      },
-      {
-        nodeId: "k_z",
-      },
+      { nodeId: "pi" },
+      { nodeId: "E" },
+      { nodeId: "Iz" },
+      { nodeId: "L" },
+      { nodeId: "k_z" },
     ],
   },
   {
@@ -140,17 +126,7 @@ export const nodes = defineNodes([
     name: "Non-dimensional slenderness z-z",
     symbol: "\\bar{\\lambda}_z",
     expression: "\\sqrt{\\frac{Af_y}{N_{cr,z}}}",
-    children: [
-      {
-        nodeId: "A",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "N_cr_z",
-      },
-    ],
+    children: [{ nodeId: "A" }, { nodeId: "fy" }, { nodeId: "N_cr_z" }],
   },
   {
     type: "derived",
@@ -161,14 +137,7 @@ export const nodes = defineNodes([
     symbol: "\\Phi_z",
     expression:
       "0.5\\left(1+\\alpha_z(\\bar{\\lambda}_z-0.2)+\\bar{\\lambda}_z^2\\right)",
-    children: [
-      {
-        nodeId: "alpha_z",
-      },
-      {
-        nodeId: "lambda_bar_z",
-      },
-    ],
+    children: [{ nodeId: "alpha_z" }, { nodeId: "lambda_bar_z" }],
   },
   {
     type: "formula",
@@ -178,18 +147,8 @@ export const nodes = defineNodes([
     name: "Reduction factor z-z",
     symbol: "\\chi_z",
     expression: "\\frac{1}{\\Phi_z + \\sqrt{\\Phi_z^2 - \\bar{\\lambda}_z^2}}",
-    meta: {
-      sectionRef: "6.3.1.2",
-      formulaRef: "(6.49)",
-    },
-    children: [
-      {
-        nodeId: "phi_z",
-      },
-      {
-        nodeId: "lambda_bar_z",
-      },
-    ],
+    meta: { sectionRef: "6.3.1.2", formulaRef: "(6.49)" },
+    children: [{ nodeId: "phi_z" }, { nodeId: "lambda_bar_z" }],
   },
   {
     type: "formula",
@@ -200,23 +159,12 @@ export const nodes = defineNodes([
     symbol: "N_{b,z,Rd}",
     expression: "\\frac{\\chi_z A f_y}{\\gamma_{M1}}",
     unit: "\\mathrm{N}",
-    meta: {
-      sectionRef: "6.3.1.1",
-      formulaRef: "(6.47)",
-    },
+    meta: { sectionRef: "6.3.1.1", formulaRef: "(6.47)" },
     children: [
-      {
-        nodeId: "chi_z",
-      },
-      {
-        nodeId: "A",
-      },
-      {
-        nodeId: "fy",
-      },
-      {
-        nodeId: "gamma_M1",
-      },
+      { nodeId: "chi_z" },
+      { nodeId: "A" },
+      { nodeId: "fy" },
+      { nodeId: "gamma_M1" },
     ],
   },
   {
@@ -227,11 +175,7 @@ export const nodes = defineNodes([
     name: "Absolute design axial force",
     expression: "\\left|N_{Ed}\\right|",
     unit: "\\mathrm{N}",
-    children: [
-      {
-        nodeId: "N_Ed",
-      },
-    ],
+    children: [{ nodeId: "N_Ed" }],
   },
   {
     type: "check",
@@ -240,18 +184,8 @@ export const nodes = defineNodes([
     id: "buckling_z_check",
     name: "Flexural buckling check z-z",
     verificationExpression: "\\frac{N_{Ed}}{N_{b,z,Rd}} \\leq 1.0",
-    meta: {
-      sectionRef: "6.3.1.1",
-      verificationRef: "(6.46)",
-    },
-    children: [
-      {
-        nodeId: "abs_N_Ed",
-      },
-      {
-        nodeId: "N_b_z_Rd",
-      },
-    ],
+    meta: { sectionRef: "6.3.1.1", verificationRef: "(6.46)" },
+    children: [{ nodeId: "abs_N_Ed" }, { nodeId: "N_b_z_Rd" }],
   },
 ]);
 

@@ -26,12 +26,7 @@ const baseInputs = {
 describe("check-14 biaxial-axial-shear", () => {
   it("computes finite utilization for high-shear class-1 I-section inputs", () => {
     const result = evaluate(check, {
-      inputs: {
-        ...baseInputs,
-        N_Ed: -30_000,
-        V_y_Ed: 350_000,
-        V_z_Ed: 80_000,
-      },
+      inputs: { ...baseInputs, N_Ed: -30_000, V_y_Ed: 350_000, V_z_Ed: 80_000 },
       annex: customAnnex,
     });
 
@@ -64,12 +59,7 @@ const parityAnnex = { id: "parity", coefficients: { gamma_M0: 1.05 } };
 describe("check-14 reference scenarios", () => {
   it("returns expected ratio for high-shear reference values", () => {
     const result = evaluate(check, {
-      inputs: {
-        ...baseInputs,
-        N_Ed: -30_000,
-        V_y_Ed: 350_000,
-        V_z_Ed: 80_000,
-      },
+      inputs: { ...baseInputs, N_Ed: -30_000, V_y_Ed: 350_000, V_z_Ed: 80_000 },
       annex: parityAnnex,
     });
 
@@ -79,12 +69,7 @@ describe("check-14 reference scenarios", () => {
 
   it("returns expected ratio for near-failure reference values", () => {
     const result = evaluate(check, {
-      inputs: {
-        ...baseInputs,
-        N_Ed: -30_000,
-        V_y_Ed: 410_000,
-        V_z_Ed: 80_000,
-      },
+      inputs: { ...baseInputs, N_Ed: -30_000, V_y_Ed: 410_000, V_z_Ed: 80_000 },
       annex: parityAnnex,
     });
 

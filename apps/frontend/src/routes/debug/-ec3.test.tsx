@@ -3,9 +3,7 @@ import { render, screen } from "@testing-library/react";
 
 vi.mock("@tanstack/react-router", () => ({
   Navigate: ({ to }: { to: string }) => <div data-testid="navigate">{to}</div>,
-  createFileRoute: () => () => ({
-    useSearch: () => ({}),
-  }),
+  createFileRoute: () => () => ({ useSearch: () => ({}) }),
 }));
 
 describe("DebugEc3RouteContent", () => {

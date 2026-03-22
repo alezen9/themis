@@ -13,10 +13,10 @@ import {
   type VerificationRow,
 } from "../ec3/use-ec3-evaluate";
 
-const INTERNAL_CONSTANTS = {
-  e: Math.E,
-  pi: Math.PI,
-} satisfies Record<string, number>;
+const INTERNAL_CONSTANTS = { e: Math.E, pi: Math.PI } satisfies Record<
+  string,
+  number
+>;
 
 export type VerificationCheckStatus =
   | "passed"
@@ -24,11 +24,7 @@ export type VerificationCheckStatus =
   | "not-applicable"
   | "error";
 
-export type BranchStatus =
-  | "taken"
-  | "skipped"
-  | "unevaluated"
-  | "not-reached";
+export type BranchStatus = "taken" | "skipped" | "unevaluated" | "not-reached";
 
 export type NodeExecutionStatus = "executed" | "skipped" | "not-reached";
 
@@ -118,14 +114,15 @@ export const formatCondition = (condition: Condition): string => {
     return `${condition.gte[0]} >= ${formatConditionOperand(condition.gte[1])}`;
   }
   if ("and" in condition) {
-    return condition.and.map((item) => `(${formatCondition(item)})`).join(" AND ");
+    return condition.and
+      .map((item) => `(${formatCondition(item)})`)
+      .join(" AND ");
   }
   return condition.or.map((item) => `(${formatCondition(item)})`).join(" OR ");
 };
 
-const formatConditionOperand = (
-  operand: ConditionOperand,
-): string => ("key" in operand ? operand.key : JSON.stringify(operand.value));
+const formatConditionOperand = (operand: ConditionOperand): string =>
+  "key" in operand ? operand.key : JSON.stringify(operand.value);
 
 export const getActivePathNodeIds = (trace: readonly TraceEntry[]) =>
   new Set(trace.map((entry) => entry.nodeId));
@@ -288,7 +285,10 @@ const buildTreeNode = ({
   };
 };
 
-const buildCacheEntries = (trace: readonly TraceEntry[], cache: Record<string, unknown>) => {
+const buildCacheEntries = (
+  trace: readonly TraceEntry[],
+  cache: Record<string, unknown>,
+) => {
   const orderedKeys = new Set<string>();
 
   for (const entry of trace) {
@@ -299,10 +299,7 @@ const buildCacheEntries = (trace: readonly TraceEntry[], cache: Record<string, u
     .filter((key) => !orderedKeys.has(key))
     .sort((left, right) => left.localeCompare(right));
 
-  return [
-    ...Array.from(orderedKeys),
-    ...remainingKeys,
-  ].map((key) => ({
+  return [...Array.from(orderedKeys), ...remainingKeys].map((key) => ({
     key,
     value: cache[key],
     isTraced: orderedKeys.has(key),

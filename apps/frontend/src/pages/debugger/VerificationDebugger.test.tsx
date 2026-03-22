@@ -204,7 +204,9 @@ afterEach(() => {
 
 describe("VerificationDebugger", () => {
   it("renders run context, tree, trace, and cache for the selected verification", () => {
-    const { container } = render(<VerificationDebugger adapter={sampleAdapter} />);
+    const { container } = render(
+      <VerificationDebugger adapter={sampleAdapter} />,
+    );
 
     expect(screen.getAllByText("Compression check").length).toBeGreaterThan(0);
     expect(screen.getByText("Node diagram")).not.toBeNull();
@@ -216,7 +218,9 @@ describe("VerificationDebugger", () => {
     expect(screen.getByText("tableRef: 3.1")).not.toBeNull();
     expect(screen.getByText("Axial force ratio helper")).not.toBeNull();
     expect(container.querySelectorAll(".katex").length).toBeGreaterThan(0);
-    expect(screen.queryByRole("button", { name: /select node chi_y/i })).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /select node chi_y/i }),
+    ).toBeNull();
     expect(screen.queryByText("Selected node")).toBeNull();
     fireEvent.click(
       screen.getByRole("button", { name: /collapse all subtrees/i }),

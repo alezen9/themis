@@ -235,7 +235,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return Math.sqrt(value);
   },
   phi_y: ({ alpha_y, A, fy, N_cr_y }) =>
-    0.5 * (1 + alpha_y * (Math.sqrt((A * fy) / N_cr_y) - 0.2) + (A * fy) / N_cr_y),
+    0.5 *
+    (1 + alpha_y * (Math.sqrt((A * fy) / N_cr_y) - 0.2) + (A * fy) / N_cr_y),
   chi_y: ({ phi_y, A, fy, N_cr_y }) => {
     const radicand = phi_y ** 2 - (A * fy) / N_cr_y;
     if (!Number.isFinite(radicand) || radicand < 0) {
@@ -367,10 +368,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         type: "not-applicable-load-case",
         message:
           "beam-column-62-m2: check is only applicable for compression (N_Ed < 0)",
-        details: {
-          N_Ed,
-          sectionRef: "6.3.3",
-        },
+        details: { N_Ed, sectionRef: "6.3.3" },
       });
     }
     return -N_Ed / N_b_y_Rd;
@@ -403,20 +401,14 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       throw new Ec3VerificationError({
         type: "not-applicable-load-case",
         message: "beam-column-62-m2: torsional deformations are disabled",
-        details: {
-          torsional_deformations,
-          sectionRef: "6.3.3",
-        },
+        details: { torsional_deformations, sectionRef: "6.3.3" },
       });
     }
     if ((interaction_factor_method ?? "both") === "method1") {
       throw new Ec3VerificationError({
         type: "not-applicable-load-case",
         message: "beam-column-62-m2: interaction factor method set to method1",
-        details: {
-          interaction_factor_method,
-          sectionRef: "6.3.3(5)",
-        },
+        details: { interaction_factor_method, sectionRef: "6.3.3(5)" },
       });
     }
     if (N_Ed > 0) {
@@ -424,10 +416,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         type: "not-applicable-load-case",
         message:
           "beam-column-62-m2: check is only applicable for compression (N_Ed < 0)",
-        details: {
-          N_Ed,
-          sectionRef: "6.3.3",
-        },
+        details: { N_Ed, sectionRef: "6.3.3" },
       });
     }
     return -N_Ed / N_b_z_Rd;
@@ -483,10 +472,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
         type: "not-applicable-load-case",
         message:
           "beam-column-62-m2: check is only applicable for compression (N_Ed < 0)",
-        details: {
-          N_Ed,
-          sectionRef: "6.3.3",
-        },
+        details: { N_Ed, sectionRef: "6.3.3" },
       });
     }
     return -N_Ed / ((chi_z * N_Rk) / gamma_M1);

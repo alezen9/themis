@@ -8,17 +8,17 @@ Class 3 uses stress criterion.
 
 ## Equation Ledger
 
-| Node key | EC3 ref | Expression | Branch |
-|---|---|---|---|
-| `rho_z`, `rho_y` | 6.2.10 | shear reduction from `|V|/V_pl` | threshold |
-| `a_w` | 6.2.9.1 | capped axial parameter | shape (`I/RHS/CHS`) |
-| `k_y` | 6.2.9.1 (6.36) | y-branch axial factor | threshold |
-| `Wpl_y_eff` | 6.2.10 (6.45 intent) | effective plastic modulus under shear | shape (`I/RHS/CHS`) |
-| `M_y_V_Rd` | 6.2.10 (6.45) | `Wpl_y_eff * f_y / gamma_M0` | none |
-| `M_NV_y_Rd` | 6.2.9.1 (6.36) | `M_y,V,Rd * k_y` | none |
-| `utilization_class12` | 6.2.10 | `|M_y,Ed| / M_NV,y,Rd` | class 1/2 |
-| `utilization_class3` | 6.2.10 + 6.2.9.2 | `sigma_v,Ed / (f_y/gamma_M0)` | class 3 |
-| `bending_y_axial_shear_check` | 6.2.10 | selected utilization | class branch |
+| Node key                      | EC3 ref              | Expression                            | Branch              |
+| ----------------------------- | -------------------- | ------------------------------------- | ------------------- | ------------ | --------- |
+| `rho_z`, `rho_y`              | 6.2.10               | shear reduction from `                | V                   | /V_pl`       | threshold |
+| `a_w`                         | 6.2.9.1              | capped axial parameter                | shape (`I/RHS/CHS`) |
+| `k_y`                         | 6.2.9.1 (6.36)       | y-branch axial factor                 | threshold           |
+| `Wpl_y_eff`                   | 6.2.10 (6.45 intent) | effective plastic modulus under shear | shape (`I/RHS/CHS`) |
+| `M_y_V_Rd`                    | 6.2.10 (6.45)        | `Wpl_y_eff * f_y / gamma_M0`          | none                |
+| `M_NV_y_Rd`                   | 6.2.9.1 (6.36)       | `M_y,V,Rd * k_y`                      | none                |
+| `utilization_class12`         | 6.2.10               | `                                     | M_y,Ed              | / M_NV,y,Rd` | class 1/2 |
+| `utilization_class3`          | 6.2.10 + 6.2.9.2     | `sigma_v,Ed / (f_y/gamma_M0)`         | class 3             |
+| `bending_y_axial_shear_check` | 6.2.10               | selected utilization                  | class branch        |
 
 ## Node Tree
 

@@ -72,7 +72,19 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     }
     return 1 / k_c ** 2;
   },
-  M_cr: ({ torsional_deformations, L, k_LT, Iz, It, Iw, C1, pi, E, G, section_shape }) => {
+  M_cr: ({
+    torsional_deformations,
+    L,
+    k_LT,
+    Iz,
+    It,
+    Iw,
+    C1,
+    pi,
+    E,
+    G,
+    section_shape,
+  }) => {
     if (section_shape === "RHS" || section_shape === "CHS") {
       throw new Ec3VerificationError({
         type: "not-applicable-load-case",

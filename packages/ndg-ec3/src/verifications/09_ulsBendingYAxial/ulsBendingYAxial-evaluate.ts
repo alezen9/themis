@@ -323,8 +323,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     if (!Number.isFinite(section_class) || !Number.isInteger(section_class)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message:
-          "bending-y-axial: section_class must be an integer in {1,2,3}",
+        message: "bending-y-axial: section_class must be an integer in {1,2,3}",
         details: { section_class, sectionRef: "6.2.9" },
       });
     }

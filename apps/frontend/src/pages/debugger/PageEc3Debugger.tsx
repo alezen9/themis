@@ -111,12 +111,16 @@ export function PageEc3Debugger({
 
   const checks = useMemo(
     () =>
-      ec3VerificationDefinitions.map((definition: Ec3VerificationCatalogEntry) =>
-        buildVerificationDebuggerCheck({
-          definition,
-          row: rowByCheckId.get(definition.checkId),
-          conditionContext: conditionContext as Record<string, string | number>,
-        }),
+      ec3VerificationDefinitions.map(
+        (definition: Ec3VerificationCatalogEntry) =>
+          buildVerificationDebuggerCheck({
+            definition,
+            row: rowByCheckId.get(definition.checkId),
+            conditionContext: conditionContext as Record<
+              string,
+              string | number
+            >,
+          }),
       ),
     [conditionContext, rowByCheckId],
   );

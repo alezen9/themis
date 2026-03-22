@@ -403,7 +403,11 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return sigma_v_class3 / sigma_limit;
   },
 
-  bending_z_axial_shear_check: ({ section_class, utilization_class12, utilization_class3 }) => {
+  bending_z_axial_shear_check: ({
+    section_class,
+    utilization_class12,
+    utilization_class3,
+  }) => {
     if (!Number.isFinite(section_class) || !Number.isInteger(section_class)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -430,7 +434,8 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
 
     throw new Ec3VerificationError({
       type: "evaluation-error",
-      message: "bending-z-axial-shear: no active utilization branch was selected",
+      message:
+        "bending-z-axial-shear: no active utilization branch was selected",
       details: { sectionRef: "6.2.10" },
     });
   },

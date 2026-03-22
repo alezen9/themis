@@ -68,11 +68,7 @@ export type Ec3SectionDerivedInputs = {
   t: number;
 };
 
-export type Ec3MaterialInputs = {
-  fy: number;
-  E: number;
-  G: number;
-};
+export type Ec3MaterialInputs = { fy: number; E: number; G: number };
 
 export type Ec3ResolvedInputs = Omit<
   Ec3EditableInputs,
@@ -153,7 +149,10 @@ export const hasData = (
 export const hasError = (
   row: VerificationRow,
 ): row is VerificationRow & {
-  payload: { data?: undefined; error: NonNullable<VerificationRow["payload"]["error"]> };
+  payload: {
+    data?: undefined;
+    error: NonNullable<VerificationRow["payload"]["error"]>;
+  };
 } => row.payload.error !== undefined;
 
 export const isNotApplicable = (row: VerificationRow): boolean =>
@@ -165,10 +164,7 @@ export const evaluateEc3Rows = (
 ): VerificationRow[] => {
   if (inputs === null) return [];
 
-  const rows = verify(inputs, {
-    id: "custom",
-    coefficients: annexCoeffs,
-  });
+  const rows = verify(inputs, { id: "custom", coefficients: annexCoeffs });
   return rows.filter((row) => row.checkId <= FRONTEND_MAX_CHECK_ID);
 };
 
