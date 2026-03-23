@@ -13,6 +13,9 @@ function Home() {
         <Link to="/ec3" className="underline hover:no-underline">
           EC3 Verifications
         </Link>
+        <Link to="/editor" className="underline hover:no-underline">
+          Editor
+        </Link>
         {verificationDebuggerEnabled ? (
           <Link to="/debug/ec3" className="underline hover:no-underline">
             EC3 Debugger
