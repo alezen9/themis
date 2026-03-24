@@ -32,6 +32,7 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
+    "@ndg/ndg-core": "workspace:*",
     "@xyflow/react": "^12.10.1"
   }
 }

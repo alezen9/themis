@@ -1,3 +1,2 @@
-export type * from "./types";
-export * from "./document";
-export { NdgEditor } from "./react/NdgEditor";
+export * from "@ndg/ndg-core";
+export { NdgEditor } from "./NdgEditor";
