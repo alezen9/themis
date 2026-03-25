@@ -15,6 +15,8 @@ export type EditorState = {
   measuredById: Record<string, { width: number; height: number }>;
   editingNodeId: string | null;
   dialogError: string | null;
+  autoLayoutError: string | null;
+  autoLayoutVersion: number;
 };
 
 export const ndgEditorDraftFormat = "ndg-editor-draft" as const;
@@ -30,6 +32,9 @@ export type NdgEditorDraftV1 = {
 const horizontalGap = 320;
 const verticalGap = 220;
 const childStagger = 72;
+const autoLayoutHorizontalGap = 96;
+const autoLayoutVerticalGap = 120;
+const autoLayoutMargin = 48;
 
 const getNodeById = (nodesById: Map<string, EditorNode>, nodeId: string) =>
   nodesById.get(nodeId) ?? null;
@@ -199,6 +204,8 @@ const buildInitialLayout = (nodesById: Map<string, EditorNode>) => {
   return layoutById;
 };
 
+type MeasuredNodeSize = { width: number; height: number };
+
 type ValidateNodesResult =
   | { error: string; nodes: null }
   | { error: null; nodes: readonly Node[] };
@@ -316,6 +323,182 @@ const hasDuplicateKey = (
     (node) => node.id !== ignoredNodeId && node.key.trim() === key,
   );
 
+const isValidMeasuredNodeSize = (
+  value: { width: number; height: number } | undefined,
+): value is MeasuredNodeSize => {
+  if (!value) return false;
+  if (!isFiniteNumber(value.width) || !isFiniteNumber(value.height)) return false;
+  if (value.width <= 0 || value.height <= 0) return false;
+  return true;
+};
+
+const getMeasuredNodeSizesById = (state: EditorState) => {
+  const sizesById: Record<string, MeasuredNodeSize> = {};
+
+  for (const nodeId of state.nodesById.keys()) {
+    const measuredNodeSize = state.measuredById[nodeId];
+    if (!isValidMeasuredNodeSize(measuredNodeSize)) {
+      return {
+        error: "Auto layout unavailable until all nodes are measured",
+        sizesById: null,
+      } as const;
+    }
+
+    sizesById[nodeId] = measuredNodeSize;
+  }
+
+  return {
+    error: null,
+    sizesById,
+  } as const;
+};
+
+const buildTidyTreeLayout = (
+  nodesById: Map<string, EditorNode>,
+  measuredNodeSizesById: Record<string, MeasuredNodeSize>,
+) => {
+  const parentById = buildParentById(nodesById);
+  const rootNodeId = getRootNodeId(nodesById, parentById);
+  if (!rootNodeId) return {};
+
+  const depthById = new Map<string, number>();
+  const maxHeightByDepth = new Map<number, number>();
+  const queue: Array<{ depth: number; nodeId: string }> = [
+    { depth: 0, nodeId: rootNodeId },
+  ];
+  const visited = new Set<string>();
+  let maxDepth = 0;
+
+  while (queue.length > 0) {
+    const currentItem = queue.shift();
+    if (!currentItem || visited.has(currentItem.nodeId)) continue;
+
+    visited.add(currentItem.nodeId);
+    depthById.set(currentItem.nodeId, currentItem.depth);
+
+    const measuredNodeSize = measuredNodeSizesById[currentItem.nodeId];
+    if (measuredNodeSize) {
+      const currentMaxHeight = maxHeightByDepth.get(currentItem.depth) ?? 0;
+      if (measuredNodeSize.height > currentMaxHeight) {
+        maxHeightByDepth.set(currentItem.depth, measuredNodeSize.height);
+      }
+    }
+
+    if (currentItem.depth > maxDepth) {
+      maxDepth = currentItem.depth;
+    }
+
+    const currentNode = nodesById.get(currentItem.nodeId);
+    if (!currentNode) continue;
+
+    for (const child of currentNode.children) {
+      queue.push({
+        depth: currentItem.depth + 1,
+        nodeId: child.nodeId,
+      });
+    }
+  }
+
+  const depthStartYByDepth = new Map<number, number>();
+  let currentDepthY = autoLayoutMargin;
+
+  for (let depth = 0; depth <= maxDepth; depth += 1) {
+    depthStartYByDepth.set(depth, currentDepthY);
+    const depthBandHeight = maxHeightByDepth.get(depth) ?? 0;
+    currentDepthY += depthBandHeight + autoLayoutVerticalGap;
+  }
+
+  const subtreeWidthById = new Map<string, number>();
+
+  const getSubtreeWidth = (nodeId: string): number => {
+    const cachedSubtreeWidth = subtreeWidthById.get(nodeId);
+    if (cachedSubtreeWidth !== undefined) return cachedSubtreeWidth;
+
+    const currentNode = nodesById.get(nodeId);
+    const measuredNodeSize = measuredNodeSizesById[nodeId];
+    if (!currentNode || !measuredNodeSize) return 0;
+
+    if (currentNode.children.length === 0) {
+      subtreeWidthById.set(nodeId, measuredNodeSize.width);
+      return measuredNodeSize.width;
+    }
+
+    let childrenTotalWidth = 0;
+    for (const [index, child] of currentNode.children.entries()) {
+      const childSubtreeWidth = getSubtreeWidth(child.nodeId);
+      if (index > 0) childrenTotalWidth += autoLayoutHorizontalGap;
+      childrenTotalWidth += childSubtreeWidth;
+    }
+
+    const subtreeWidth = Math.max(measuredNodeSize.width, childrenTotalWidth);
+    subtreeWidthById.set(nodeId, subtreeWidth);
+    return subtreeWidth;
+  };
+
+  const layoutById: Record<string, XYPosition> = {};
+
+  const placeNode = (nodeId: string, centerX: number) => {
+    const currentNode = nodesById.get(nodeId);
+    const measuredNodeSize = measuredNodeSizesById[nodeId];
+    if (!currentNode || !measuredNodeSize) return;
+
+    const depth = depthById.get(nodeId) ?? 0;
+    const depthStartY = depthStartYByDepth.get(depth) ?? autoLayoutMargin;
+
+    layoutById[nodeId] = {
+      x: centerX - measuredNodeSize.width / 2,
+      y: depthStartY,
+    };
+
+    if (currentNode.children.length === 0) return;
+
+    let childrenTotalWidth = 0;
+    for (const [index, child] of currentNode.children.entries()) {
+      const childSubtreeWidth = subtreeWidthById.get(child.nodeId) ?? 0;
+      if (index > 0) childrenTotalWidth += autoLayoutHorizontalGap;
+      childrenTotalWidth += childSubtreeWidth;
+    }
+
+    let nextChildStartX = centerX - childrenTotalWidth / 2;
+    for (const child of currentNode.children) {
+      const childSubtreeWidth = subtreeWidthById.get(child.nodeId) ?? 0;
+      const childCenterX = nextChildStartX + childSubtreeWidth / 2;
+
+      placeNode(child.nodeId, childCenterX);
+      nextChildStartX += childSubtreeWidth + autoLayoutHorizontalGap;
+    }
+  };
+
+  const rootSubtreeWidth = getSubtreeWidth(rootNodeId);
+  if (rootSubtreeWidth <= 0) return {};
+
+  placeNode(rootNodeId, autoLayoutMargin + rootSubtreeWidth / 2);
+
+  const positionedNodes = Object.values(layoutById);
+  if (positionedNodes.length === 0) return {};
+
+  let minX = Number.POSITIVE_INFINITY;
+  let minY = Number.POSITIVE_INFINITY;
+  for (const position of positionedNodes) {
+    if (position.x < minX) minX = position.x;
+    if (position.y < minY) minY = position.y;
+  }
+
+  const offsetX = autoLayoutMargin - minX;
+  const offsetY = autoLayoutMargin - minY;
+  if (offsetX === 0 && offsetY === 0) return layoutById;
+
+  const normalizedLayoutById: Record<string, XYPosition> = {};
+  for (const [nodeId, position] of Object.entries(layoutById)) {
+    normalizedLayoutById[nodeId] = {
+      x: position.x + offsetX,
+      y: position.y + offsetY,
+    };
+  }
+
+  return normalizedLayoutById;
+};
+
 export const createInitialState = (): EditorState => {
   const nodes = [createDefaultRootNode()];
   const nodesById = new Map<string, EditorNode>(nodes.map((node) => [node.id, node]));
@@ -326,6 +509,8 @@ export const createInitialState = (): EditorState => {
     measuredById: {},
     editingNodeId: null,
     dialogError: null,
+    autoLayoutError: null,
+    autoLayoutVersion: 0,
   };
 };
 
@@ -437,8 +622,39 @@ export const draftToEditorState = (draft: unknown) => {
       measuredById: {},
       editingNodeId: null,
       dialogError: null,
+      autoLayoutError: null,
+      autoLayoutVersion: 0,
     } satisfies EditorState,
   } as const;
+};
+
+export const autoLayoutTree = (state: EditorState) => {
+  const measuredNodeSizes = getMeasuredNodeSizesById(state);
+  if (measuredNodeSizes.error || !measuredNodeSizes.sizesById) {
+    return {
+      ...state,
+      autoLayoutError:
+        measuredNodeSizes.error ?? "Auto layout unavailable until all nodes are measured",
+    };
+  }
+
+  const nextLayoutById = buildTidyTreeLayout(
+    state.nodesById,
+    measuredNodeSizes.sizesById,
+  );
+  if (Object.keys(nextLayoutById).length === 0) {
+    return {
+      ...state,
+      autoLayoutError: "Auto layout could not compute positions",
+    };
+  }
+
+  return {
+    ...state,
+    layoutById: nextLayoutById,
+    autoLayoutError: null,
+    autoLayoutVersion: state.autoLayoutVersion + 1,
+  };
 };
 
 export const openNodeDialog = (state: EditorState, nodeId: string) => {
