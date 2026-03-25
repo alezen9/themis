@@ -43,10 +43,11 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
       canDelete,
       nodeId,
       nodeLabel,
+      nodeName,
       nodeType,
       nodeTypeLabel,
       nodeReference,
-      nodeFormula = "-",
+      nodeFormula,
       onAddChild,
       onDelete,
       onEdit,
@@ -74,35 +75,45 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
       )}
 
       <NodeHeader>
-        <NodeKey>{nodeLabel}</NodeKey>
-        <NodeDragHandle />
+        <div>
+          <NodeKey>{nodeLabel}</NodeKey>
+          <NodeName>{nodeName}</NodeName>
+        </div>
+        <div className="flex items-center gap-1">
+          <NodeIconButton
+            aria-label="Edit node"
+            onClick={() => onEdit(nodeId)}
+            title="Edit node"
+          >
+            <EditIcon />
+          </NodeIconButton>
+          {canDelete && (
+            <NodeIconButton
+              aria-label="Delete node"
+              onClick={() => onDelete(nodeId)}
+              title="Delete node"
+              tone="danger"
+            >
+              <DeleteIcon />
+            </NodeIconButton>
+          )}
+        </div>
       </NodeHeader>
       <NodeType className={theme.textClass}>{nodeTypeLabel}</NodeType>
-      {nodeReference && <NodeReference>{nodeReference}</NodeReference>}
-      {nodeFormula && (
+      <NodeReference>{nodeReference}</NodeReference>
+      {nodeFormula?.trim() && (
         <NodeFormula className={theme.formulaClass}>{nodeFormula}</NodeFormula>
       )}
-
-      <NodeActions>
-        {canAddChild && (
-          <NodeActionButton onClick={() => onAddChild(nodeId)}>
-            Add child
-          </NodeActionButton>
-        )}
-        <NodeActionButton onClick={() => onEdit(nodeId)}>Edit</NodeActionButton>
-        {canDelete && (
-          <NodeActionButton tone="danger" onClick={() => onDelete(nodeId)}>
-            Delete
-          </NodeActionButton>
-        )}
-      </NodeActions>
+      {canAddChild && (
+        <NodeAddChildButton onClick={() => onAddChild(nodeId)} />
+      )}
     </NodeWrapper>
   );
 };
 
 const NodeWrapper = ({ children, ...rest }: ComponentProps<"div">) => (
   <div
-    className="relative flex min-w-72 cursor-default flex-col gap-1 rounded-sm border border-slate-200 bg-white px-3 py-2  shadow-xl shadow-gray-200"
+    className="relative flex min-w-72 cursor-grab select-none flex-col gap-1 rounded-sm border border-slate-200 bg-white px-3 py-2 shadow-xl shadow-gray-200 active:cursor-grabbing"
     {...rest}
   >
     {children}
@@ -119,13 +130,8 @@ const NodeKey = ({ children }: ComponentProps<"p">) => (
   <p className="truncate text-sm font-bold">{children}</p>
 );
 
-const NodeDragHandle = ({ ...rest }: ComponentProps<"div">) => (
-  <div
-    aria-label="Drag node"
-    className="w-6 h-4 ndg-node-drag-handle cursor-grab select-none bg-[radial-gradient(var(--color-gray-300)_1.35px,transparent_1px)] bg-size-[5px_5px] active:cursor-grabbing"
-    title="Drag node"
-    {...rest}
-  />
+const NodeName = ({ children }: ComponentProps<"p">) => (
+  <p className="text-[0.7rem] font-medium text-slate-500">{children}</p>
 );
 
 const NodeType = ({ children, className, ...rest }: ComponentProps<"p">) => (
@@ -138,7 +144,7 @@ const NodeType = ({ children, className, ...rest }: ComponentProps<"p">) => (
 );
 
 const NodeReference = ({ children }: ComponentProps<"p">) => (
-  <p className="min-h-[0.65rem] text-[0.5rem] font-light text-gray-500">
+  <p className="text-[0.6rem] font-light text-gray-500">
     {children}
   </p>
 );
@@ -158,28 +164,85 @@ const NodeFormula = ({ children, className = "" }: ComponentProps<"span">) => {
   );
 };
 
-const NodeActions = ({ children, ...rest }: ComponentProps<"div">) => (
-  <div className="mt-2 flex flex-wrap gap-1.5" {...rest}>
-    {children}
-  </div>
+const NodeAddChildButton = ({ ...rest }: ComponentProps<"button">) => (
+  <button
+    type="button"
+    aria-label="Add child"
+    title="Add child"
+    className="nodrag nopan absolute -bottom-3 left-1/2 z-10 inline-flex h-6 w-6 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border border-teal-800 bg-teal-700 text-white shadow-sm transition-colors hover:border-teal-900 hover:bg-teal-800"
+    {...rest}
+  >
+    <PlusIcon />
+  </button>
 );
 
-const NodeActionButton = ({
+const NodeIconButton = ({
   children,
-  className,
   tone = "default",
+  className,
   type = "button",
   ...rest
 }: ComponentProps<"button"> & { tone?: "default" | "danger" }) => (
   <button
     type={type}
-    className={`nodrag nopan rounded-sm border px-2 py-1 text-[11px] font-semibold transition-colors ${
+    className={`nodrag nopan inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm border transition-colors ${
       tone === "danger"
         ? "border-red-200 bg-red-50 text-red-700 hover:border-red-300 hover:bg-red-100"
-        : "border-teal-800 bg-teal-700 text-white hover:border-teal-900 hover:bg-teal-800"
+        : "border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50"
     } ${className ?? ""}`}
     {...rest}
   >
     {children}
   </button>
+);
+
+const EditIcon = () => (
+  <svg
+    aria-hidden="true"
+    className="h-3.5 w-3.5"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={1.8}
+    viewBox="0 0 24 24"
+  >
+    <path d="M12 20h9" />
+    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+  </svg>
+);
+
+const DeleteIcon = () => (
+  <svg
+    aria-hidden="true"
+    className="h-3.5 w-3.5"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={1.8}
+    viewBox="0 0 24 24"
+  >
+    <path d="M3 6h18" />
+    <path d="M8 6V4h8v2" />
+    <path d="M19 6l-1 14H6L5 6" />
+    <path d="M10 11v6" />
+    <path d="M14 11v6" />
+  </svg>
+);
+
+const PlusIcon = () => (
+  <svg
+    aria-hidden="true"
+    className="h-3.5 w-3.5"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    viewBox="0 0 24 24"
+  >
+    <path d="M12 5v14" />
+    <path d="M5 12h14" />
+  </svg>
 );

@@ -15,7 +15,16 @@ export type EditorState = {
   measuredById: Record<string, { width: number; height: number }>;
   editingNodeId: string | null;
   dialogError: string | null;
-  loadError: string | null;
+};
+
+export const ndgEditorDraftFormat = "ndg-editor-draft" as const;
+export const ndgEditorDraftVersion = 1 as const;
+
+export type NdgEditorDraftV1 = {
+  format: typeof ndgEditorDraftFormat;
+  version: typeof ndgEditorDraftVersion;
+  nodesById: Record<string, Node>;
+  layoutById: Record<string, XYPosition>;
 };
 
 const horizontalGap = 320;
@@ -190,11 +199,15 @@ const buildInitialLayout = (nodesById: Map<string, EditorNode>) => {
   return layoutById;
 };
 
-const validateInitialValue = (initialValue: readonly Node[]) => {
-  const parsedNodes = VerificationSchema.safeParse([...initialValue]);
+type ValidateNodesResult =
+  | { error: string; nodes: null }
+  | { error: null; nodes: readonly Node[] };
+
+const validateNodes = (nodes: readonly Node[]): ValidateNodesResult => {
+  const parsedNodes = VerificationSchema.safeParse([...nodes]);
   if (!parsedNodes.success) {
     return {
-      error: "Initial graph is not a valid NDG verification.",
+      error: "Graph is not a valid NDG verification",
       nodes: null,
     } as const;
   }
@@ -203,7 +216,7 @@ const validateInitialValue = (initialValue: readonly Node[]) => {
   for (const node of parsedNodes.data) {
     if (nodesById.has(node.id)) {
       return {
-        error: "Initial graph contains duplicate node ids.",
+        error: "Graph contains duplicate node ids",
         nodes: null,
       } as const;
     }
@@ -214,7 +227,7 @@ const validateInitialValue = (initialValue: readonly Node[]) => {
   const checkNodes = parsedNodes.data.filter((node) => node.type === "check");
   if (checkNodes.length !== 1) {
     return {
-      error: "Initial graph must contain exactly one check node.",
+      error: "Graph must contain exactly one check node",
       nodes: null,
     } as const;
   }
@@ -224,7 +237,7 @@ const validateInitialValue = (initialValue: readonly Node[]) => {
   for (const node of parsedNodes.data) {
     if (node.type === "user-input" && node.children.length > 0) {
       return {
-        error: "User input nodes must be leaves.",
+        error: "User input nodes must be leaves",
         nodes: null,
       } as const;
     }
@@ -232,14 +245,14 @@ const validateInitialValue = (initialValue: readonly Node[]) => {
     for (const child of node.children) {
       if (!nodesById.has(child.nodeId)) {
         return {
-          error: "Initial graph references a child node that does not exist.",
+          error: "Graph references a child node that does not exist",
           nodes: null,
         } as const;
       }
 
       if (parentById.has(child.nodeId)) {
         return {
-          error: "Initial graph cannot contain multi-parent nodes.",
+          error: "Graph cannot contain multi-parent nodes",
           nodes: null,
         } as const;
       }
@@ -251,7 +264,7 @@ const validateInitialValue = (initialValue: readonly Node[]) => {
   const rootNodes = parsedNodes.data.filter((node) => !parentById.has(node.id));
   if (rootNodes.length !== 1 || rootNodes[0]?.type !== "check") {
     return {
-      error: "Initial graph must contain exactly one root check node.",
+      error: "Graph must contain exactly one root check node",
       nodes: null,
     } as const;
   }
@@ -274,7 +287,7 @@ const validateInitialValue = (initialValue: readonly Node[]) => {
 
   if (visited.size !== parsedNodes.data.length) {
     return {
-      error: "Initial graph must be a single rooted tree.",
+      error: "Graph must be a single rooted tree",
       nodes: null,
     } as const;
   }
@@ -285,6 +298,15 @@ const validateInitialValue = (initialValue: readonly Node[]) => {
   } as const;
 };
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+const isFiniteNumber = (value: unknown): value is number =>
+  typeof value === "number" && Number.isFinite(value);
+
+const isValidPosition = (value: unknown): value is XYPosition =>
+  isRecord(value) && isFiniteNumber(value.x) && isFiniteNumber(value.y);
+
 const hasDuplicateKey = (
   nodesById: Map<string, EditorNode>,
   key: string,
@@ -294,21 +316,8 @@ const hasDuplicateKey = (
     (node) => node.id !== ignoredNodeId && node.key.trim() === key,
   );
 
-export const createInitialState = (initialValue?: readonly Node[]): EditorState => {
-  const initialNodes = initialValue ? validateInitialValue(initialValue) : null;
-
-  if (initialNodes?.error) {
-    return {
-      nodesById: new Map(),
-      layoutById: {},
-      measuredById: {},
-      editingNodeId: null,
-      dialogError: null,
-      loadError: initialNodes.error,
-    };
-  }
-
-  const nodes = initialNodes?.nodes ?? [createDefaultRootNode()];
+export const createInitialState = (): EditorState => {
+  const nodes = [createDefaultRootNode()];
   const nodesById = new Map<string, EditorNode>(nodes.map((node) => [node.id, node]));
 
   return {
@@ -317,8 +326,119 @@ export const createInitialState = (initialValue?: readonly Node[]): EditorState 
     measuredById: {},
     editingNodeId: null,
     dialogError: null,
-    loadError: null,
   };
+};
+
+export const editorStateToDraft = (state: EditorState): NdgEditorDraftV1 => {
+  const nodesById: Record<string, Node> = {};
+
+  for (const node of state.nodesById.values()) {
+    nodesById[node.id] = node;
+  }
+
+  return {
+    format: ndgEditorDraftFormat,
+    version: ndgEditorDraftVersion,
+    nodesById,
+    layoutById: { ...state.layoutById },
+  };
+};
+
+export const draftToEditorState = (draft: unknown) => {
+  if (!isRecord(draft)) {
+    return {
+      error: "Draft must be a JSON object",
+      state: null,
+    } as const;
+  }
+
+  if (draft.format !== ndgEditorDraftFormat) {
+    return {
+      error: `Draft format must be "${ndgEditorDraftFormat}"`,
+      state: null,
+    } as const;
+  }
+
+  if (draft.version !== ndgEditorDraftVersion) {
+    return {
+      error: `Draft version must be ${ndgEditorDraftVersion}`,
+      state: null,
+    } as const;
+  }
+
+  if (!isRecord(draft.nodesById)) {
+    return {
+      error: "Draft nodesById must be an object",
+      state: null,
+    } as const;
+  }
+
+  if (!isRecord(draft.layoutById)) {
+    return {
+      error: "Draft layoutById must be an object",
+      state: null,
+    } as const;
+  }
+
+  const rawNodesById = draft.nodesById;
+  const rawNodes: Node[] = [];
+
+  for (const [nodeId, nodeValue] of Object.entries(rawNodesById)) {
+    if (!isRecord(nodeValue)) {
+      return {
+        error: `Draft node "${nodeId}" must be an object`,
+        state: null,
+      } as const;
+    }
+
+    if (nodeValue.id !== nodeId) {
+      return {
+        error: `Draft node key "${nodeId}" must match node.id`,
+        state: null,
+      } as const;
+    }
+
+    rawNodes.push(nodeValue as Node);
+  }
+
+  const validatedNodes = validateNodes(rawNodes);
+  if (validatedNodes.error || !validatedNodes.nodes) {
+    return {
+      error: validatedNodes.error ?? "Draft graph is invalid",
+      state: null,
+    } as const;
+  }
+
+  const nodesById = new Map<string, EditorNode>(
+    validatedNodes.nodes.map((node) => [node.id, node]),
+  );
+
+  const initialLayout = buildInitialLayout(nodesById);
+  const rawLayoutById = draft.layoutById;
+  const layoutById: Record<string, XYPosition> = { ...initialLayout };
+
+  for (const nodeId of nodesById.keys()) {
+    const position = rawLayoutById[nodeId];
+    if (!isValidPosition(position)) {
+      continue;
+    }
+
+    layoutById[nodeId] = {
+      x: position.x,
+      y: position.y,
+    };
+  }
+
+  return {
+    error: null,
+    state: {
+      nodesById,
+      layoutById,
+      measuredById: {},
+      editingNodeId: null,
+      dialogError: null,
+    } satisfies EditorState,
+  } as const;
 };
 
 export const openNodeDialog = (state: EditorState, nodeId: string) => {

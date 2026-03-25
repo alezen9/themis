@@ -27,15 +27,6 @@ const nodeTypeLabels: Record<NodeType, string> = {
   "user-input": "User input",
 };
 
-const referenceFields = [
-  "formulaRef",
-  "tableRef",
-  "verificationRef",
-  "sectionRef",
-  "paragraphRef",
-  "subParagraphRef",
-] as const;
-
 const getNodeTypeLabel = (nodeType: FlowNodeType) => nodeTypeLabels[nodeType];
 
 const getNodeLabel = (node: EditorNode) => {
@@ -55,13 +46,34 @@ const getNodeFormulaText = (node: EditorNode) => {
   }
 };
 
+const getReferencePart = (label: string, value: string | undefined) => {
+  const trimmedValue = value?.trim();
+  if (!trimmedValue) return null;
+  return `${label} ${trimmedValue}`;
+};
+
 const getNodeReferenceText = (node: EditorNode) => {
   if (!("meta" in node) || !node.meta) return "";
   const { meta } = node;
 
-  return referenceFields
-    .map((field) => meta[field]?.trim())
-    .filter(Boolean)
+  const sectionRef = meta.sectionRef?.trim();
+  const paragraphRef = meta.paragraphRef?.trim();
+  const subParagraphRef = meta.subParagraphRef?.trim();
+  const clauseRef = [
+    sectionRef ? `\u00a7${sectionRef}` : null,
+    paragraphRef ? `\u00b6${paragraphRef}` : null,
+    subParagraphRef,
+  ]
+    .filter((part): part is string => Boolean(part))
+    .join(" ");
+
+  return [
+    clauseRef,
+    getReferencePart("Eq.", meta.formulaRef),
+    getReferencePart("Tbl.", meta.tableRef),
+    getReferencePart("Check", meta.verificationRef),
+  ]
+    .filter((part): part is string => Boolean(part))
     .join(" · ");
 };
 
@@ -71,6 +83,7 @@ type FlowNodeData = {
   canDelete: boolean;
   nodeId: string;
   nodeLabel: string;
+  nodeName: string;
   nodeType: FlowNodeType;
   nodeTypeLabel: string;
   nodeReference: string;
@@ -102,12 +115,10 @@ export const editorStateToFlowNodes = (
     return {
       id: node.id,
       type: flowNodeType,
-      dragHandle: ".ndg-node-drag-handle",
       style: {
         background: "transparent",
         border: "none",
         boxShadow: "none",
-        cursor: "default",
         padding: 0,
       },
       ...(measured ? { measured } : {}),
@@ -119,6 +130,7 @@ export const editorStateToFlowNodes = (
         canDelete: !isRootCheckNode(node, parentById),
         nodeId: node.id,
         nodeLabel: getNodeLabel(node),
+        nodeName: node.name,
         nodeType,
         nodeTypeLabel: getNodeTypeLabel(nodeType),
         nodeReference: getNodeReferenceText(node),

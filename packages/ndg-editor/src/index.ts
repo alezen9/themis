@@ -1,2 +1,3 @@
 export * from "@ndg/ndg-core";
-export { NdgEditor } from "./NdgEditor";
+export { NdgEditor, type NdgEditorRef } from "./NdgEditor";
+export type { NdgEditorDraftV1 } from "./internal/graph";
