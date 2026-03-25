@@ -7,32 +7,34 @@
       "development": "./src/index.ts",
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./styles.css": "./dist/ndg-editor.css"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "vite build",
-    "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "build": "vite build && tsc -p tsconfig.json --declaration --emitDeclarationOnly --noEmit false",
+    "typecheck": "tsc -p tsconfig.json"
   },
   "peerDependencies": {
     "react": "^18.3.0",
     "react-dom": "^18.3.0"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.0",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
+    "tailwindcss": "^4.0",
     "typescript": "^5.7",
-    "vite": "^6.1",
-    "vitest": "^3.0"
+    "vite": "^6.1"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
     "@ndg/ndg-core": "workspace:*",
-    "@xyflow/react": "^12.10.1"
+    "@xyflow/react": "^12.10.1",
+    "katex": "^0.16.22"
   }
 }

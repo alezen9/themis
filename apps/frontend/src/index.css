@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../../../packages/ndg-editor/src";
 
 @theme {
   --color-primary: #0ea5e9;

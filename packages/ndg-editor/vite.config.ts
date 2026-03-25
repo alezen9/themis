@@ -1,6 +1,13 @@
 import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  build: { lib: { entry: "src/index.ts", formats: ["es"], fileName: "index" } },
-  test: { environment: "jsdom", passWithNoTests: true },
+  plugins: [tailwindcss()],
+  build: {
+    lib: {
+      entry: { index: "src/index.ts", styles: "src/styles.ts" },
+      formats: ["es"],
+      fileName: (_, entryName) => `${entryName}.js`,
+    },
+  },
 });
