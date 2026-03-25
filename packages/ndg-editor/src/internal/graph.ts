@@ -1,4 +1,9 @@
-import { VerificationSchema, type Child, type Node } from "@ndg/ndg-core";
+import {
+  VerificationSchema,
+  type Child,
+  type Condition,
+  type Node,
+} from "@ndg/ndg-core";
 import type { XYPosition } from "@xyflow/react";
 import {
   buildNodeFromDraft,
@@ -748,6 +753,47 @@ export const connectUnattachedNode = (
       ...parentNode.children,
       { nodeId: childId },
     ]),
+  );
+
+  return {
+    ...state,
+    nodesById: nextNodesById,
+    dialogError: null,
+  };
+};
+
+export const setIncomingCondition = (
+  state: EditorState,
+  childNodeId: string,
+  when?: Condition,
+) => {
+  const parentById = buildParentById(state.nodesById);
+  const parentId = parentById.get(childNodeId);
+  if (!parentId) return state;
+
+  const parentNode = getNodeById(state.nodesById, parentId);
+  if (!parentNode) return state;
+
+  const hasTargetChild = parentNode.children.some(
+    (child) => child.nodeId === childNodeId,
+  );
+  if (!hasTargetChild) return state;
+
+  const nextNodesById = new Map(state.nodesById);
+  nextNodesById.set(
+    parentId,
+    replaceNodeChildren(
+      parentNode,
+      parentNode.children.map((child) => {
+        if (child.nodeId !== childNodeId) return child;
+        if (!when) return { nodeId: child.nodeId };
+
+        return {
+          nodeId: child.nodeId,
+          when,
+        };
+      }),
+    ),
   );
 
   return {

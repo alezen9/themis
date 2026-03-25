@@ -5,7 +5,8 @@ import {
   type Node as ReactFlowNode,
   type NodeChange,
 } from "@xyflow/react";
-import type { NodeType } from "@ndg/ndg-core";
+import type { Condition, NodeType } from "@ndg/ndg-core";
+import { formatCondition } from "./condition";
 import {
   buildParentById,
   connectUnattachedNode,
@@ -81,6 +82,9 @@ type FlowNodeData = {
   canAcceptParent: boolean;
   canAddChild: boolean;
   canDelete: boolean;
+  canEditIncomingCondition: boolean;
+  incomingCondition?: Condition;
+  incomingConditionLabel?: string;
   nodeId: string;
   nodeLabel: string;
   nodeName: string;
@@ -89,6 +93,8 @@ type FlowNodeData = {
   nodeReference: string;
   nodeFormula?: string;
   onAddChild: (nodeId: string) => void;
+  onApplyIncomingCondition: (nodeId: string, condition: Condition) => void;
+  onClearIncomingCondition: (nodeId: string) => void;
   onDelete: (nodeId: string) => void;
   onEdit: (nodeId: string) => void;
 };
@@ -102,6 +108,8 @@ export const editorStateToFlowNodes = (
   state: EditorState,
   handlers: {
     onAddChild: (nodeId: string) => void;
+    onApplyIncomingCondition: (nodeId: string, condition: Condition) => void;
+    onClearIncomingCondition: (nodeId: string) => void;
     onDelete: (nodeId: string) => void;
     onEdit: (nodeId: string) => void;
   },
@@ -111,6 +119,11 @@ export const editorStateToFlowNodes = (
   return [...state.nodesById.values()].map((node) => {
     const nodeType = node.type;
     const measured = state.measuredById[node.id];
+    const parentId = parentById.get(node.id);
+    const parentNode = parentId ? state.nodesById.get(parentId) : null;
+    const incomingCondition = parentNode?.children.find(
+      (child) => child.nodeId === node.id,
+    )?.when;
 
     return {
       id: node.id,
@@ -119,6 +132,7 @@ export const editorStateToFlowNodes = (
         background: "transparent",
         border: "none",
         boxShadow: "none",
+        overflow: "visible",
         padding: 0,
       },
       ...(measured ? { measured } : {}),
@@ -128,6 +142,13 @@ export const editorStateToFlowNodes = (
           !parentById.has(node.id) && !isRootCheckNode(node, parentById),
         canAddChild: canNodeHaveChildren(node),
         canDelete: !isRootCheckNode(node, parentById),
+        canEditIncomingCondition: Boolean(parentId),
+        ...(incomingCondition
+          ? {
+              incomingCondition,
+              incomingConditionLabel: formatCondition(incomingCondition),
+            }
+          : {}),
         nodeId: node.id,
         nodeLabel: getNodeLabel(node),
         nodeName: node.name,
@@ -136,6 +157,8 @@ export const editorStateToFlowNodes = (
         nodeReference: getNodeReferenceText(node),
         nodeFormula: getNodeFormulaText(node),
         onAddChild: handlers.onAddChild,
+        onApplyIncomingCondition: handlers.onApplyIncomingCondition,
+        onClearIncomingCondition: handlers.onClearIncomingCondition,
         onDelete: handlers.onDelete,
         onEdit: handlers.onEdit,
       },

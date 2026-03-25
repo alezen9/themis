@@ -16,6 +16,7 @@ import {
   type Connection,
   type NodeChange,
 } from "@xyflow/react";
+import type { Condition } from "@ndg/ndg-core";
 import "@xyflow/react/dist/style.css";
 import {
   applyConnection,
@@ -38,6 +39,7 @@ import {
   editorStateToDraft,
   type NdgEditorDraftV1,
   openNodeDialog,
+  setIncomingCondition,
   saveNode,
   type EditorState,
 } from "./internal/graph";
@@ -52,9 +54,11 @@ export type NdgEditorRef = {
 
 type NdgEditorAction =
   | { type: "addChild"; parentId: string }
+  | { type: "applyIncomingCondition"; nodeId: string; when: Condition }
   | { type: "autoLayout" }
   | { type: "applyConnection"; connection: Connection }
   | { type: "applyNodeChanges"; changes: NodeChange[] }
+  | { type: "clearIncomingCondition"; nodeId: string }
   | { type: "closeDialog" }
   | { type: "deleteNode"; nodeId: string }
   | { type: "hydrate"; state: EditorState }
@@ -67,12 +71,16 @@ const reducer = (state: EditorState, action: NdgEditorAction) => {
   switch (action.type) {
     case "addChild":
       return addChildNode(state, action.parentId);
+    case "applyIncomingCondition":
+      return setIncomingCondition(state, action.nodeId, action.when);
     case "autoLayout":
       return autoLayoutTree(state);
     case "applyConnection":
       return applyConnection(state, action.connection);
     case "applyNodeChanges":
       return applyNodePositionChanges(state, action.changes);
+    case "clearIncomingCondition":
+      return setIncomingCondition(state, action.nodeId);
     case "closeDialog":
       return closeNodeDialog(state);
     case "deleteNode":
@@ -117,6 +125,10 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
         editorStateToFlowNodes(state, {
           onAddChild: (nodeId) =>
             dispatch({ type: "addChild", parentId: nodeId }),
+          onApplyIncomingCondition: (nodeId, when) =>
+            dispatch({ type: "applyIncomingCondition", nodeId, when }),
+          onClearIncomingCondition: (nodeId) =>
+            dispatch({ type: "clearIncomingCondition", nodeId }),
           onDelete: (nodeId) => dispatch({ type: "deleteNode", nodeId }),
           onEdit: (nodeId) => dispatch({ type: "openDialog", nodeId }),
         }),

@@ -1,8 +1,9 @@
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
-import type { ComponentProps } from "react";
+import { useState, type ComponentProps } from "react";
 import type { EditorFlowNode } from "../adapter";
+import { ConditionPopover } from "./ConditionPopover";
 
 const nodeTypeThemes = {
   check: {
@@ -41,6 +42,9 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
       canAcceptParent,
       canAddChild,
       canDelete,
+      canEditIncomingCondition,
+      incomingCondition,
+      incomingConditionLabel,
       nodeId,
       nodeLabel,
       nodeName,
@@ -49,16 +53,47 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
       nodeReference,
       nodeFormula,
       onAddChild,
+      onApplyIncomingCondition,
+      onClearIncomingCondition,
       onDelete,
       onEdit,
     },
   } = props;
 
+  const [isConditionPopoverOpen, setIsConditionPopoverOpen] = useState(false);
   const showTargetHandle = nodeType !== "check" || canAcceptParent;
   const theme = nodeTypeThemes[nodeType];
+  const hasIncomingCondition = Boolean(incomingCondition);
 
   return (
     <NodeWrapper>
+      {canEditIncomingCondition && hasIncomingCondition && (
+        <NodeConditionPreview>{incomingConditionLabel}</NodeConditionPreview>
+      )}
+      {canEditIncomingCondition && (
+        <div className="nodrag nopan absolute -top-3 left-1/2 -translate-x-1/2 z-30">
+          <NodeConditionButton
+            aria-label={
+              hasIncomingCondition ? "Edit condition" : "Add condition"
+            }
+            onClick={() => setIsConditionPopoverOpen((current) => !current)}
+            title={hasIncomingCondition ? "Edit condition" : "Add condition"}
+          >
+            {hasIncomingCondition ? <EditIcon /> : <PlusIcon />}
+          </NodeConditionButton>
+          {isConditionPopoverOpen && (
+            <ConditionPopover
+              condition={incomingCondition}
+              onApply={(condition) =>
+                onApplyIncomingCondition(nodeId, condition)
+              }
+              onClear={() => onClearIncomingCondition(nodeId)}
+              onClose={() => setIsConditionPopoverOpen(false)}
+            />
+          )}
+        </div>
+      )}
+
       {showTargetHandle && (
         <Handle
           type="target"
@@ -104,9 +139,7 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
       {nodeFormula?.trim() && (
         <NodeFormula className={theme.formulaClass}>{nodeFormula}</NodeFormula>
       )}
-      {canAddChild && (
-        <NodeAddChildButton onClick={() => onAddChild(nodeId)} />
-      )}
+      {canAddChild && <NodeAddChildButton onClick={() => onAddChild(nodeId)} />}
     </NodeWrapper>
   );
 };
@@ -118,6 +151,28 @@ const NodeWrapper = ({ children, ...rest }: ComponentProps<"div">) => (
   >
     {children}
   </div>
+);
+
+const NodeConditionPreview = ({ children, ...rest }: ComponentProps<"div">) => (
+  <div
+    className="pointer-events-none absolute bottom-[115%] left-1/2 z-20 mb-2 w-fit max-w-[calc(100%-0.5rem)] -translate-x-1/2 rounded-sm border border-slate-300 bg-white px-2 py-1 text-[11px] leading-tight whitespace-pre-wrap break-words text-slate-700 shadow-sm shadow-slate-300/40"
+    {...rest}
+  >
+    {children}
+  </div>
+);
+
+const NodeConditionButton = ({
+  children,
+  ...rest
+}: ComponentProps<"button">) => (
+  <button
+    type="button"
+    className="nodrag nopan inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm shadow-slate-300/30 transition-colors hover:border-slate-400 hover:bg-slate-50"
+    {...rest}
+  >
+    {children}
+  </button>
 );
 
 const NodeHeader = ({ children, ...rest }: ComponentProps<"div">) => (
@@ -144,9 +199,7 @@ const NodeType = ({ children, className, ...rest }: ComponentProps<"p">) => (
 );
 
 const NodeReference = ({ children }: ComponentProps<"p">) => (
-  <p className="text-[0.6rem] font-light text-gray-500">
-    {children}
-  </p>
+  <p className="text-[0.6rem] font-light text-gray-500">{children}</p>
 );
 
 const NodeFormula = ({ children, className = "" }: ComponentProps<"span">) => {
