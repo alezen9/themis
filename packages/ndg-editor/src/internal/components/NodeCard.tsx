@@ -1,9 +1,8 @@
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
-import { useState, type ComponentProps } from "react";
+import { type ComponentProps } from "react";
 import type { EditorFlowNode } from "../adapter";
-import { ConditionPopover } from "./ConditionPopover";
 
 const nodeTypeThemes = {
   check: {
@@ -39,12 +38,8 @@ const nodeTypeThemes = {
 export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
   const {
     data: {
-      canAcceptParent,
       canAddChild,
-      canDelete,
-      canEditIncomingCondition,
-      incomingCondition,
-      incomingConditionLabel,
+      isUnreachable,
       nodeId,
       nodeLabel,
       nodeName,
@@ -53,47 +48,15 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
       nodeReference,
       nodeFormula,
       onAddChild,
-      onApplyIncomingCondition,
-      onClearIncomingCondition,
-      onDelete,
       onEdit,
     },
   } = props;
 
-  const [isConditionPopoverOpen, setIsConditionPopoverOpen] = useState(false);
-  const showTargetHandle = nodeType !== "check" || canAcceptParent;
+  const showTargetHandle = nodeType !== "check";
   const theme = nodeTypeThemes[nodeType];
-  const hasIncomingCondition = Boolean(incomingCondition);
 
   return (
-    <NodeWrapper>
-      {canEditIncomingCondition && hasIncomingCondition && (
-        <NodeConditionPreview>{incomingConditionLabel}</NodeConditionPreview>
-      )}
-      {canEditIncomingCondition && (
-        <div className="nodrag nopan absolute -top-3 left-1/2 -translate-x-1/2 z-30">
-          <NodeConditionButton
-            aria-label={
-              hasIncomingCondition ? "Edit condition" : "Add condition"
-            }
-            onClick={() => setIsConditionPopoverOpen((current) => !current)}
-            title={hasIncomingCondition ? "Edit condition" : "Add condition"}
-          >
-            {hasIncomingCondition ? <EditIcon /> : <PlusIcon />}
-          </NodeConditionButton>
-          {isConditionPopoverOpen && (
-            <ConditionPopover
-              condition={incomingCondition}
-              onApply={(condition) =>
-                onApplyIncomingCondition(nodeId, condition)
-              }
-              onClear={() => onClearIncomingCondition(nodeId)}
-              onClose={() => setIsConditionPopoverOpen(false)}
-            />
-          )}
-        </div>
-      )}
-
+    <NodeWrapper isUnreachable={isUnreachable}>
       {showTargetHandle && (
         <Handle
           type="target"
@@ -114,25 +77,13 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
           <NodeKey>{nodeLabel}</NodeKey>
           <NodeName>{nodeName}</NodeName>
         </div>
-        <div className="flex items-center gap-1">
-          <NodeIconButton
-            aria-label="Edit node"
-            onClick={() => onEdit(nodeId)}
-            title="Edit node"
-          >
-            <EditIcon />
-          </NodeIconButton>
-          {canDelete && (
-            <NodeIconButton
-              aria-label="Delete node"
-              onClick={() => onDelete(nodeId)}
-              title="Delete node"
-              tone="danger"
-            >
-              <DeleteIcon />
-            </NodeIconButton>
-          )}
-        </div>
+        <NodeIconButton
+          aria-label="Edit node"
+          onClick={() => onEdit(nodeId)}
+          title="Edit node"
+        >
+          <EditIcon />
+        </NodeIconButton>
       </NodeHeader>
       <NodeType className={theme.textClass}>{nodeTypeLabel}</NodeType>
       <NodeReference>{nodeReference}</NodeReference>
@@ -144,35 +95,21 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
   );
 };
 
-const NodeWrapper = ({ children, ...rest }: ComponentProps<"div">) => (
-  <div
-    className="relative flex min-w-72 cursor-grab select-none flex-col gap-1 rounded-sm border border-slate-200 bg-white px-3 py-2 shadow-xl shadow-gray-200 active:cursor-grabbing"
-    {...rest}
-  >
-    {children}
-  </div>
-);
-
-const NodeConditionPreview = ({ children, ...rest }: ComponentProps<"div">) => (
-  <div
-    className="pointer-events-none absolute bottom-[115%] left-1/2 z-20 mb-2 w-fit max-w-[calc(100%-0.5rem)] -translate-x-1/2 rounded-sm border border-slate-300 bg-white px-2 py-1 text-[11px] leading-tight whitespace-pre-wrap break-words text-slate-700 shadow-sm shadow-slate-300/40"
-    {...rest}
-  >
-    {children}
-  </div>
-);
-
-const NodeConditionButton = ({
+const NodeWrapper = ({
   children,
+  isUnreachable,
   ...rest
-}: ComponentProps<"button">) => (
-  <button
-    type="button"
-    className="nodrag nopan inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm shadow-slate-300/30 transition-colors hover:border-slate-400 hover:bg-slate-50"
+}: ComponentProps<"div"> & { isUnreachable: boolean }) => (
+  <div
+    className={`relative flex min-w-72 cursor-grab select-none flex-col gap-1 rounded-sm border px-3 py-2 shadow-xl shadow-gray-200 active:cursor-grabbing ${
+      isUnreachable
+        ? "border-amber-300 bg-amber-50/70"
+        : "border-slate-200 bg-white"
+    }`}
     {...rest}
   >
     {children}
-  </button>
+  </div>
 );
 
 const NodeHeader = ({ children, ...rest }: ComponentProps<"div">) => (
@@ -182,7 +119,7 @@ const NodeHeader = ({ children, ...rest }: ComponentProps<"div">) => (
 );
 
 const NodeKey = ({ children }: ComponentProps<"p">) => (
-  <p className="truncate text-sm font-bold">{children}</p>
+  <p className="text-sm font-bold">{children}</p>
 );
 
 const NodeName = ({ children }: ComponentProps<"p">) => (
@@ -207,6 +144,7 @@ const NodeFormula = ({ children, className = "" }: ComponentProps<"span">) => {
     displayMode: true,
     throwOnError: false,
   });
+
   return (
     <div className={`rounded-xs border p-2 ${className}`}>
       <span
@@ -231,18 +169,13 @@ const NodeAddChildButton = ({ ...rest }: ComponentProps<"button">) => (
 
 const NodeIconButton = ({
   children,
-  tone = "default",
   className,
   type = "button",
   ...rest
-}: ComponentProps<"button"> & { tone?: "default" | "danger" }) => (
+}: ComponentProps<"button">) => (
   <button
     type={type}
-    className={`nodrag nopan inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm border transition-colors ${
-      tone === "danger"
-        ? "border-red-200 bg-red-50 text-red-700 hover:border-red-300 hover:bg-red-100"
-        : "border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50"
-    } ${className ?? ""}`}
+    className={`nodrag nopan inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm border border-slate-300 bg-white text-slate-700 transition-colors hover:border-slate-400 hover:bg-slate-50 ${className ?? ""}`}
     {...rest}
   >
     {children}
@@ -262,25 +195,6 @@ const EditIcon = () => (
   >
     <path d="M12 20h9" />
     <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
-  </svg>
-);
-
-const DeleteIcon = () => (
-  <svg
-    aria-hidden="true"
-    className="h-3.5 w-3.5"
-    fill="none"
-    stroke="currentColor"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    strokeWidth={1.8}
-    viewBox="0 0 24 24"
-  >
-    <path d="M3 6h18" />
-    <path d="M8 6V4h8v2" />
-    <path d="M19 6l-1 14H6L5 6" />
-    <path d="M10 11v6" />
-    <path d="M14 11v6" />
   </svg>
 );
 

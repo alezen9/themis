@@ -256,59 +256,154 @@ const loadVerificationSchema = async () => {
   }
 };
 
+const buildWeakAdjacency = (nodesById) => {
+  const adjacency = new Map();
+
+  for (const nodeId of nodesById.keys()) {
+    adjacency.set(nodeId, new Set());
+  }
+
+  for (const node of nodesById.values()) {
+    for (const child of node.children) {
+      if (!nodesById.has(child.nodeId)) continue;
+
+      adjacency.get(node.id)?.add(child.nodeId);
+      adjacency.get(child.nodeId)?.add(node.id);
+    }
+  }
+
+  return adjacency;
+};
+
+const collectWeakComponents = (nodeIds, adjacency, preferredFirstId) => {
+  const visited = new Set();
+  const orderedSeeds = [...nodeIds].sort((left, right) =>
+    left.localeCompare(right),
+  );
+
+  if (preferredFirstId) {
+    const preferredIndex = orderedSeeds.indexOf(preferredFirstId);
+    if (preferredIndex >= 0) {
+      orderedSeeds.splice(preferredIndex, 1);
+      orderedSeeds.unshift(preferredFirstId);
+    }
+  }
+
+  const components = [];
+
+  for (const seedNodeId of orderedSeeds) {
+    if (visited.has(seedNodeId)) continue;
+
+    const queue = [seedNodeId];
+    const component = [];
+
+    while (queue.length > 0) {
+      const nodeId = queue.shift();
+      if (!nodeId || visited.has(nodeId)) continue;
+
+      visited.add(nodeId);
+      component.push(nodeId);
+
+      const neighbors = adjacency.get(nodeId);
+      if (!neighbors) continue;
+
+      for (const neighborId of neighbors) {
+        if (visited.has(neighborId)) continue;
+        queue.push(neighborId);
+      }
+    }
+
+    components.push(component);
+  }
+
+  return components;
+};
+
 const buildLayoutById = (nodes) => {
   const nodesById = new Map(nodes.map((node) => [node.id, node]));
-  const parentById = new Map();
-
-  for (const node of nodes) {
-    for (const child of node.children) {
-      parentById.set(child.nodeId, node.id);
-    }
-  }
-
-  const rootNode = nodes.find(
-    (node) => node.type === "check" && !parentById.has(node.id),
+  const layoutById = {};
+  const checkNode = nodes.find((node) => node.type === "check");
+  const components = collectWeakComponents(
+    [...nodesById.keys()],
+    buildWeakAdjacency(nodesById),
+    checkNode?.id ?? null,
   );
-  if (!rootNode) {
-    fail("Could not determine root check node for BFS layout");
-  }
+  let componentOffsetX = 0;
 
-  const nodesByDepth = new Map();
-  const visited = new Set();
-  const queue = [{ nodeId: rootNode.id, depth: 0 }];
+  for (const componentNodeIds of components) {
+    const componentNodeIdSet = new Set(componentNodeIds);
+    const indegreeById = new Map(componentNodeIds.map((nodeId) => [nodeId, 0]));
 
-  while (queue.length > 0) {
-    const current = queue.shift();
-    if (!current || visited.has(current.nodeId)) {
-      continue;
+    for (const nodeId of componentNodeIds) {
+      const node = nodesById.get(nodeId);
+      if (!node) continue;
+
+      for (const child of node.children) {
+        if (!componentNodeIdSet.has(child.nodeId)) continue;
+        indegreeById.set(child.nodeId, (indegreeById.get(child.nodeId) ?? 0) + 1);
+      }
     }
 
-    visited.add(current.nodeId);
-    const row = nodesByDepth.get(current.depth) ?? [];
-    row.push(current.nodeId);
-    nodesByDepth.set(current.depth, row);
+    const roots = componentNodeIds.filter(
+      (nodeId) => (indegreeById.get(nodeId) ?? 0) === 0,
+    );
+    const queue = roots.length > 0 ? [...roots] : [componentNodeIds[0]];
+    const visited = new Set();
+    const depthById = new Map();
+    const nodeIdsByDepth = new Map();
 
-    const node = nodesById.get(current.nodeId);
-    if (!node) {
-      continue;
+    for (const rootId of queue) {
+      depthById.set(rootId, 0);
     }
 
-    for (const child of node.children) {
-      queue.push({
-        nodeId: child.nodeId,
-        depth: current.depth + 1,
+    while (queue.length > 0) {
+      const nodeId = queue.shift();
+      if (!nodeId || visited.has(nodeId)) continue;
+
+      visited.add(nodeId);
+      const depth = depthById.get(nodeId) ?? 0;
+      const row = nodeIdsByDepth.get(depth) ?? [];
+      row.push(nodeId);
+      nodeIdsByDepth.set(depth, row);
+
+      const node = nodesById.get(nodeId);
+      if (!node) continue;
+
+      for (const child of node.children) {
+        if (!componentNodeIdSet.has(child.nodeId)) continue;
+
+        const nextDepth = depth + 1;
+        const currentDepth = depthById.get(child.nodeId) ?? Number.NEGATIVE_INFINITY;
+        if (nextDepth > currentDepth) depthById.set(child.nodeId, nextDepth);
+
+        queue.push(child.nodeId);
+      }
+    }
+
+    for (const nodeId of componentNodeIds) {
+      if (visited.has(nodeId)) continue;
+
+      const row = nodeIdsByDepth.get(0) ?? [];
+      row.push(nodeId);
+      nodeIdsByDepth.set(0, row);
+    }
+
+    const sortedDepths = [...nodeIdsByDepth.keys()].sort((left, right) => left - right);
+    let maxRowLength = 0;
+
+    for (const depth of sortedDepths) {
+      const row = nodeIdsByDepth.get(depth) ?? [];
+      if (row.length > maxRowLength) maxRowLength = row.length;
+
+      row.forEach((nodeId, index) => {
+        layoutById[nodeId] = {
+          x: componentOffsetX + index * HORIZONTAL_GAP,
+          y: depth * VERTICAL_GAP,
+        };
       });
     }
-  }
 
-  const layoutById = {};
-  for (const [depth, nodeIds] of nodesByDepth.entries()) {
-    nodeIds.forEach((nodeId, index) => {
-      layoutById[nodeId] = {
-        x: index * HORIZONTAL_GAP,
-        y: depth * VERTICAL_GAP,
-      };
-    });
+    componentOffsetX += Math.max(1, maxRowLength) * HORIZONTAL_GAP + HORIZONTAL_GAP;
   }
 
   return layoutById;

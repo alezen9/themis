@@ -5,6 +5,7 @@ import {
   useMemo,
   useReducer,
   useRef,
+  useState,
 } from "react";
 import {
   Background,
@@ -21,12 +22,15 @@ import "@xyflow/react/dist/style.css";
 import {
   applyConnection,
   applyNodePositionChanges,
+  applyReconnect,
+  flowEdgeType,
   type EditorFlowEdge,
   type EditorFlowNode,
   editorStateToFlowEdges,
   editorStateToFlowNodes,
   flowNodeType,
 } from "./internal/adapter";
+import { ConditionEdge } from "./internal/components/ConditionEdge";
 import { NodeCard } from "./internal/components/NodeCard";
 import { NodeDialog } from "./internal/components/NodeDialog";
 import {
@@ -34,13 +38,14 @@ import {
   autoLayoutTree,
   closeNodeDialog,
   createInitialState,
+  disconnectEdge,
   draftToEditorState,
-  deleteSubtree,
   editorStateToDraft,
+  getUnreachableNodeIds,
   type NdgEditorDraftV1,
   openNodeDialog,
-  setIncomingCondition,
   saveNode,
+  setEdgeCondition,
   type EditorState,
 } from "./internal/graph";
 import type { NodeDraft } from "./internal/node-factory";
@@ -54,37 +59,50 @@ export type NdgEditorRef = {
 
 type NdgEditorAction =
   | { type: "addChild"; parentId: string }
-  | { type: "applyIncomingCondition"; nodeId: string; when: Condition }
+  | {
+      type: "applyEdgeCondition";
+      sourceId: string;
+      targetId: string;
+      when: Condition;
+    }
   | { type: "autoLayout" }
   | { type: "applyConnection"; connection: Connection }
   | { type: "applyNodeChanges"; changes: NodeChange[] }
-  | { type: "clearIncomingCondition"; nodeId: string }
+  | { type: "clearEdgeCondition"; sourceId: string; targetId: string }
   | { type: "closeDialog" }
-  | { type: "deleteNode"; nodeId: string }
+  | { type: "disconnectEdge"; sourceId: string; targetId: string }
+  | {
+      type: "reconnectEdge";
+      oldEdge: { source?: string | null; target?: string | null };
+      connection: Connection;
+    }
   | { type: "hydrate"; state: EditorState }
   | { type: "openDialog"; nodeId: string }
   | { type: "saveNode"; nodeId: string; draft: NodeDraft };
 
 const nodeTypes = { [flowNodeType]: NodeCard };
+const edgeTypes = { [flowEdgeType]: ConditionEdge };
 
 const reducer = (state: EditorState, action: NdgEditorAction) => {
   switch (action.type) {
     case "addChild":
       return addChildNode(state, action.parentId);
-    case "applyIncomingCondition":
-      return setIncomingCondition(state, action.nodeId, action.when);
+    case "applyEdgeCondition":
+      return setEdgeCondition(state, action.sourceId, action.targetId, action.when);
     case "autoLayout":
       return autoLayoutTree(state);
     case "applyConnection":
       return applyConnection(state, action.connection);
     case "applyNodeChanges":
       return applyNodePositionChanges(state, action.changes);
-    case "clearIncomingCondition":
-      return setIncomingCondition(state, action.nodeId);
+    case "clearEdgeCondition":
+      return setEdgeCondition(state, action.sourceId, action.targetId);
     case "closeDialog":
       return closeNodeDialog(state);
-    case "deleteNode":
-      return deleteSubtree(state, action.nodeId);
+    case "disconnectEdge":
+      return disconnectEdge(state, action.sourceId, action.targetId);
+    case "reconnectEdge":
+      return applyReconnect(state, action.oldEdge, action.connection);
     case "hydrate":
       return action.state;
     case "openDialog":
@@ -97,6 +115,7 @@ const reducer = (state: EditorState, action: NdgEditorAction) => {
 export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
   function NdgEditor({ className }, ref) {
     const [state, dispatch] = useReducer(reducer, undefined, createInitialState);
+    const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
     const reactFlowRef = useRef<ReactFlowInstance<EditorFlowNode, EditorFlowEdge> | null>(null);
 
     useEffect(() => {
@@ -114,28 +133,52 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
             throw new Error(parsedState.error ?? "Draft could not be loaded");
           }
 
+          setHoveredEdgeId(null);
           dispatch({ type: "hydrate", state: parsedState.state });
         },
       }),
       [state],
     );
 
-    const nodes = useMemo(
-      () =>
-        editorStateToFlowNodes(state, {
-          onAddChild: (nodeId) =>
-            dispatch({ type: "addChild", parentId: nodeId }),
-          onApplyIncomingCondition: (nodeId, when) =>
-            dispatch({ type: "applyIncomingCondition", nodeId, when }),
-          onClearIncomingCondition: (nodeId) =>
-            dispatch({ type: "clearIncomingCondition", nodeId }),
-          onDelete: (nodeId) => dispatch({ type: "deleteNode", nodeId }),
-          onEdit: (nodeId) => dispatch({ type: "openDialog", nodeId }),
-        }),
-      [state],
+    const unreachableNodeIds = useMemo(
+      () => getUnreachableNodeIds(state.nodesById),
+      [state.nodesById],
     );
 
-    const edges = useMemo(() => editorStateToFlowEdges(state), [state]);
+    const nodes = useMemo(
+      () =>
+        editorStateToFlowNodes(
+          state,
+          {
+            onAddChild: (nodeId) => dispatch({ type: "addChild", parentId: nodeId }),
+            onEdit: (nodeId) => dispatch({ type: "openDialog", nodeId }),
+          },
+          {
+            unreachableNodeIds,
+          },
+        ),
+      [state, unreachableNodeIds],
+    );
+
+    const edges = useMemo(
+      () =>
+        editorStateToFlowEdges(
+          state,
+          {
+            onApplyCondition: (sourceId, targetId, when) =>
+              dispatch({ type: "applyEdgeCondition", sourceId, targetId, when }),
+            onClearCondition: (sourceId, targetId) =>
+              dispatch({ type: "clearEdgeCondition", sourceId, targetId }),
+            onDisconnect: (sourceId, targetId) =>
+              dispatch({ type: "disconnectEdge", sourceId, targetId }),
+          },
+          {
+            hoveredEdgeId,
+            unreachableNodeIds,
+          },
+        ),
+      [state, hoveredEdgeId, unreachableNodeIds],
+    );
 
     const editingNode = state.editingNodeId
       ? (state.nodesById.get(state.editingNodeId) ?? null)
@@ -152,17 +195,26 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
             reactFlowRef.current = reactFlowInstance;
           }}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           deleteKeyCode={null}
-          elementsSelectable={false}
-          edgesFocusable={false}
+          elementsSelectable
+          edgesFocusable
+          edgesReconnectable
           nodesDraggable
           nodesConnectable
-          onConnect={(connection) =>
-            dispatch({ type: "applyConnection", connection })
+          onConnect={(connection) => dispatch({ type: "applyConnection", connection })}
+          onReconnect={(oldEdge, connection) =>
+            dispatch({ type: "reconnectEdge", oldEdge, connection })
           }
-          onNodesChange={(changes) =>
-            dispatch({ type: "applyNodeChanges", changes })
-          }
+          onEdgeMouseEnter={(_, edge) => setHoveredEdgeId(edge.id)}
+          onEdgeMouseLeave={(_, edge) => {
+            setHoveredEdgeId((currentEdgeId) => {
+              if (currentEdgeId !== edge.id) return currentEdgeId;
+              return null;
+            });
+          }}
+          onPaneClick={() => setHoveredEdgeId(null)}
+          onNodesChange={(changes) => dispatch({ type: "applyNodeChanges", changes })}
           proOptions={{ hideAttribution: true }}
         >
           <Background color="rgba(17, 24, 39, 0.12)" gap={20} />
@@ -182,6 +234,14 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
             >
               <div className="rounded-sm border border-amber-200 bg-amber-50 px-2 py-1 text-[11px] font-medium text-amber-800">
                 {state.autoLayoutError}
+              </div>
+            </Panel>
+          ) : null}
+          {unreachableNodeIds.size > 0 ? (
+            <Panel position="top-right" className="mr-2 mt-2">
+              <div className="rounded-sm border border-amber-300 bg-amber-50 px-2 py-1 text-[11px] font-medium text-amber-800">
+                {unreachableNodeIds.size} unreachable node
+                {unreachableNodeIds.size === 1 ? "" : "s"}
               </div>
             </Panel>
           ) : null}

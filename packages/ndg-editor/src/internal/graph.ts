@@ -37,8 +37,9 @@ export type NdgEditorDraftV1 = {
 const horizontalGap = 320;
 const verticalGap = 220;
 const childStagger = 72;
-const autoLayoutHorizontalGap = 96;
-const autoLayoutVerticalGap = 120;
+const autoLayoutHorizontalGap = 80;
+const autoLayoutVerticalGap = 132;
+const autoLayoutComponentGap = 240;
 const autoLayoutMargin = 48;
 
 const getNodeById = (nodesById: Map<string, EditorNode>, nodeId: string) =>
@@ -52,34 +53,63 @@ const replaceNodeChildren = (node: EditorNode, children: readonly Child[]) => ({
 const hasChildReference = (node: EditorNode, childId: string) =>
   node.children.some((child) => child.nodeId === childId);
 
-export const buildParentById = (nodesById: Map<string, EditorNode>) => {
-  const parentById = new Map<string, string>();
-
-  for (const node of nodesById.values()) {
-    for (const child of node.children) {
-      parentById.set(child.nodeId, node.id);
-    }
-  }
-
-  return parentById;
-};
-
 const isCheckNode = (node: EditorNode) => node.type === "check";
 
-export const isRootCheckNode = (
-  node: EditorNode,
-  parentById: Map<string, string>,
-) => node.type === "check" && !parentById.has(node.id);
-
-const getRootNodeId = (
-  nodesById: Map<string, EditorNode>,
-  parentById: Map<string, string>,
-) => {
+const getCheckNodeId = (nodesById: Map<string, EditorNode>) => {
   for (const node of nodesById.values()) {
-    if (isCheckNode(node) && !parentById.has(node.id)) return node.id;
+    if (isCheckNode(node)) return node.id;
   }
 
   return null;
+};
+
+export const buildParentsByChildId = (nodesById: Map<string, EditorNode>) => {
+  const parentsByChildId = new Map<string, Set<string>>();
+
+  for (const node of nodesById.values()) {
+    for (const child of node.children) {
+      const parentIds = parentsByChildId.get(child.nodeId) ?? new Set<string>();
+      parentIds.add(node.id);
+      parentsByChildId.set(child.nodeId, parentIds);
+    }
+  }
+
+  return parentsByChildId;
+};
+
+export const buildReachableNodeIds = (nodesById: Map<string, EditorNode>) => {
+  const checkNodeId = getCheckNodeId(nodesById);
+  if (!checkNodeId) return new Set<string>();
+
+  const visited = new Set<string>();
+  const stack = [checkNodeId];
+
+  while (stack.length > 0) {
+    const nodeId = stack.pop();
+    if (!nodeId || visited.has(nodeId)) continue;
+
+    visited.add(nodeId);
+    const node = nodesById.get(nodeId);
+    if (!node) continue;
+
+    for (const child of node.children) {
+      stack.push(child.nodeId);
+    }
+  }
+
+  return visited;
+};
+
+export const getUnreachableNodeIds = (nodesById: Map<string, EditorNode>) => {
+  const reachableNodeIds = buildReachableNodeIds(nodesById);
+  const unreachableNodeIds = new Set<string>();
+
+  for (const nodeId of nodesById.keys()) {
+    if (reachableNodeIds.has(nodeId)) continue;
+    unreachableNodeIds.add(nodeId);
+  }
+
+  return unreachableNodeIds;
 };
 
 const hasPath = (
@@ -108,53 +138,69 @@ const hasPath = (
   return false;
 };
 
-const collectSubtreeIds = (
-  nodesById: Map<string, EditorNode>,
-  startNodeId: string,
-) => {
-  const removedIds = new Set<string>();
-  const stack = [startNodeId];
+const buildWeakAdjacency = (nodesById: Map<string, EditorNode>) => {
+  const adjacency = new Map<string, Set<string>>();
 
-  while (stack.length > 0) {
-    const currentNodeId = stack.pop();
-    if (!currentNodeId || removedIds.has(currentNodeId)) continue;
+  for (const nodeId of nodesById.keys()) {
+    adjacency.set(nodeId, new Set<string>());
+  }
 
-    removedIds.add(currentNodeId);
-    const currentNode = nodesById.get(currentNodeId);
-    if (!currentNode) continue;
+  for (const node of nodesById.values()) {
+    for (const child of node.children) {
+      if (!nodesById.has(child.nodeId)) continue;
 
-    for (const child of currentNode.children) {
-      stack.push(child.nodeId);
+      adjacency.get(node.id)?.add(child.nodeId);
+      adjacency.get(child.nodeId)?.add(node.id);
     }
   }
 
-  return removedIds;
+  return adjacency;
 };
 
-const removeLayoutEntries = (
-  layoutById: Record<string, XYPosition>,
-  removedIds: ReadonlySet<string>,
+const collectWeakComponents = (
+  nodeIds: readonly string[],
+  adjacency: Map<string, Set<string>>,
+  preferredFirstId: string | null,
 ) => {
-  const nextLayoutById = { ...layoutById };
+  const visited = new Set<string>();
+  const orderedSeeds = [...nodeIds].sort((left, right) => left.localeCompare(right));
 
-  for (const removedId of removedIds) {
-    delete nextLayoutById[removedId];
+  if (preferredFirstId) {
+    const preferredIndex = orderedSeeds.indexOf(preferredFirstId);
+    if (preferredIndex >= 0) {
+      orderedSeeds.splice(preferredIndex, 1);
+      orderedSeeds.unshift(preferredFirstId);
+    }
   }
 
-  return nextLayoutById;
-};
+  const components: string[][] = [];
 
-const removeMeasuredEntries = (
-  measuredById: Record<string, { width: number; height: number }>,
-  removedIds: ReadonlySet<string>,
-) => {
-  const nextMeasuredById = { ...measuredById };
+  for (const seedNodeId of orderedSeeds) {
+    if (visited.has(seedNodeId)) continue;
 
-  for (const removedId of removedIds) {
-    delete nextMeasuredById[removedId];
+    const queue = [seedNodeId];
+    const component: string[] = [];
+
+    while (queue.length > 0) {
+      const nodeId = queue.shift();
+      if (!nodeId || visited.has(nodeId)) continue;
+
+      visited.add(nodeId);
+      component.push(nodeId);
+
+      const neighbors = adjacency.get(nodeId);
+      if (!neighbors) continue;
+
+      for (const neighborId of neighbors) {
+        if (visited.has(neighborId)) continue;
+        queue.push(neighborId);
+      }
+    }
+
+    components.push(component);
   }
 
-  return nextMeasuredById;
+  return components;
 };
 
 const getChildOffset = (childIndex: number) => {
@@ -166,44 +212,92 @@ const getChildOffset = (childIndex: number) => {
 };
 
 const buildInitialLayout = (nodesById: Map<string, EditorNode>) => {
-  const parentById = buildParentById(nodesById);
-  const rootNodeId = getRootNodeId(nodesById, parentById);
-  if (!rootNodeId) return {};
+  if (nodesById.size === 0) return {};
 
-  const nodesByDepth = new Map<number, string[]>();
-  const queue = [{ depth: 0, nodeId: rootNodeId }];
-  const visited = new Set<string>();
-
-  while (queue.length > 0) {
-    const currentItem = queue.shift();
-    if (!currentItem || visited.has(currentItem.nodeId)) continue;
-
-    visited.add(currentItem.nodeId);
-
-    const row = nodesByDepth.get(currentItem.depth) ?? [];
-    row.push(currentItem.nodeId);
-    nodesByDepth.set(currentItem.depth, row);
-
-    const currentNode = nodesById.get(currentItem.nodeId);
-    if (!currentNode) continue;
-
-    for (const child of currentNode.children) {
-      queue.push({
-        depth: currentItem.depth + 1,
-        nodeId: child.nodeId,
-      });
-    }
-  }
+  const components = collectWeakComponents(
+    [...nodesById.keys()],
+    buildWeakAdjacency(nodesById),
+    getCheckNodeId(nodesById),
+  );
 
   const layoutById: Record<string, XYPosition> = {};
+  let componentOffsetX = autoLayoutMargin;
 
-  for (const [depth, nodeIds] of nodesByDepth) {
-    nodeIds.forEach((nodeId, index) => {
-      layoutById[nodeId] = {
-        x: index * horizontalGap,
-        y: depth * verticalGap,
-      };
-    });
+  for (const componentNodeIds of components) {
+    const componentNodeIdSet = new Set(componentNodeIds);
+    const indegreeById = new Map<string, number>(
+      componentNodeIds.map((nodeId) => [nodeId, 0]),
+    );
+
+    for (const nodeId of componentNodeIds) {
+      const node = nodesById.get(nodeId);
+      if (!node) continue;
+
+      for (const child of node.children) {
+        if (!componentNodeIdSet.has(child.nodeId)) continue;
+        indegreeById.set(child.nodeId, (indegreeById.get(child.nodeId) ?? 0) + 1);
+      }
+    }
+
+    const roots = componentNodeIds.filter((nodeId) => (indegreeById.get(nodeId) ?? 0) === 0);
+    const queue = roots.length > 0 ? [...roots] : [componentNodeIds[0]];
+    const visited = new Set<string>();
+    const depthById = new Map<string, number>();
+    const nodeIdsByDepth = new Map<number, string[]>();
+
+    for (const rootId of queue) {
+      depthById.set(rootId, 0);
+    }
+
+    while (queue.length > 0) {
+      const nodeId = queue.shift();
+      if (!nodeId || visited.has(nodeId)) continue;
+
+      visited.add(nodeId);
+      const depth = depthById.get(nodeId) ?? 0;
+      const row = nodeIdsByDepth.get(depth) ?? [];
+      row.push(nodeId);
+      nodeIdsByDepth.set(depth, row);
+
+      const node = nodesById.get(nodeId);
+      if (!node) continue;
+
+      for (const child of node.children) {
+        if (!componentNodeIdSet.has(child.nodeId)) continue;
+
+        const nextDepth = depth + 1;
+        const currentDepth = depthById.get(child.nodeId) ?? Number.NEGATIVE_INFINITY;
+        if (nextDepth > currentDepth) depthById.set(child.nodeId, nextDepth);
+
+        queue.push(child.nodeId);
+      }
+    }
+
+    for (const nodeId of componentNodeIds) {
+      if (visited.has(nodeId)) continue;
+
+      const row = nodeIdsByDepth.get(0) ?? [];
+      row.push(nodeId);
+      nodeIdsByDepth.set(0, row);
+    }
+
+    const sortedDepths = [...nodeIdsByDepth.keys()].sort((left, right) => left - right);
+    let maxRowLength = 0;
+
+    for (const depth of sortedDepths) {
+      const row = nodeIdsByDepth.get(depth) ?? [];
+      if (row.length > maxRowLength) maxRowLength = row.length;
+
+      row.forEach((nodeId, index) => {
+        layoutById[nodeId] = {
+          x: componentOffsetX + index * horizontalGap,
+          y: autoLayoutMargin + depth * verticalGap,
+        };
+      });
+    }
+
+    const componentWidth = Math.max(1, maxRowLength) * horizontalGap;
+    componentOffsetX += componentWidth + horizontalGap;
   }
 
   return layoutById;
@@ -214,6 +308,35 @@ type MeasuredNodeSize = { width: number; height: number };
 type ValidateNodesResult =
   | { error: string; nodes: null }
   | { error: null; nodes: readonly Node[] };
+
+const findCycleNodeId = (nodesById: Map<string, Node>) => {
+  const stateById = new Map<string, 0 | 1 | 2>();
+
+  const visit = (nodeId: string): string | null => {
+    const nodeState = stateById.get(nodeId) ?? 0;
+    if (nodeState === 1) return nodeId;
+    if (nodeState === 2) return null;
+
+    stateById.set(nodeId, 1);
+    const node = nodesById.get(nodeId);
+    if (node) {
+      for (const child of node.children) {
+        const cycleNodeId = visit(child.nodeId);
+        if (cycleNodeId) return cycleNodeId;
+      }
+    }
+
+    stateById.set(nodeId, 2);
+    return null;
+  };
+
+  for (const nodeId of nodesById.keys()) {
+    const cycleNodeId = visit(nodeId);
+    if (cycleNodeId) return cycleNodeId;
+  }
+
+  return null;
+};
 
 const validateNodes = (nodes: readonly Node[]): ValidateNodesResult => {
   const parsedNodes = VerificationSchema.safeParse([...nodes]);
@@ -244,8 +367,6 @@ const validateNodes = (nodes: readonly Node[]): ValidateNodesResult => {
     } as const;
   }
 
-  const parentById = new Map<string, string>();
-
   for (const node of parsedNodes.data) {
     if (node.type === "user-input" && node.children.length > 0) {
       return {
@@ -253,6 +374,8 @@ const validateNodes = (nodes: readonly Node[]): ValidateNodesResult => {
         nodes: null,
       } as const;
     }
+
+    const childIdSet = new Set<string>();
 
     for (const child of node.children) {
       if (!nodesById.has(child.nodeId)) {
@@ -262,44 +385,30 @@ const validateNodes = (nodes: readonly Node[]): ValidateNodesResult => {
         } as const;
       }
 
-      if (parentById.has(child.nodeId)) {
+      if (childIdSet.has(child.nodeId)) {
         return {
-          error: "Graph cannot contain multi-parent nodes",
+          error: `Node "${node.id}" contains duplicate edge to "${child.nodeId}"`,
           nodes: null,
         } as const;
       }
 
-      parentById.set(child.nodeId, node.id);
+      childIdSet.add(child.nodeId);
+
+      const childNode = nodesById.get(child.nodeId);
+      if (!childNode) continue;
+      if (childNode.type !== "check") continue;
+
+      return {
+        error: "Check node cannot be a child node",
+        nodes: null,
+      } as const;
     }
   }
 
-  const rootNodes = parsedNodes.data.filter((node) => !parentById.has(node.id));
-  if (rootNodes.length !== 1 || rootNodes[0]?.type !== "check") {
+  const cycleNodeId = findCycleNodeId(nodesById);
+  if (cycleNodeId) {
     return {
-      error: "Graph must contain exactly one root check node",
-      nodes: null,
-    } as const;
-  }
-
-  const visited = new Set<string>();
-  const stack = [rootNodes[0].id];
-
-  while (stack.length > 0) {
-    const currentNodeId = stack.pop();
-    if (!currentNodeId || visited.has(currentNodeId)) continue;
-
-    visited.add(currentNodeId);
-    const currentNode = nodesById.get(currentNodeId);
-    if (!currentNode) continue;
-
-    for (const child of currentNode.children) {
-      stack.push(child.nodeId);
-    }
-  }
-
-  if (visited.size !== parsedNodes.data.length) {
-    return {
-      error: "Graph must be a single rooted tree",
+      error: `Graph cannot contain cycles (found at "${cycleNodeId}")`,
       nodes: null,
     } as const;
   }
@@ -358,126 +467,313 @@ const getMeasuredNodeSizesById = (state: EditorState) => {
   } as const;
 };
 
-const buildTidyTreeLayout = (
+type ComponentLayout = {
+  width: number;
+  height: number;
+  positionsByNodeId: Record<string, XYPosition>;
+};
+
+const buildComponentLayout = (
   nodesById: Map<string, EditorNode>,
   measuredNodeSizesById: Record<string, MeasuredNodeSize>,
-) => {
-  const parentById = buildParentById(nodesById);
-  const rootNodeId = getRootNodeId(nodesById, parentById);
-  if (!rootNodeId) return {};
+  componentNodeIds: readonly string[],
+): ComponentLayout | null => {
+  const componentNodeIdSet = new Set(componentNodeIds);
+  const indegreeById = new Map<string, number>(
+    componentNodeIds.map((nodeId) => [nodeId, 0]),
+  );
+  const parentIdsByNodeId = new Map<string, string[]>(
+    componentNodeIds.map((nodeId) => [nodeId, []]),
+  );
+  const childIdsByNodeId = new Map<string, string[]>(
+    componentNodeIds.map((nodeId) => [nodeId, []]),
+  );
 
+  for (const nodeId of componentNodeIds) {
+    const node = nodesById.get(nodeId);
+    if (!node) continue;
+
+    for (const child of node.children) {
+      if (!componentNodeIdSet.has(child.nodeId)) continue;
+
+      indegreeById.set(child.nodeId, (indegreeById.get(child.nodeId) ?? 0) + 1);
+      const parentIds = parentIdsByNodeId.get(child.nodeId) ?? [];
+      parentIds.push(nodeId);
+      parentIdsByNodeId.set(child.nodeId, parentIds);
+      const childIds = childIdsByNodeId.get(nodeId) ?? [];
+      childIds.push(child.nodeId);
+      childIdsByNodeId.set(nodeId, childIds);
+    }
+  }
+
+  const roots = componentNodeIds
+    .filter((nodeId) => (indegreeById.get(nodeId) ?? 0) === 0)
+    .sort((left, right) => left.localeCompare(right));
+  const queue = roots.length > 0 ? [...roots] : [componentNodeIds[0]];
+  const mutableIndegreeById = new Map(indegreeById);
   const depthById = new Map<string, number>();
-  const maxHeightByDepth = new Map<number, number>();
-  const queue: Array<{ depth: number; nodeId: string }> = [
-    { depth: 0, nodeId: rootNodeId },
-  ];
-  const visited = new Set<string>();
-  let maxDepth = 0;
+  const topologicalOrder: string[] = [];
+
+  for (const rootId of queue) {
+    depthById.set(rootId, 0);
+  }
 
   while (queue.length > 0) {
-    const currentItem = queue.shift();
-    if (!currentItem || visited.has(currentItem.nodeId)) continue;
+    const nodeId = queue.shift();
+    if (!nodeId) continue;
 
-    visited.add(currentItem.nodeId);
-    depthById.set(currentItem.nodeId, currentItem.depth);
+    topologicalOrder.push(nodeId);
+    const depth = depthById.get(nodeId) ?? 0;
+    const node = nodesById.get(nodeId);
+    if (!node) continue;
 
-    const measuredNodeSize = measuredNodeSizesById[currentItem.nodeId];
-    if (measuredNodeSize) {
-      const currentMaxHeight = maxHeightByDepth.get(currentItem.depth) ?? 0;
-      if (measuredNodeSize.height > currentMaxHeight) {
-        maxHeightByDepth.set(currentItem.depth, measuredNodeSize.height);
+    for (const child of node.children) {
+      if (!componentNodeIdSet.has(child.nodeId)) continue;
+
+      const nextDepth = depth + 1;
+      const currentDepth = depthById.get(child.nodeId) ?? Number.NEGATIVE_INFINITY;
+      if (nextDepth > currentDepth) depthById.set(child.nodeId, nextDepth);
+
+      const nextIndegree = (mutableIndegreeById.get(child.nodeId) ?? 0) - 1;
+      mutableIndegreeById.set(child.nodeId, nextIndegree);
+      if (nextIndegree === 0) queue.push(child.nodeId);
+    }
+  }
+
+  if (topologicalOrder.length !== componentNodeIds.length) return null;
+
+  const nodeIdsByDepth = new Map<number, string[]>();
+  let maxDepth = 0;
+
+  for (const nodeId of topologicalOrder) {
+    const depth = depthById.get(nodeId) ?? 0;
+    if (depth > maxDepth) maxDepth = depth;
+
+    const row = nodeIdsByDepth.get(depth) ?? [];
+    row.push(nodeId);
+    nodeIdsByDepth.set(depth, row);
+  }
+
+  const average = (values: readonly number[]) =>
+    values.reduce((accumulator, value) => accumulator + value, 0) / values.length;
+
+  const reorderLayerByNeighborBarycenter = (
+    depth: number,
+    getNeighborIds: (nodeId: string) => readonly string[],
+    neighborIndexByNodeId: Map<string, number>,
+  ) => {
+    const layer = nodeIdsByDepth.get(depth) ?? [];
+    if (layer.length <= 1) return;
+
+    const currentIndexByNodeId = new Map<string, number>(
+      layer.map((nodeId, index) => [nodeId, index]),
+    );
+
+    const layerScores = new Map<string, number>();
+    for (const nodeId of layer) {
+      const neighborIndexes = getNeighborIds(nodeId)
+        .map((neighborId) => neighborIndexByNodeId.get(neighborId))
+        .filter((index): index is number => typeof index === "number");
+      if (neighborIndexes.length > 0) {
+        layerScores.set(nodeId, average(neighborIndexes));
+        continue;
+      }
+
+      layerScores.set(nodeId, currentIndexByNodeId.get(nodeId) ?? 0);
+    }
+
+    const reorderedLayer = [...layer].sort((leftNodeId, rightNodeId) => {
+      const leftScore = layerScores.get(leftNodeId) ?? 0;
+      const rightScore = layerScores.get(rightNodeId) ?? 0;
+      if (leftScore !== rightScore) return leftScore - rightScore;
+
+      const leftIndex = currentIndexByNodeId.get(leftNodeId) ?? 0;
+      const rightIndex = currentIndexByNodeId.get(rightNodeId) ?? 0;
+      if (leftIndex !== rightIndex) return leftIndex - rightIndex;
+
+      return leftNodeId.localeCompare(rightNodeId);
+    });
+
+    nodeIdsByDepth.set(depth, reorderedLayer);
+  };
+
+  for (let passIndex = 0; passIndex < 6; passIndex += 1) {
+    for (let depth = 1; depth <= maxDepth; depth += 1) {
+      const previousLayer = nodeIdsByDepth.get(depth - 1) ?? [];
+      const previousIndexByNodeId = new Map<string, number>(
+        previousLayer.map((nodeId, index) => [nodeId, index]),
+      );
+      reorderLayerByNeighborBarycenter(
+        depth,
+        (nodeId) => parentIdsByNodeId.get(nodeId) ?? [],
+        previousIndexByNodeId,
+      );
+    }
+
+    for (let depth = maxDepth - 1; depth >= 0; depth -= 1) {
+      const nextLayer = nodeIdsByDepth.get(depth + 1) ?? [];
+      const nextIndexByNodeId = new Map<string, number>(
+        nextLayer.map((nodeId, index) => [nodeId, index]),
+      );
+      reorderLayerByNeighborBarycenter(
+        depth,
+        (nodeId) => childIdsByNodeId.get(nodeId) ?? [],
+        nextIndexByNodeId,
+      );
+    }
+  }
+
+  const maxHeightByDepth = new Map<number, number>();
+  const depthYByDepth = new Map<number, number>();
+  let currentY = 0;
+
+  for (let depth = 0; depth <= maxDepth; depth += 1) {
+    const layer = nodeIdsByDepth.get(depth) ?? [];
+    let layerHeight = 0;
+    layer.forEach((nodeId) => {
+      const measuredNodeSize = measuredNodeSizesById[nodeId];
+      if (!measuredNodeSize) return;
+
+      if (measuredNodeSize.height > layerHeight) layerHeight = measuredNodeSize.height;
+    });
+
+    maxHeightByDepth.set(depth, layerHeight);
+    depthYByDepth.set(depth, currentY);
+    currentY += layerHeight + autoLayoutVerticalGap;
+  }
+
+  const positionsByNodeId: Record<string, XYPosition> = {};
+  const centerXByNodeId = new Map<string, number>();
+  let minX = Number.POSITIVE_INFINITY;
+  let maxX = Number.NEGATIVE_INFINITY;
+
+  for (let depth = 0; depth <= maxDepth; depth += 1) {
+    const layer = nodeIdsByDepth.get(depth) ?? [];
+    const y = depthYByDepth.get(depth) ?? 0;
+    let nextLeft = 0;
+    const leftByNodeId = new Map<string, number>();
+    const desiredCenterByNodeId = new Map<string, number>();
+
+    for (const nodeId of layer) {
+      const parentCenters = (parentIdsByNodeId.get(nodeId) ?? [])
+        .map((parentId) => centerXByNodeId.get(parentId))
+        .filter((center): center is number => typeof center === "number");
+      if (parentCenters.length === 0) continue;
+
+      desiredCenterByNodeId.set(nodeId, average(parentCenters));
+    }
+
+    for (const nodeId of layer) {
+      const measuredNodeSize = measuredNodeSizesById[nodeId];
+      if (!measuredNodeSize) continue;
+
+      const desiredCenter = desiredCenterByNodeId.get(nodeId);
+      const desiredLeft =
+        typeof desiredCenter === "number"
+          ? desiredCenter - measuredNodeSize.width / 2
+          : nextLeft;
+      const left = desiredLeft < nextLeft ? nextLeft : desiredLeft;
+      leftByNodeId.set(nodeId, left);
+      nextLeft = left + measuredNodeSize.width + autoLayoutHorizontalGap;
+    }
+
+    const desiredCenters = [...desiredCenterByNodeId.values()];
+    if (desiredCenters.length > 0 && leftByNodeId.size > 0) {
+      let layerMinLeft = Number.POSITIVE_INFINITY;
+      let layerMaxRight = Number.NEGATIVE_INFINITY;
+      for (const nodeId of layer) {
+        const measuredNodeSize = measuredNodeSizesById[nodeId];
+        const left = leftByNodeId.get(nodeId);
+        if (!measuredNodeSize || typeof left !== "number") continue;
+
+        if (left < layerMinLeft) layerMinLeft = left;
+        const right = left + measuredNodeSize.width;
+        if (right > layerMaxRight) layerMaxRight = right;
+      }
+
+      if (Number.isFinite(layerMinLeft) && Number.isFinite(layerMaxRight)) {
+        const desiredLayerCenter = average(desiredCenters);
+        const currentLayerCenter = (layerMinLeft + layerMaxRight) / 2;
+        const shift = desiredLayerCenter - currentLayerCenter;
+        if (shift !== 0) {
+          for (const nodeId of layer) {
+            const left = leftByNodeId.get(nodeId);
+            if (typeof left !== "number") continue;
+            leftByNodeId.set(nodeId, left + shift);
+          }
+        }
       }
     }
 
-    if (currentItem.depth > maxDepth) {
-      maxDepth = currentItem.depth;
-    }
+    for (const nodeId of layer) {
+      const measuredNodeSize = measuredNodeSizesById[nodeId];
+      if (!measuredNodeSize) continue;
+      const left = leftByNodeId.get(nodeId);
+      if (typeof left !== "number") continue;
 
-    const currentNode = nodesById.get(currentItem.nodeId);
-    if (!currentNode) continue;
-
-    for (const child of currentNode.children) {
-      queue.push({
-        depth: currentItem.depth + 1,
-        nodeId: child.nodeId,
-      });
+      positionsByNodeId[nodeId] = {
+        x: left,
+        y,
+      };
+      centerXByNodeId.set(nodeId, left + measuredNodeSize.width / 2);
+      if (left < minX) minX = left;
+      const right = left + measuredNodeSize.width;
+      if (right > maxX) maxX = right;
     }
   }
 
-  const depthStartYByDepth = new Map<number, number>();
-  let currentDepthY = autoLayoutMargin;
+  if (!Number.isFinite(minX) || !Number.isFinite(maxX)) return null;
 
-  for (let depth = 0; depth <= maxDepth; depth += 1) {
-    depthStartYByDepth.set(depth, currentDepthY);
-    const depthBandHeight = maxHeightByDepth.get(depth) ?? 0;
-    currentDepthY += depthBandHeight + autoLayoutVerticalGap;
+  const normalizedPositionsByNodeId: Record<string, XYPosition> = {};
+  const normalizedOffsetX = minX < 0 ? -minX : 0;
+  for (const [nodeId, position] of Object.entries(positionsByNodeId)) {
+    normalizedPositionsByNodeId[nodeId] = {
+      x: position.x + normalizedOffsetX,
+      y: position.y,
+    };
   }
 
-  const subtreeWidthById = new Map<string, number>();
+  const componentWidth = maxX - minX;
+  const lastLayerHeight = maxHeightByDepth.get(maxDepth) ?? 0;
+  const componentHeight = (depthYByDepth.get(maxDepth) ?? 0) + lastLayerHeight;
 
-  const getSubtreeWidth = (nodeId: string): number => {
-    const cachedSubtreeWidth = subtreeWidthById.get(nodeId);
-    if (cachedSubtreeWidth !== undefined) return cachedSubtreeWidth;
-
-    const currentNode = nodesById.get(nodeId);
-    const measuredNodeSize = measuredNodeSizesById[nodeId];
-    if (!currentNode || !measuredNodeSize) return 0;
-
-    if (currentNode.children.length === 0) {
-      subtreeWidthById.set(nodeId, measuredNodeSize.width);
-      return measuredNodeSize.width;
-    }
-
-    let childrenTotalWidth = 0;
-    for (const [index, child] of currentNode.children.entries()) {
-      const childSubtreeWidth = getSubtreeWidth(child.nodeId);
-      if (index > 0) childrenTotalWidth += autoLayoutHorizontalGap;
-      childrenTotalWidth += childSubtreeWidth;
-    }
-
-    const subtreeWidth = Math.max(measuredNodeSize.width, childrenTotalWidth);
-    subtreeWidthById.set(nodeId, subtreeWidth);
-    return subtreeWidth;
+  return {
+    width: componentWidth,
+    height: componentHeight,
+    positionsByNodeId: normalizedPositionsByNodeId,
   };
+};
+
+const buildLayeredDagLayout = (
+  nodesById: Map<string, EditorNode>,
+  measuredNodeSizesById: Record<string, MeasuredNodeSize>,
+) => {
+  const components = collectWeakComponents(
+    [...nodesById.keys()],
+    buildWeakAdjacency(nodesById),
+    getCheckNodeId(nodesById),
+  );
 
   const layoutById: Record<string, XYPosition> = {};
+  let currentOffsetX = autoLayoutMargin;
 
-  const placeNode = (nodeId: string, centerX: number) => {
-    const currentNode = nodesById.get(nodeId);
-    const measuredNodeSize = measuredNodeSizesById[nodeId];
-    if (!currentNode || !measuredNodeSize) return;
+  for (const componentNodeIds of components) {
+    const componentLayout = buildComponentLayout(
+      nodesById,
+      measuredNodeSizesById,
+      componentNodeIds,
+    );
+    if (!componentLayout) return {};
 
-    const depth = depthById.get(nodeId) ?? 0;
-    const depthStartY = depthStartYByDepth.get(depth) ?? autoLayoutMargin;
-
-    layoutById[nodeId] = {
-      x: centerX - measuredNodeSize.width / 2,
-      y: depthStartY,
-    };
-
-    if (currentNode.children.length === 0) return;
-
-    let childrenTotalWidth = 0;
-    for (const [index, child] of currentNode.children.entries()) {
-      const childSubtreeWidth = subtreeWidthById.get(child.nodeId) ?? 0;
-      if (index > 0) childrenTotalWidth += autoLayoutHorizontalGap;
-      childrenTotalWidth += childSubtreeWidth;
+    for (const [nodeId, position] of Object.entries(componentLayout.positionsByNodeId)) {
+      layoutById[nodeId] = {
+        x: position.x + currentOffsetX,
+        y: position.y + autoLayoutMargin,
+      };
     }
 
-    let nextChildStartX = centerX - childrenTotalWidth / 2;
-    for (const child of currentNode.children) {
-      const childSubtreeWidth = subtreeWidthById.get(child.nodeId) ?? 0;
-      const childCenterX = nextChildStartX + childSubtreeWidth / 2;
-
-      placeNode(child.nodeId, childCenterX);
-      nextChildStartX += childSubtreeWidth + autoLayoutHorizontalGap;
-    }
-  };
-
-  const rootSubtreeWidth = getSubtreeWidth(rootNodeId);
-  if (rootSubtreeWidth <= 0) return {};
-
-  placeNode(rootNodeId, autoLayoutMargin + rootSubtreeWidth / 2);
+    currentOffsetX += Math.max(componentLayout.width, 1) + autoLayoutComponentGap;
+  }
 
   const positionedNodes = Object.values(layoutById);
   if (positionedNodes.length === 0) return {};
@@ -609,9 +905,7 @@ export const draftToEditorState = (draft: unknown) => {
 
   for (const nodeId of nodesById.keys()) {
     const position = rawLayoutById[nodeId];
-    if (!isValidPosition(position)) {
-      continue;
-    }
+    if (!isValidPosition(position)) continue;
 
     layoutById[nodeId] = {
       x: position.x,
@@ -643,7 +937,7 @@ export const autoLayoutTree = (state: EditorState) => {
     };
   }
 
-  const nextLayoutById = buildTidyTreeLayout(
+  const nextLayoutById = buildLayeredDagLayout(
     state.nodesById,
     measuredNodeSizes.sizesById,
   );
@@ -705,10 +999,7 @@ export const addChildNode = (state: EditorState, parentId: string) => {
 
   nextNodesById.set(
     parentId,
-    replaceNodeChildren(parentNode, [
-      ...parentNode.children,
-      { nodeId: childNode.id },
-    ]),
+    replaceNodeChildren(parentNode, [...parentNode.children, { nodeId: childNode.id }]),
   );
   nextNodesById.set(childNode.id, childNode);
 
@@ -727,32 +1018,24 @@ export const addChildNode = (state: EditorState, parentId: string) => {
   };
 };
 
-export const connectUnattachedNode = (
+export const connectEdge = (
   state: EditorState,
-  parentId: string,
-  childId: string,
+  sourceNodeId: string,
+  targetNodeId: string,
 ) => {
-  const parentNode = getNodeById(state.nodesById, parentId);
-  const childNode = getNodeById(state.nodesById, childId);
-  if (!parentNode || !childNode || parentId === childId) return state;
-
-  const parentById = buildParentById(state.nodesById);
-  if (
-    !canNodeHaveChildren(parentNode) ||
-    isCheckNode(childNode) ||
-    parentById.has(childId) ||
-    hasChildReference(parentNode, childId) ||
-    hasPath(state.nodesById, childId, parentId)
-  )
-    return state;
+  const sourceNode = getNodeById(state.nodesById, sourceNodeId);
+  const targetNode = getNodeById(state.nodesById, targetNodeId);
+  if (!sourceNode || !targetNode) return state;
+  if (sourceNodeId === targetNodeId) return state;
+  if (!canNodeHaveChildren(sourceNode)) return state;
+  if (isCheckNode(targetNode)) return state;
+  if (hasChildReference(sourceNode, targetNodeId)) return state;
+  if (hasPath(state.nodesById, targetNodeId, sourceNodeId)) return state;
 
   const nextNodesById = new Map(state.nodesById);
   nextNodesById.set(
-    parentId,
-    replaceNodeChildren(parentNode, [
-      ...parentNode.children,
-      { nodeId: childId },
-    ]),
+    sourceNodeId,
+    replaceNodeChildren(sourceNode, [...sourceNode.children, { nodeId: targetNodeId }]),
   );
 
   return {
@@ -762,36 +1045,109 @@ export const connectUnattachedNode = (
   };
 };
 
-export const setIncomingCondition = (
+const findChildIndex = (node: EditorNode, childNodeId: string) =>
+  node.children.findIndex((child) => child.nodeId === childNodeId);
+
+export const reconnectEdge = (
   state: EditorState,
-  childNodeId: string,
-  when?: Condition,
+  oldSourceNodeId: string,
+  oldTargetNodeId: string,
+  newSourceNodeId: string,
+  newTargetNodeId: string,
 ) => {
-  const parentById = buildParentById(state.nodesById);
-  const parentId = parentById.get(childNodeId);
-  if (!parentId) return state;
+  const oldSourceNode = getNodeById(state.nodesById, oldSourceNodeId);
+  const newSourceNode = getNodeById(state.nodesById, newSourceNodeId);
+  const newTargetNode = getNodeById(state.nodesById, newTargetNodeId);
+  if (!oldSourceNode || !newSourceNode || !newTargetNode) return state;
 
-  const parentNode = getNodeById(state.nodesById, parentId);
-  if (!parentNode) return state;
+  const oldChildIndex = findChildIndex(oldSourceNode, oldTargetNodeId);
+  if (oldChildIndex < 0) return state;
+  if (!canNodeHaveChildren(newSourceNode)) return state;
+  if (isCheckNode(newTargetNode)) return state;
+  if (newSourceNodeId === newTargetNodeId) return state;
 
-  const hasTargetChild = parentNode.children.some(
-    (child) => child.nodeId === childNodeId,
+  const oldChild = oldSourceNode.children[oldChildIndex];
+  if (!oldChild) return state;
+
+  const nodesWithoutOldEdge = new Map(state.nodesById);
+  nodesWithoutOldEdge.set(
+    oldSourceNodeId,
+    replaceNodeChildren(
+      oldSourceNode,
+      oldSourceNode.children.filter((_, childIndex) => childIndex !== oldChildIndex),
+    ),
   );
-  if (!hasTargetChild) return state;
+
+  const sourceAfterRemoval = nodesWithoutOldEdge.get(newSourceNodeId);
+  if (!sourceAfterRemoval) return state;
+  if (hasChildReference(sourceAfterRemoval, newTargetNodeId)) return state;
+  if (hasPath(nodesWithoutOldEdge, newTargetNodeId, newSourceNodeId)) return state;
+
+  const edgeToAdd: Child = oldChild.when
+    ? { nodeId: newTargetNodeId, when: oldChild.when }
+    : { nodeId: newTargetNodeId };
+
+  const nextNodesById = new Map(nodesWithoutOldEdge);
+  nextNodesById.set(
+    newSourceNodeId,
+    replaceNodeChildren(sourceAfterRemoval, [...sourceAfterRemoval.children, edgeToAdd]),
+  );
+
+  return {
+    ...state,
+    nodesById: nextNodesById,
+    dialogError: null,
+  };
+};
+
+export const disconnectEdge = (
+  state: EditorState,
+  sourceNodeId: string,
+  targetNodeId: string,
+) => {
+  const sourceNode = getNodeById(state.nodesById, sourceNodeId);
+  if (!sourceNode) return state;
+
+  const childIndex = findChildIndex(sourceNode, targetNodeId);
+  if (childIndex < 0) return state;
 
   const nextNodesById = new Map(state.nodesById);
   nextNodesById.set(
-    parentId,
+    sourceNodeId,
     replaceNodeChildren(
-      parentNode,
-      parentNode.children.map((child) => {
-        if (child.nodeId !== childNodeId) return child;
-        if (!when) return { nodeId: child.nodeId };
+      sourceNode,
+      sourceNode.children.filter((_, index) => index !== childIndex),
+    ),
+  );
 
-        return {
-          nodeId: child.nodeId,
-          when,
-        };
+  return {
+    ...state,
+    nodesById: nextNodesById,
+    dialogError: null,
+  };
+};
+
+export const setEdgeCondition = (
+  state: EditorState,
+  sourceNodeId: string,
+  targetNodeId: string,
+  when?: Condition,
+) => {
+  const sourceNode = getNodeById(state.nodesById, sourceNodeId);
+  if (!sourceNode) return state;
+
+  const childIndex = findChildIndex(sourceNode, targetNodeId);
+  if (childIndex < 0) return state;
+
+  const nextNodesById = new Map(state.nodesById);
+  nextNodesById.set(
+    sourceNodeId,
+    replaceNodeChildren(
+      sourceNode,
+      sourceNode.children.map((child, index) => {
+        if (index !== childIndex) return child;
+        if (!when) return { nodeId: child.nodeId };
+        return { nodeId: child.nodeId, when };
       }),
     ),
   );
@@ -811,9 +1167,8 @@ export const saveNode = (
   const currentNode = getNodeById(state.nodesById, nodeId);
   if (!currentNode) return state;
 
-  const parentById = buildParentById(state.nodesById);
-  const isRootNode = !parentById.has(nodeId);
-  const isEditingRootCheckNode = isRootNode && isCheckNode(currentNode);
+  const checkNodeId = getCheckNodeId(state.nodesById);
+  const isEditingCheckNode = checkNodeId === nodeId;
 
   const nextNodeResult = buildNodeFromDraft({
     currentNode,
@@ -828,17 +1183,17 @@ export const saveNode = (
     };
   }
 
-  if (isEditingRootCheckNode && nextNodeResult.node.type !== "check") {
+  if (isEditingCheckNode && nextNodeResult.node.type !== "check") {
     return {
       ...state,
-      dialogError: "The root node must remain the check node.",
+      dialogError: "The check node must remain the check node.",
     };
   }
 
-  if (nextNodeResult.node.type === "check" && !isEditingRootCheckNode) {
+  if (!isEditingCheckNode && nextNodeResult.node.type === "check") {
     return {
       ...state,
-      dialogError: "Only the root node can be a check node.",
+      dialogError: "Only one check node is allowed.",
     };
   }
 
@@ -857,37 +1212,5 @@ export const saveNode = (
     nodesById: nextNodesById,
     dialogError: null,
     editingNodeId: null,
-  };
-};
-
-export const deleteSubtree = (state: EditorState, nodeId: string) => {
-  const currentNode = getNodeById(state.nodesById, nodeId);
-  if (!currentNode || isCheckNode(currentNode)) return state;
-
-  const removedIds = collectSubtreeIds(state.nodesById, nodeId);
-  const nextNodesById = new Map<string, EditorNode>();
-
-  for (const node of state.nodesById.values()) {
-    if (removedIds.has(node.id)) continue;
-
-    nextNodesById.set(
-      node.id,
-      replaceNodeChildren(
-        node,
-        node.children.filter((child) => !removedIds.has(child.nodeId)),
-      ),
-    );
-  }
-
-  return {
-    ...state,
-    nodesById: nextNodesById,
-    layoutById: removeLayoutEntries(state.layoutById, removedIds),
-    measuredById: removeMeasuredEntries(state.measuredById, removedIds),
-    dialogError: null,
-    editingNodeId:
-      state.editingNodeId && removedIds.has(state.editingNodeId)
-        ? null
-        : state.editingNodeId,
   };
 };

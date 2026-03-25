@@ -8,9 +8,8 @@ import {
 import type { Condition, NodeType } from "@ndg/ndg-core";
 import { formatCondition } from "./condition";
 import {
-  buildParentById,
-  connectUnattachedNode,
-  isRootCheckNode,
+  connectEdge,
+  reconnectEdge,
   updateNodePositions,
   type EditorState,
 } from "./graph";
@@ -79,12 +78,8 @@ const getNodeReferenceText = (node: EditorNode) => {
 };
 
 type FlowNodeData = {
-  canAcceptParent: boolean;
   canAddChild: boolean;
-  canDelete: boolean;
-  canEditIncomingCondition: boolean;
-  incomingCondition?: Condition;
-  incomingConditionLabel?: string;
+  isUnreachable: boolean;
   nodeId: string;
   nodeLabel: string;
   nodeName: string;
@@ -93,37 +88,47 @@ type FlowNodeData = {
   nodeReference: string;
   nodeFormula?: string;
   onAddChild: (nodeId: string) => void;
-  onApplyIncomingCondition: (nodeId: string, condition: Condition) => void;
-  onClearIncomingCondition: (nodeId: string) => void;
-  onDelete: (nodeId: string) => void;
   onEdit: (nodeId: string) => void;
 };
 
+export type FlowEdgeData = {
+  condition?: Condition;
+  conditionLabel?: string;
+  isHovered: boolean;
+  isUnreachable: boolean;
+  sourceId: string;
+  targetId: string;
+  onApplyCondition: (
+    sourceId: string,
+    targetId: string,
+    condition: Condition,
+  ) => void;
+  onClearCondition: (sourceId: string, targetId: string) => void;
+  onDisconnect: (sourceId: string, targetId: string) => void;
+};
+
 export const flowNodeType = "ndg-node";
+export const flowEdgeType = "ndg-edge";
 
 export type EditorFlowNode = ReactFlowNode<FlowNodeData, typeof flowNodeType>;
-export type EditorFlowEdge = ReactFlowEdge;
+export type EditorFlowEdge = ReactFlowEdge<FlowEdgeData, typeof flowEdgeType>;
+
+export const edgeIdFromNodes = (sourceNodeId: string, targetNodeId: string) =>
+  `${sourceNodeId}:${targetNodeId}`;
 
 export const editorStateToFlowNodes = (
   state: EditorState,
   handlers: {
     onAddChild: (nodeId: string) => void;
-    onApplyIncomingCondition: (nodeId: string, condition: Condition) => void;
-    onClearIncomingCondition: (nodeId: string) => void;
-    onDelete: (nodeId: string) => void;
     onEdit: (nodeId: string) => void;
   },
+  options: {
+    unreachableNodeIds: ReadonlySet<string>;
+  },
 ): EditorFlowNode[] => {
-  const parentById = buildParentById(state.nodesById);
-
   return [...state.nodesById.values()].map((node) => {
     const nodeType = node.type;
     const measured = state.measuredById[node.id];
-    const parentId = parentById.get(node.id);
-    const parentNode = parentId ? state.nodesById.get(parentId) : null;
-    const incomingCondition = parentNode?.children.find(
-      (child) => child.nodeId === node.id,
-    )?.when;
 
     return {
       id: node.id,
@@ -138,17 +143,8 @@ export const editorStateToFlowNodes = (
       ...(measured ? { measured } : {}),
       position: state.layoutById[node.id] ?? { x: 0, y: 0 },
       data: {
-        canAcceptParent:
-          !parentById.has(node.id) && !isRootCheckNode(node, parentById),
         canAddChild: canNodeHaveChildren(node),
-        canDelete: !isRootCheckNode(node, parentById),
-        canEditIncomingCondition: Boolean(parentId),
-        ...(incomingCondition
-          ? {
-              incomingCondition,
-              incomingConditionLabel: formatCondition(incomingCondition),
-            }
-          : {}),
+        isUnreachable: options.unreachableNodeIds.has(node.id),
         nodeId: node.id,
         nodeLabel: getNodeLabel(node),
         nodeName: node.name,
@@ -157,9 +153,6 @@ export const editorStateToFlowNodes = (
         nodeReference: getNodeReferenceText(node),
         nodeFormula: getNodeFormulaText(node),
         onAddChild: handlers.onAddChild,
-        onApplyIncomingCondition: handlers.onApplyIncomingCondition,
-        onClearIncomingCondition: handlers.onClearIncomingCondition,
-        onDelete: handlers.onDelete,
         onEdit: handlers.onEdit,
       },
     };
@@ -168,25 +161,80 @@ export const editorStateToFlowNodes = (
 
 export const editorStateToFlowEdges = (
   state: EditorState,
+  handlers: {
+    onApplyCondition: (
+      sourceId: string,
+      targetId: string,
+      condition: Condition,
+    ) => void;
+    onClearCondition: (sourceId: string, targetId: string) => void;
+    onDisconnect: (sourceId: string, targetId: string) => void;
+  },
+  options: {
+    hoveredEdgeId: string | null;
+    unreachableNodeIds: ReadonlySet<string>;
+  },
 ): EditorFlowEdge[] => {
   const edges: EditorFlowEdge[] = [];
+  const hasHoveredEdge = options.hoveredEdgeId !== null;
 
   for (const node of state.nodesById.values()) {
     for (const child of node.children) {
+      const edgeId = edgeIdFromNodes(node.id, child.nodeId);
+      const isHovered = options.hoveredEdgeId === edgeId;
+      const isUnreachable =
+        options.unreachableNodeIds.has(node.id) ||
+        options.unreachableNodeIds.has(child.nodeId);
+      const strokeColor = isHovered
+        ? "#0f766e"
+        : isUnreachable
+          ? "#d97706"
+          : "#64748b";
+
       edges.push({
-        id: `${node.id}:${child.nodeId}`,
+        id: edgeId,
         source: node.id,
         target: child.nodeId,
-        type: "smoothstep",
+        type: flowEdgeType,
+        selectable: true,
+        reconnectable: true,
+        focusable: true,
         deletable: false,
-        reconnectable: false,
-        selectable: false,
-        markerEnd: { type: MarkerType.ArrowClosed },
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: strokeColor,
+        },
+        style: {
+          stroke: strokeColor,
+          strokeWidth: isHovered ? 2.4 : 1.7,
+          opacity: hasHoveredEdge && !isHovered ? 0.28 : 1,
+        },
+        data: {
+          ...(child.when
+            ? {
+                condition: child.when,
+                conditionLabel: formatCondition(child.when),
+              }
+            : {}),
+          isHovered,
+          isUnreachable,
+          sourceId: node.id,
+          targetId: child.nodeId,
+          onApplyCondition: handlers.onApplyCondition,
+          onClearCondition: handlers.onClearCondition,
+          onDisconnect: handlers.onDisconnect,
+        },
       });
     }
   }
 
-  return edges;
+  if (!hasHoveredEdge) return edges;
+
+  return edges.sort((left, right) => {
+    const leftHovered = left.data?.isHovered ? 1 : 0;
+    const rightHovered = right.data?.isHovered ? 1 : 0;
+    return leftHovered - rightHovered;
+  });
 };
 
 export const applyNodePositionChanges = (
@@ -221,5 +269,22 @@ export const applyNodePositionChanges = (
 export const applyConnection = (state: EditorState, connection: Connection) => {
   if (!connection.source || !connection.target) return state;
 
-  return connectUnattachedNode(state, connection.source, connection.target);
+  return connectEdge(state, connection.source, connection.target);
+};
+
+export const applyReconnect = (
+  state: EditorState,
+  oldEdge: { source?: string | null; target?: string | null },
+  connection: Connection,
+) => {
+  if (!oldEdge.source || !oldEdge.target) return state;
+  if (!connection.source || !connection.target) return state;
+
+  return reconnectEdge(
+    state,
+    oldEdge.source,
+    oldEdge.target,
+    connection.source,
+    connection.target,
+  );
 };
