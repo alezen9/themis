@@ -1,5 +1,6 @@
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -13,6 +14,7 @@ import {
   Controls,
   Panel,
   ReactFlow,
+  type XYPosition,
   type ReactFlowInstance,
   type Connection,
   type NodeChange,
@@ -33,15 +35,18 @@ import {
 import { ConditionEdge } from "./internal/components/ConditionEdge";
 import { NodeCard } from "./internal/components/NodeCard";
 import { NodeDialog } from "./internal/components/NodeDialog";
+import { runElkAutoLayout } from "./internal/elk-layout";
 import {
   addChildNode,
-  autoLayoutTree,
+  applyAutoLayout,
   closeNodeDialog,
   createInitialState,
   disconnectEdge,
   draftToEditorState,
   editorStateToDraft,
+  getMeasuredNodeSizesById,
   getUnreachableNodeIds,
+  setAutoLayoutError,
   type NdgEditorDraftV1,
   openNodeDialog,
   saveNode,
@@ -65,9 +70,14 @@ type NdgEditorAction =
       targetId: string;
       when: Condition;
     }
-  | { type: "autoLayout" }
+  | {
+      type: "applyAutoLayout";
+      edgeLayoutById: Record<string, XYPosition[]>;
+      layoutById: Record<string, XYPosition>;
+    }
   | { type: "applyConnection"; connection: Connection }
   | { type: "applyNodeChanges"; changes: NodeChange[] }
+  | { type: "autoLayoutError"; error: string }
   | { type: "clearEdgeCondition"; sourceId: string; targetId: string }
   | { type: "closeDialog" }
   | { type: "disconnectEdge"; sourceId: string; targetId: string }
@@ -83,32 +93,103 @@ type NdgEditorAction =
 const nodeTypes = { [flowNodeType]: NodeCard };
 const edgeTypes = { [flowEdgeType]: ConditionEdge };
 
+const getMovedNodeIds = (changes: readonly NodeChange[]) => {
+  const movedNodeIds = new Set<string>();
+
+  for (const change of changes) {
+    if (change.type !== "position" || !change.position) continue;
+    movedNodeIds.add(change.id);
+  }
+
+  return movedNodeIds;
+};
+
+const pruneEdgeLayoutByMovedNodeIds = (
+  edgeLayoutById: Record<string, XYPosition[]>,
+  movedNodeIds: ReadonlySet<string>,
+) => {
+  if (movedNodeIds.size === 0) return edgeLayoutById;
+
+  let hasPrunedEdge = false;
+  const nextEdgeLayoutById: Record<string, XYPosition[]> = {};
+
+  for (const [edgeId, points] of Object.entries(edgeLayoutById)) {
+    const separatorIndex = edgeId.indexOf(":");
+    if (separatorIndex < 0) {
+      nextEdgeLayoutById[edgeId] = points;
+      continue;
+    }
+
+    const sourceNodeId = edgeId.slice(0, separatorIndex);
+    const targetNodeId = edgeId.slice(separatorIndex + 1);
+    if (movedNodeIds.has(sourceNodeId) || movedNodeIds.has(targetNodeId)) {
+      hasPrunedEdge = true;
+      continue;
+    }
+
+    nextEdgeLayoutById[edgeId] = points;
+  }
+
+  if (!hasPrunedEdge) return edgeLayoutById;
+  return nextEdgeLayoutById;
+};
+
 const reducer = (state: EditorState, action: NdgEditorAction) => {
   switch (action.type) {
     case "addChild":
-      return addChildNode(state, action.parentId);
+      return {
+        ...addChildNode(state, action.parentId),
+        edgeLayoutById: {},
+      };
     case "applyEdgeCondition":
       return setEdgeCondition(state, action.sourceId, action.targetId, action.when);
-    case "autoLayout":
-      return autoLayoutTree(state);
+    case "applyAutoLayout":
+      return applyAutoLayout(state, action.layoutById, action.edgeLayoutById);
     case "applyConnection":
-      return applyConnection(state, action.connection);
-    case "applyNodeChanges":
-      return applyNodePositionChanges(state, action.changes);
+      return {
+        ...applyConnection(state, action.connection),
+        edgeLayoutById: {},
+      };
+    case "applyNodeChanges": {
+      const nextState = applyNodePositionChanges(state, action.changes);
+      if (nextState === state) return state;
+      if (Object.keys(state.edgeLayoutById).length === 0) return nextState;
+      const movedNodeIds = getMovedNodeIds(action.changes);
+      const nextEdgeLayoutById = pruneEdgeLayoutByMovedNodeIds(
+        state.edgeLayoutById,
+        movedNodeIds,
+      );
+      if (nextEdgeLayoutById === state.edgeLayoutById) return nextState;
+      return {
+        ...nextState,
+        edgeLayoutById: nextEdgeLayoutById,
+      };
+    }
+    case "autoLayoutError":
+      return setAutoLayoutError(state, action.error);
     case "clearEdgeCondition":
       return setEdgeCondition(state, action.sourceId, action.targetId);
     case "closeDialog":
       return closeNodeDialog(state);
     case "disconnectEdge":
-      return disconnectEdge(state, action.sourceId, action.targetId);
+      return {
+        ...disconnectEdge(state, action.sourceId, action.targetId),
+        edgeLayoutById: {},
+      };
     case "reconnectEdge":
-      return applyReconnect(state, action.oldEdge, action.connection);
+      return {
+        ...applyReconnect(state, action.oldEdge, action.connection),
+        edgeLayoutById: {},
+      };
     case "hydrate":
       return action.state;
     case "openDialog":
       return openNodeDialog(state, action.nodeId);
     case "saveNode":
-      return saveNode(state, action.nodeId, action.draft);
+      return {
+        ...saveNode(state, action.nodeId, action.draft),
+        edgeLayoutById: {},
+      };
   }
 };
 
@@ -116,12 +197,67 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
   function NdgEditor({ className }, ref) {
     const [state, dispatch] = useReducer(reducer, undefined, createInitialState);
     const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
+    const [isAutoLayouting, setIsAutoLayouting] = useState(false);
     const reactFlowRef = useRef<ReactFlowInstance<EditorFlowNode, EditorFlowEdge> | null>(null);
+    const stateRef = useRef(state);
+    const autoLayoutRunIdRef = useRef(0);
+
+    useEffect(() => {
+      stateRef.current = state;
+    }, [state]);
 
     useEffect(() => {
       if (state.autoLayoutVersion === 0) return;
       reactFlowRef.current?.fitView({ duration: 250, padding: 0.2 });
     }, [state.autoLayoutVersion]);
+
+    const onAutoLayout = useCallback(async () => {
+      const currentState = stateRef.current;
+      const measuredNodeSizes = getMeasuredNodeSizesById(currentState);
+      if (measuredNodeSizes.error || !measuredNodeSizes.sizesById) {
+        dispatch({
+          type: "autoLayoutError",
+          error:
+            measuredNodeSizes.error ??
+            "Auto layout unavailable until all nodes are measured",
+        });
+        return;
+      }
+
+      const runId = autoLayoutRunIdRef.current + 1;
+      autoLayoutRunIdRef.current = runId;
+      setIsAutoLayouting(true);
+
+      const layoutResult = await runElkAutoLayout({
+        measuredNodeSizesById: measuredNodeSizes.sizesById,
+        nodesById: currentState.nodesById,
+      });
+
+      if (autoLayoutRunIdRef.current !== runId) return;
+      if (
+        stateRef.current.nodesById !== currentState.nodesById ||
+        stateRef.current.measuredById !== currentState.measuredById
+      ) {
+        setIsAutoLayouting(false);
+        return;
+      }
+
+      setIsAutoLayouting(false);
+
+      if (layoutResult.error || !layoutResult.layoutById) {
+        dispatch({
+          type: "autoLayoutError",
+          error: layoutResult.error ?? "Auto layout failed",
+        });
+        return;
+      }
+
+      dispatch({
+        type: "applyAutoLayout",
+        edgeLayoutById: layoutResult.edgeLayoutById ?? {},
+        layoutById: layoutResult.layoutById,
+      });
+    }, []);
 
     useImperativeHandle(
       ref,
@@ -133,6 +269,8 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
             throw new Error(parsedState.error ?? "Draft could not be loaded");
           }
 
+          autoLayoutRunIdRef.current += 1;
+          setIsAutoLayouting(false);
           setHoveredEdgeId(null);
           dispatch({ type: "hydrate", state: parsedState.state });
         },
@@ -163,7 +301,7 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
     const edges = useMemo(
       () =>
         editorStateToFlowEdges(
-          state,
+          state.nodesById,
           {
             onApplyCondition: (sourceId, targetId, when) =>
               dispatch({ type: "applyEdgeCondition", sourceId, targetId, when }),
@@ -174,10 +312,16 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
           },
           {
             hoveredEdgeId,
+            routedEdgePointsById: state.edgeLayoutById,
             unreachableNodeIds,
           },
         ),
-      [state, hoveredEdgeId, unreachableNodeIds],
+      [
+        state.nodesById,
+        state.edgeLayoutById,
+        hoveredEdgeId,
+        unreachableNodeIds,
+      ],
     );
 
     const editingNode = state.editingNodeId
@@ -189,6 +333,7 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
         <ReactFlow
           fitView
           className="h-full"
+          minZoom={0.05}
           nodes={nodes}
           edges={edges}
           onInit={(reactFlowInstance) => {
@@ -200,6 +345,8 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
           elementsSelectable
           edgesFocusable
           edgesReconnectable
+          reconnectRadius={28}
+          connectionRadius={38}
           nodesDraggable
           nodesConnectable
           onConnect={(connection) => dispatch({ type: "applyConnection", connection })}
@@ -213,7 +360,9 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
               return null;
             });
           }}
+          onNodeMouseMove={() => setHoveredEdgeId(null)}
           onPaneClick={() => setHoveredEdgeId(null)}
+          onPaneMouseMove={() => setHoveredEdgeId(null)}
           onNodesChange={(changes) => dispatch({ type: "applyNodeChanges", changes })}
           proOptions={{ hideAttribution: true }}
         >
@@ -221,8 +370,14 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
           <Controls>
             <ControlButton
               aria-label="Auto layout"
-              onClick={() => dispatch({ type: "autoLayout" })}
-              title={state.autoLayoutError ?? "Auto layout"}
+              disabled={isAutoLayouting}
+              onClick={() => {
+                void onAutoLayout();
+              }}
+              title={
+                state.autoLayoutError ??
+                (isAutoLayouting ? "Auto layout running..." : "Auto layout")
+              }
             >
               <AutoLayoutIcon />
             </ControlButton>

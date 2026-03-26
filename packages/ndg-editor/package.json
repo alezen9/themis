@@ -35,6 +35,7 @@
   "dependencies": {
     "@ndg/ndg-core": "workspace:*",
     "@xyflow/react": "^12.10.1",
+    "elkjs": "^0.11.0",
     "katex": "^0.16.22"
   }
 }

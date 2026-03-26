@@ -68,7 +68,7 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
         <Handle
           type="source"
           position={Position.Bottom}
-          className="h-2.5! w-2.5! border-slate-300! bg-white!"
+          className="-bottom-5! h-3! w-3! border-slate-300! bg-white!"
         />
       )}
 

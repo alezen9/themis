@@ -3,6 +3,7 @@ import {
   EdgeLabelRenderer,
   Position,
   getSmoothStepPath,
+  type XYPosition,
   type EdgeProps,
 } from "@xyflow/react";
 import { useState, type ComponentProps } from "react";
@@ -24,7 +25,7 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
   } = props;
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [edgePath] = getSmoothStepPath({
+  const [smoothPath] = getSmoothStepPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -32,6 +33,8 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
     targetY,
     targetPosition,
   });
+  const routedPoints = data?.routedPoints ?? [];
+  const edgePath = routedPoints.length >= 2 ? buildPolylinePath(routedPoints) : smoothPath;
 
   if (!data) {
     return <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />;
@@ -41,7 +44,12 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
   const isHighlighted = Boolean(data.isHovered || selected);
   const showActions = Boolean(data.isHovered || selected || isPopoverOpen);
   const showChip = hasCondition || showActions;
-  const chipPosition = getChipPosition(targetX, targetY, targetPosition);
+  const chipPosition = getChipPosition({
+    routedPoints: data.routedPoints,
+    targetPosition,
+    targetX,
+    targetY,
+  });
   const edgeStrokeColor = isHighlighted
     ? "#0f766e"
     : data.isUnreachable
@@ -58,6 +66,7 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
           ...(style ?? {}),
           stroke: edgeStrokeColor,
           strokeWidth: edgeStrokeWidth,
+          transition: "stroke 150ms linear, opacity 150ms linear",
         }}
       />
 
@@ -70,7 +79,7 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
             }}
           >
             <div
-              className={`relative flex items-center gap-1 rounded-sm border px-1 py-1 shadow-sm ${
+              className={`relative flex items-center gap-1 rounded-sm border px-1 py-1 shadow-sm transition-colors duration-150 ease-linear ${
                 data.isUnreachable
                   ? "border-amber-300 bg-amber-50"
                   : "border-slate-300 bg-white"
@@ -132,10 +141,29 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
 };
 
 const getChipPosition = (
-  targetX: number,
-  targetY: number,
-  targetPosition: Position,
+  params: {
+    routedPoints?: XYPosition[];
+    targetPosition: Position;
+    targetX: number;
+    targetY: number;
+  },
 ) => {
+  const { routedPoints, targetPosition, targetX, targetY } = params;
+  const lastPoint = routedPoints?.[routedPoints.length - 1];
+  const previousPoint = routedPoints?.[routedPoints.length - 2];
+  if (lastPoint && previousPoint) {
+    const dx = lastPoint.x - previousPoint.x;
+    const dy = lastPoint.y - previousPoint.y;
+    const distance = Math.hypot(dx, dy);
+    if (distance > 0) {
+      const offset = 22;
+      return {
+        x: lastPoint.x - (dx / distance) * offset,
+        y: lastPoint.y - (dy / distance) * offset,
+      };
+    }
+  }
+
   if (targetPosition === Position.Top) {
     return { x: targetX, y: targetY - 22 };
   }
@@ -146,6 +174,16 @@ const getChipPosition = (
     return { x: targetX - 22, y: targetY };
   }
   return { x: targetX + 22, y: targetY };
+};
+
+const buildPolylinePath = (points: XYPosition[]) => {
+  const [firstPoint, ...restPoints] = points;
+  if (!firstPoint) return "";
+
+  return restPoints.reduce(
+    (path, point) => `${path} L ${point.x} ${point.y}`,
+    `M ${firstPoint.x} ${firstPoint.y}`,
+  );
 };
 
 const EdgeActionButton = ({

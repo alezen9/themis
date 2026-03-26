@@ -1,5 +1,6 @@
 import {
   MarkerType,
+  type XYPosition,
   type Connection,
   type Edge as ReactFlowEdge,
   type Node as ReactFlowNode,
@@ -96,6 +97,7 @@ export type FlowEdgeData = {
   conditionLabel?: string;
   isHovered: boolean;
   isUnreachable: boolean;
+  routedPoints?: XYPosition[];
   sourceId: string;
   targetId: string;
   onApplyCondition: (
@@ -160,7 +162,7 @@ export const editorStateToFlowNodes = (
 };
 
 export const editorStateToFlowEdges = (
-  state: EditorState,
+  nodesById: Map<string, EditorNode>,
   handlers: {
     onApplyCondition: (
       sourceId: string,
@@ -172,13 +174,14 @@ export const editorStateToFlowEdges = (
   },
   options: {
     hoveredEdgeId: string | null;
+    routedEdgePointsById: Record<string, XYPosition[]>;
     unreachableNodeIds: ReadonlySet<string>;
   },
 ): EditorFlowEdge[] => {
   const edges: EditorFlowEdge[] = [];
   const hasHoveredEdge = options.hoveredEdgeId !== null;
 
-  for (const node of state.nodesById.values()) {
+  for (const node of nodesById.values()) {
     for (const child of node.children) {
       const edgeId = edgeIdFromNodes(node.id, child.nodeId);
       const isHovered = options.hoveredEdgeId === edgeId;
@@ -200,6 +203,7 @@ export const editorStateToFlowEdges = (
         reconnectable: true,
         focusable: true,
         deletable: false,
+        interactionWidth: 56,
         markerEnd: {
           type: MarkerType.ArrowClosed,
           color: strokeColor,
@@ -218,6 +222,7 @@ export const editorStateToFlowEdges = (
             : {}),
           isHovered,
           isUnreachable,
+          routedPoints: options.routedEdgePointsById[edgeId],
           sourceId: node.id,
           targetId: child.nodeId,
           onApplyCondition: handlers.onApplyCondition,

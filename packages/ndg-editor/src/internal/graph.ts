@@ -17,6 +17,7 @@ import {
 export type EditorState = {
   nodesById: Map<string, EditorNode>;
   layoutById: Record<string, XYPosition>;
+  edgeLayoutById: Record<string, XYPosition[]>;
   measuredById: Record<string, { width: number; height: number }>;
   editingNodeId: string | null;
   dialogError: string | null;
@@ -37,9 +38,6 @@ export type NdgEditorDraftV1 = {
 const horizontalGap = 320;
 const verticalGap = 220;
 const childStagger = 72;
-const autoLayoutHorizontalGap = 80;
-const autoLayoutVerticalGap = 132;
-const autoLayoutComponentGap = 240;
 const autoLayoutMargin = 48;
 
 const getNodeById = (nodesById: Map<string, EditorNode>, nodeId: string) =>
@@ -303,7 +301,7 @@ const buildInitialLayout = (nodesById: Map<string, EditorNode>) => {
   return layoutById;
 };
 
-type MeasuredNodeSize = { width: number; height: number };
+export type MeasuredNodeSize = { width: number; height: number };
 
 type ValidateNodesResult =
   | { error: string; nodes: null }
@@ -446,7 +444,7 @@ const isValidMeasuredNodeSize = (
   return true;
 };
 
-const getMeasuredNodeSizesById = (state: EditorState) => {
+export const getMeasuredNodeSizesById = (state: EditorState) => {
   const sizesById: Record<string, MeasuredNodeSize> = {};
 
   for (const nodeId of state.nodesById.keys()) {
@@ -467,339 +465,6 @@ const getMeasuredNodeSizesById = (state: EditorState) => {
   } as const;
 };
 
-type ComponentLayout = {
-  width: number;
-  height: number;
-  positionsByNodeId: Record<string, XYPosition>;
-};
-
-const buildComponentLayout = (
-  nodesById: Map<string, EditorNode>,
-  measuredNodeSizesById: Record<string, MeasuredNodeSize>,
-  componentNodeIds: readonly string[],
-): ComponentLayout | null => {
-  const componentNodeIdSet = new Set(componentNodeIds);
-  const indegreeById = new Map<string, number>(
-    componentNodeIds.map((nodeId) => [nodeId, 0]),
-  );
-  const parentIdsByNodeId = new Map<string, string[]>(
-    componentNodeIds.map((nodeId) => [nodeId, []]),
-  );
-  const childIdsByNodeId = new Map<string, string[]>(
-    componentNodeIds.map((nodeId) => [nodeId, []]),
-  );
-
-  for (const nodeId of componentNodeIds) {
-    const node = nodesById.get(nodeId);
-    if (!node) continue;
-
-    for (const child of node.children) {
-      if (!componentNodeIdSet.has(child.nodeId)) continue;
-
-      indegreeById.set(child.nodeId, (indegreeById.get(child.nodeId) ?? 0) + 1);
-      const parentIds = parentIdsByNodeId.get(child.nodeId) ?? [];
-      parentIds.push(nodeId);
-      parentIdsByNodeId.set(child.nodeId, parentIds);
-      const childIds = childIdsByNodeId.get(nodeId) ?? [];
-      childIds.push(child.nodeId);
-      childIdsByNodeId.set(nodeId, childIds);
-    }
-  }
-
-  const roots = componentNodeIds
-    .filter((nodeId) => (indegreeById.get(nodeId) ?? 0) === 0)
-    .sort((left, right) => left.localeCompare(right));
-  const queue = roots.length > 0 ? [...roots] : [componentNodeIds[0]];
-  const mutableIndegreeById = new Map(indegreeById);
-  const depthById = new Map<string, number>();
-  const topologicalOrder: string[] = [];
-
-  for (const rootId of queue) {
-    depthById.set(rootId, 0);
-  }
-
-  while (queue.length > 0) {
-    const nodeId = queue.shift();
-    if (!nodeId) continue;
-
-    topologicalOrder.push(nodeId);
-    const depth = depthById.get(nodeId) ?? 0;
-    const node = nodesById.get(nodeId);
-    if (!node) continue;
-
-    for (const child of node.children) {
-      if (!componentNodeIdSet.has(child.nodeId)) continue;
-
-      const nextDepth = depth + 1;
-      const currentDepth = depthById.get(child.nodeId) ?? Number.NEGATIVE_INFINITY;
-      if (nextDepth > currentDepth) depthById.set(child.nodeId, nextDepth);
-
-      const nextIndegree = (mutableIndegreeById.get(child.nodeId) ?? 0) - 1;
-      mutableIndegreeById.set(child.nodeId, nextIndegree);
-      if (nextIndegree === 0) queue.push(child.nodeId);
-    }
-  }
-
-  if (topologicalOrder.length !== componentNodeIds.length) return null;
-
-  const nodeIdsByDepth = new Map<number, string[]>();
-  let maxDepth = 0;
-
-  for (const nodeId of topologicalOrder) {
-    const depth = depthById.get(nodeId) ?? 0;
-    if (depth > maxDepth) maxDepth = depth;
-
-    const row = nodeIdsByDepth.get(depth) ?? [];
-    row.push(nodeId);
-    nodeIdsByDepth.set(depth, row);
-  }
-
-  const average = (values: readonly number[]) =>
-    values.reduce((accumulator, value) => accumulator + value, 0) / values.length;
-
-  const reorderLayerByNeighborBarycenter = (
-    depth: number,
-    getNeighborIds: (nodeId: string) => readonly string[],
-    neighborIndexByNodeId: Map<string, number>,
-  ) => {
-    const layer = nodeIdsByDepth.get(depth) ?? [];
-    if (layer.length <= 1) return;
-
-    const currentIndexByNodeId = new Map<string, number>(
-      layer.map((nodeId, index) => [nodeId, index]),
-    );
-
-    const layerScores = new Map<string, number>();
-    for (const nodeId of layer) {
-      const neighborIndexes = getNeighborIds(nodeId)
-        .map((neighborId) => neighborIndexByNodeId.get(neighborId))
-        .filter((index): index is number => typeof index === "number");
-      if (neighborIndexes.length > 0) {
-        layerScores.set(nodeId, average(neighborIndexes));
-        continue;
-      }
-
-      layerScores.set(nodeId, currentIndexByNodeId.get(nodeId) ?? 0);
-    }
-
-    const reorderedLayer = [...layer].sort((leftNodeId, rightNodeId) => {
-      const leftScore = layerScores.get(leftNodeId) ?? 0;
-      const rightScore = layerScores.get(rightNodeId) ?? 0;
-      if (leftScore !== rightScore) return leftScore - rightScore;
-
-      const leftIndex = currentIndexByNodeId.get(leftNodeId) ?? 0;
-      const rightIndex = currentIndexByNodeId.get(rightNodeId) ?? 0;
-      if (leftIndex !== rightIndex) return leftIndex - rightIndex;
-
-      return leftNodeId.localeCompare(rightNodeId);
-    });
-
-    nodeIdsByDepth.set(depth, reorderedLayer);
-  };
-
-  for (let passIndex = 0; passIndex < 6; passIndex += 1) {
-    for (let depth = 1; depth <= maxDepth; depth += 1) {
-      const previousLayer = nodeIdsByDepth.get(depth - 1) ?? [];
-      const previousIndexByNodeId = new Map<string, number>(
-        previousLayer.map((nodeId, index) => [nodeId, index]),
-      );
-      reorderLayerByNeighborBarycenter(
-        depth,
-        (nodeId) => parentIdsByNodeId.get(nodeId) ?? [],
-        previousIndexByNodeId,
-      );
-    }
-
-    for (let depth = maxDepth - 1; depth >= 0; depth -= 1) {
-      const nextLayer = nodeIdsByDepth.get(depth + 1) ?? [];
-      const nextIndexByNodeId = new Map<string, number>(
-        nextLayer.map((nodeId, index) => [nodeId, index]),
-      );
-      reorderLayerByNeighborBarycenter(
-        depth,
-        (nodeId) => childIdsByNodeId.get(nodeId) ?? [],
-        nextIndexByNodeId,
-      );
-    }
-  }
-
-  const maxHeightByDepth = new Map<number, number>();
-  const depthYByDepth = new Map<number, number>();
-  let currentY = 0;
-
-  for (let depth = 0; depth <= maxDepth; depth += 1) {
-    const layer = nodeIdsByDepth.get(depth) ?? [];
-    let layerHeight = 0;
-    layer.forEach((nodeId) => {
-      const measuredNodeSize = measuredNodeSizesById[nodeId];
-      if (!measuredNodeSize) return;
-
-      if (measuredNodeSize.height > layerHeight) layerHeight = measuredNodeSize.height;
-    });
-
-    maxHeightByDepth.set(depth, layerHeight);
-    depthYByDepth.set(depth, currentY);
-    currentY += layerHeight + autoLayoutVerticalGap;
-  }
-
-  const positionsByNodeId: Record<string, XYPosition> = {};
-  const centerXByNodeId = new Map<string, number>();
-  let minX = Number.POSITIVE_INFINITY;
-  let maxX = Number.NEGATIVE_INFINITY;
-
-  for (let depth = 0; depth <= maxDepth; depth += 1) {
-    const layer = nodeIdsByDepth.get(depth) ?? [];
-    const y = depthYByDepth.get(depth) ?? 0;
-    let nextLeft = 0;
-    const leftByNodeId = new Map<string, number>();
-    const desiredCenterByNodeId = new Map<string, number>();
-
-    for (const nodeId of layer) {
-      const parentCenters = (parentIdsByNodeId.get(nodeId) ?? [])
-        .map((parentId) => centerXByNodeId.get(parentId))
-        .filter((center): center is number => typeof center === "number");
-      if (parentCenters.length === 0) continue;
-
-      desiredCenterByNodeId.set(nodeId, average(parentCenters));
-    }
-
-    for (const nodeId of layer) {
-      const measuredNodeSize = measuredNodeSizesById[nodeId];
-      if (!measuredNodeSize) continue;
-
-      const desiredCenter = desiredCenterByNodeId.get(nodeId);
-      const desiredLeft =
-        typeof desiredCenter === "number"
-          ? desiredCenter - measuredNodeSize.width / 2
-          : nextLeft;
-      const left = desiredLeft < nextLeft ? nextLeft : desiredLeft;
-      leftByNodeId.set(nodeId, left);
-      nextLeft = left + measuredNodeSize.width + autoLayoutHorizontalGap;
-    }
-
-    const desiredCenters = [...desiredCenterByNodeId.values()];
-    if (desiredCenters.length > 0 && leftByNodeId.size > 0) {
-      let layerMinLeft = Number.POSITIVE_INFINITY;
-      let layerMaxRight = Number.NEGATIVE_INFINITY;
-      for (const nodeId of layer) {
-        const measuredNodeSize = measuredNodeSizesById[nodeId];
-        const left = leftByNodeId.get(nodeId);
-        if (!measuredNodeSize || typeof left !== "number") continue;
-
-        if (left < layerMinLeft) layerMinLeft = left;
-        const right = left + measuredNodeSize.width;
-        if (right > layerMaxRight) layerMaxRight = right;
-      }
-
-      if (Number.isFinite(layerMinLeft) && Number.isFinite(layerMaxRight)) {
-        const desiredLayerCenter = average(desiredCenters);
-        const currentLayerCenter = (layerMinLeft + layerMaxRight) / 2;
-        const shift = desiredLayerCenter - currentLayerCenter;
-        if (shift !== 0) {
-          for (const nodeId of layer) {
-            const left = leftByNodeId.get(nodeId);
-            if (typeof left !== "number") continue;
-            leftByNodeId.set(nodeId, left + shift);
-          }
-        }
-      }
-    }
-
-    for (const nodeId of layer) {
-      const measuredNodeSize = measuredNodeSizesById[nodeId];
-      if (!measuredNodeSize) continue;
-      const left = leftByNodeId.get(nodeId);
-      if (typeof left !== "number") continue;
-
-      positionsByNodeId[nodeId] = {
-        x: left,
-        y,
-      };
-      centerXByNodeId.set(nodeId, left + measuredNodeSize.width / 2);
-      if (left < minX) minX = left;
-      const right = left + measuredNodeSize.width;
-      if (right > maxX) maxX = right;
-    }
-  }
-
-  if (!Number.isFinite(minX) || !Number.isFinite(maxX)) return null;
-
-  const normalizedPositionsByNodeId: Record<string, XYPosition> = {};
-  const normalizedOffsetX = minX < 0 ? -minX : 0;
-  for (const [nodeId, position] of Object.entries(positionsByNodeId)) {
-    normalizedPositionsByNodeId[nodeId] = {
-      x: position.x + normalizedOffsetX,
-      y: position.y,
-    };
-  }
-
-  const componentWidth = maxX - minX;
-  const lastLayerHeight = maxHeightByDepth.get(maxDepth) ?? 0;
-  const componentHeight = (depthYByDepth.get(maxDepth) ?? 0) + lastLayerHeight;
-
-  return {
-    width: componentWidth,
-    height: componentHeight,
-    positionsByNodeId: normalizedPositionsByNodeId,
-  };
-};
-
-const buildLayeredDagLayout = (
-  nodesById: Map<string, EditorNode>,
-  measuredNodeSizesById: Record<string, MeasuredNodeSize>,
-) => {
-  const components = collectWeakComponents(
-    [...nodesById.keys()],
-    buildWeakAdjacency(nodesById),
-    getCheckNodeId(nodesById),
-  );
-
-  const layoutById: Record<string, XYPosition> = {};
-  let currentOffsetX = autoLayoutMargin;
-
-  for (const componentNodeIds of components) {
-    const componentLayout = buildComponentLayout(
-      nodesById,
-      measuredNodeSizesById,
-      componentNodeIds,
-    );
-    if (!componentLayout) return {};
-
-    for (const [nodeId, position] of Object.entries(componentLayout.positionsByNodeId)) {
-      layoutById[nodeId] = {
-        x: position.x + currentOffsetX,
-        y: position.y + autoLayoutMargin,
-      };
-    }
-
-    currentOffsetX += Math.max(componentLayout.width, 1) + autoLayoutComponentGap;
-  }
-
-  const positionedNodes = Object.values(layoutById);
-  if (positionedNodes.length === 0) return {};
-
-  let minX = Number.POSITIVE_INFINITY;
-  let minY = Number.POSITIVE_INFINITY;
-  for (const position of positionedNodes) {
-    if (position.x < minX) minX = position.x;
-    if (position.y < minY) minY = position.y;
-  }
-
-  const offsetX = autoLayoutMargin - minX;
-  const offsetY = autoLayoutMargin - minY;
-  if (offsetX === 0 && offsetY === 0) return layoutById;
-
-  const normalizedLayoutById: Record<string, XYPosition> = {};
-  for (const [nodeId, position] of Object.entries(layoutById)) {
-    normalizedLayoutById[nodeId] = {
-      x: position.x + offsetX,
-      y: position.y + offsetY,
-    };
-  }
-
-  return normalizedLayoutById;
-};
-
 export const createInitialState = (): EditorState => {
   const nodes = [createDefaultRootNode()];
   const nodesById = new Map<string, EditorNode>(nodes.map((node) => [node.id, node]));
@@ -807,6 +472,7 @@ export const createInitialState = (): EditorState => {
   return {
     nodesById,
     layoutById: buildInitialLayout(nodesById),
+    edgeLayoutById: {},
     measuredById: {},
     editingNodeId: null,
     dialogError: null,
@@ -918,6 +584,7 @@ export const draftToEditorState = (draft: unknown) => {
     state: {
       nodesById,
       layoutById,
+      edgeLayoutById: {},
       measuredById: {},
       editingNodeId: null,
       dialogError: null,
@@ -925,35 +592,6 @@ export const draftToEditorState = (draft: unknown) => {
       autoLayoutVersion: 0,
     } satisfies EditorState,
   } as const;
-};
-
-export const autoLayoutTree = (state: EditorState) => {
-  const measuredNodeSizes = getMeasuredNodeSizesById(state);
-  if (measuredNodeSizes.error || !measuredNodeSizes.sizesById) {
-    return {
-      ...state,
-      autoLayoutError:
-        measuredNodeSizes.error ?? "Auto layout unavailable until all nodes are measured",
-    };
-  }
-
-  const nextLayoutById = buildLayeredDagLayout(
-    state.nodesById,
-    measuredNodeSizes.sizesById,
-  );
-  if (Object.keys(nextLayoutById).length === 0) {
-    return {
-      ...state,
-      autoLayoutError: "Auto layout could not compute positions",
-    };
-  }
-
-  return {
-    ...state,
-    layoutById: nextLayoutById,
-    autoLayoutError: null,
-    autoLayoutVersion: state.autoLayoutVersion + 1,
-  };
 };
 
 export const openNodeDialog = (state: EditorState, nodeId: string) => {
@@ -1214,3 +852,20 @@ export const saveNode = (
     editingNodeId: null,
   };
 };
+
+export const applyAutoLayout = (
+  state: EditorState,
+  layoutById: Record<string, XYPosition>,
+  edgeLayoutById: Record<string, XYPosition[]>,
+) => ({
+  ...state,
+  layoutById,
+  edgeLayoutById,
+  autoLayoutError: null,
+  autoLayoutVersion: state.autoLayoutVersion + 1,
+});
+
+export const setAutoLayoutError = (state: EditorState, error: string) => ({
+  ...state,
+  autoLayoutError: error,
+});
