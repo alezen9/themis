@@ -93,10 +93,7 @@ const formatAllowedValues = (
 const parseNumberAllowedValues = (allowedValues: string) => {
   const trimmed = trimText(allowedValues);
   if (!trimmed) {
-    return {
-      error: null,
-      oneOf: undefined,
-    } as const;
+    return { error: null, oneOf: undefined } as const;
   }
 
   const parts = trimmed
@@ -112,19 +109,13 @@ const parseNumberAllowedValues = (allowedValues: string) => {
     } as const;
   }
 
-  return {
-    error: null,
-    oneOf: parsedValues,
-  } as const;
+  return { error: null, oneOf: parsedValues } as const;
 };
 
 const parseStringAllowedValues = (allowedValues: string) => {
   const trimmed = trimText(allowedValues);
   if (!trimmed) {
-    return {
-      error: null,
-      oneOf: undefined,
-    } as const;
+    return { error: null, oneOf: undefined } as const;
   }
 
   return {
@@ -168,7 +159,10 @@ const buildFormulaMeta = (draft: NodeDraft) => ({
 });
 
 const getDraftCompletenessError = (draft: NodeDraft) => {
-  if (draft.nodeType === "check" && !normalizeInlineExpression(draft.verificationExpression)) {
+  if (
+    draft.nodeType === "check" &&
+    !normalizeInlineExpression(draft.verificationExpression)
+  ) {
     return "Check nodes require a verification formula";
   }
 
@@ -189,10 +183,7 @@ const getDraftCompletenessError = (draft: NodeDraft) => {
 const buildNumberValueType = (allowedValues: string) => {
   const parsedValues = parseNumberAllowedValues(allowedValues);
   if (parsedValues.error) {
-    return {
-      error: parsedValues.error,
-      valueType: null,
-    } as const;
+    return { error: parsedValues.error, valueType: null } as const;
   }
 
   return {
@@ -206,10 +197,7 @@ const buildNumberValueType = (allowedValues: string) => {
 const buildStringValueType = (allowedValues: string) => {
   const parsedValues = parseStringAllowedValues(allowedValues);
   if (parsedValues.error) {
-    return {
-      error: parsedValues.error,
-      valueType: null,
-    } as const;
+    return { error: parsedValues.error, valueType: null } as const;
   }
 
   return {
@@ -271,7 +259,7 @@ export const createNodeDraft = (node: EditorNode): NodeDraft => {
     key: node.key,
     symbol: node.symbol ?? "",
     description: node.description ?? "",
-    unit: "unit" in node ? node.unit ?? "" : "",
+    unit: "unit" in node ? (node.unit ?? "") : "",
     valueType: node.valueType.type,
     allowedValues: formatAllowedValues(node.valueType.oneOf),
     expression: "",
@@ -292,20 +280,11 @@ export const createNodeDraft = (node: EditorNode): NodeDraft => {
         verificationExpression: node.verificationExpression,
       };
     case "formula":
-      return {
-        ...commonDraft,
-        expression: node.expression,
-      };
+      return { ...commonDraft, expression: node.expression };
     case "derived":
-      return {
-        ...commonDraft,
-        expression: node.expression ?? "",
-      };
+      return { ...commonDraft, expression: node.expression ?? "" };
     case "table":
-      return {
-        ...commonDraft,
-        source: node.source,
-      };
+      return { ...commonDraft, source: node.source };
     case "coefficient":
     case "user-input":
     case "constant":
@@ -325,10 +304,7 @@ export const buildNodeFromDraft = ({
   const nodeType = draft.nodeType;
   const draftCompletenessError = getDraftCompletenessError(draft);
   if (draftCompletenessError) {
-    return {
-      error: draftCompletenessError,
-      node: null,
-    };
+    return { error: draftCompletenessError, node: null };
   }
 
   const baseNode = buildBaseNode(currentNode, draft, nodesById, nodeType);
@@ -337,10 +313,7 @@ export const buildNodeFromDraft = ({
     case "check": {
       const numberValueType = buildNumberValueType(draft.allowedValues);
       if (numberValueType.error) {
-        return {
-          error: numberValueType.error,
-          node: null,
-        };
+        return { error: numberValueType.error, node: null };
       }
 
       return {
@@ -359,10 +332,7 @@ export const buildNodeFromDraft = ({
     case "formula": {
       const numberValueType = buildNumberValueType(draft.allowedValues);
       if (numberValueType.error) {
-        return {
-          error: numberValueType.error,
-          node: null,
-        };
+        return { error: numberValueType.error, node: null };
       }
 
       const unit = getOptionalText(draft.unit);
@@ -386,10 +356,7 @@ export const buildNodeFromDraft = ({
           : buildStringValueType(draft.allowedValues);
 
       if (valueType.error) {
-        return {
-          error: valueType.error,
-          node: null,
-        };
+        return { error: valueType.error, node: null };
       }
 
       const expression = getOptionalText(
@@ -416,10 +383,7 @@ export const buildNodeFromDraft = ({
           : buildStringValueType(draft.allowedValues);
 
       if (valueType.error) {
-        return {
-          error: valueType.error,
-          node: null,
-        };
+        return { error: valueType.error, node: null };
       }
 
       const unit = getOptionalText(draft.unit);
@@ -439,10 +403,7 @@ export const buildNodeFromDraft = ({
     case "coefficient": {
       const numberValueType = buildNumberValueType(draft.allowedValues);
       if (numberValueType.error) {
-        return {
-          error: numberValueType.error,
-          node: null,
-        };
+        return { error: numberValueType.error, node: null };
       }
 
       const unit = getOptionalText(draft.unit);
@@ -465,10 +426,7 @@ export const buildNodeFromDraft = ({
           : buildStringValueType(draft.allowedValues);
 
       if (valueType.error) {
-        return {
-          error: valueType.error,
-          node: null,
-        };
+        return { error: valueType.error, node: null };
       }
 
       const unit = getOptionalText(draft.unit);
@@ -486,10 +444,7 @@ export const buildNodeFromDraft = ({
     case "constant": {
       const numberValueType = buildNumberValueType(draft.allowedValues);
       if (numberValueType.error) {
-        return {
-          error: numberValueType.error,
-          node: null,
-        };
+        return { error: numberValueType.error, node: null };
       }
 
       return {

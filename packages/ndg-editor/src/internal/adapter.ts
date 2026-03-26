@@ -124,9 +124,7 @@ export const editorStateToFlowNodes = (
     onAddChild: (nodeId: string) => void;
     onEdit: (nodeId: string) => void;
   },
-  options: {
-    unreachableNodeIds: ReadonlySet<string>;
-  },
+  options: { unreachableNodeIds: ReadonlySet<string> },
 ): EditorFlowNode[] => {
   return [...state.nodesById.values()].map((node) => {
     const nodeType = node.type;
@@ -204,10 +202,7 @@ export const editorStateToFlowEdges = (
         focusable: true,
         deletable: false,
         interactionWidth: 56,
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-          color: strokeColor,
-        },
+        markerEnd: { type: MarkerType.ArrowClosed, color: strokeColor },
         style: {
           stroke: strokeColor,
           strokeWidth: isHovered ? 2.4 : 1.7,

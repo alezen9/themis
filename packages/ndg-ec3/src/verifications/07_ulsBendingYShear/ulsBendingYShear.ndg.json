@@ -5,23 +5,11 @@
     "bending_y_shear_check": {
       "id": "bending_y_shear_check",
       "name": "Bending and shear resistance check about y-y",
-      "children": [
-        {
-          "nodeId": "M_y_Ed"
-        },
-        {
-          "nodeId": "M_y_V_Rd"
-        }
-      ],
+      "children": [{ "nodeId": "M_y_Ed" }, { "nodeId": "M_y_V_Rd" }],
       "type": "check",
       "key": "bending_y_shear_check",
-      "valueType": {
-        "type": "number"
-      },
-      "meta": {
-        "sectionRef": "6.2.8",
-        "verificationRef": "(6.29)"
-      },
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.2.8", "verificationRef": "(6.29)" },
       "verificationExpression": "\\frac{\\left|M_{y,Ed}\\right|}{M_{y,V,Rd}} \\leq 1.0"
     },
     "M_y_Ed": {
@@ -31,9 +19,7 @@
       "children": [],
       "type": "user-input",
       "key": "M_y_Ed",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "unit": "\\mathrm{N\\cdot mm}"
     },
     "M_y_V_Rd": {
@@ -43,48 +29,22 @@
       "children": [
         {
           "nodeId": "M_y_V_Rd_i",
-          "when": {
-            "eq": [
-              "section_shape",
-              {
-                "value": "I"
-              }
-            ]
-          }
+          "when": { "eq": ["section_shape", { "value": "I" }] }
         },
         {
           "nodeId": "M_y_V_Rd_rhs_chs",
           "when": {
             "or": [
-              {
-                "eq": [
-                  "section_shape",
-                  {
-                    "value": "RHS"
-                  }
-                ]
-              },
-              {
-                "eq": [
-                  "section_shape",
-                  {
-                    "value": "CHS"
-                  }
-                ]
-              }
+              { "eq": ["section_shape", { "value": "RHS" }] },
+              { "eq": ["section_shape", { "value": "CHS" }] }
             ]
           }
         }
       ],
       "type": "derived",
       "key": "M_y_V_Rd",
-      "valueType": {
-        "type": "number"
-      },
-      "meta": {
-        "sectionRef": "6.2.8",
-        "formulaRef": "(6.30)"
-      },
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.2.8", "formulaRef": "(6.30)" },
       "unit": "\\mathrm{N\\cdot mm}"
     },
     "M_y_V_Rd_i": {
@@ -92,34 +52,17 @@
       "name": "I-section reduced bending resistance about y-y under shear",
       "symbol": "M_{y,V,Rd,i}",
       "children": [
-        {
-          "nodeId": "W_y_res"
-        },
-        {
-          "nodeId": "rho_z"
-        },
-        {
-          "nodeId": "A_w"
-        },
-        {
-          "nodeId": "tw"
-        },
-        {
-          "nodeId": "fy"
-        },
-        {
-          "nodeId": "gamma_M0"
-        }
+        { "nodeId": "W_y_res" },
+        { "nodeId": "rho_z" },
+        { "nodeId": "A_w" },
+        { "nodeId": "tw" },
+        { "nodeId": "fy" },
+        { "nodeId": "gamma_M0" }
       ],
       "type": "formula",
       "key": "M_y_V_Rd_i",
-      "valueType": {
-        "type": "number"
-      },
-      "meta": {
-        "sectionRef": "6.2.8",
-        "formulaRef": "(6.30)"
-      },
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.2.8", "formulaRef": "(6.30)" },
       "expression": "\\frac{\\left(W_{y,res} - \\rho \\dfrac{A_w^2}{4t_w}\\right) \\cdot f_y}{\\gamma_{M0}} \\leq M_{c,y,Rd}",
       "unit": "\\mathrm{N\\cdot mm}"
     },
@@ -128,28 +71,15 @@
       "name": "RHS/CHS reduced bending resistance about y-y under shear",
       "symbol": "M_{y,V,Rd,RHS/CHS}",
       "children": [
-        {
-          "nodeId": "W_y_res"
-        },
-        {
-          "nodeId": "rho_z"
-        },
-        {
-          "nodeId": "fy"
-        },
-        {
-          "nodeId": "gamma_M0"
-        }
+        { "nodeId": "W_y_res" },
+        { "nodeId": "rho_z" },
+        { "nodeId": "fy" },
+        { "nodeId": "gamma_M0" }
       ],
       "type": "derived",
       "key": "M_y_V_Rd_rhs_chs",
-      "valueType": {
-        "type": "number"
-      },
-      "meta": {
-        "sectionRef": "6.2.8",
-        "paragraphRef": "(3)"
-      },
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.2.8", "paragraphRef": "(3)" },
       "expression": "\\frac{\\left(W_{y,res}(1-\\rho)\\right) \\cdot f_y}{\\gamma_{M0}} \\leq M_{c,y,Rd}",
       "unit": "\\mathrm{N\\cdot mm}"
     },
@@ -162,42 +92,19 @@
           "nodeId": "Wpl_y",
           "when": {
             "or": [
-              {
-                "eq": [
-                  "section_class",
-                  {
-                    "value": 1
-                  }
-                ]
-              },
-              {
-                "eq": [
-                  "section_class",
-                  {
-                    "value": 2
-                  }
-                ]
-              }
+              { "eq": ["section_class", { "value": 1 }] },
+              { "eq": ["section_class", { "value": 2 }] }
             ]
           }
         },
         {
           "nodeId": "Wel_y",
-          "when": {
-            "eq": [
-              "section_class",
-              {
-                "value": 3
-              }
-            ]
-          }
+          "when": { "eq": ["section_class", { "value": 3 }] }
         }
       ],
       "type": "derived",
       "key": "W_y_res",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "unit": "\\mathrm{mm^{3}}"
     },
     "Wpl_y": {
@@ -207,9 +114,7 @@
       "children": [],
       "type": "user-input",
       "key": "Wpl_y",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "unit": "\\mathrm{mm^{3}}"
     },
     "Wel_y": {
@@ -219,9 +124,7 @@
       "children": [],
       "type": "user-input",
       "key": "Wel_y",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "unit": "\\mathrm{mm^{3}}"
     },
     "rho_z": {
@@ -229,34 +132,12 @@
       "name": "Shear reduction factor",
       "symbol": "\\rho",
       "children": [
-        {
-          "nodeId": "rho_z_1",
-          "when": {
-            "lte": [
-              "u_z",
-              {
-                "value": 0.5
-              }
-            ]
-          }
-        },
-        {
-          "nodeId": "rho_z_2",
-          "when": {
-            "gt": [
-              "u_z",
-              {
-                "value": 0.5
-              }
-            ]
-          }
-        }
+        { "nodeId": "rho_z_1", "when": { "lte": ["u_z", { "value": 0.5 }] } },
+        { "nodeId": "rho_z_2", "when": { "gt": ["u_z", { "value": 0.5 }] } }
       ],
       "type": "derived",
       "key": "rho_z",
-      "valueType": {
-        "type": "number"
-      }
+      "valueType": { "type": "number" }
     },
     "rho_z_1": {
       "id": "rho_z_1",
@@ -265,25 +146,17 @@
       "children": [],
       "type": "derived",
       "key": "rho_z_1",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "expression": "0"
     },
     "rho_z_2": {
       "id": "rho_z_2",
       "name": "Shear reduction factor for high-shear branch",
       "symbol": "\\rho_{z,2}",
-      "children": [
-        {
-          "nodeId": "u_z"
-        }
-      ],
+      "children": [{ "nodeId": "u_z" }],
       "type": "derived",
       "key": "rho_z_2",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "expression": "\\left(2u_z - 1\\right)^2"
     },
     "V_z_Ed": {
@@ -293,9 +166,7 @@
       "children": [],
       "type": "user-input",
       "key": "V_z_Ed",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "unit": "\\mathrm{N}"
     },
     "V_pl_z_Rd": {
@@ -303,25 +174,14 @@
       "name": "Plastic shear resistance about z-z",
       "symbol": "V_{pl,z,Rd}",
       "children": [
-        {
-          "nodeId": "Av_z"
-        },
-        {
-          "nodeId": "fy"
-        },
-        {
-          "nodeId": "gamma_M0"
-        }
+        { "nodeId": "Av_z" },
+        { "nodeId": "fy" },
+        { "nodeId": "gamma_M0" }
       ],
       "type": "formula",
       "key": "V_pl_z_Rd",
-      "valueType": {
-        "type": "number"
-      },
-      "meta": {
-        "sectionRef": "6.2.6",
-        "formulaRef": "(6.18)"
-      },
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.2.6", "formulaRef": "(6.18)" },
       "expression": "\\dfrac{A_{v,z} \\cdot f_y}{\\sqrt{3}\\,\\gamma_{M0}}",
       "unit": "\\mathrm{N}"
     },
@@ -329,19 +189,10 @@
       "id": "u_z",
       "name": "Shear utilization about z-z",
       "symbol": "u_z",
-      "children": [
-        {
-          "nodeId": "V_z_Ed"
-        },
-        {
-          "nodeId": "V_pl_z_Rd"
-        }
-      ],
+      "children": [{ "nodeId": "V_z_Ed" }, { "nodeId": "V_pl_z_Rd" }],
       "type": "derived",
       "key": "u_z",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "expression": "\\left|V_{z,Ed}\\right| / V_{pl,z,Rd}"
     },
     "Av_z": {
@@ -351,9 +202,7 @@
       "children": [],
       "type": "user-input",
       "key": "Av_z",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "unit": "\\mathrm{mm^{2}}"
     },
     "hw": {
@@ -363,28 +212,17 @@
       "children": [],
       "type": "user-input",
       "key": "hw",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "unit": "\\mathrm{mm}"
     },
     "A_w": {
       "id": "A_w",
       "name": "Web area",
       "symbol": "A_w",
-      "children": [
-        {
-          "nodeId": "hw"
-        },
-        {
-          "nodeId": "tw"
-        }
-      ],
+      "children": [{ "nodeId": "hw" }, { "nodeId": "tw" }],
       "type": "derived",
       "key": "A_w",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "expression": "h_w \\cdot t_w",
       "unit": "\\mathrm{mm^{2}}"
     },
@@ -395,9 +233,7 @@
       "children": [],
       "type": "user-input",
       "key": "tw",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "unit": "\\mathrm{mm}"
     },
     "fy": {
@@ -407,9 +243,7 @@
       "children": [],
       "type": "user-input",
       "key": "fy",
-      "valueType": {
-        "type": "number"
-      },
+      "valueType": { "type": "number" },
       "unit": "\\mathrm{MPa}"
     },
     "gamma_M0": {
@@ -419,94 +253,30 @@
       "children": [],
       "type": "coefficient",
       "key": "gamma_M0",
-      "valueType": {
-        "type": "number"
-      },
-      "meta": {
-        "sectionRef": "6.1"
-      }
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.1" }
     }
   },
   "layoutById": {
-    "bending_y_shear_check": {
-      "x": 0,
-      "y": 0
-    },
-    "M_y_Ed": {
-      "x": 0,
-      "y": 220
-    },
-    "M_y_V_Rd": {
-      "x": 320,
-      "y": 220
-    },
-    "M_y_V_Rd_i": {
-      "x": 0,
-      "y": 440
-    },
-    "M_y_V_Rd_rhs_chs": {
-      "x": 320,
-      "y": 440
-    },
-    "W_y_res": {
-      "x": 0,
-      "y": 660
-    },
-    "rho_z": {
-      "x": 320,
-      "y": 660
-    },
-    "A_w": {
-      "x": 640,
-      "y": 660
-    },
-    "fy": {
-      "x": 960,
-      "y": 660
-    },
-    "gamma_M0": {
-      "x": 1280,
-      "y": 660
-    },
-    "tw": {
-      "x": 0,
-      "y": 880
-    },
-    "Wpl_y": {
-      "x": 320,
-      "y": 880
-    },
-    "Wel_y": {
-      "x": 640,
-      "y": 880
-    },
-    "rho_z_1": {
-      "x": 960,
-      "y": 880
-    },
-    "rho_z_2": {
-      "x": 1280,
-      "y": 880
-    },
-    "hw": {
-      "x": 1600,
-      "y": 880
-    },
-    "u_z": {
-      "x": 0,
-      "y": 1100
-    },
-    "V_z_Ed": {
-      "x": 0,
-      "y": 1320
-    },
-    "V_pl_z_Rd": {
-      "x": 320,
-      "y": 1320
-    },
-    "Av_z": {
-      "x": 0,
-      "y": 1540
-    }
+    "bending_y_shear_check": { "x": 0, "y": 0 },
+    "M_y_Ed": { "x": 0, "y": 220 },
+    "M_y_V_Rd": { "x": 320, "y": 220 },
+    "M_y_V_Rd_i": { "x": 0, "y": 440 },
+    "M_y_V_Rd_rhs_chs": { "x": 320, "y": 440 },
+    "W_y_res": { "x": 0, "y": 660 },
+    "rho_z": { "x": 320, "y": 660 },
+    "A_w": { "x": 640, "y": 660 },
+    "fy": { "x": 960, "y": 660 },
+    "gamma_M0": { "x": 1280, "y": 660 },
+    "tw": { "x": 0, "y": 880 },
+    "Wpl_y": { "x": 320, "y": 880 },
+    "Wel_y": { "x": 640, "y": 880 },
+    "rho_z_1": { "x": 960, "y": 880 },
+    "rho_z_2": { "x": 1280, "y": 880 },
+    "hw": { "x": 1600, "y": 880 },
+    "u_z": { "x": 0, "y": 1100 },
+    "V_z_Ed": { "x": 0, "y": 1320 },
+    "V_pl_z_Rd": { "x": 320, "y": 1320 },
+    "Av_z": { "x": 0, "y": 1540 }
   }
 }

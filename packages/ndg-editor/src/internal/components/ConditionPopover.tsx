@@ -96,11 +96,16 @@ const ConditionEntryEditor = ({
     return (
       <div className="rounded-sm border border-slate-200 bg-white p-2">
         <div className="mb-2 flex items-center gap-1.5">
-          <span className="text-[11px] font-semibold text-slate-700">Group</span>
+          <span className="text-[11px] font-semibold text-slate-700">
+            Group
+          </span>
           <Select
             value={entry.operator}
             onChange={(event) =>
-              onUpdateGroupOperator(entry.id, event.target.value as GroupOperator)
+              onUpdateGroupOperator(
+                entry.id,
+                event.target.value as GroupOperator,
+              )
             }
           >
             <option value="and">AND</option>
@@ -251,12 +256,19 @@ const ConditionEntryEditor = ({
 
       <div className="mt-2 flex flex-wrap justify-end gap-1.5">
         {!isRoot && parentGroupId && (
-          <Button tone="danger" onClick={() => onRemoveFromGroup(parentGroupId, entry.id)}>
+          <Button
+            tone="danger"
+            onClick={() => onRemoveFromGroup(parentGroupId, entry.id)}
+          >
             Remove
           </Button>
         )}
-        {isRoot && <Button onClick={() => onWrapRootInGroup("and")}>Wrap AND</Button>}
-        {isRoot && <Button onClick={() => onWrapRootInGroup("or")}>Wrap OR</Button>}
+        {isRoot && (
+          <Button onClick={() => onWrapRootInGroup("and")}>Wrap AND</Button>
+        )}
+        {isRoot && (
+          <Button onClick={() => onWrapRootInGroup("or")}>Wrap OR</Button>
+        )}
       </div>
     </div>
   );
@@ -274,7 +286,9 @@ export const ConditionPopover = ({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setDraft(condition ? conditionToDraft(condition) : createDefaultConditionDraft());
+    setDraft(
+      condition ? conditionToDraft(condition) : createDefaultConditionDraft(),
+    );
     setError(null);
   }, [condition]);
 

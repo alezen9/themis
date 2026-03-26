@@ -20,9 +20,7 @@ type ElkLayoutResult = {
   edges?: ElkEdge[];
 };
 
-type ElkLike = {
-  layout: (graph: unknown) => Promise<ElkLayoutResult>;
-};
+type ElkLike = { layout: (graph: unknown) => Promise<ElkLayoutResult> };
 
 let elkInstancePromise: Promise<ElkLike> | undefined;
 
@@ -110,11 +108,7 @@ export const runElkAutoLayout = async ({
     const layoutById: Record<string, XYPosition> = {};
     const edgeLayoutById: Record<string, XYPosition[]> = {};
     for (const child of layout.children ?? []) {
-      if (
-        !child.id ||
-        !isFiniteNumber(child.x) ||
-        !isFiniteNumber(child.y)
-      ) {
+      if (!child.id || !isFiniteNumber(child.x) || !isFiniteNumber(child.y)) {
         continue;
       }
 
@@ -149,11 +143,7 @@ export const runElkAutoLayout = async ({
       } as const;
     }
 
-    return {
-      error: null,
-      layoutById,
-      edgeLayoutById,
-    } as const;
+    return { error: null, layoutById, edgeLayoutById } as const;
   } catch {
     return {
       error: "Auto layout failed",

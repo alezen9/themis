@@ -27,7 +27,10 @@ export const PageEditor = () => {
         return;
       }
 
-      downloadTextFile("verification.ndg.json", `${JSON.stringify(draft, null, 2)}\n`);
+      downloadTextFile(
+        "verification.ndg.json",
+        `${JSON.stringify(draft, null, 2)}\n`,
+      );
       setError(null);
     } catch (saveError) {
       const errorMessage =

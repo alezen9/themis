@@ -81,16 +81,15 @@ export const NodeDialog = ({
   }, [onClose]);
 
   const updateDraft = (field: keyof NodeDraft, value: string) => {
-    setDraft((currentDraft) => ({
-      ...currentDraft,
-      [field]: value,
-    }));
+    setDraft((currentDraft) => ({ ...currentDraft, [field]: value }));
   };
 
   const onFieldChange =
     (field: keyof NodeDraft) =>
     (
-      event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+      event: ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >,
     ) => {
       updateDraft(field, event.target.value);
     };
@@ -308,10 +307,7 @@ export const NodeDialog = ({
           {showReferences ? (
             <NodeDialogSection title="References">
               <div className="grid gap-3.5 md:grid-cols-2">
-                <NodeDialogField
-                  label="Section ref"
-                  hint="Standard section id"
-                >
+                <NodeDialogField label="Section ref" hint="Standard section id">
                   <input
                     className={inputClassName}
                     onChange={onFieldChange("sectionRef")}

@@ -161,7 +161,9 @@ const collectWeakComponents = (
   preferredFirstId: string | null,
 ) => {
   const visited = new Set<string>();
-  const orderedSeeds = [...nodeIds].sort((left, right) => left.localeCompare(right));
+  const orderedSeeds = [...nodeIds].sort((left, right) =>
+    left.localeCompare(right),
+  );
 
   if (preferredFirstId) {
     const preferredIndex = orderedSeeds.indexOf(preferredFirstId);
@@ -233,11 +235,16 @@ const buildInitialLayout = (nodesById: Map<string, EditorNode>) => {
 
       for (const child of node.children) {
         if (!componentNodeIdSet.has(child.nodeId)) continue;
-        indegreeById.set(child.nodeId, (indegreeById.get(child.nodeId) ?? 0) + 1);
+        indegreeById.set(
+          child.nodeId,
+          (indegreeById.get(child.nodeId) ?? 0) + 1,
+        );
       }
     }
 
-    const roots = componentNodeIds.filter((nodeId) => (indegreeById.get(nodeId) ?? 0) === 0);
+    const roots = componentNodeIds.filter(
+      (nodeId) => (indegreeById.get(nodeId) ?? 0) === 0,
+    );
     const queue = roots.length > 0 ? [...roots] : [componentNodeIds[0]];
     const visited = new Set<string>();
     const depthById = new Map<string, number>();
@@ -264,7 +271,8 @@ const buildInitialLayout = (nodesById: Map<string, EditorNode>) => {
         if (!componentNodeIdSet.has(child.nodeId)) continue;
 
         const nextDepth = depth + 1;
-        const currentDepth = depthById.get(child.nodeId) ?? Number.NEGATIVE_INFINITY;
+        const currentDepth =
+          depthById.get(child.nodeId) ?? Number.NEGATIVE_INFINITY;
         if (nextDepth > currentDepth) depthById.set(child.nodeId, nextDepth);
 
         queue.push(child.nodeId);
@@ -279,7 +287,9 @@ const buildInitialLayout = (nodesById: Map<string, EditorNode>) => {
       nodeIdsByDepth.set(0, row);
     }
 
-    const sortedDepths = [...nodeIdsByDepth.keys()].sort((left, right) => left - right);
+    const sortedDepths = [...nodeIdsByDepth.keys()].sort(
+      (left, right) => left - right,
+    );
     let maxRowLength = 0;
 
     for (const depth of sortedDepths) {
@@ -367,10 +377,7 @@ const validateNodes = (nodes: readonly Node[]): ValidateNodesResult => {
 
   for (const node of parsedNodes.data) {
     if (node.type === "user-input" && node.children.length > 0) {
-      return {
-        error: "User input nodes must be leaves",
-        nodes: null,
-      } as const;
+      return { error: "User input nodes must be leaves", nodes: null } as const;
     }
 
     const childIdSet = new Set<string>();
@@ -411,10 +418,7 @@ const validateNodes = (nodes: readonly Node[]): ValidateNodesResult => {
     } as const;
   }
 
-  return {
-    error: null,
-    nodes: parsedNodes.data,
-  } as const;
+  return { error: null, nodes: parsedNodes.data } as const;
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -439,7 +443,8 @@ const isValidMeasuredNodeSize = (
   value: { width: number; height: number } | undefined,
 ): value is MeasuredNodeSize => {
   if (!value) return false;
-  if (!isFiniteNumber(value.width) || !isFiniteNumber(value.height)) return false;
+  if (!isFiniteNumber(value.width) || !isFiniteNumber(value.height))
+    return false;
   if (value.width <= 0 || value.height <= 0) return false;
   return true;
 };
@@ -459,15 +464,14 @@ export const getMeasuredNodeSizesById = (state: EditorState) => {
     sizesById[nodeId] = measuredNodeSize;
   }
 
-  return {
-    error: null,
-    sizesById,
-  } as const;
+  return { error: null, sizesById } as const;
 };
 
 export const createInitialState = (): EditorState => {
   const nodes = [createDefaultRootNode()];
-  const nodesById = new Map<string, EditorNode>(nodes.map((node) => [node.id, node]));
+  const nodesById = new Map<string, EditorNode>(
+    nodes.map((node) => [node.id, node]),
+  );
 
   return {
     nodesById,
@@ -498,10 +502,7 @@ export const editorStateToDraft = (state: EditorState): NdgEditorDraftV1 => {
 
 export const draftToEditorState = (draft: unknown) => {
   if (!isRecord(draft)) {
-    return {
-      error: "Draft must be a JSON object",
-      state: null,
-    } as const;
+    return { error: "Draft must be a JSON object", state: null } as const;
   }
 
   if (draft.format !== ndgEditorDraftFormat) {
@@ -519,10 +520,7 @@ export const draftToEditorState = (draft: unknown) => {
   }
 
   if (!isRecord(draft.nodesById)) {
-    return {
-      error: "Draft nodesById must be an object",
-      state: null,
-    } as const;
+    return { error: "Draft nodesById must be an object", state: null } as const;
   }
 
   if (!isRecord(draft.layoutById)) {
@@ -573,10 +571,7 @@ export const draftToEditorState = (draft: unknown) => {
     const position = rawLayoutById[nodeId];
     if (!isValidPosition(position)) continue;
 
-    layoutById[nodeId] = {
-      x: position.x,
-      y: position.y,
-    };
+    layoutById[nodeId] = { x: position.x, y: position.y };
   }
 
   return {
@@ -597,11 +592,7 @@ export const draftToEditorState = (draft: unknown) => {
 export const openNodeDialog = (state: EditorState, nodeId: string) => {
   if (!state.nodesById.has(nodeId)) return state;
 
-  return {
-    ...state,
-    dialogError: null,
-    editingNodeId: nodeId,
-  };
+  return { ...state, dialogError: null, editingNodeId: nodeId };
 };
 
 export const closeNodeDialog = (state: EditorState) => ({
@@ -616,14 +607,8 @@ export const updateNodePositions = (
   measuredUpdates: Record<string, { width: number; height: number }> = {},
 ) => ({
   ...state,
-  layoutById: {
-    ...state.layoutById,
-    ...layoutUpdates,
-  },
-  measuredById: {
-    ...state.measuredById,
-    ...measuredUpdates,
-  },
+  layoutById: { ...state.layoutById, ...layoutUpdates },
+  measuredById: { ...state.measuredById, ...measuredUpdates },
 });
 
 export const addChildNode = (state: EditorState, parentId: string) => {
@@ -637,7 +622,10 @@ export const addChildNode = (state: EditorState, parentId: string) => {
 
   nextNodesById.set(
     parentId,
-    replaceNodeChildren(parentNode, [...parentNode.children, { nodeId: childNode.id }]),
+    replaceNodeChildren(parentNode, [
+      ...parentNode.children,
+      { nodeId: childNode.id },
+    ]),
   );
   nextNodesById.set(childNode.id, childNode);
 
@@ -673,14 +661,13 @@ export const connectEdge = (
   const nextNodesById = new Map(state.nodesById);
   nextNodesById.set(
     sourceNodeId,
-    replaceNodeChildren(sourceNode, [...sourceNode.children, { nodeId: targetNodeId }]),
+    replaceNodeChildren(sourceNode, [
+      ...sourceNode.children,
+      { nodeId: targetNodeId },
+    ]),
   );
 
-  return {
-    ...state,
-    nodesById: nextNodesById,
-    dialogError: null,
-  };
+  return { ...state, nodesById: nextNodesById, dialogError: null };
 };
 
 const findChildIndex = (node: EditorNode, childNodeId: string) =>
@@ -712,14 +699,17 @@ export const reconnectEdge = (
     oldSourceNodeId,
     replaceNodeChildren(
       oldSourceNode,
-      oldSourceNode.children.filter((_, childIndex) => childIndex !== oldChildIndex),
+      oldSourceNode.children.filter(
+        (_, childIndex) => childIndex !== oldChildIndex,
+      ),
     ),
   );
 
   const sourceAfterRemoval = nodesWithoutOldEdge.get(newSourceNodeId);
   if (!sourceAfterRemoval) return state;
   if (hasChildReference(sourceAfterRemoval, newTargetNodeId)) return state;
-  if (hasPath(nodesWithoutOldEdge, newTargetNodeId, newSourceNodeId)) return state;
+  if (hasPath(nodesWithoutOldEdge, newTargetNodeId, newSourceNodeId))
+    return state;
 
   const edgeToAdd: Child = oldChild.when
     ? { nodeId: newTargetNodeId, when: oldChild.when }
@@ -728,14 +718,13 @@ export const reconnectEdge = (
   const nextNodesById = new Map(nodesWithoutOldEdge);
   nextNodesById.set(
     newSourceNodeId,
-    replaceNodeChildren(sourceAfterRemoval, [...sourceAfterRemoval.children, edgeToAdd]),
+    replaceNodeChildren(sourceAfterRemoval, [
+      ...sourceAfterRemoval.children,
+      edgeToAdd,
+    ]),
   );
 
-  return {
-    ...state,
-    nodesById: nextNodesById,
-    dialogError: null,
-  };
+  return { ...state, nodesById: nextNodesById, dialogError: null };
 };
 
 export const disconnectEdge = (
@@ -758,11 +747,7 @@ export const disconnectEdge = (
     ),
   );
 
-  return {
-    ...state,
-    nodesById: nextNodesById,
-    dialogError: null,
-  };
+  return { ...state, nodesById: nextNodesById, dialogError: null };
 };
 
 export const setEdgeCondition = (
@@ -790,11 +775,7 @@ export const setEdgeCondition = (
     ),
   );
 
-  return {
-    ...state,
-    nodesById: nextNodesById,
-    dialogError: null,
-  };
+  return { ...state, nodesById: nextNodesById, dialogError: null };
 };
 
 export const saveNode = (
@@ -829,13 +810,12 @@ export const saveNode = (
   }
 
   if (!isEditingCheckNode && nextNodeResult.node.type === "check") {
-    return {
-      ...state,
-      dialogError: "Only one check node is allowed.",
-    };
+    return { ...state, dialogError: "Only one check node is allowed." };
   }
 
-  if (hasDuplicateKey(state.nodesById, nextNodeResult.node.key.trim(), nodeId)) {
+  if (
+    hasDuplicateKey(state.nodesById, nextNodeResult.node.key.trim(), nodeId)
+  ) {
     return {
       ...state,
       dialogError: `Another node already uses the key "${nextNodeResult.node.key}".`,

@@ -178,7 +178,10 @@ const parseLiteralExpression = (sourceFile, expression) => {
       }
 
       const key = parsePropertyName(sourceFile, property.name);
-      objectValue[key] = parseLiteralExpression(sourceFile, property.initializer);
+      objectValue[key] = parseLiteralExpression(
+        sourceFile,
+        property.initializer,
+      );
     }
 
     return objectValue;
@@ -213,7 +216,11 @@ const findDefineNodesArrayLiteral = (sourceFile) => {
 
     const firstArg = currentNode.arguments[0];
     if (!firstArg) {
-      failAtNode(sourceFile, currentNode, "defineNodes(...) requires an array argument");
+      failAtNode(
+        sourceFile,
+        currentNode,
+        "defineNodes(...) requires an array argument",
+      );
     }
 
     const arg = unwrapExpression(firstArg);
@@ -340,7 +347,10 @@ const buildLayoutById = (nodes) => {
 
       for (const child of node.children) {
         if (!componentNodeIdSet.has(child.nodeId)) continue;
-        indegreeById.set(child.nodeId, (indegreeById.get(child.nodeId) ?? 0) + 1);
+        indegreeById.set(
+          child.nodeId,
+          (indegreeById.get(child.nodeId) ?? 0) + 1,
+        );
       }
     }
 
@@ -373,7 +383,8 @@ const buildLayoutById = (nodes) => {
         if (!componentNodeIdSet.has(child.nodeId)) continue;
 
         const nextDepth = depth + 1;
-        const currentDepth = depthById.get(child.nodeId) ?? Number.NEGATIVE_INFINITY;
+        const currentDepth =
+          depthById.get(child.nodeId) ?? Number.NEGATIVE_INFINITY;
         if (nextDepth > currentDepth) depthById.set(child.nodeId, nextDepth);
 
         queue.push(child.nodeId);
@@ -388,7 +399,9 @@ const buildLayoutById = (nodes) => {
       nodeIdsByDepth.set(0, row);
     }
 
-    const sortedDepths = [...nodeIdsByDepth.keys()].sort((left, right) => left - right);
+    const sortedDepths = [...nodeIdsByDepth.keys()].sort(
+      (left, right) => left - right,
+    );
     let maxRowLength = 0;
 
     for (const depth of sortedDepths) {
@@ -403,7 +416,8 @@ const buildLayoutById = (nodes) => {
       });
     }
 
-    componentOffsetX += Math.max(1, maxRowLength) * HORIZONTAL_GAP + HORIZONTAL_GAP;
+    componentOffsetX +=
+      Math.max(1, maxRowLength) * HORIZONTAL_GAP + HORIZONTAL_GAP;
   }
 
   return layoutById;
@@ -425,7 +439,10 @@ const main = async () => {
   );
 
   const nodesArrayLiteral = findDefineNodesArrayLiteral(sourceFile);
-  const parsedNodesValue = parseLiteralExpression(sourceFile, nodesArrayLiteral);
+  const parsedNodesValue = parseLiteralExpression(
+    sourceFile,
+    nodesArrayLiteral,
+  );
 
   if (!Array.isArray(parsedNodesValue)) {
     fail("defineNodes argument must resolve to an array literal");
@@ -433,7 +450,9 @@ const main = async () => {
 
   const validatedNodes = VerificationSchema.safeParse(parsedNodesValue);
   if (!validatedNodes.success) {
-    fail(`Input nodes are invalid: ${formatSchemaIssue(validatedNodes.error.issues[0])}`);
+    fail(
+      `Input nodes are invalid: ${formatSchemaIssue(validatedNodes.error.issues[0])}`,
+    );
   }
 
   const nodesById = Object.fromEntries(

@@ -1,9 +1,6 @@
 import type { ReactNode } from "react";
 
-type NodeDialogSectionProps = {
-  title: string;
-  children: ReactNode;
-};
+type NodeDialogSectionProps = { title: string; children: ReactNode };
 
 export const NodeDialogSection = ({
   title,
