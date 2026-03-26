@@ -1,8 +1,8 @@
-import type { Ec3EditableInputs } from "./use-ec3-evaluate";
+import type { Ec3EditableInputs } from "../hooks/use-ec3-evaluate";
 import {
   computeSectionProperties,
   type SectionInput,
-} from "./compute-section-properties";
+} from "../domain/sectionProperties";
 import {
   ANNEXES,
   ANNEX_FIELDS,
@@ -21,7 +21,7 @@ import {
   type EditableNumericKey,
   type FieldDef,
   type ShapeKey,
-} from "./use-ec3-workbench";
+} from "../hooks/use-ec3-workbench";
 
 const clampPsi = (value: number): number => Math.max(-1, Math.min(1, value));
 
@@ -141,7 +141,7 @@ function SectionSummary({
   );
 }
 
-export function Ec3WorkbenchForm({
+export function Verification({
   workbench,
   className,
 }: {

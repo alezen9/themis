@@ -13,18 +13,18 @@ import {
   isNotApplicable,
   useEc3Evaluate,
 } from "./use-ec3-evaluate";
-import { flangedSections, type FlangedSection } from "./data/flanged-sections";
-import { hollowSections, type HollowSection } from "./data/hollow-sections";
+import { flangedSections, type FlangedSection } from "../data/flanged-sections";
+import { hollowSections, type HollowSection } from "../data/hollow-sections";
 import {
   circularSections,
   type CircularSection,
-} from "./data/circular-sections";
+} from "../data/circular-sections";
 import {
   steelGrades,
   STEEL_E,
   STEEL_G,
   type SteelGrade,
-} from "./data/steel-grades";
+} from "../data/steel-grades";
 import type {
   AnnexCoeffs,
   Ec3EditableInputs,
@@ -34,13 +34,13 @@ import type {
   SupportCondition,
   VerificationRow,
 } from "./use-ec3-evaluate";
-import { ANNEX_EDITABLE_KEYS, SECTION_CLASS_OPTIONS } from "./input-contract";
+import { ANNEX_EDITABLE_KEYS, SECTION_CLASS_OPTIONS } from "../input-contract";
 import {
   computeSectionProperties,
   type FabricationType,
   type SectionInput,
-} from "./compute-section-properties";
-import computeClass from "./section-class";
+} from "../domain/sectionProperties";
+import computeClass from "../section-class";
 import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3";
 
 type CatalogSection = FlangedSection | HollowSection | CircularSection;

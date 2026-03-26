@@ -4,12 +4,12 @@ import {
   ec3VerificationDefinitions,
   type Ec3VerificationCatalogEntry,
 } from "@ndg/ndg-ec3";
-import { Ec3WorkbenchForm } from "../ec3/Ec3WorkbenchForm";
-import { decodeEc3DebugSession } from "../ec3/ec3-debug-session";
+import { Verification } from "../../features/verifications/ec3/components/Verification";
+import { decodeEc3DebugSession } from "../../features/verifications/ec3/ec3-debug-session";
 import {
   createDefaultEc3WorkbenchSessionState,
   useEc3Workbench,
-} from "../ec3/use-ec3-workbench";
+} from "../../features/verifications/ec3/hooks/use-ec3-workbench";
 import {
   VerificationDebugger,
   type VerificationDebuggerAdapter,
@@ -174,7 +174,7 @@ export function PageEc3Debugger({
         <Link to="/" className="underline hover:no-underline">
           Home
         </Link>
-        <Link to="/ec3" className="underline hover:no-underline">
+        <Link to="/verifications/ec3" className="underline hover:no-underline">
           EC3 Verifications
         </Link>
       </nav>
@@ -194,7 +194,7 @@ export function PageEc3Debugger({
             Workbench controls
           </summary>
           <div className="border-t px-4 py-4">
-            <Ec3WorkbenchForm workbench={workbench} className="space-y-4" />
+            <Verification workbench={workbench} className="space-y-4" />
           </div>
         </details>
       </div>

@@ -18,13 +18,13 @@ afterEach(() => {
   vi.unstubAllEnvs();
 });
 
-describe("PageEc3", () => {
+describe("Ec3VerificationsPage", () => {
   it("shows debugger links when the debugger flag is enabled", async () => {
     vi.unstubAllEnvs();
     vi.resetModules();
 
-    const { PageEc3 } = await import("./PageEc3");
-    render(<PageEc3 />);
+    const { Ec3VerificationsPage } = await import("./Ec3VerificationsPage");
+    render(<Ec3VerificationsPage />);
 
     expect(screen.getByText("Open in debugger")).not.toBeNull();
     expect(screen.getByText("EC3 Debugger")).not.toBeNull();
@@ -34,8 +34,8 @@ describe("PageEc3", () => {
     vi.stubEnv("VITE_ENABLE_VERIFICATION_DEBUGGER", "false");
     vi.resetModules();
 
-    const { PageEc3 } = await import("./PageEc3");
-    render(<PageEc3 />);
+    const { Ec3VerificationsPage } = await import("./Ec3VerificationsPage");
+    render(<Ec3VerificationsPage />);
 
     expect(screen.queryByText("Open in debugger")).toBeNull();
     expect(screen.queryByText("EC3 Debugger")).toBeNull();

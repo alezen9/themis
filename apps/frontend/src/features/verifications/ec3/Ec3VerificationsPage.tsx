@@ -1,12 +1,15 @@
 import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
-import { Ec3Results } from "./Ec3Results";
-import { Ec3WorkbenchForm } from "./Ec3WorkbenchForm";
+import { Ec3Results } from "./components/Ec3Results";
+import { Verification } from "./components/Verification";
 import { encodeEc3DebugSession } from "./ec3-debug-session";
 import { verificationDebuggerEnabled } from "./ec3-debugger-env";
-import { FRONTEND_MAX_CHECK_ID, useEc3Workbench } from "./use-ec3-workbench";
+import {
+  FRONTEND_MAX_CHECK_ID,
+  useEc3Workbench,
+} from "./hooks/use-ec3-workbench";
 
-export function PageEc3() {
+export function Ec3VerificationsPage() {
   const workbench = useEc3Workbench();
   const debugSession = useMemo(
     () => encodeEc3DebugSession(workbench.sessionState),
@@ -33,7 +36,7 @@ export function PageEc3() {
       <h1 className="mb-6 text-2xl font-bold">EC3 Verifications</h1>
 
       <div className="grid gap-8 lg:grid-cols-[1fr_2fr]">
-        <Ec3WorkbenchForm workbench={workbench} />
+        <Verification workbench={workbench} />
 
         <div>
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">

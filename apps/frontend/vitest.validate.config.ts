@@ -4,6 +4,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     passWithNoTests: true,
-    include: ["src/pages/ec3/**/*.test.ts"],
+    include: [
+      "src/features/verifications/ec3/**/*.test.ts",
+      "src/features/verifications/ec3/**/*.test.tsx",
+    ],
   },
 });

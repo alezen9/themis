@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Navigate, createFileRoute } from "@tanstack/react-router";
-import { verificationDebuggerEnabled } from "../../pages/ec3/ec3-debugger-env";
+import { verificationDebuggerEnabled } from "../../features/verifications/ec3/ec3-debugger-env";
 
 const LazyPageEc3Debugger = verificationDebuggerEnabled
   ? lazy(async () => {
@@ -26,7 +26,7 @@ export function DebugEc3RouteContent({
   session?: string;
 }) {
   if (!enabled || !LazyPageEc3Debugger) {
-    return <Navigate replace to="/ec3" />;
+    return <Navigate replace to="/verifications/ec3" />;
   }
 
   return (

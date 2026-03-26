@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
-import { hasData, hasError, isNotApplicable } from "./use-ec3-evaluate";
-import type { VerificationRow } from "./use-ec3-evaluate";
+import {
+  hasData,
+  hasError,
+  isNotApplicable,
+  type VerificationRow,
+} from "../hooks/use-ec3-evaluate";
 
 type Ec3ReportProps = {
   results: VerificationRow[];

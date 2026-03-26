@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeSectionProperties } from "./compute-section-properties";
+import { computeSectionProperties } from "./sectionProperties";
 
 describe("computeSectionProperties", () => {
   it("uses rolled buckling curves for predefined-style I input", () => {
@@ -133,5 +133,33 @@ describe("computeSectionProperties", () => {
     expect(properties.A).toBe(providedArea);
     expect(properties.Iy).toBeCloseTo(expectedIy, 6);
     expect(properties.Av_y).toBeCloseTo((providedArea * b) / (b + h), 6);
+  });
+
+  it("sets non-applicable geometric fields to zero", () => {
+    const chs = computeSectionProperties({
+      shape: "CHS",
+      fabricationType: "rolled",
+      d: 200,
+      t: 8,
+    });
+    const rhs = computeSectionProperties({
+      shape: "RHS",
+      fabricationType: "rolled",
+      h: 200,
+      b: 120,
+      tw: 8,
+      ro: 12,
+      ri: 8,
+    });
+
+    expect(chs.tw).toBe(0);
+    expect(chs.hw).toBe(0);
+    expect(chs.h).toBe(0);
+    expect(chs.b).toBe(0);
+    expect(chs.tf).toBe(0);
+
+    expect(rhs.tf).toBe(0);
+    expect(rhs.t).toBe(0);
+    expect(rhs.d).toBe(0);
   });
 });

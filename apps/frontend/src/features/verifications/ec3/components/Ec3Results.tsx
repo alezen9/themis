@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import { hasData, hasError, isNotApplicable } from "./use-ec3-evaluate";
-import type { VerificationRow } from "./use-ec3-evaluate";
+import {
+  hasData,
+  hasError,
+  isNotApplicable,
+  type VerificationRow,
+} from "../hooks/use-ec3-evaluate";
 import { Ec3Report } from "./Ec3Report";
 
 type Ec3ResultsProps = { results: VerificationRow[] };

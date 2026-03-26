@@ -3,7 +3,7 @@ import {
   decodeEc3DebugSession,
   encodeEc3DebugSession,
 } from "./ec3-debug-session";
-import { createDefaultEc3WorkbenchSessionState } from "./use-ec3-workbench";
+import { createDefaultEc3WorkbenchSessionState } from "./hooks/use-ec3-workbench";
 
 describe("ec3 debug session", () => {
   it("round-trips the EC3 workbench session payload", () => {

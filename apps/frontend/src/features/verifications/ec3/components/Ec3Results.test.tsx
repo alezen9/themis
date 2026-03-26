@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { Ec3Results } from "./Ec3Results";
-import type { VerificationRow } from "./use-ec3-evaluate";
+import type { VerificationRow } from "../hooks/use-ec3-evaluate";
 
 afterEach(() => {
   cleanup();
