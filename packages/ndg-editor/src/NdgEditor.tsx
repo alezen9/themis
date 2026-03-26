@@ -15,7 +15,6 @@ import {
   Panel,
   ReactFlow,
   type XYPosition,
-  type ReactFlowInstance,
   type Connection,
   type NodeChange,
 } from "@xyflow/react";
@@ -26,8 +25,6 @@ import {
   applyNodePositionChanges,
   applyReconnect,
   flowEdgeType,
-  type EditorFlowEdge,
-  type EditorFlowNode,
   editorStateToFlowEdges,
   editorStateToFlowNodes,
   flowNodeType,
@@ -92,6 +89,7 @@ type NdgEditorAction =
 
 const nodeTypes = { [flowNodeType]: NodeCard };
 const edgeTypes = { [flowEdgeType]: ConditionEdge };
+const edgeHoverKeepSelector = ".react-flow__edge, .ndg-edge-overlay";
 
 const getMovedNodeIds = (changes: readonly NodeChange[]) => {
   const movedNodeIds = new Set<string>();
@@ -137,12 +135,14 @@ const pruneEdgeLayoutByMovedNodeIds = (
 const reducer = (state: EditorState, action: NdgEditorAction) => {
   switch (action.type) {
     case "addChild":
-      return {
-        ...addChildNode(state, action.parentId),
-        edgeLayoutById: {},
-      };
+      return { ...addChildNode(state, action.parentId), edgeLayoutById: {} };
     case "applyEdgeCondition":
-      return setEdgeCondition(state, action.sourceId, action.targetId, action.when);
+      return setEdgeCondition(
+        state,
+        action.sourceId,
+        action.targetId,
+        action.when,
+      );
     case "applyAutoLayout":
       return applyAutoLayout(state, action.layoutById, action.edgeLayoutById);
     case "applyConnection":
@@ -160,10 +160,7 @@ const reducer = (state: EditorState, action: NdgEditorAction) => {
         movedNodeIds,
       );
       if (nextEdgeLayoutById === state.edgeLayoutById) return nextState;
-      return {
-        ...nextState,
-        edgeLayoutById: nextEdgeLayoutById,
-      };
+      return { ...nextState, edgeLayoutById: nextEdgeLayoutById };
     }
     case "autoLayoutError":
       return setAutoLayoutError(state, action.error);
@@ -195,21 +192,19 @@ const reducer = (state: EditorState, action: NdgEditorAction) => {
 
 export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
   function NdgEditor({ className }, ref) {
-    const [state, dispatch] = useReducer(reducer, undefined, createInitialState);
+    const [state, dispatch] = useReducer(
+      reducer,
+      undefined,
+      createInitialState,
+    );
     const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
     const [isAutoLayouting, setIsAutoLayouting] = useState(false);
-    const reactFlowRef = useRef<ReactFlowInstance<EditorFlowNode, EditorFlowEdge> | null>(null);
     const stateRef = useRef(state);
     const autoLayoutRunIdRef = useRef(0);
 
     useEffect(() => {
       stateRef.current = state;
     }, [state]);
-
-    useEffect(() => {
-      if (state.autoLayoutVersion === 0) return;
-      reactFlowRef.current?.fitView({ duration: 250, padding: 0.2 });
-    }, [state.autoLayoutVersion]);
 
     const onAutoLayout = useCallback(async () => {
       const currentState = stateRef.current;
@@ -288,12 +283,11 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
         editorStateToFlowNodes(
           state,
           {
-            onAddChild: (nodeId) => dispatch({ type: "addChild", parentId: nodeId }),
+            onAddChild: (nodeId) =>
+              dispatch({ type: "addChild", parentId: nodeId }),
             onEdit: (nodeId) => dispatch({ type: "openDialog", nodeId }),
           },
-          {
-            unreachableNodeIds,
-          },
+          { unreachableNodeIds },
         ),
       [state, unreachableNodeIds],
     );
@@ -304,7 +298,12 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
           state.nodesById,
           {
             onApplyCondition: (sourceId, targetId, when) =>
-              dispatch({ type: "applyEdgeCondition", sourceId, targetId, when }),
+              dispatch({
+                type: "applyEdgeCondition",
+                sourceId,
+                targetId,
+                when,
+              }),
             onClearCondition: (sourceId, targetId) =>
               dispatch({ type: "clearEdgeCondition", sourceId, targetId }),
             onDisconnect: (sourceId, targetId) =>
@@ -336,9 +335,6 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
           minZoom={0.05}
           nodes={nodes}
           edges={edges}
-          onInit={(reactFlowInstance) => {
-            reactFlowRef.current = reactFlowInstance;
-          }}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           deleteKeyCode={null}
@@ -349,12 +345,22 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
           connectionRadius={38}
           nodesDraggable
           nodesConnectable
-          onConnect={(connection) => dispatch({ type: "applyConnection", connection })}
+          onConnect={(connection) =>
+            dispatch({ type: "applyConnection", connection })
+          }
           onReconnect={(oldEdge, connection) =>
             dispatch({ type: "reconnectEdge", oldEdge, connection })
           }
           onEdgeMouseEnter={(_, edge) => setHoveredEdgeId(edge.id)}
-          onEdgeMouseLeave={(_, edge) => {
+          onEdgeMouseLeave={(event, edge) => {
+            const relatedTarget = event.relatedTarget;
+            if (
+              relatedTarget instanceof Element &&
+              relatedTarget.closest(edgeHoverKeepSelector)
+            ) {
+              return;
+            }
+
             setHoveredEdgeId((currentEdgeId) => {
               if (currentEdgeId !== edge.id) return currentEdgeId;
               return null;
@@ -362,8 +368,20 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
           }}
           onNodeMouseMove={() => setHoveredEdgeId(null)}
           onPaneClick={() => setHoveredEdgeId(null)}
-          onPaneMouseMove={() => setHoveredEdgeId(null)}
-          onNodesChange={(changes) => dispatch({ type: "applyNodeChanges", changes })}
+          onPaneMouseMove={(event) => {
+            const target = event.target;
+            if (
+              target instanceof Element &&
+              target.closest(edgeHoverKeepSelector)
+            ) {
+              return;
+            }
+
+            setHoveredEdgeId(null);
+          }}
+          onNodesChange={(changes) =>
+            dispatch({ type: "applyNodeChanges", changes })
+          }
           proOptions={{ hideAttribution: true }}
         >
           <Background color="rgba(17, 24, 39, 0.12)" gap={20} />

@@ -34,7 +34,8 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
     targetPosition,
   });
   const routedPoints = data?.routedPoints ?? [];
-  const edgePath = routedPoints.length >= 2 ? buildPolylinePath(routedPoints) : smoothPath;
+  const edgePath =
+    routedPoints.length >= 2 ? buildPolylinePath(routedPoints) : smoothPath;
 
   if (!data) {
     return <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />;
@@ -54,7 +55,9 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
     ? "#0f766e"
     : data.isUnreachable
       ? "#d97706"
-      : (typeof style?.stroke === "string" ? style.stroke : "#64748b");
+      : typeof style?.stroke === "string"
+        ? style.stroke
+        : "#64748b";
   const edgeStrokeWidth = isHighlighted ? 2.4 : 1.7;
 
   return (
@@ -73,7 +76,7 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
       {showChip && (
         <EdgeLabelRenderer>
           <div
-            className="nodrag nopan pointer-events-auto absolute z-30"
+            className="ndg-edge-overlay nodrag nopan pointer-events-auto absolute z-30"
             style={{
               transform: `translate(-50%, -50%) translate(${chipPosition.x}px,${chipPosition.y}px)`,
             }}
@@ -94,7 +97,9 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
               {showActions && (
                 <>
                   <EdgeActionButton
-                    aria-label={hasCondition ? "Edit condition" : "Add condition"}
+                    aria-label={
+                      hasCondition ? "Edit condition" : "Add condition"
+                    }
                     onClick={(event) => {
                       event.stopPropagation();
                       setIsPopoverOpen((isOpen) => !isOpen);
@@ -122,7 +127,11 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
                 <ConditionPopover
                   condition={data.condition}
                   onApply={(condition) => {
-                    data.onApplyCondition(data.sourceId, data.targetId, condition);
+                    data.onApplyCondition(
+                      data.sourceId,
+                      data.targetId,
+                      condition,
+                    );
                     setIsPopoverOpen(false);
                   }}
                   onClear={() => {
@@ -140,14 +149,12 @@ export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {
   );
 };
 
-const getChipPosition = (
-  params: {
-    routedPoints?: XYPosition[];
-    targetPosition: Position;
-    targetX: number;
-    targetY: number;
-  },
-) => {
+const getChipPosition = (params: {
+  routedPoints?: XYPosition[];
+  targetPosition: Position;
+  targetX: number;
+  targetY: number;
+}) => {
   const { routedPoints, targetPosition, targetX, targetY } = params;
   const lastPoint = routedPoints?.[routedPoints.length - 1];
   const previousPoint = routedPoints?.[routedPoints.length - 2];
