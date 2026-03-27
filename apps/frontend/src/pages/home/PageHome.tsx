@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { verificationDebuggerEnabled } from "../../features/verifications/ec3/ec3-debugger-env";
+import { verificationDebuggerEnabled } from "../../features/verifications/ec3/ec3DebuggerEnv";
 
 export function PageHome() {
   return (

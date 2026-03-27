@@ -5,12 +5,12 @@ import {
   type Ec3VerificationCatalogEntry,
 } from "@ndg/ndg-ec3";
 import { Verification } from "../../features/verifications/ec3/components/Verification";
-import { decodeEc3DebugSession } from "../../features/verifications/ec3/ec3-debug-session";
+import { decodeEc3DebugSession } from "../../features/verifications/ec3/ec3DebugSession";
 import {
   createDefaultEc3WorkbenchSessionState,
   useEc3Workbench,
   type Ec3WorkbenchSessionState,
-} from "../../features/verifications/ec3/hooks/use-ec3-workbench";
+} from "../../features/verifications/ec3/hooks/useEc3Workbench";
 import {
   VerificationDebugger,
   type VerificationDebuggerAdapter,

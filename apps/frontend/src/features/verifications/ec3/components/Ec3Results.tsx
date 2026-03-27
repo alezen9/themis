@@ -4,7 +4,7 @@ import {
   hasError,
   isNotApplicable,
   type VerificationRow,
-} from "../hooks/use-ec3-evaluate";
+} from "../hooks/useEc3Evaluate";
 import { Ec3Report } from "./Ec3Report";
 
 type Ec3ResultsProps = { results: VerificationRow[] };

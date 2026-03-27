@@ -2,12 +2,12 @@ import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { Ec3Results } from "./components/Ec3Results";
 import { Verification } from "./components/Verification";
-import { encodeEc3DebugSession } from "./ec3-debug-session";
-import { verificationDebuggerEnabled } from "./ec3-debugger-env";
+import { encodeEc3DebugSession } from "./ec3DebugSession";
+import { verificationDebuggerEnabled } from "./ec3DebuggerEnv";
 import {
   FRONTEND_MAX_CHECK_ID,
   useEc3Workbench,
-} from "./hooks/use-ec3-workbench";
+} from "./hooks/useEc3Workbench";
 
 export function Ec3VerificationsPage() {
   const workbench = useEc3Workbench();

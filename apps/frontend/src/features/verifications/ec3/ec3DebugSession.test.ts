@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   decodeEc3DebugSession,
   encodeEc3DebugSession,
-} from "./ec3-debug-session";
-import { createDefaultEc3WorkbenchSessionState } from "./hooks/use-ec3-workbench";
+} from "./ec3DebugSession";
+import { createDefaultEc3WorkbenchSessionState } from "./hooks/useEc3Workbench";
 
 describe("ec3 debug session", () => {
   it("round-trips the EC3 workbench session payload", () => {

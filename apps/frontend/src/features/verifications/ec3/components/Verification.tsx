@@ -1,4 +1,4 @@
-import type { Ec3EditableInputs } from "../hooks/use-ec3-evaluate";
+import type { Ec3EditableInputs } from "../hooks/useEc3Evaluate";
 import {
   computeSectionProperties,
   type SectionInput,
@@ -21,7 +21,7 @@ import {
   type EditableNumericKey,
   type FieldDef,
   type ShapeKey,
-} from "../hooks/use-ec3-workbench";
+} from "../hooks/useEc3Workbench";
 
 const clampPsi = (value: number): number => Math.max(-1, Math.min(1, value));
 
