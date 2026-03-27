@@ -200,7 +200,7 @@ const ErrorBlock = ({
         <p className="font-mono text-xs">{type ?? "evaluation-error"}</p>
         <p>{message ?? "Unexpected evaluation error."}</p>
         {details && Object.keys(details).length > 0 && (
-          <pre className="text-[11px] text-red-800/90 whitespace-pre-wrap break-words">
+          <pre className="text-[11px] text-red-800/90 whitespace-pre-wrap wrap-break-word">
             {JSON.stringify(details, null, 2)}
           </pre>
         )}
@@ -369,7 +369,7 @@ const VerboseVerification = ({
                     )}
                   </div>
                   {(displayExpression || selectedChild) && (
-                    <div className="ml-[94px] mt-1 space-y-0.5">
+                    <div className="ml-23.5 mt-1 space-y-0.5">
                       {selectedChild && (
                         <div className="text-xs text-gray-400 flex items-center gap-1">
                           <span>=&gt;</span>

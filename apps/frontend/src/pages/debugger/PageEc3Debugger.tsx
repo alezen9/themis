@@ -180,7 +180,7 @@ function PageEc3DebuggerContent({
   );
 
   return (
-    <div className="mx-auto max-w-[1600px] p-6 lg:p-8">
+    <div className="mx-auto max-w-400 p-6 lg:p-8">
       <nav className="mb-6 flex flex-wrap gap-4 text-sm">
         <Link to="/" className="underline hover:no-underline">
           Home

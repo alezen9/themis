@@ -946,7 +946,7 @@ function TreeInspector({
                       edge.status,
                     )}`}
                   >
-                    <div className="break-words font-mono text-[10px]">
+                    <div className="wrap-break-word font-mono text-[10px]">
                       {edge.conditionLabel}
                     </div>
                   </div>
