@@ -6,6 +6,7 @@ import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 export default defineConfig({
   base: "/themis/",
   resolve: { conditions: ["development"] },
+  build: { chunkSizeWarningLimit: 1536 },
   plugins: [
     TanStackRouterVite({
       routesDirectory: "./src/routes",
