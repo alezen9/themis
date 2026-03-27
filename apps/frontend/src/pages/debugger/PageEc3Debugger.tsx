@@ -9,6 +9,7 @@ import { decodeEc3DebugSession } from "../../features/verifications/ec3/ec3-debu
 import {
   createDefaultEc3WorkbenchSessionState,
   useEc3Workbench,
+  type Ec3WorkbenchSessionState,
 } from "../../features/verifications/ec3/hooks/use-ec3-workbench";
 import {
   VerificationDebugger,
@@ -31,10 +32,20 @@ export function PageEc3Debugger({
     () => decodeEc3DebugSession(initialSessionToken),
     [initialSessionToken],
   );
-  const workbench = useEc3Workbench({
-    initialSession,
-    resetKey: initialSessionToken,
-  });
+  return (
+    <PageEc3DebuggerContent
+      key={initialSessionToken ?? "default-session"}
+      initialSession={initialSession}
+    />
+  );
+}
+
+function PageEc3DebuggerContent({
+  initialSession,
+}: {
+  initialSession: Partial<Ec3WorkbenchSessionState> | null;
+}) {
+  const workbench = useEc3Workbench({ initialSession });
 
   const rowByCheckId = useMemo(
     () => new Map(workbench.results.map((row) => [row.checkId, row])),

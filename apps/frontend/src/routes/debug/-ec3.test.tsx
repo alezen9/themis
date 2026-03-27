@@ -8,7 +8,8 @@ vi.mock("@tanstack/react-router", () => ({
 
 describe("DebugEc3RouteContent", () => {
   it("redirects to /verifications/ec3 when the debugger route is disabled", async () => {
-    const { DebugEc3RouteContent } = await import("./ec3");
+    const { DebugEc3RouteContent } =
+      await import("../../pages/debugger/DebugEc3RouteContent");
 
     render(<DebugEc3RouteContent enabled={false} session="abc123" />);
 

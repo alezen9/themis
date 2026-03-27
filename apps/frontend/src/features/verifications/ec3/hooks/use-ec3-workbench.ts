@@ -1,6 +1,5 @@
 import {
   useCallback,
-  useEffect,
   useMemo,
   useState,
   type Dispatch,
@@ -772,7 +771,6 @@ export type Ec3WorkbenchState = {
 
 type UseEc3WorkbenchOptions = {
   initialSession?: Partial<Ec3WorkbenchSessionState> | null;
-  resetKey?: string;
 };
 
 export const useEc3Workbench = (
@@ -809,23 +807,6 @@ export const useEc3Workbench = (
     normalizedInitialState.selectedAnnexId,
   );
   const [annex, setAnnex] = useState<AnnexCoeffs>(normalizedInitialState.annex);
-
-  useEffect(() => {
-    setShape(normalizedInitialState.shape);
-    setSelectedSectionId(normalizedInitialState.selectedSectionId);
-    setCustomFabricationType(normalizedInitialState.customFabricationType);
-    setCustomISectionGeometry(normalizedInitialState.customISectionGeometry);
-    setCustomRhsSectionGeometry(
-      normalizedInitialState.customRhsSectionGeometry,
-    );
-    setCustomChsSectionGeometry(
-      normalizedInitialState.customChsSectionGeometry,
-    );
-    setGradeId(normalizedInitialState.gradeId);
-    setEditableInputs(normalizedInitialState.editableInputs);
-    setSelectedAnnexId(normalizedInitialState.selectedAnnexId);
-    setAnnex(normalizedInitialState.annex);
-  }, [normalizedInitialState, options.resetKey]);
 
   const sections = useMemo(() => getSectionsByShape(shape), [shape]);
   const isCustomSectionSelected = selectedSectionId === CUSTOM_SECTION_ID;

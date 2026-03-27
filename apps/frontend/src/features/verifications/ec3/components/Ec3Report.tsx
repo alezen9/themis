@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import {
@@ -57,6 +57,17 @@ const buildTraceMap = (trace: TraceEntry[]) => {
   return map;
 };
 
+const renderKatexHtml = (tex: string, display: boolean) => {
+  try {
+    return katex.renderToString(tex, {
+      throwOnError: false,
+      displayMode: display,
+    });
+  } catch {
+    return null;
+  }
+};
+
 const Formula = ({
   tex,
   display = false,
@@ -64,15 +75,11 @@ const Formula = ({
   tex: string;
   display?: boolean;
 }) => {
-  try {
-    const html = katex.renderToString(tex, {
-      throwOnError: false,
-      displayMode: display,
-    });
-    return <span dangerouslySetInnerHTML={{ __html: html }} />;
-  } catch {
+  const html = renderKatexHtml(tex, display);
+  if (html === null) {
     return <code className="text-xs text-red-500">{tex}</code>;
   }
+  return <span dangerouslySetInnerHTML={{ __html: html }} />;
 };
 
 const Unit = ({ unit }: { unit: string }) => (
@@ -797,10 +804,18 @@ const SummaryVerification = ({
 
 // -- Main report --
 
+const EMPTY_EXPANDED_CHECKS = new Set<number>();
+
 export const Ec3Report = ({ results, mode }: Ec3ReportProps) => {
-  const [expandedChecks, setExpandedChecks] = useState<Set<number>>(
-    () => new Set(),
-  );
+  const [expandedCheckState, setExpandedCheckState] = useState(() => ({
+    results,
+    mode,
+    checks: new Set<number>(),
+  }));
+  const expandedChecks =
+    expandedCheckState.results === results && expandedCheckState.mode === mode
+      ? expandedCheckState.checks
+      : EMPTY_EXPANDED_CHECKS;
   const passed = results.filter(
     (r) => hasData(r) && r.payload.data.passed,
   ).length;
@@ -813,24 +828,24 @@ export const Ec3Report = ({ results, mode }: Ec3ReportProps) => {
   ).length;
   const hasExpandedChecks = expandedChecks.size > 0;
 
-  useEffect(() => {
-    setExpandedChecks(new Set());
-  }, [results, mode]);
-
   const toggleCheck = (checkId: number) => {
-    setExpandedChecks((current) => {
-      const next = new Set(current);
+    setExpandedCheckState((current) => {
+      const currentChecks =
+        current.results === results && current.mode === mode
+          ? current.checks
+          : EMPTY_EXPANDED_CHECKS;
+      const next = new Set(currentChecks);
       if (next.has(checkId)) {
         next.delete(checkId);
       } else {
         next.add(checkId);
       }
-      return next;
+      return { results, mode, checks: next };
     });
   };
 
   const collapseAll = () => {
-    setExpandedChecks(new Set());
+    setExpandedCheckState({ results, mode, checks: new Set() });
   };
 
   return (

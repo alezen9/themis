@@ -56,6 +56,17 @@ const formatScalar = (value: unknown) => {
   return JSON.stringify(value);
 };
 
+const renderKatexHtml = (tex: string, display: boolean) => {
+  try {
+    return katex.renderToString(tex, {
+      displayMode: display,
+      throwOnError: false,
+    });
+  } catch {
+    return null;
+  }
+};
+
 function MathFormula({
   tex,
   className,
@@ -65,17 +76,13 @@ function MathFormula({
   className?: string;
   display?: boolean;
 }) {
-  try {
-    const html = katex.renderToString(tex, {
-      displayMode: display,
-      throwOnError: false,
-    });
-    return (
-      <span className={className} dangerouslySetInnerHTML={{ __html: html }} />
-    );
-  } catch {
+  const html = renderKatexHtml(tex, display);
+  if (html === null) {
     return <code className={className}>{tex}</code>;
   }
+  return (
+    <span className={className} dangerouslySetInnerHTML={{ __html: html }} />
+  );
 }
 
 function FormulaBlock({

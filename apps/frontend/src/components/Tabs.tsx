@@ -1,8 +1,6 @@
 import {
   Children,
-  cloneElement,
   isValidElement,
-  useEffect,
   useId,
   useLayoutEffect,
   useRef,
@@ -32,10 +30,9 @@ type InternalTabProps = {
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   onKeyDown?: (event: KeyboardEvent<HTMLButtonElement>) => void;
   tabId?: string;
-  tabRef?: (node: HTMLButtonElement | null) => void;
 };
 
-export type TabProps = Omit<InternalTabProps, "isActive" | "tabId" | "tabRef">;
+export type TabProps = Omit<InternalTabProps, "isActive" | "tabId">;
 
 export function Tab({
   children,
@@ -45,11 +42,9 @@ export function Tab({
   onClick,
   onKeyDown,
   tabId,
-  tabRef,
 }: InternalTabProps) {
   return (
     <button
-      ref={tabRef}
       id={tabId}
       type="button"
       role="tab"
@@ -74,6 +69,11 @@ type TabsProps = {
   className?: string;
 };
 
+const getTabElements = (container: HTMLDivElement | null) =>
+  Array.from(
+    container?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? [],
+  );
+
 function clampIndex(index: number, length: number) {
   if (length === 0) return 0;
   return Math.min(Math.max(index, 0), length - 1);
@@ -94,20 +94,18 @@ export function Tabs({
   const [activeIndex, setActiveIndex] = useState(() =>
     clampIndex(defaultActiveIndex, items.length),
   );
+  const clampedActiveIndex = clampIndex(activeIndex, items.length);
   const [indicatorStyle, setIndicatorStyle] = useState<IndicatorStyle>({
     opacity: 0,
   });
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const tabsId = useId();
-
-  useEffect(() => {
-    setActiveIndex((currentIndex) => clampIndex(currentIndex, items.length));
-  }, [items.length]);
 
   useLayoutEffect(() => {
     const updateIndicator = () => {
-      const activeTab = tabRefs.current[activeIndex];
+      const activeTab = getTabElements(containerRef.current)[
+        clampedActiveIndex
+      ];
 
       if (!activeTab) {
         setIndicatorStyle({ opacity: 0 });
@@ -140,7 +138,7 @@ export function Tabs({
 
     const observer = new ResizeObserver(() => updateIndicator());
     observer.observe(container);
-    tabRefs.current.forEach((tab) => {
+    getTabElements(container).forEach((tab) => {
       if (tab) observer.observe(tab);
     });
 
@@ -149,12 +147,12 @@ export function Tabs({
       container.removeEventListener("scroll", handleResize);
       window.removeEventListener("resize", handleResize);
     };
-  }, [activeIndex, items.length]);
+  }, [clampedActiveIndex, items.length]);
 
   if (items.length === 0) return null;
 
   const focusTab = (targetIndex: number) => {
-    const nextTab = tabRefs.current[targetIndex];
+    const nextTab = getTabElements(containerRef.current)[targetIndex];
     if (!nextTab || nextTab.disabled) return;
     nextTab.focus();
     setActiveIndex(targetIndex);
@@ -162,10 +160,11 @@ export function Tabs({
 
   const moveFocus = (startIndex: number, direction: -1 | 1) => {
     let nextIndex = startIndex;
+    const tabs = getTabElements(containerRef.current);
 
     for (let step = 0; step < items.length; step += 1) {
       nextIndex = (nextIndex + direction + items.length) % items.length;
-      const nextTab = tabRefs.current[nextIndex];
+      const nextTab = tabs[nextIndex];
       if (nextTab && !nextTab.disabled) {
         focusTab(nextIndex);
         return;
@@ -178,9 +177,10 @@ export function Tabs({
       edge === "start"
         ? items.map((_, index) => index)
         : items.map((_, index) => items.length - 1 - index);
+    const tabs = getTabElements(containerRef.current);
 
     for (const index of indices) {
-      const tab = tabRefs.current[index];
+      const tab = tabs[index];
       if (tab && !tab.disabled) {
         focusTab(index);
         return;
@@ -206,19 +206,19 @@ export function Tabs({
           style={indicatorStyle}
         />
 
-        {items.map((child, index) =>
-          cloneElement(child, {
-            isActive: index === activeIndex,
-            tabId: `${tabsId}-tab-${index}`,
-            tabRef: (node: HTMLButtonElement | null) => {
-              tabRefs.current[index] = node;
-            },
-            onClick: (event: MouseEvent<HTMLButtonElement>) => {
+        {items.map((child, index) => (
+          <Tab
+            key={child.key ?? `${tabsId}-tab-item-${index}`}
+            className={child.props.className}
+            disabled={child.props.disabled}
+            isActive={index === clampedActiveIndex}
+            tabId={`${tabsId}-tab-${index}`}
+            onClick={(event) => {
               child.props.onClick?.(event);
               if (event.defaultPrevented || child.props.disabled) return;
               setActiveIndex(index);
-            },
-            onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => {
+            }}
+            onKeyDown={(event) => {
               child.props.onKeyDown?.(event);
               if (event.defaultPrevented) return;
 
@@ -244,9 +244,11 @@ export function Tabs({
                 default:
                   break;
               }
-            },
-          }),
-        )}
+            }}
+          >
+            {child.props.children}
+          </Tab>
+        ))}
       </div>
     </div>
   );
