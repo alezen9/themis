@@ -1,4 +1,4 @@
-import type { FabricationType, SectionShape } from "../inputs";
+import type { FabricationType, SectionShape } from "../inputsSchema";
 
 type HollowSectionShape = Exclude<SectionShape, "I">;
 

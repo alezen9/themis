@@ -1,8 +1,16 @@
 import type {
+  Ec3InputValues,
   ResolvedSectionClass,
-  RhsSectionClassificationInput,
-} from "../inputs";
+  SectionInput,
+} from "../inputsSchema";
+import type { SectionProperties } from "../geometry/sectionProperties";
 import { resolveInternalPartClass } from "./internalPartClassification";
+
+type RhsSectionClassificationInput = Pick<
+  Extract<SectionInput, { shape: "RHS" }>,
+  "shape" | "h" | "b" | "tw" | "ri"
+> &
+  Pick<Ec3InputValues, "fy" | "N_Ed" | "M_y_Ed" | "M_z_Ed">;
 
 const maxSectionClass = (
   ...classes: ResolvedSectionClass[]
@@ -10,33 +18,20 @@ const maxSectionClass = (
 
 export const computeRhsSectionClassification = (
   input: RhsSectionClassificationInput,
+  sectionProperties: Pick<SectionProperties, "A" | "Wel_y" | "Wel_z">,
 ): ResolvedSectionClass => {
-  const {
-    yieldStrength,
-    depth,
-    width,
-    wallThickness,
-    innerRadius,
-    crossSectionArea = 0,
-    elasticSectionModulusY = 0,
-    elasticSectionModulusZ = 0,
-    axialForceEd = 0,
-    bendingMomentYEd = 0,
-    bendingMomentZEd = 0,
-  } = input;
+  const { fy, h, b, tw, ri, N_Ed, M_y_Ed, M_z_Ed } = input;
+  const { A, Wel_y, Wel_z } = sectionProperties;
 
-  const epsilon = Math.sqrt(235 / yieldStrength);
-  const wallDepth = Math.max(depth - 2 * (innerRadius + wallThickness), 0);
-  const wallWidth = Math.max(width - 2 * (innerRadius + wallThickness), 0);
-  const depthSlenderness = wallDepth / wallThickness;
-  const widthSlenderness = wallWidth / wallThickness;
+  const epsilon = Math.sqrt(235 / fy);
+  const wallDepth = Math.max(h - 2 * (ri + tw), 0);
+  const wallWidth = Math.max(b - 2 * (ri + tw), 0);
+  const depthSlenderness = wallDepth / tw;
+  const widthSlenderness = wallWidth / tw;
 
-  const compressionFromAxialForce =
-    crossSectionArea > 0 ? -axialForceEd / crossSectionArea : 0;
-  const compressionFromBendingY =
-    elasticSectionModulusY > 0 ? -bendingMomentYEd / elasticSectionModulusY : 0;
-  const compressionFromBendingZ =
-    elasticSectionModulusZ > 0 ? -bendingMomentZEd / elasticSectionModulusZ : 0;
+  const compressionFromAxialForce = A > 0 ? -N_Ed / A : 0;
+  const compressionFromBendingY = Wel_y > 0 ? -M_y_Ed / Wel_y : 0;
+  const compressionFromBendingZ = Wel_z > 0 ? -M_z_Ed / Wel_z : 0;
 
   const topLeftStress =
     compressionFromAxialForce +
@@ -59,28 +54,28 @@ export const computeRhsSectionClassification = (
     resolveInternalPartClass(
       widthSlenderness,
       epsilon,
-      yieldStrength,
+      fy,
       topLeftStress,
       topRightStress,
     ),
     resolveInternalPartClass(
       widthSlenderness,
       epsilon,
-      yieldStrength,
+      fy,
       bottomLeftStress,
       bottomRightStress,
     ),
     resolveInternalPartClass(
       depthSlenderness,
       epsilon,
-      yieldStrength,
+      fy,
       topLeftStress,
       bottomLeftStress,
     ),
     resolveInternalPartClass(
       depthSlenderness,
       epsilon,
-      yieldStrength,
+      fy,
       topRightStress,
       bottomRightStress,
     ),

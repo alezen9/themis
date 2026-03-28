@@ -1,5 +1,5 @@
 import { getBucklingCurves, getImperfectionFactor } from "../buckling/buckling";
-import type { ChsSectionInput } from "../inputs";
+import type { ChsSectionInput } from "../inputsSchema";
 import type { SectionProperties } from "./sectionProperties";
 
 export const computeChsSectionProperties = (
@@ -9,16 +9,16 @@ export const computeChsSectionProperties = (
   const t = section.t; // wall thickness
   const di = d - 2 * t;
 
-  const A = section.A ?? (Math.PI / 4) * (d ** 2 - di ** 2);
-  const Iy = section.Iy ?? (Math.PI / 64) * (d ** 4 - di ** 4);
+  const A = (Math.PI / 4) * (d ** 2 - di ** 2);
+  const Iy = (Math.PI / 64) * (d ** 4 - di ** 4);
   const Iz = Iy;
   const Wel_y = Iy / (d / 2);
   const Wel_z = Wel_y;
-  const Wpl_y = section.Wpl_y ?? (d ** 3 - di ** 3) / 6;
+  const Wpl_y = (d ** 3 - di ** 3) / 6;
   const Wpl_z = Wpl_y;
   const Av_y = (2 * A) / Math.PI;
   const Av_z = Av_y;
-  const It = section.It ?? 2 * Iy;
+  const It = 2 * Iy;
 
   const curves = getBucklingCurves({
     shape: "CHS",
@@ -45,9 +45,9 @@ export const computeChsSectionProperties = (
     tf: 0, // flange thickness is not applicable to CHS sections
     t,
     d,
-    bucklingY: curves.y,
-    bucklingZ: curves.z,
-    bucklingLT: curves.lt,
+    buckling_curve_y: curves.y,
+    buckling_curve_z: curves.z,
+    buckling_curve_LT: curves.lt,
     alpha_y: getImperfectionFactor(curves.y),
     alpha_z: getImperfectionFactor(curves.z),
     alpha_LT: getImperfectionFactor(curves.lt),

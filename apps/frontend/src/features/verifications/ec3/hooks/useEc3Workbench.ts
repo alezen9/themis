@@ -1,3 +1,4 @@
+import { SHAPE_OPTIONS, SUPPORT_CONDITION_VALUES } from "../constants";
 import {
   useCallback,
   useMemo,
@@ -12,10 +13,7 @@ import {
   isNotApplicable,
   useEc3Evaluate,
 } from "./useEc3Evaluate";
-import {
-  computeEc3ComputedProperties,
-  toEc3SectionDerivedInputs,
-} from "../domain/computedProperties";
+import { computeEc3ComputedProperties } from "../domain/computedProperties";
 import { flangedSections, type FlangedSection } from "../data/flangedSections";
 import { hollowSections, type HollowSection } from "../data/hollowSections";
 import {
@@ -36,10 +34,14 @@ import type {
   SupportCondition,
   VerificationRow,
 } from "./useEc3Evaluate";
-import { ANNEX_EDITABLE_KEYS, SECTION_CLASS_OPTIONS } from "../inputContract";
-import { type FabricationType, type SectionInput } from "../domain/inputs";
-import type { Ec3SectionDerivedInputs } from "../domain/computedProperties";
+import { ANNEX_EDITABLE_KEYS } from "../inputContract";
+import {
+  type FabricationType,
+  type SectionInput,
+} from "../domain/inputsSchema";
 import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3";
+
+type Ec3ComputedProperties = ReturnType<typeof computeEc3ComputedProperties>;
 
 type CatalogSection = FlangedSection | HollowSection | CircularSection;
 
@@ -49,7 +51,6 @@ export const ANNEXES: readonly {
   coefficients: Record<string, number>;
 }[] = [italianAnnex, eurocodeAnnex];
 
-export const SHAPE_OPTIONS = ["I", "RHS", "CHS"] as const;
 export type ShapeKey = (typeof SHAPE_OPTIONS)[number];
 
 export const CUSTOM_SECTION_ID = "custom";
@@ -113,52 +114,20 @@ const INITIAL_CUSTOM_CHS_GEOMETRY: CustomChsSectionGeometry = {
 
 const mapCatalogSectionToInput = (section: CatalogSection): SectionInput => {
   if (section.shape === "I") {
-    return {
-      shape: "I",
-      fabricationType: "rolled",
-      h: section.h,
-      b: section.b,
-      tw: section.tw,
-      tf: section.tf,
-      r: section.r,
-      A: section.A,
-      Iy: section.Iy,
-      Iz: section.Iz,
-      Wpl_y: section.Wpl_y,
-      Wpl_z: section.Wpl_z,
-      It: section.It,
-      Iw: section.Iw,
-    };
+    const { h, b, tw, tf, r } = section;
+
+    return { shape: "I", fabricationType: "rolled", h, b, tw, tf, r };
   }
 
   if (section.shape === "RHS") {
-    return {
-      shape: "RHS",
-      fabricationType: "rolled",
-      h: section.h,
-      b: section.b,
-      tw: section.tw,
-      ro: section.ro,
-      ri: section.ri,
-      A: section.A,
-      Iy: section.Iy,
-      Iz: section.Iz,
-      Wpl_y: section.Wpl_y,
-      Wpl_z: section.Wpl_z,
-      It: section.It,
-    };
+    const { h, b, tw, ro, ri } = section;
+
+    return { shape: "RHS", fabricationType: "rolled", h, b, tw, ro, ri };
   }
 
-  return {
-    shape: "CHS",
-    fabricationType: "rolled",
-    d: section.d,
-    t: section.t,
-    A: section.A,
-    Iy: section.Iy,
-    Wpl_y: section.Wpl_y,
-    It: section.It,
-  };
+  const { d, t } = section;
+
+  return { shape: "CHS", fabricationType: "rolled", d, t };
 };
 
 const buildCustomSectionInput = (
@@ -271,43 +240,12 @@ const validateCustomSectionGeometry = (
   return null;
 };
 
-export const MOMENT_SHAPE_OPTIONS = [
-  "uniform",
-  "linear",
-  "parabolic",
-  "triangular",
-] as const;
-export const SUPPORT_CONDITION_OPTIONS = [
-  "pinned-pinned",
-  "pinned-fixed",
-  "fixed-fixed",
-] as const;
-export const LOAD_APPLICATION_LT_OPTIONS = [
-  "top-flange",
-  "centroid",
-  "bottom-flange",
-] as const;
-export const TORSIONAL_DEFORMATION_OPTIONS = ["yes", "no"] as const;
-export const INTERACTION_FACTOR_METHOD_OPTIONS = [
-  "both",
-  "method1",
-  "method2",
-  "any",
-] as const;
-export const COEFFICIENT_F_METHOD_OPTIONS = [
-  "default-equation",
-  "force-1.0",
-] as const;
-export const BUCKLING_CURVES_LT_POLICY_OPTIONS = [
-  "default",
-  "general",
-] as const;
-
 export type EditableNumericKey = {
-  [K in keyof Ec3EditableInputs]: Ec3EditableInputs[K] extends number
-    ? K
-    : never;
-}[keyof Ec3EditableInputs];
+  [K in Extract<
+    keyof Ec3EditableInputs,
+    string
+  >]: Ec3EditableInputs[K] extends number ? K : never;
+}[Extract<keyof Ec3EditableInputs, string>];
 
 export type FieldDef<K extends string = EditableNumericKey> = {
   key: K;
@@ -376,7 +314,7 @@ export const INITIAL_EDITABLE_INPUTS: Ec3EditableInputs = {
   M_z_Ed: 5_000_000,
   V_y_Ed: 10_000,
   V_z_Ed: 50_000,
-  section_class_mode: "auto",
+  section_class_selection: "auto",
   L: 5000,
   k_y: 1,
   k_z: 1,
@@ -426,9 +364,7 @@ const isShapeKey = (value: unknown): value is ShapeKey =>
 
 const isSupportCondition = (value: unknown): value is SupportCondition =>
   typeof value === "string" &&
-  (
-    ["pinned-pinned", "fixed-pinned", "pinned-fixed", "fixed-fixed"] as const
-  ).includes(value as SupportCondition);
+  SUPPORT_CONDITION_VALUES.includes(value as SupportCondition);
 
 const coerceShape = (value: unknown): ShapeKey =>
   isShapeKey(value) ? value : DEFAULT_SHAPE;
@@ -497,7 +433,18 @@ const coerceEditableInputs = (
   value: Partial<Ec3EditableInputs> | undefined,
 ): Ec3EditableInputs => {
   if (!value) return { ...INITIAL_EDITABLE_INPUTS };
-  const candidate = { ...INITIAL_EDITABLE_INPUTS, ...value };
+  const candidate = {
+    ...INITIAL_EDITABLE_INPUTS,
+    ...value,
+    section_class_selection:
+      value.section_class_selection ??
+      (
+        value as {
+          section_class_mode?: Ec3EditableInputs["section_class_selection"];
+        }
+      ).section_class_mode ??
+      INITIAL_EDITABLE_INPUTS.section_class_selection,
+  };
   candidate.N_Ed = pickFiniteNumber(
     candidate.N_Ed,
     INITIAL_EDITABLE_INPUTS.N_Ed,
@@ -684,7 +631,7 @@ export type Ec3WorkbenchState = {
   grade: SteelGrade;
   gradesByNorm: GradesByNormGroup[];
   resolvedInputs: Ec3ResolvedInputs | null;
-  sectionDerivedInputs: Ec3SectionDerivedInputs | null;
+  sectionDerivedInputs: Ec3ComputedProperties | null;
   materialInputs: { fy: number; E: number; G: number };
   classResolutionMessage: string | null;
   resolvedSectionClass: ResolvedSectionClass | null;
@@ -805,7 +752,7 @@ export const useEc3Workbench = (
     resolvedInputs: Ec3ResolvedInputs | null;
     classResolutionMessage: string | null;
     resolvedSectionClass: ResolvedSectionClass | null;
-    sectionDerivedInputs: Ec3SectionDerivedInputs | null;
+    sectionDerivedInputs: Ec3ComputedProperties | null;
   }>(() => {
     if (isCustomSectionSelected) {
       const invalidCustomGeometryMessage = validateCustomSectionGeometry(
@@ -826,20 +773,14 @@ export const useEc3Workbench = (
     }
 
     const computedProperties = computeEc3ComputedProperties({
-      section: sectionForSummary,
-      material: materialInputs,
-      editable: {
-        N_Ed: editableInputs.N_Ed,
-        M_y_Ed: editableInputs.M_y_Ed,
-        M_z_Ed: editableInputs.M_z_Ed,
-        section_class_mode: editableInputs.section_class_mode,
-      },
+      ...sectionForSummary,
+      ...materialInputs,
+      ...editableInputs,
     });
-    const sectionDerived = toEc3SectionDerivedInputs(computedProperties);
     const nextResolvedSectionClass = computedProperties.section_class;
 
     if (
-      editableInputs.section_class_mode === "auto" &&
+      editableInputs.section_class_selection === "auto" &&
       nextResolvedSectionClass === 4
     ) {
       return {
@@ -847,20 +788,19 @@ export const useEc3Workbench = (
         classResolutionMessage:
           "Automatic section class resolved to class 4, which is not supported in this scope. Select class 1, 2, or 3 manually.",
         resolvedSectionClass: nextResolvedSectionClass,
-        sectionDerivedInputs: sectionDerived,
+        sectionDerivedInputs: computedProperties,
       };
     }
 
     return {
       resolvedInputs: buildResolvedInputs(
         editableInputs,
-        sectionDerived,
+        computedProperties,
         materialInputs,
-        nextResolvedSectionClass,
       ),
       classResolutionMessage: null,
       resolvedSectionClass: nextResolvedSectionClass,
-      sectionDerivedInputs: sectionDerived,
+      sectionDerivedInputs: computedProperties,
     };
   }, [
     isCustomSectionSelected,
@@ -893,19 +833,25 @@ export const useEc3Workbench = (
 
   const setInput = useCallback(
     (key: EditableNumericKey, value: number) =>
-      setEditableInputs((prev) => ({ ...prev, [key]: value })),
+      setEditableInputs((prev: Ec3EditableInputs) => ({
+        ...prev,
+        [key]: value,
+      })),
     [],
   );
 
   const setEditableValue = useCallback(
     <K extends keyof Ec3EditableInputs>(key: K, value: Ec3EditableInputs[K]) =>
-      setEditableInputs((prev) => ({ ...prev, [key]: value })),
+      setEditableInputs((prev: Ec3EditableInputs) => ({
+        ...prev,
+        [key]: value,
+      })),
     [],
   );
 
   const setCoeff = useCallback(
     (key: keyof AnnexCoeffs, value: number) =>
-      setAnnex((prev) => ({ ...prev, [key]: value })),
+      setAnnex((prev: AnnexCoeffs) => ({ ...prev, [key]: value })),
     [],
   );
 
@@ -1030,6 +976,5 @@ export {
   DEFAULT_GRADE,
   DEFAULT_SECTION,
   FRONTEND_MAX_CHECK_ID,
-  SECTION_CLASS_OPTIONS,
   getSectionsByShape,
 };

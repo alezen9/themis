@@ -1,4 +1,4 @@
-import type { ResolvedSectionClass } from "../inputs";
+import type { ResolvedSectionClass } from "../inputsSchema";
 
 const computeClass1Limit = (alpha: number, epsilon: number) => {
   if (alpha <= 0.5) return (36 * epsilon) / alpha;
@@ -25,7 +25,7 @@ const computeClass3Limit = (
 export const resolveInternalPartClass = (
   slenderness: number,
   epsilon: number,
-  yieldStrength: number,
+  fy: number,
   stressEdgeA: number,
   stressEdgeB: number,
 ): ResolvedSectionClass => {
@@ -38,8 +38,7 @@ export const resolveInternalPartClass = (
   const stressRatio = minCompressionStress / maxCompressionStress;
   const tensionStressMagnitude = Math.max(-minCompressionStress, 0);
   const canUsePsiLowerBranch =
-    maxCompressionStress <= yieldStrength ||
-    tensionStressMagnitude >= yieldStrength;
+    maxCompressionStress <= fy || tensionStressMagnitude >= fy;
   const alpha =
     minCompressionStress >= 0
       ? 1

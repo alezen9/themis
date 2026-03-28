@@ -1,5 +1,5 @@
 import { getBucklingCurves, getImperfectionFactor } from "../buckling/buckling";
-import type { RhsSectionInput } from "../inputs";
+import type { RhsSectionInput } from "../inputsSchema";
 import type { SectionProperties } from "./sectionProperties";
 
 export const computeRhsSectionProperties = (
@@ -21,18 +21,18 @@ export const computeRhsSectionProperties = (
     2 * ri * (hi - 2 * ri + bi - 2 * ri) +
     Math.PI * ri ** 2 +
     (hi - 2 * ri) * (bi - 2 * ri);
-  const A = section.A ?? outerArea - innerArea;
-  const Iy = section.Iy ?? (b * h ** 3 - bi * hi ** 3) / 12;
-  const Iz = section.Iz ?? (h * b ** 3 - hi * bi ** 3) / 12;
+  const A = outerArea - innerArea;
+  const Iy = (b * h ** 3 - bi * hi ** 3) / 12;
+  const Iz = (h * b ** 3 - hi * bi ** 3) / 12;
   const Wel_y = Iy / (h / 2);
   const Wel_z = Iz / (b / 2);
-  const Wpl_y = section.Wpl_y ?? (b * h ** 2 - bi * hi ** 2) / 4;
-  const Wpl_z = section.Wpl_z ?? (h * b ** 2 - hi * bi ** 2) / 4;
+  const Wpl_y = (b * h ** 2 - bi * hi ** 2) / 4;
+  const Wpl_z = (h * b ** 2 - hi * bi ** 2) / 4;
   const Av_y = (A * b) / (b + h);
   const Av_z = (A * h) / (b + h);
   const p = 2 * (h - tw + (b - tw)) - 2 * ro * (4 - Math.PI);
   const Ap = A / p;
-  const It = section.It ?? (4 * Ap ** 2 * (p - 2.8 * Ap)) / 3;
+  const It = (4 * Ap ** 2 * (p - 2.8 * Ap)) / 3;
 
   const curves = getBucklingCurves({
     shape: "RHS",
@@ -59,9 +59,9 @@ export const computeRhsSectionProperties = (
     tf: 0, // flange thickness is not applicable to RHS sections
     t: 0, // CHS wall-thickness field is not applicable to RHS sections
     d: 0, // outer diameter is not applicable to RHS sections
-    bucklingY: curves.y,
-    bucklingZ: curves.z,
-    bucklingLT: curves.lt,
+    buckling_curve_y: curves.y,
+    buckling_curve_z: curves.z,
+    buckling_curve_LT: curves.lt,
     alpha_y: getImperfectionFactor(curves.y),
     alpha_z: getImperfectionFactor(curves.z),
     alpha_LT: getImperfectionFactor(curves.lt),

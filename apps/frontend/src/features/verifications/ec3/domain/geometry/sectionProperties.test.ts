@@ -13,8 +13,8 @@ describe("computeSectionProperties", () => {
       r: 8,
     });
 
-    expect(properties.bucklingY).toBe("a");
-    expect(properties.bucklingZ).toBe("b");
+    expect(properties.buckling_curve_y).toBe("a");
+    expect(properties.buckling_curve_z).toBe("b");
   });
 
   it("uses welded buckling curves for custom I input", () => {
@@ -28,8 +28,8 @@ describe("computeSectionProperties", () => {
       r: 8,
     });
 
-    expect(properties.bucklingY).toBe("b");
-    expect(properties.bucklingZ).toBe("c");
+    expect(properties.buckling_curve_y).toBe("b");
+    expect(properties.buckling_curve_z).toBe("c");
   });
 
   it("switches RHS buckling curves by fabrication type", () => {
@@ -52,10 +52,10 @@ describe("computeSectionProperties", () => {
       ri: 8,
     });
 
-    expect(rolled.bucklingY).toBe("a");
-    expect(rolled.bucklingZ).toBe("a");
-    expect(welded.bucklingY).toBe("b");
-    expect(welded.bucklingZ).toBe("b");
+    expect(rolled.buckling_curve_y).toBe("a");
+    expect(rolled.buckling_curve_z).toBe("a");
+    expect(welded.buckling_curve_y).toBe("b");
+    expect(welded.buckling_curve_z).toBe("b");
   });
 
   it("uses RHS inner and outer corner radii in custom area calculation", () => {
@@ -81,40 +81,12 @@ describe("computeSectionProperties", () => {
     expect(widerCorners.A).toBeLessThan(tighterCorners.A);
   });
 
-  it("prefers precomputed values when provided", () => {
-    const properties = computeSectionProperties({
-      shape: "I",
-      fabricationType: "rolled",
-      h: 300,
-      b: 100,
-      tw: 6,
-      tf: 10,
-      r: 8,
-      A: 1234,
-      Iy: 2345,
-      Iz: 3456,
-      Wpl_y: 4567,
-      Wpl_z: 5678,
-      It: 6789,
-      Iw: 7890,
-    });
-
-    expect(properties.A).toBe(1234);
-    expect(properties.Iy).toBe(2345);
-    expect(properties.Iz).toBe(3456);
-    expect(properties.Wpl_y).toBe(4567);
-    expect(properties.Wpl_z).toBe(5678);
-    expect(properties.It).toBe(6789);
-    expect(properties.Iw).toBe(7890);
-  });
-
-  it("computes missing values while preserving provided precomputed ones", () => {
+  it("computes section properties directly from geometry inputs", () => {
     const h = 200;
     const b = 100;
     const tw = 8;
     const ro = 12;
     const ri = 8;
-    const providedArea = 9999;
     const hi = h - 2 * tw;
     const bi = b - 2 * tw;
     const expectedIy = (b * h ** 3 - bi * hi ** 3) / 12;
@@ -127,12 +99,10 @@ describe("computeSectionProperties", () => {
       tw,
       ro,
       ri,
-      A: providedArea,
     });
 
-    expect(properties.A).toBe(providedArea);
     expect(properties.Iy).toBeCloseTo(expectedIy, 6);
-    expect(properties.Av_y).toBeCloseTo((providedArea * b) / (b + h), 6);
+    expect(properties.Av_y).toBeCloseTo((properties.A * b) / (b + h), 6);
   });
 
   it("sets non-applicable geometric fields to zero", () => {

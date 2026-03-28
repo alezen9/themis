@@ -1,18 +1,20 @@
 import { computeSectionProperties } from "../domain/geometry/sectionProperties";
-import type { Ec3EditableInputs, SectionInput } from "../domain/inputs";
 import {
-  ANNEXES,
-  ANNEX_FIELDS,
   BUCKLING_CURVES_LT_POLICY_OPTIONS,
   COEFFICIENT_F_METHOD_OPTIONS,
-  CUSTOM_SECTION_ID,
-  FIELD_GROUPS,
   INTERACTION_FACTOR_METHOD_OPTIONS,
   LOAD_APPLICATION_LT_OPTIONS,
   MOMENT_SHAPE_OPTIONS,
   SECTION_CLASS_OPTIONS,
   SHAPE_OPTIONS,
   SUPPORT_CONDITION_OPTIONS,
+} from "../constants";
+import type { Ec3EditableInputs, SectionInput } from "../domain/inputsSchema";
+import {
+  ANNEXES,
+  ANNEX_FIELDS,
+  CUSTOM_SECTION_ID,
+  FIELD_GROUPS,
   toDisplay,
   type Ec3WorkbenchState,
   type EditableNumericKey,
@@ -86,20 +88,20 @@ function FieldGroup({
 
 function SectionSummary({
   section,
-  sectionClassMode,
+  sectionClassSelection,
   resolvedSectionClass,
 }: {
   section: SectionInput;
-  sectionClassMode: Ec3EditableInputs["section_class_mode"];
+  sectionClassSelection: Ec3EditableInputs["section_class_selection"];
   resolvedSectionClass: 1 | 2 | 3 | 4 | null;
 }) {
   const computed = computeSectionProperties(section);
   const classDisplay =
-    sectionClassMode === "auto"
+    sectionClassSelection === "auto"
       ? resolvedSectionClass === null
         ? "auto: —"
         : `auto: ${resolvedSectionClass}`
-      : `manual: ${sectionClassMode}`;
+      : `manual: ${sectionClassSelection}`;
 
   const geometryDisplay =
     section.shape === "I"
@@ -130,8 +132,8 @@ function SectionSummary({
 
         <span className="font-medium text-gray-600">Curves</span>
         <span>
-          y/z/LT: {computed.bucklingY}/{computed.bucklingZ}/
-          {computed.bucklingLT}
+          y/z/LT: {computed.buckling_curve_y}/{computed.buckling_curve_z}/
+          {computed.buckling_curve_LT}
         </span>
       </div>
     </div>
@@ -400,11 +402,11 @@ export function Verification({
           <label className="flex items-center gap-2 text-sm">
             <span className="w-20 shrink-0">Class</span>
             <select
-              value={editableInputs.section_class_mode}
+              value={editableInputs.section_class_selection}
               onChange={(event) => {
                 const rawValue = event.target.value;
                 setEditableValue(
-                  "section_class_mode",
+                  "section_class_selection",
                   rawValue === "auto"
                     ? "auto"
                     : (Number(rawValue) as 1 | 2 | 3),
@@ -422,7 +424,7 @@ export function Verification({
 
           <SectionSummary
             section={sectionForSummary}
-            sectionClassMode={editableInputs.section_class_mode}
+            sectionClassSelection={editableInputs.section_class_selection}
             resolvedSectionClass={resolvedSectionClass}
           />
         </div>

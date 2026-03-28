@@ -1,8 +1,19 @@
 import type {
-  ISectionClassificationInput,
+  Ec3InputValues,
+  FabricationType,
   ResolvedSectionClass,
-} from "../inputs";
+  SectionInput,
+} from "../inputsSchema";
+import type { SectionProperties } from "../geometry/sectionProperties";
 import { resolveInternalPartClass } from "./internalPartClassification";
+
+type ISectionClassificationInput = Pick<
+  Extract<SectionInput, { shape: "I" }>,
+  "shape" | "h" | "b" | "tw" | "tf" | "r"
+> & { fabricationType?: FabricationType } & Pick<
+    Ec3InputValues,
+    "fy" | "N_Ed" | "M_y_Ed" | "M_z_Ed"
+  >;
 
 const maxSectionClass = (
   ...classes: ResolvedSectionClass[]
@@ -73,41 +84,23 @@ const resolveWeldedOutstandClass = (
 
 export const computeISectionClassification = (
   input: ISectionClassificationInput,
+  sectionProperties: Pick<SectionProperties, "A" | "Wel_y" | "Wel_z">,
 ): ResolvedSectionClass => {
-  const {
-    fabricationType = "rolled",
-    yieldStrength,
-    depth,
-    width,
-    webThickness,
-    flangeThickness,
-    rootRadius = 0,
-    crossSectionArea = 0,
-    elasticSectionModulusY = 0,
-    elasticSectionModulusZ = 0,
-    axialForceEd = 0,
-    bendingMomentYEd = 0,
-    bendingMomentZEd = 0,
-  } = input;
+  const { fabricationType, fy, h, b, tw, tf, r, N_Ed, M_y_Ed, M_z_Ed } = input;
+  const { A, Wel_y, Wel_z } = sectionProperties;
 
-  const epsilon = Math.sqrt(235 / yieldStrength);
-  const flangeOutstand = Math.max(
-    (width - webThickness - 2 * rootRadius) / 2,
-    0,
-  );
-  const flangeSlenderness = flangeOutstand / flangeThickness;
+  const epsilon = Math.sqrt(235 / fy);
+  const flangeOutstand = Math.max((b - tw - 2 * r) / 2, 0);
+  const flangeSlenderness = flangeOutstand / tf;
 
-  const webHeight = Math.max(depth - 2 * flangeThickness - 2 * rootRadius, 0);
-  const webSlenderness = webHeight / webThickness;
+  const webHeight = Math.max(h - 2 * tf - 2 * r, 0);
+  const webSlenderness = webHeight / tw;
 
-  const compressionFromAxialForce =
-    crossSectionArea > 0 ? -axialForceEd / crossSectionArea : 0;
-  const compressionFromBendingY =
-    elasticSectionModulusY > 0 ? -bendingMomentYEd / elasticSectionModulusY : 0;
-  const tipCompressionFromBendingZ =
-    elasticSectionModulusZ > 0 ? -bendingMomentZEd / elasticSectionModulusZ : 0;
-  const tipDistanceFromCentroid = width / 2;
-  const webDistanceFromCentroid = webThickness / 2 + rootRadius;
+  const compressionFromAxialForce = A > 0 ? -N_Ed / A : 0;
+  const compressionFromBendingY = Wel_y > 0 ? -M_y_Ed / Wel_y : 0;
+  const tipCompressionFromBendingZ = Wel_z > 0 ? -M_z_Ed / Wel_z : 0;
+  const tipDistanceFromCentroid = b / 2;
+  const webDistanceFromCentroid = tw / 2 + r;
   const webToTipDistanceRatio =
     tipDistanceFromCentroid > 0
       ? Math.min(webDistanceFromCentroid / tipDistanceFromCentroid, 1)
@@ -120,7 +113,7 @@ export const computeISectionClassification = (
   const webClass = resolveInternalPartClass(
     webSlenderness,
     epsilon,
-    yieldStrength,
+    fy,
     topStress,
     bottomStress,
   );

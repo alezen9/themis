@@ -1,5 +1,5 @@
 import type { BucklingCurve } from "../buckling/buckling";
-import type { SectionInput } from "../inputs";
+import type { SectionInput } from "../inputsSchema";
 import { computeChsSectionProperties } from "./sectionPropertiesChs";
 import { computeISectionProperties } from "./sectionPropertiesI";
 import { computeRhsSectionProperties } from "./sectionPropertiesRhs";
@@ -24,9 +24,9 @@ export type SectionProperties = {
   tf: number; // flange thickness
   t: number; // wall thickness
   d: number; // outer diameter
-  bucklingY: BucklingCurve;
-  bucklingZ: BucklingCurve;
-  bucklingLT: BucklingCurve;
+  buckling_curve_y: BucklingCurve;
+  buckling_curve_z: BucklingCurve;
+  buckling_curve_LT: BucklingCurve;
   alpha_y: number;
   alpha_z: number;
   alpha_LT: number;
@@ -43,4 +43,6 @@ export const computeSectionProperties = (
     case "CHS":
       return computeChsSectionProperties(section);
   }
+
+  throw new Error("Unsupported section shape");
 };

@@ -5,9 +5,9 @@ describe("computeChsSectionClassification", () => {
   it("returns class 1 when d/t is below the class 1 tubular limit", () => {
     const sectionClass = computeChsSectionClassification({
       shape: "CHS",
-      yieldStrength: 235,
-      diameter: 99.8,
-      wallThickness: 2,
+      fy: 235,
+      d: 99.8,
+      t: 2,
     });
 
     expect(sectionClass).toBe(1);
@@ -16,9 +16,9 @@ describe("computeChsSectionClassification", () => {
   it("returns class 2 when d/t is between class 1 and class 2 limits", () => {
     const sectionClass = computeChsSectionClassification({
       shape: "CHS",
-      yieldStrength: 235,
-      diameter: 120,
-      wallThickness: 2,
+      fy: 235,
+      d: 120,
+      t: 2,
     });
 
     expect(sectionClass).toBe(2);
@@ -27,9 +27,9 @@ describe("computeChsSectionClassification", () => {
   it("returns class 3 when d/t is between class 2 and class 3 limits", () => {
     const sectionClass = computeChsSectionClassification({
       shape: "CHS",
-      yieldStrength: 235,
-      diameter: 160,
-      wallThickness: 2,
+      fy: 235,
+      d: 160,
+      t: 2,
     });
 
     expect(sectionClass).toBe(3);
@@ -38,9 +38,9 @@ describe("computeChsSectionClassification", () => {
   it("returns class 4 when d/t is above the class 3 tubular limit", () => {
     const sectionClass = computeChsSectionClassification({
       shape: "CHS",
-      yieldStrength: 235,
-      diameter: 190,
-      wallThickness: 2,
+      fy: 235,
+      d: 190,
+      t: 2,
     });
 
     expect(sectionClass).toBe(4);
@@ -49,15 +49,12 @@ describe("computeChsSectionClassification", () => {
   it("returns the same class for mixed load when geometry and fy are unchanged", () => {
     const sectionClass = computeChsSectionClassification({
       shape: "CHS",
-      yieldStrength: 235,
-      diameter: 120,
-      wallThickness: 2,
-      crossSectionArea: 500,
-      elasticSectionModulusY: 20_000,
-      elasticSectionModulusZ: 20_000,
-      axialForceEd: -250_000,
-      bendingMomentYEd: 10_000_000,
-      bendingMomentZEd: -7_000_000,
+      fy: 235,
+      d: 120,
+      t: 2,
+      N_Ed: -250_000,
+      M_y_Ed: 10_000_000,
+      M_z_Ed: -7_000_000,
     });
 
     expect(sectionClass).toBe(2);

@@ -1,13 +1,13 @@
 import { useMemo } from "react";
 import verify from "@ndg/ndg-ec3";
-import type { Ec3SectionDerivedInputs } from "../domain/computedProperties";
+import { computeEc3ComputedProperties } from "../domain/computedProperties";
 import type {
   AnnexCoeffs,
   Ec3EditableInputs,
   Ec3MaterialInputs,
   ResolvedSectionClass,
   SupportCondition,
-} from "../domain/inputs";
+} from "../domain/inputsSchema";
 
 export type {
   AnnexCoeffs,
@@ -15,25 +15,34 @@ export type {
   CoefficientFMethod,
   Ec3EditableInputs,
   Ec3MaterialInputs,
-  EditableSectionClass,
   InteractionFactorMethod,
   LoadApplicationLT,
   MomentShape,
   ResolvedSectionClass,
+  SectionClassSelection,
   SectionShape,
   SupportCondition,
   TorsionalDeformations,
-} from "../domain/inputs";
-export type { Ec3SectionDerivedInputs } from "../domain/computedProperties";
+} from "../domain/inputsSchema";
+
+type Ec3ComputedProperties = ReturnType<typeof computeEc3ComputedProperties>;
+type EngineSectionInputs = Omit<
+  Ec3ComputedProperties,
+  | "buckling_curve_y"
+  | "buckling_curve_z"
+  | "buckling_curve_LT"
+  | "d"
+  | "section_class"
+>;
 
 export type Ec3ResolvedInputs = Omit<
   Ec3EditableInputs,
-  "section_class_mode" | "LLT_over_L" | "LcrT_over_L"
+  "section_class_selection" | "LLT_over_L" | "LcrT_over_L"
 > & {
   section_class: ResolvedSectionClass;
   k_LT: number;
   k_T: number;
-} & Ec3SectionDerivedInputs &
+} & EngineSectionInputs &
   Ec3MaterialInputs;
 
 export type VerificationRow = ReturnType<typeof verify>[number];
@@ -48,9 +57,8 @@ const canonicalSupportCondition = (
 
 export const buildResolvedInputs = (
   editable: Ec3EditableInputs,
-  section: Ec3SectionDerivedInputs,
+  computedProperties: ReturnType<typeof computeEc3ComputedProperties>,
   material: Ec3MaterialInputs,
-  resolvedSectionClass: ResolvedSectionClass,
 ): Ec3ResolvedInputs => {
   const normalized = { ...editable };
 
@@ -71,19 +79,32 @@ export const buildResolvedInputs = (
     normalized.support_condition_LT,
   );
 
-  const resolvedEditable = { ...normalized } as Omit<
-    Ec3EditableInputs,
-    "section_class_mode" | "LLT_over_L" | "LcrT_over_L"
-  >;
-  delete (resolvedEditable as Partial<Ec3EditableInputs>).section_class_mode;
-  delete (resolvedEditable as Partial<Ec3EditableInputs>).LLT_over_L;
-  delete (resolvedEditable as Partial<Ec3EditableInputs>).LcrT_over_L;
+  const {
+    section_class_selection: _sectionClassSelection,
+    LLT_over_L,
+    LcrT_over_L,
+    ...resolvedEditable
+  } = normalized;
+  void _sectionClassSelection;
+
+  const {
+    buckling_curve_y: _bucklingCurveY,
+    buckling_curve_z: _bucklingCurveZ,
+    buckling_curve_LT: _bucklingCurveLT,
+    d: _d,
+    section_class,
+    ...section
+  } = computedProperties;
+  void _bucklingCurveY;
+  void _bucklingCurveZ;
+  void _bucklingCurveLT;
+  void _d;
 
   return {
     ...resolvedEditable,
-    section_class: resolvedSectionClass,
-    k_LT: normalized.LLT_over_L,
-    k_T: normalized.LcrT_over_L,
+    section_class,
+    k_LT: LLT_over_L,
+    k_T: LcrT_over_L,
     ...section,
     ...material,
   };
