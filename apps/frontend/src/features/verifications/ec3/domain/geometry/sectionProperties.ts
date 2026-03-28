@@ -1,55 +1,8 @@
-import type { BucklingCurve } from "./buckling";
+import type { BucklingCurve } from "../buckling/buckling";
+import type { SectionInput } from "../inputs";
 import { computeChsSectionProperties } from "./sectionPropertiesChs";
 import { computeISectionProperties } from "./sectionPropertiesI";
 import { computeRhsSectionProperties } from "./sectionPropertiesRhs";
-
-export type FabricationType = "rolled" | "welded";
-
-export type ISectionInput = {
-  shape: "I";
-  fabricationType: FabricationType;
-  h: number;
-  b: number;
-  tw: number;
-  tf: number;
-  r: number;
-  A?: number;
-  Iy?: number;
-  Iz?: number;
-  Wpl_y?: number;
-  Wpl_z?: number;
-  It?: number;
-  Iw?: number;
-};
-
-export type RhsSectionInput = {
-  shape: "RHS";
-  fabricationType: FabricationType;
-  h: number;
-  b: number;
-  tw: number;
-  ro: number;
-  ri: number;
-  A?: number;
-  Iy?: number;
-  Iz?: number;
-  Wpl_y?: number;
-  Wpl_z?: number;
-  It?: number;
-};
-
-export type ChsSectionInput = {
-  shape: "CHS";
-  fabricationType: FabricationType;
-  d: number;
-  t: number;
-  A?: number;
-  Iy?: number;
-  Wpl_y?: number;
-  It?: number;
-};
-
-export type SectionInput = ISectionInput | RhsSectionInput | ChsSectionInput;
 
 export type SectionProperties = {
   A: number;

@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { computeRhsClass } from "./computeRhsClass";
+import { computeRhsSectionClassification } from "./sectionClassificationRhs";
 
-describe("computeRhsClass", () => {
+describe("computeRhsSectionClassification", () => {
   it("returns class 2 in uniform compression when governing wall is between 33ε and 38ε", () => {
-    const sectionClass = computeRhsClass({
-      sectionShape: "RHS",
+    const sectionClass = computeRhsSectionClassification({
+      shape: "RHS",
       yieldStrength: 235,
       depth: 110,
       width: 70,
@@ -22,8 +22,8 @@ describe("computeRhsClass", () => {
   });
 
   it("returns class 3 for a mixed wall stress case with intermediate psi", () => {
-    const sectionClass = computeRhsClass({
-      sectionShape: "RHS",
+    const sectionClass = computeRhsSectionClassification({
+      shape: "RHS",
       yieldStrength: 235,
       depth: 630,
       width: 120,
@@ -41,8 +41,8 @@ describe("computeRhsClass", () => {
   });
 
   it("returns class 1 for depth wall slenderness just below 33ε in uniform compression", () => {
-    const sectionClass = computeRhsClass({
-      sectionShape: "RHS",
+    const sectionClass = computeRhsSectionClassification({
+      shape: "RHS",
       yieldStrength: 235,
       depth: 359,
       width: 120,
@@ -60,8 +60,8 @@ describe("computeRhsClass", () => {
   });
 
   it("returns class 2 for depth wall slenderness just above 33ε in uniform compression", () => {
-    const sectionClass = computeRhsClass({
-      sectionShape: "RHS",
+    const sectionClass = computeRhsSectionClassification({
+      shape: "RHS",
       yieldStrength: 235,
       depth: 364,
       width: 120,
@@ -79,8 +79,8 @@ describe("computeRhsClass", () => {
   });
 
   it("returns class 3 for depth wall slenderness just above 38ε in uniform compression", () => {
-    const sectionClass = computeRhsClass({
-      sectionShape: "RHS",
+    const sectionClass = computeRhsSectionClassification({
+      shape: "RHS",
       yieldStrength: 235,
       depth: 414,
       width: 120,
@@ -98,8 +98,8 @@ describe("computeRhsClass", () => {
   });
 
   it("returns class 4 when one wall governs above class-3 limit", () => {
-    const sectionClass = computeRhsClass({
-      sectionShape: "RHS",
+    const sectionClass = computeRhsSectionClassification({
+      shape: "RHS",
       yieldStrength: 235,
       depth: 100,
       width: 500,
@@ -117,8 +117,8 @@ describe("computeRhsClass", () => {
   });
 
   it("uses explicit inner radius when computing flat width c", () => {
-    const sectionClass = computeRhsClass({
-      sectionShape: "RHS",
+    const sectionClass = computeRhsSectionClassification({
+      shape: "RHS",
       yieldStrength: 235,
       depth: 370,
       width: 120,

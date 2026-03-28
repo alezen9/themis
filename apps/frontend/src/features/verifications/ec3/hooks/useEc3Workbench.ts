@@ -12,6 +12,10 @@ import {
   isNotApplicable,
   useEc3Evaluate,
 } from "./useEc3Evaluate";
+import {
+  computeEc3ComputedProperties,
+  toEc3SectionDerivedInputs,
+} from "../domain/computedProperties";
 import { flangedSections, type FlangedSection } from "../data/flangedSections";
 import { hollowSections, type HollowSection } from "../data/hollowSections";
 import {
@@ -28,18 +32,13 @@ import type {
   AnnexCoeffs,
   Ec3EditableInputs,
   Ec3ResolvedInputs,
-  Ec3SectionDerivedInputs,
   ResolvedSectionClass,
   SupportCondition,
   VerificationRow,
 } from "./useEc3Evaluate";
 import { ANNEX_EDITABLE_KEYS, SECTION_CLASS_OPTIONS } from "../inputContract";
-import {
-  computeSectionProperties,
-  type FabricationType,
-  type SectionInput,
-} from "../domain/sectionProperties";
-import computeClass from "../sectionClass";
+import { type FabricationType, type SectionInput } from "../domain/inputs";
+import type { Ec3SectionDerivedInputs } from "../domain/computedProperties";
 import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3";
 
 type CatalogSection = FlangedSection | HollowSection | CircularSection;
@@ -397,62 +396,6 @@ export const INITIAL_EDITABLE_INPUTS: Ec3EditableInputs = {
   psi_y: 0,
   psi_z: 0,
   psi_LT: 1,
-};
-
-const resolveSectionClass = (
-  section: SectionInput,
-  fy: number,
-  sectionDerived: Ec3SectionDerivedInputs,
-  actions: Pick<Ec3EditableInputs, "N_Ed" | "M_y_Ed" | "M_z_Ed">,
-  sectionClassMode: Ec3EditableInputs["section_class_mode"],
-): ResolvedSectionClass => {
-  if (sectionClassMode !== "auto") return sectionClassMode;
-  if (section.shape === "I") {
-    return computeClass({
-      sectionShape: "I",
-      fabricationType: section.fabricationType,
-      yieldStrength: fy,
-      depth: section.h,
-      width: section.b,
-      webThickness: section.tw,
-      flangeThickness: section.tf,
-      rootRadius: section.r,
-      crossSectionArea: sectionDerived.A,
-      elasticSectionModulusY: sectionDerived.Wel_y,
-      elasticSectionModulusZ: sectionDerived.Wel_z,
-      axialForceEd: actions.N_Ed,
-      bendingMomentYEd: actions.M_y_Ed,
-      bendingMomentZEd: actions.M_z_Ed,
-    });
-  }
-  if (section.shape === "RHS") {
-    return computeClass({
-      sectionShape: "RHS",
-      yieldStrength: fy,
-      depth: section.h,
-      width: section.b,
-      wallThickness: section.tw,
-      innerRadius: section.ri,
-      crossSectionArea: sectionDerived.A,
-      elasticSectionModulusY: sectionDerived.Wel_y,
-      elasticSectionModulusZ: sectionDerived.Wel_z,
-      axialForceEd: actions.N_Ed,
-      bendingMomentYEd: actions.M_y_Ed,
-      bendingMomentZEd: actions.M_z_Ed,
-    });
-  }
-  return computeClass({
-    sectionShape: "CHS",
-    yieldStrength: fy,
-    diameter: section.d,
-    wallThickness: section.t,
-    crossSectionArea: sectionDerived.A,
-    elasticSectionModulusY: sectionDerived.Wel_y,
-    elasticSectionModulusZ: sectionDerived.Wel_z,
-    axialForceEd: actions.N_Ed,
-    bendingMomentYEd: actions.M_y_Ed,
-    bendingMomentZEd: actions.M_z_Ed,
-  });
 };
 
 type GradesByNormGroup = { norm: string; grades: SteelGrade[] };
@@ -882,41 +825,18 @@ export const useEc3Workbench = (
       }
     }
 
-    const properties = computeSectionProperties(sectionForSummary);
-    const sectionDerived = {
-      A: properties.A,
-      Wel_y: properties.Wel_y,
-      Wel_z: properties.Wel_z,
-      Wpl_y: properties.Wpl_y,
-      Wpl_z: properties.Wpl_z,
-      Av_y: properties.Av_y,
-      Av_z: properties.Av_z,
-      tw: properties.tw,
-      hw: properties.hw,
-      section_shape: properties.section_shape,
-      Iy: properties.Iy,
-      Iz: properties.Iz,
-      It: properties.It,
-      Iw: properties.Iw,
-      alpha_y: properties.alpha_y,
-      alpha_z: properties.alpha_z,
-      alpha_LT: properties.alpha_LT,
-      h: properties.h,
-      b: properties.b,
-      tf: properties.tf,
-      t: properties.t,
-    } satisfies Ec3SectionDerivedInputs;
-    const nextResolvedSectionClass = resolveSectionClass(
-      sectionForSummary,
-      grade.fy,
-      sectionDerived,
-      {
+    const computedProperties = computeEc3ComputedProperties({
+      section: sectionForSummary,
+      material: materialInputs,
+      editable: {
         N_Ed: editableInputs.N_Ed,
         M_y_Ed: editableInputs.M_y_Ed,
         M_z_Ed: editableInputs.M_z_Ed,
+        section_class_mode: editableInputs.section_class_mode,
       },
-      editableInputs.section_class_mode,
-    );
+    });
+    const sectionDerived = toEc3SectionDerivedInputs(computedProperties);
+    const nextResolvedSectionClass = computedProperties.section_class;
 
     if (
       editableInputs.section_class_mode === "auto" &&
@@ -950,7 +870,6 @@ export const useEc3Workbench = (
     customChsSectionGeometry,
     sectionForSummary,
     editableInputs,
-    grade.fy,
     materialInputs,
   ]);
 

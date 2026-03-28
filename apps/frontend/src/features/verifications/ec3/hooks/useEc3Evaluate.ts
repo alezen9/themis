@@ -1,74 +1,30 @@
 import { useMemo } from "react";
 import verify from "@ndg/ndg-ec3";
+import type { Ec3SectionDerivedInputs } from "../domain/computedProperties";
+import type {
+  AnnexCoeffs,
+  Ec3EditableInputs,
+  Ec3MaterialInputs,
+  ResolvedSectionClass,
+  SupportCondition,
+} from "../domain/inputs";
 
-export type SectionShape = "I" | "RHS" | "CHS";
-export type EditableSectionClass = "auto" | 1 | 2 | 3;
-export type ResolvedSectionClass = 1 | 2 | 3 | 4;
-export type MomentShape = "uniform" | "linear" | "parabolic" | "triangular";
-export type SupportCondition =
-  | "pinned-pinned"
-  | "fixed-pinned"
-  | "pinned-fixed"
-  | "fixed-fixed";
-export type LoadApplicationLT = "top-flange" | "centroid" | "bottom-flange";
-export type TorsionalDeformations = "yes" | "no";
-export type InteractionFactorMethod = "both" | "method1" | "method2" | "any";
-export type CoefficientFMethod = "default-equation" | "force-1.0";
-export type BucklingCurvesLtPolicy = "default" | "general";
-
-export type Ec3EditableInputs = {
-  N_Ed: number;
-  M_y_Ed: number;
-  M_z_Ed: number;
-  V_y_Ed: number;
-  V_z_Ed: number;
-  L: number;
-  k_y: number;
-  k_z: number;
-  LLT_over_L: number;
-  LcrT_over_L: number;
-  psi_y: number;
-  psi_z: number;
-  psi_LT: number;
-  moment_shape_y: MomentShape;
-  moment_shape_z: MomentShape;
-  moment_shape_LT: MomentShape;
-  support_condition_y: SupportCondition;
-  support_condition_z: SupportCondition;
-  support_condition_LT: SupportCondition;
-  load_application_LT: LoadApplicationLT;
-  torsional_deformations: TorsionalDeformations;
-  interaction_factor_method: InteractionFactorMethod;
-  coefficient_f_method: CoefficientFMethod;
-  buckling_curves_LT_policy: BucklingCurvesLtPolicy;
-  section_class_mode: EditableSectionClass;
-};
-
-export type Ec3SectionDerivedInputs = {
-  A: number;
-  Wel_y: number;
-  Wel_z: number;
-  Wpl_y: number;
-  Wpl_z: number;
-  Av_y: number;
-  Av_z: number;
-  tw: number;
-  hw: number;
-  section_shape: SectionShape;
-  Iy: number;
-  Iz: number;
-  It: number;
-  Iw: number;
-  alpha_y: number;
-  alpha_z: number;
-  alpha_LT: number;
-  h: number;
-  b: number;
-  tf: number;
-  t: number;
-};
-
-export type Ec3MaterialInputs = { fy: number; E: number; G: number };
+export type {
+  AnnexCoeffs,
+  BucklingCurvesLtPolicy,
+  CoefficientFMethod,
+  Ec3EditableInputs,
+  Ec3MaterialInputs,
+  EditableSectionClass,
+  InteractionFactorMethod,
+  LoadApplicationLT,
+  MomentShape,
+  ResolvedSectionClass,
+  SectionShape,
+  SupportCondition,
+  TorsionalDeformations,
+} from "../domain/inputs";
+export type { Ec3SectionDerivedInputs } from "../domain/computedProperties";
 
 export type Ec3ResolvedInputs = Omit<
   Ec3EditableInputs,
@@ -79,13 +35,6 @@ export type Ec3ResolvedInputs = Omit<
   k_T: number;
 } & Ec3SectionDerivedInputs &
   Ec3MaterialInputs;
-
-export type AnnexCoeffs = {
-  gamma_M0: number;
-  gamma_M1: number;
-  lambda_LT_0: number;
-  beta_LT: number;
-};
 
 export type VerificationRow = ReturnType<typeof verify>[number];
 type EvaluationResult = NonNullable<VerificationRow["payload"]["data"]>;

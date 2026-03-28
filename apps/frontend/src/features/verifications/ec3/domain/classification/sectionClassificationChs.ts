@@ -1,6 +1,11 @@
-import type { ChsClassInput } from "./";
+import type {
+  ChsSectionClassificationInput,
+  ResolvedSectionClass,
+} from "../inputs";
 
-export const computeChsClass = (input: ChsClassInput) => {
+export const computeChsSectionClassification = (
+  input: ChsSectionClassificationInput,
+): ResolvedSectionClass => {
   const { yieldStrength, diameter, wallThickness } = input;
 
   const epsilonSquared = 235 / yieldStrength;

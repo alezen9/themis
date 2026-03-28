@@ -1,8 +1,5 @@
-import type { Ec3EditableInputs } from "../hooks/useEc3Evaluate";
-import {
-  computeSectionProperties,
-  type SectionInput,
-} from "../domain/sectionProperties";
+import { computeSectionProperties } from "../domain/geometry/sectionProperties";
+import type { Ec3EditableInputs, SectionInput } from "../domain/inputs";
 import {
   ANNEXES,
   ANNEX_FIELDS,
