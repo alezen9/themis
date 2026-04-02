@@ -1,10 +1,11 @@
-import { getBucklingCurves, getImperfectionFactor } from "../buckling/buckling";
-import type { ISectionInput } from "../inputsSchema";
-import type { SectionProperties } from "./sectionProperties";
+import type { Ec3FormValues } from "../formSchema";
 
-export const computeISectionProperties = (
-  section: ISectionInput,
-): SectionProperties => {
+type ISectionInput = Pick<
+  Extract<Ec3FormValues, { shape: "I" }>,
+  "shape" | "fabricationType" | "h" | "b" | "tw" | "tf" | "r"
+>;
+
+export const computeISectionProperties = (section: ISectionInput) => {
   const h = section.h;
   const b = section.b;
   const tw = section.tw; // web thickness
@@ -34,13 +35,6 @@ export const computeISectionProperties = (
   const Iw = ((tf * b ** 3) / 24) * (h - tf) ** 2;
   const hw = h - 2 * tf;
 
-  const curves = getBucklingCurves({
-    shape: "I",
-    fabricationType: section.fabricationType,
-    hOverB: h / b,
-    tf,
-  });
-
   return {
     A,
     Iy,
@@ -55,17 +49,10 @@ export const computeISectionProperties = (
     Iw,
     tw,
     hw,
-    section_shape: "I",
     h,
     b,
     tf,
     t: 0, // wall thickness is not applicable to I-sections
     d: 0, // outer diameter is not applicable to I-sections
-    buckling_curve_y: curves.y,
-    buckling_curve_z: curves.z,
-    buckling_curve_LT: curves.lt,
-    alpha_y: getImperfectionFactor(curves.y),
-    alpha_z: getImperfectionFactor(curves.z),
-    alpha_LT: getImperfectionFactor(curves.lt),
   };
 };

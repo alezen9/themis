@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
+import { computeBucklingProperties } from "../buckling/buckling";
 import { computeSectionProperties } from "./sectionProperties";
 
 describe("computeSectionProperties", () => {
   it("uses rolled buckling curves for predefined-style I input", () => {
-    const properties = computeSectionProperties({
+    const properties = computeBucklingProperties({
       shape: "I",
       fabricationType: "rolled",
       h: 300,
@@ -18,7 +19,7 @@ describe("computeSectionProperties", () => {
   });
 
   it("uses welded buckling curves for custom I input", () => {
-    const properties = computeSectionProperties({
+    const properties = computeBucklingProperties({
       shape: "I",
       fabricationType: "welded",
       h: 300,
@@ -33,7 +34,7 @@ describe("computeSectionProperties", () => {
   });
 
   it("switches RHS buckling curves by fabrication type", () => {
-    const rolled = computeSectionProperties({
+    const rolled = computeBucklingProperties({
       shape: "RHS",
       fabricationType: "rolled",
       h: 200,
@@ -42,7 +43,7 @@ describe("computeSectionProperties", () => {
       ro: 12,
       ri: 8,
     });
-    const welded = computeSectionProperties({
+    const welded = computeBucklingProperties({
       shape: "RHS",
       fabricationType: "welded",
       h: 200,

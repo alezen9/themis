@@ -1,30 +1,26 @@
-import type {
-  Ec3InputValues,
-  FabricationType,
-  ResolvedSectionClass,
-  SectionInput,
-} from "../inputsSchema";
-import type { SectionProperties } from "../geometry/sectionProperties";
-import { resolveInternalPartClass } from "./internalPartClassification";
+import type { Ec3FormValues } from "../formSchema";
+import { computeInternalPartClass } from "./internalPartClassification";
+
+type ComputedSectionClass = 1 | 2 | 3 | 4;
 
 type ISectionClassificationInput = Pick<
-  Extract<SectionInput, { shape: "I" }>,
+  Extract<Ec3FormValues, { shape: "I" }>,
   "shape" | "h" | "b" | "tw" | "tf" | "r"
-> & { fabricationType?: FabricationType } & Pick<
-    Ec3InputValues,
-    "fy" | "N_Ed" | "M_y_Ed" | "M_z_Ed"
-  >;
+> & { fabricationType?: Ec3FormValues["fabricationType"] } & Pick<
+    Ec3FormValues,
+    "N_Ed" | "M_y_Ed" | "M_z_Ed"
+  > & { fy: number };
 
-const maxSectionClass = (
-  ...classes: ResolvedSectionClass[]
-): ResolvedSectionClass => Math.max(...classes) as ResolvedSectionClass;
+const computeMaxSectionClass = (
+  ...classes: ComputedSectionClass[]
+): ComputedSectionClass => Math.max(...classes) as ComputedSectionClass;
 
-const resolveRolledOutstandClass = (
+const computeRolledOutstandClass = (
   flangeSlenderness: number,
   epsilon: number,
   webStress: number,
   tipStress: number,
-): ResolvedSectionClass => {
+): ComputedSectionClass => {
   const maxCompressionStress = Math.max(webStress, tipStress);
   if (maxCompressionStress <= 0) return 1;
   if (flangeSlenderness <= 9 * epsilon) return 1;
@@ -51,12 +47,12 @@ const computeWeldedOutstandKSigma = (webStress: number, tipStress: number) => {
   return 0.57 - 0.21 * clampedStressRatio + 0.07 * clampedStressRatio ** 2;
 };
 
-const resolveWeldedOutstandClass = (
+const computeWeldedOutstandClass = (
   flangeSlenderness: number,
   epsilon: number,
   webStress: number,
   tipStress: number,
-): ResolvedSectionClass => {
+): ComputedSectionClass => {
   const maxCompressionStress = Math.max(webStress, tipStress);
   if (maxCompressionStress <= 0) return 1;
 
@@ -84,9 +80,20 @@ const resolveWeldedOutstandClass = (
 
 export const computeISectionClassification = (
   input: ISectionClassificationInput,
-  sectionProperties: Pick<SectionProperties, "A" | "Wel_y" | "Wel_z">,
-): ResolvedSectionClass => {
-  const { fabricationType, fy, h, b, tw, tf, r, N_Ed, M_y_Ed, M_z_Ed } = input;
+  sectionProperties: { A: number; Wel_y: number; Wel_z: number },
+): ComputedSectionClass => {
+  const {
+    fabricationType = "rolled",
+    fy,
+    h,
+    b,
+    tw,
+    tf,
+    r,
+    N_Ed,
+    M_y_Ed,
+    M_z_Ed,
+  } = input;
   const { A, Wel_y, Wel_z } = sectionProperties;
 
   const epsilon = Math.sqrt(235 / fy);
@@ -110,7 +117,7 @@ export const computeISectionClassification = (
 
   const topStress = compressionFromAxialForce + compressionFromBendingY;
   const bottomStress = compressionFromAxialForce - compressionFromBendingY;
-  const webClass = resolveInternalPartClass(
+  const webClass = computeInternalPartClass(
     webSlenderness,
     epsilon,
     fy,
@@ -118,31 +125,31 @@ export const computeISectionClassification = (
     bottomStress,
   );
 
-  const resolveOutstandClass =
+  const computeOutstandClass =
     fabricationType === "welded"
-      ? resolveWeldedOutstandClass
-      : resolveRolledOutstandClass;
+      ? computeWeldedOutstandClass
+      : computeRolledOutstandClass;
 
-  const flangeClass = maxSectionClass(
-    resolveOutstandClass(
+  const flangeClass = computeMaxSectionClass(
+    computeOutstandClass(
       flangeSlenderness,
       epsilon,
       topStress - webCompressionFromBendingZ,
       topStress - tipCompressionFromBendingZ,
     ),
-    resolveOutstandClass(
+    computeOutstandClass(
       flangeSlenderness,
       epsilon,
       topStress + webCompressionFromBendingZ,
       topStress + tipCompressionFromBendingZ,
     ),
-    resolveOutstandClass(
+    computeOutstandClass(
       flangeSlenderness,
       epsilon,
       bottomStress - webCompressionFromBendingZ,
       bottomStress - tipCompressionFromBendingZ,
     ),
-    resolveOutstandClass(
+    computeOutstandClass(
       flangeSlenderness,
       epsilon,
       bottomStress + webCompressionFromBendingZ,
@@ -150,5 +157,5 @@ export const computeISectionClassification = (
     ),
   );
 
-  return maxSectionClass(webClass, flangeClass);
+  return computeMaxSectionClass(webClass, flangeClass);
 };

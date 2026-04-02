@@ -1,4 +1,4 @@
-import type { ResolvedSectionClass } from "../inputsSchema";
+type ComputedSectionClass = 1 | 2 | 3 | 4;
 
 const computeClass1Limit = (alpha: number, epsilon: number) => {
   if (alpha <= 0.5) return (36 * epsilon) / alpha;
@@ -22,13 +22,13 @@ const computeClass3Limit = (
   return 62 * epsilon * (1 - stressRatio) * Math.sqrt(-stressRatio);
 };
 
-export const resolveInternalPartClass = (
+export const computeInternalPartClass = (
   slenderness: number,
   epsilon: number,
   fy: number,
   stressEdgeA: number,
   stressEdgeB: number,
-): ResolvedSectionClass => {
+): ComputedSectionClass => {
   if (!Number.isFinite(slenderness) || slenderness <= 0) return 4;
 
   const maxCompressionStress = Math.max(stressEdgeA, stressEdgeB);

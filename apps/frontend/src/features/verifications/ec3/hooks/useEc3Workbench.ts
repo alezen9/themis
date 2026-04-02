@@ -1,4 +1,8 @@
-import { SHAPE_OPTIONS, SUPPORT_CONDITION_VALUES } from "../constants";
+import {
+  FABRICATION_TYPE_OPTIONS,
+  SHAPE_OPTIONS,
+  SUPPORT_CONDITION_VALUES,
+} from "../options";
 import {
   useCallback,
   useMemo,
@@ -13,7 +17,8 @@ import {
   isNotApplicable,
   useEc3Evaluate,
 } from "./useEc3Evaluate";
-import { computeEc3ComputedProperties } from "../domain/computedProperties";
+import { computeAdditionalProperties } from "../domain/computeAdditionalProperties";
+import { formSchema, type Ec3FormValues } from "../domain/formSchema";
 import { flangedSections, type FlangedSection } from "../data/flangedSections";
 import { hollowSections, type HollowSection } from "../data/hollowSections";
 import {
@@ -35,13 +40,11 @@ import type {
   VerificationRow,
 } from "./useEc3Evaluate";
 import { ANNEX_EDITABLE_KEYS } from "../inputContract";
-import {
-  type FabricationType,
-  type SectionInput,
-} from "../domain/inputsSchema";
+import { type SectionInput } from "../domain/geometry/sectionProperties";
 import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3";
 
-type Ec3ComputedProperties = ReturnType<typeof computeEc3ComputedProperties>;
+type Ec3ComputedProperties = ReturnType<typeof computeAdditionalProperties>;
+type FabricationType = (typeof FABRICATION_TYPE_OPTIONS)[number];
 
 type CatalogSection = FlangedSection | HollowSection | CircularSection;
 
@@ -276,8 +279,8 @@ export const FIELD_GROUPS: { legend: string; fields: FieldDef[] }[] = [
       { key: "L", label: "L", displayUnit: "m", toEngine: 1000 },
       { key: "k_y", label: "Lcr,y / L" },
       { key: "k_z", label: "Lcr,z / L" },
-      { key: "LLT_over_L", label: "LLT / L" },
-      { key: "LcrT_over_L", label: "Lcr,T / L" },
+      { key: "k_LT", label: "Lcr,LT / L" },
+      { key: "k_T", label: "Lcr,T / L" },
     ],
   },
 ];
@@ -314,12 +317,12 @@ export const INITIAL_EDITABLE_INPUTS: Ec3EditableInputs = {
   M_z_Ed: 5_000_000,
   V_y_Ed: 10_000,
   V_z_Ed: 50_000,
-  section_class_selection: "auto",
+  section_class: "auto",
   L: 5000,
   k_y: 1,
   k_z: 1,
-  LLT_over_L: 1,
-  LcrT_over_L: 1,
+  k_LT: 1,
+  k_T: 1,
   torsional_deformations: "yes",
   interaction_factor_method: "both",
   coefficient_f_method: "default-equation",
@@ -436,14 +439,16 @@ const coerceEditableInputs = (
   const candidate = {
     ...INITIAL_EDITABLE_INPUTS,
     ...value,
-    section_class_selection:
-      value.section_class_selection ??
+    section_class:
+      value.section_class ??
       (
         value as {
-          section_class_mode?: Ec3EditableInputs["section_class_selection"];
+          section_class_selection?: Ec3EditableInputs["section_class"];
         }
-      ).section_class_mode ??
-      INITIAL_EDITABLE_INPUTS.section_class_selection,
+      ).section_class_selection ??
+      (value as { section_class_mode?: Ec3EditableInputs["section_class"] })
+        .section_class_mode ??
+      INITIAL_EDITABLE_INPUTS.section_class,
   };
   candidate.N_Ed = pickFiniteNumber(
     candidate.N_Ed,
@@ -468,13 +473,13 @@ const coerceEditableInputs = (
   candidate.L = pickFiniteNumber(candidate.L, INITIAL_EDITABLE_INPUTS.L);
   candidate.k_y = pickFiniteNumber(candidate.k_y, INITIAL_EDITABLE_INPUTS.k_y);
   candidate.k_z = pickFiniteNumber(candidate.k_z, INITIAL_EDITABLE_INPUTS.k_z);
-  candidate.LLT_over_L = pickFiniteNumber(
-    candidate.LLT_over_L,
-    INITIAL_EDITABLE_INPUTS.LLT_over_L,
+  candidate.k_LT = pickFiniteNumber(
+    candidate.k_LT ?? (value as { LLT_over_L?: number }).LLT_over_L,
+    INITIAL_EDITABLE_INPUTS.k_LT,
   );
-  candidate.LcrT_over_L = pickFiniteNumber(
-    candidate.LcrT_over_L,
-    INITIAL_EDITABLE_INPUTS.LcrT_over_L,
+  candidate.k_T = pickFiniteNumber(
+    candidate.k_T ?? (value as { LcrT_over_L?: number }).LcrT_over_L,
+    INITIAL_EDITABLE_INPUTS.k_T,
   );
   candidate.psi_y = pickFiniteNumber(
     candidate.psi_y,
@@ -526,6 +531,110 @@ const coerceAnnexCoeffs = (
     ),
   } satisfies AnnexCoeffs;
 };
+
+const buildMomentYFields = (editableInputs: Ec3EditableInputs) => {
+  switch (editableInputs.moment_shape_y) {
+    case "uniform":
+      return { moment_shape_y: "uniform" };
+    case "linear":
+      return { moment_shape_y: "linear", psi_y: editableInputs.psi_y };
+    case "parabolic":
+      return {
+        moment_shape_y: "parabolic",
+        support_condition_y: editableInputs.support_condition_y,
+      };
+    case "triangular":
+      return {
+        moment_shape_y: "triangular",
+        support_condition_y: editableInputs.support_condition_y,
+      };
+  }
+};
+
+const buildMomentZFields = (editableInputs: Ec3EditableInputs) => {
+  switch (editableInputs.moment_shape_z) {
+    case "uniform":
+      return { moment_shape_z: "uniform" };
+    case "linear":
+      return { moment_shape_z: "linear", psi_z: editableInputs.psi_z };
+    case "parabolic":
+      return {
+        moment_shape_z: "parabolic",
+        support_condition_z: editableInputs.support_condition_z,
+      };
+    case "triangular":
+      return {
+        moment_shape_z: "triangular",
+        support_condition_z: editableInputs.support_condition_z,
+      };
+  }
+};
+
+const buildLateralTorsionalFields = (editableInputs: Ec3EditableInputs) => {
+  if (editableInputs.torsional_deformations === "no") {
+    return { torsional_deformations: "no" };
+  }
+
+  const ltBase = {
+    torsional_deformations: "yes" as const,
+    k_LT: editableInputs.k_LT,
+    k_T: editableInputs.k_T,
+    coefficient_f_method: editableInputs.coefficient_f_method,
+    buckling_curves_LT_policy: editableInputs.buckling_curves_LT_policy,
+  };
+
+  switch (editableInputs.moment_shape_LT) {
+    case "uniform":
+      return { ...ltBase, moment_shape_LT: "uniform" };
+    case "linear":
+      return {
+        ...ltBase,
+        moment_shape_LT: "linear",
+        psi_LT: editableInputs.psi_LT,
+      };
+    case "parabolic":
+      return {
+        ...ltBase,
+        moment_shape_LT: "parabolic",
+        support_condition_LT: editableInputs.support_condition_LT,
+        load_application_LT: editableInputs.load_application_LT,
+      };
+    case "triangular":
+      return {
+        ...ltBase,
+        moment_shape_LT: "triangular",
+        support_condition_LT: editableInputs.support_condition_LT,
+        load_application_LT: editableInputs.load_application_LT,
+      };
+  }
+};
+
+const buildFormValues = (
+  section: SectionInput,
+  editableInputs: Ec3EditableInputs,
+  gradeId: string,
+  annexId: Ec3FormValues["annexId"],
+  annex: AnnexCoeffs,
+) =>
+  formSchema.safeParse({
+    ...section,
+    gradeId,
+    annexId,
+    ...annex,
+    section_class: editableInputs.section_class,
+    N_Ed: editableInputs.N_Ed,
+    M_y_Ed: editableInputs.M_y_Ed,
+    M_z_Ed: editableInputs.M_z_Ed,
+    V_y_Ed: editableInputs.V_y_Ed,
+    V_z_Ed: editableInputs.V_z_Ed,
+    L: editableInputs.L,
+    k_y: editableInputs.k_y,
+    k_z: editableInputs.k_z,
+    interaction_factor_method: editableInputs.interaction_factor_method,
+    ...buildMomentYFields(editableInputs),
+    ...buildMomentZFields(editableInputs),
+    ...buildLateralTorsionalFields(editableInputs),
+  });
 
 const normalizeInitialState = (
   initialSession?: Partial<Ec3WorkbenchSessionState> | null,
@@ -772,25 +881,41 @@ export const useEc3Workbench = (
       }
     }
 
-    const computedProperties = computeEc3ComputedProperties({
-      ...sectionForSummary,
-      ...materialInputs,
-      ...editableInputs,
-    });
-    const nextResolvedSectionClass = computedProperties.section_class;
+    const formValuesResult = buildFormValues(
+      sectionForSummary,
+      editableInputs,
+      gradeId,
+      selectedAnnexId as Ec3FormValues["annexId"],
+      annex,
+    );
 
-    if (
-      editableInputs.section_class_selection === "auto" &&
-      nextResolvedSectionClass === 4
-    ) {
+    if (!formValuesResult.success) {
       return {
         resolvedInputs: null,
         classResolutionMessage:
-          "Automatic section class resolved to class 4, which is not supported in this scope. Select class 1, 2, or 3 manually.",
-        resolvedSectionClass: nextResolvedSectionClass,
-        sectionDerivedInputs: computedProperties,
+          formValuesResult.error.issues[0]?.message ??
+          "Invalid EC3 form values",
+        resolvedSectionClass: null,
+        sectionDerivedInputs: null,
       };
     }
+
+    let computedProperties: Ec3ComputedProperties;
+    try {
+      computedProperties = computeAdditionalProperties(formValuesResult.data);
+    } catch (error) {
+      return {
+        resolvedInputs: null,
+        classResolutionMessage:
+          error instanceof Error
+            ? error.message
+            : "Invalid additional EC3 properties",
+        resolvedSectionClass: null,
+        sectionDerivedInputs: null,
+      };
+    }
+
+    const nextResolvedSectionClass = computedProperties.section_class;
 
     return {
       resolvedInputs: buildResolvedInputs(
@@ -810,6 +935,9 @@ export const useEc3Workbench = (
     customChsSectionGeometry,
     sectionForSummary,
     editableInputs,
+    gradeId,
+    selectedAnnexId,
+    annex,
     materialInputs,
   ]);
 

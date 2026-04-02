@@ -1,25 +1,22 @@
-import type {
-  Ec3InputValues,
-  ResolvedSectionClass,
-  SectionInput,
-} from "../inputsSchema";
-import type { SectionProperties } from "../geometry/sectionProperties";
-import { resolveInternalPartClass } from "./internalPartClassification";
+import type { Ec3FormValues } from "../formSchema";
+import { computeInternalPartClass } from "./internalPartClassification";
+
+type ComputedSectionClass = 1 | 2 | 3 | 4;
 
 type RhsSectionClassificationInput = Pick<
-  Extract<SectionInput, { shape: "RHS" }>,
+  Extract<Ec3FormValues, { shape: "RHS" }>,
   "shape" | "h" | "b" | "tw" | "ri"
 > &
-  Pick<Ec3InputValues, "fy" | "N_Ed" | "M_y_Ed" | "M_z_Ed">;
+  Pick<Ec3FormValues, "N_Ed" | "M_y_Ed" | "M_z_Ed"> & { fy: number };
 
-const maxSectionClass = (
-  ...classes: ResolvedSectionClass[]
-): ResolvedSectionClass => Math.max(...classes) as ResolvedSectionClass;
+const computeMaxSectionClass = (
+  ...classes: ComputedSectionClass[]
+): ComputedSectionClass => Math.max(...classes) as ComputedSectionClass;
 
 export const computeRhsSectionClassification = (
   input: RhsSectionClassificationInput,
-  sectionProperties: Pick<SectionProperties, "A" | "Wel_y" | "Wel_z">,
-): ResolvedSectionClass => {
+  sectionProperties: { A: number; Wel_y: number; Wel_z: number },
+): ComputedSectionClass => {
   const { fy, h, b, tw, ri, N_Ed, M_y_Ed, M_z_Ed } = input;
   const { A, Wel_y, Wel_z } = sectionProperties;
 
@@ -50,29 +47,29 @@ export const computeRhsSectionClassification = (
     compressionFromBendingY +
     compressionFromBendingZ;
 
-  return maxSectionClass(
-    resolveInternalPartClass(
+  return computeMaxSectionClass(
+    computeInternalPartClass(
       widthSlenderness,
       epsilon,
       fy,
       topLeftStress,
       topRightStress,
     ),
-    resolveInternalPartClass(
+    computeInternalPartClass(
       widthSlenderness,
       epsilon,
       fy,
       bottomLeftStress,
       bottomRightStress,
     ),
-    resolveInternalPartClass(
+    computeInternalPartClass(
       depthSlenderness,
       epsilon,
       fy,
       topLeftStress,
       bottomLeftStress,
     ),
-    resolveInternalPartClass(
+    computeInternalPartClass(
       depthSlenderness,
       epsilon,
       fy,

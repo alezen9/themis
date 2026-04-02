@@ -309,6 +309,10 @@ export const steelGrades: readonly SteelGrade[] = [
   },
 ] as const;
 
+export const steelGradeById: ReadonlyMap<string, SteelGrade> = new Map(
+  steelGrades.map((grade) => [`${grade.norm}:${grade.id}`, grade] as const),
+);
+
 /** Steel elastic constants per EN 1993-1-1 §3.2.6 */
 export const STEEL_E = 210000;
 export const STEEL_G = 81000;

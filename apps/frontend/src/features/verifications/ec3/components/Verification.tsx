@@ -1,3 +1,4 @@
+import { computeBucklingProperties } from "../domain/buckling/buckling";
 import { computeSectionProperties } from "../domain/geometry/sectionProperties";
 import {
   BUCKLING_CURVES_LT_POLICY_OPTIONS,
@@ -8,8 +9,9 @@ import {
   SECTION_CLASS_OPTIONS,
   SHAPE_OPTIONS,
   SUPPORT_CONDITION_OPTIONS,
-} from "../constants";
-import type { Ec3EditableInputs, SectionInput } from "../domain/inputsSchema";
+} from "../options";
+import type { SectionInput } from "../domain/geometry/sectionProperties";
+import type { Ec3EditableInputs } from "../hooks/useEc3Evaluate";
 import {
   ANNEXES,
   ANNEX_FIELDS,
@@ -92,10 +94,11 @@ function SectionSummary({
   resolvedSectionClass,
 }: {
   section: SectionInput;
-  sectionClassSelection: Ec3EditableInputs["section_class_selection"];
+  sectionClassSelection: Ec3EditableInputs["section_class"];
   resolvedSectionClass: 1 | 2 | 3 | 4 | null;
 }) {
   const computed = computeSectionProperties(section);
+  const buckling = computeBucklingProperties(section);
   const classDisplay =
     sectionClassSelection === "auto"
       ? resolvedSectionClass === null
@@ -132,8 +135,8 @@ function SectionSummary({
 
         <span className="font-medium text-gray-600">Curves</span>
         <span>
-          y/z/LT: {computed.buckling_curve_y}/{computed.buckling_curve_z}/
-          {computed.buckling_curve_LT}
+          y/z/LT: {buckling.buckling_curve_y}/{buckling.buckling_curve_z}/
+          {buckling.buckling_curve_LT}
         </span>
       </div>
     </div>
@@ -402,11 +405,11 @@ export function Verification({
           <label className="flex items-center gap-2 text-sm">
             <span className="w-20 shrink-0">Class</span>
             <select
-              value={editableInputs.section_class_selection}
+              value={editableInputs.section_class}
               onChange={(event) => {
                 const rawValue = event.target.value;
                 setEditableValue(
-                  "section_class_selection",
+                  "section_class",
                   rawValue === "auto"
                     ? "auto"
                     : (Number(rawValue) as 1 | 2 | 3),
@@ -424,7 +427,7 @@ export function Verification({
 
           <SectionSummary
             section={sectionForSummary}
-            sectionClassSelection={editableInputs.section_class_selection}
+            sectionClassSelection={editableInputs.section_class}
             resolvedSectionClass={resolvedSectionClass}
           />
         </div>
@@ -462,8 +465,7 @@ export function Verification({
           fields={
             group.legend === "Buckling" && !torsionalActive
               ? group.fields.filter(
-                  (field) =>
-                    field.key !== "LLT_over_L" && field.key !== "LcrT_over_L",
+                  (field) => field.key !== "k_LT" && field.key !== "k_T",
                 )
               : group.fields
           }

@@ -8,3 +8,4 @@ apps/frontend/src/routeTree.gen.ts
 .DS_Store
 resources
 .vscode
+AGENTS.md

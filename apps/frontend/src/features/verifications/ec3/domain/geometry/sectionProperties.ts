@@ -1,48 +1,34 @@
-import type { BucklingCurve } from "../buckling/buckling";
-import type { SectionInput } from "../inputsSchema";
+import type { Ec3FormValues } from "../formSchema";
 import { computeChsSectionProperties } from "./sectionPropertiesChs";
 import { computeISectionProperties } from "./sectionPropertiesI";
 import { computeRhsSectionProperties } from "./sectionPropertiesRhs";
 
-export type SectionProperties = {
-  A: number;
-  Iy: number;
-  Iz: number;
-  Wel_y: number;
-  Wel_z: number;
-  Wpl_y: number;
-  Wpl_z: number;
-  Av_y: number;
-  Av_z: number;
-  It: number;
-  Iw: number;
-  tw: number; // web thickness
-  hw: number; // web height
-  section_shape: SectionInput["shape"];
-  h: number; // section height
-  b: number; // section width
-  tf: number; // flange thickness
-  t: number; // wall thickness
-  d: number; // outer diameter
-  buckling_curve_y: BucklingCurve;
-  buckling_curve_z: BucklingCurve;
-  buckling_curve_LT: BucklingCurve;
-  alpha_y: number;
-  alpha_z: number;
-  alpha_LT: number;
-};
+type ISectionInput = Pick<
+  Extract<Ec3FormValues, { shape: "I" }>,
+  "shape" | "fabricationType" | "h" | "b" | "tw" | "tf" | "r"
+>;
+
+type RhsSectionInput = Pick<
+  Extract<Ec3FormValues, { shape: "RHS" }>,
+  "shape" | "fabricationType" | "h" | "b" | "tw" | "ro" | "ri"
+>;
+
+type ChsSectionInput = Pick<
+  Extract<Ec3FormValues, { shape: "CHS" }>,
+  "shape" | "fabricationType" | "d" | "t"
+>;
+
+export type SectionInput = ISectionInput | RhsSectionInput | ChsSectionInput;
 
 export const computeSectionProperties = (
-  section: SectionInput,
-): SectionProperties => {
-  switch (section.shape) {
+  inputs: SectionInput | Ec3FormValues,
+) => {
+  switch (inputs.shape) {
     case "I":
-      return computeISectionProperties(section);
+      return computeISectionProperties(inputs);
     case "RHS":
-      return computeRhsSectionProperties(section);
+      return computeRhsSectionProperties(inputs);
     case "CHS":
-      return computeChsSectionProperties(section);
+      return computeChsSectionProperties(inputs);
   }
-
-  throw new Error("Unsupported section shape");
 };

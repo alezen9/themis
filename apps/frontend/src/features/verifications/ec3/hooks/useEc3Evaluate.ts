@@ -1,31 +1,68 @@
 import { useMemo } from "react";
 import verify from "@ndg/ndg-ec3";
-import { computeEc3ComputedProperties } from "../domain/computedProperties";
-import type {
-  AnnexCoeffs,
-  Ec3EditableInputs,
-  Ec3MaterialInputs,
-  ResolvedSectionClass,
-  SupportCondition,
-} from "../domain/inputsSchema";
+import { computeAdditionalProperties } from "../domain/computeAdditionalProperties";
+import type { Ec3FormValues } from "../domain/formSchema";
+import {
+  BUCKLING_CURVES_LT_POLICY_OPTIONS,
+  COEFFICIENT_F_METHOD_OPTIONS,
+  INTERACTION_FACTOR_METHOD_OPTIONS,
+  LOAD_APPLICATION_LT_OPTIONS,
+  MOMENT_SHAPE_OPTIONS,
+  SECTION_CLASS_OPTIONS,
+  SHAPE_OPTIONS,
+  SUPPORT_CONDITION_VALUES,
+  TORSIONAL_DEFORMATION_OPTIONS,
+} from "../options";
 
-export type {
-  AnnexCoeffs,
-  BucklingCurvesLtPolicy,
-  CoefficientFMethod,
-  Ec3EditableInputs,
-  Ec3MaterialInputs,
-  InteractionFactorMethod,
-  LoadApplicationLT,
-  MomentShape,
-  ResolvedSectionClass,
-  SectionClassSelection,
-  SectionShape,
-  SupportCondition,
-  TorsionalDeformations,
-} from "../domain/inputsSchema";
+export type AnnexCoeffs = Pick<
+  Ec3FormValues,
+  "gamma_M0" | "gamma_M1" | "lambda_LT_0" | "beta_LT"
+>;
+export type SectionShape = (typeof SHAPE_OPTIONS)[number];
+export type SectionClassSelection = (typeof SECTION_CLASS_OPTIONS)[number];
+export type MomentShape = (typeof MOMENT_SHAPE_OPTIONS)[number];
+export type SupportCondition = (typeof SUPPORT_CONDITION_VALUES)[number];
+export type LoadApplicationLT = (typeof LOAD_APPLICATION_LT_OPTIONS)[number];
+export type TorsionalDeformations =
+  (typeof TORSIONAL_DEFORMATION_OPTIONS)[number];
+export type InteractionFactorMethod =
+  (typeof INTERACTION_FACTOR_METHOD_OPTIONS)[number];
+export type CoefficientFMethod = (typeof COEFFICIENT_F_METHOD_OPTIONS)[number];
+export type BucklingCurvesLtPolicy =
+  (typeof BUCKLING_CURVES_LT_POLICY_OPTIONS)[number];
+export type ResolvedSectionClass = 1 | 2 | 3;
 
-type Ec3ComputedProperties = ReturnType<typeof computeEc3ComputedProperties>;
+export type Ec3EditableInputs = {
+  N_Ed: number;
+  M_y_Ed: number;
+  M_z_Ed: number;
+  V_y_Ed: number;
+  V_z_Ed: number;
+  L: number;
+  k_y: number;
+  k_z: number;
+  k_LT: number;
+  k_T: number;
+  torsional_deformations: TorsionalDeformations;
+  interaction_factor_method: InteractionFactorMethod;
+  coefficient_f_method: CoefficientFMethod;
+  buckling_curves_LT_policy: BucklingCurvesLtPolicy;
+  section_class: SectionClassSelection;
+  moment_shape_y: MomentShape;
+  psi_y: number;
+  support_condition_y: SupportCondition;
+  moment_shape_z: MomentShape;
+  psi_z: number;
+  support_condition_z: SupportCondition;
+  moment_shape_LT: MomentShape;
+  psi_LT: number;
+  support_condition_LT: SupportCondition;
+  load_application_LT: LoadApplicationLT;
+};
+
+export type Ec3MaterialInputs = { E: number; G: number };
+
+type Ec3ComputedProperties = ReturnType<typeof computeAdditionalProperties>;
 type EngineSectionInputs = Omit<
   Ec3ComputedProperties,
   | "buckling_curve_y"
@@ -35,13 +72,8 @@ type EngineSectionInputs = Omit<
   | "section_class"
 >;
 
-export type Ec3ResolvedInputs = Omit<
-  Ec3EditableInputs,
-  "section_class_selection" | "LLT_over_L" | "LcrT_over_L"
-> & {
+export type Ec3ResolvedInputs = Omit<Ec3EditableInputs, "section_class"> & {
   section_class: ResolvedSectionClass;
-  k_LT: number;
-  k_T: number;
 } & EngineSectionInputs &
   Ec3MaterialInputs;
 
@@ -57,7 +89,7 @@ const canonicalSupportCondition = (
 
 export const buildResolvedInputs = (
   editable: Ec3EditableInputs,
-  computedProperties: ReturnType<typeof computeEc3ComputedProperties>,
+  computedProperties: ReturnType<typeof computeAdditionalProperties>,
   material: Ec3MaterialInputs,
 ): Ec3ResolvedInputs => {
   const normalized = { ...editable };
@@ -79,13 +111,8 @@ export const buildResolvedInputs = (
     normalized.support_condition_LT,
   );
 
-  const {
-    section_class_selection: _sectionClassSelection,
-    LLT_over_L,
-    LcrT_over_L,
-    ...resolvedEditable
-  } = normalized;
-  void _sectionClassSelection;
+  const { section_class: _sectionClass, ...resolvedEditable } = normalized;
+  void _sectionClass;
 
   const {
     buckling_curve_y: _bucklingCurveY,
@@ -100,14 +127,7 @@ export const buildResolvedInputs = (
   void _bucklingCurveLT;
   void _d;
 
-  return {
-    ...resolvedEditable,
-    section_class,
-    k_LT: LLT_over_L,
-    k_T: LcrT_over_L,
-    ...section,
-    ...material,
-  };
+  return { ...resolvedEditable, section_class, ...section, ...material };
 };
 
 export const hasData = (

@@ -1,4 +1,5 @@
 import { Button } from "../../components/Button";
+import { NumberInput } from "../../components/inputs/NumberInput";
 import { Tabs, Tab } from "../../components/Tabs";
 
 export function PageDesignSystem() {
@@ -39,6 +40,25 @@ export function PageDesignSystem() {
           <Tab>Second</Tab>
           <Tab>Third</Tab>
         </Tabs>
+      </section>
+
+      <section className="max-w-sm">
+        <h2 className="mb-4 text-lg font-semibold">NumberInput</h2>
+        <div className="space-y-4">
+          <NumberInput
+            label="Length"
+            min={0}
+            step="0.1"
+            defaultValue={42.5}
+            placeholder="0.0"
+          />
+          <NumberInput
+            label="Load"
+            defaultValue={125}
+            error="Load must be greater than 0"
+          />
+          <NumberInput label="Disabled" defaultValue={12} disabled />
+        </div>
       </section>
     </main>
   );

@@ -47,4 +47,3 @@ export const BUCKLING_CURVES_LT_POLICY_OPTIONS = [
 ] as const;
 
 export const SECTION_CLASS_OPTIONS = ["auto", 1, 2, 3] as const;
-export const RESOLVED_SECTION_CLASS_OPTIONS = [1, 2, 3, 4] as const;

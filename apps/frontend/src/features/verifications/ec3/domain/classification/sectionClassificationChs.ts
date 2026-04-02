@@ -1,22 +1,16 @@
-import type {
-  Ec3InputValues,
-  ResolvedSectionClass,
-  SectionInput,
-} from "../inputsSchema";
+import type { Ec3FormValues } from "../formSchema";
+
+type ComputedSectionClass = 1 | 2 | 3 | 4;
 
 type ChsSectionClassificationInput = Pick<
-  Extract<SectionInput, { shape: "CHS" }>,
+  Extract<Ec3FormValues, { shape: "CHS" }>,
   "shape" | "d" | "t"
 > &
-  Pick<Ec3InputValues, "fy"> & {
-    N_Ed?: Ec3InputValues["N_Ed"];
-    M_y_Ed?: Ec3InputValues["M_y_Ed"];
-    M_z_Ed?: Ec3InputValues["M_z_Ed"];
-  };
+  Partial<Pick<Ec3FormValues, "N_Ed" | "M_y_Ed" | "M_z_Ed">> & { fy: number };
 
 export const computeChsSectionClassification = (
   input: ChsSectionClassificationInput,
-): ResolvedSectionClass => {
+): ComputedSectionClass => {
   const { fy, d, t } = input;
 
   const epsilonSquared = 235 / fy;

@@ -1,4 +1,4 @@
-export { SECTION_CLASS_OPTIONS } from "./constants";
+export { SECTION_CLASS_OPTIONS } from "./options";
 
 export const REQUIRED_RUNTIME_INPUT_KEYS = [
   "A",
@@ -61,8 +61,8 @@ export const EDITABLE_INPUT_KEYS = [
   "L",
   "k_y",
   "k_z",
-  "LLT_over_L",
-  "LcrT_over_L",
+  "k_LT",
+  "k_T",
   "moment_shape_y",
   "support_condition_y",
   "moment_shape_z",
@@ -77,7 +77,7 @@ export const EDITABLE_INPUT_KEYS = [
   "psi_y",
   "psi_z",
   "psi_LT",
-  "section_class_selection",
+  "section_class",
 ] as const;
 
 export const ANNEX_EDITABLE_KEYS = [
