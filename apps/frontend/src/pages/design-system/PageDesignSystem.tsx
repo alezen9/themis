@@ -1,65 +1,34 @@
-import { Button } from "../../components/Button";
-import { NumberInput } from "../../components/inputs/NumberInput";
-import { Tabs, Tab } from "../../components/Tabs";
+import { DesignSystemSidebar } from "./components/DesignSystemSidebar";
+import { getDesignSystemStory } from "./stories/designSystemStories";
 
-export function PageDesignSystem() {
+type Props = { componentId?: string };
+
+export const PageDesignSystem = (props: Props) => {
+  const { componentId } = props;
+  const story = getDesignSystemStory(componentId);
+  const Story = story.component;
+
   return (
-    <main className="p-8 h-dvh bg-linear-to-t from-[#bbcfe9] to-[rgba(219,219,219,1)]">
-      <h1 className="text-2xl font-bold">Design System</h1>
+    <main className="min-h-dvh bg-slate-50 text-slate-950">
+      <div className="mx-auto grid min-h-dvh max-w-[1600px] gap-8 px-4 py-4 lg:grid-cols-[16rem_minmax(0,1fr)] lg:px-6">
+        <DesignSystemSidebar selectedStoryId={story.id} />
 
-      <section>
-        <h2 className="text-lg font-semibold mb-4">Button</h2>
-        <div className="flex flex-wrap gap-3">
-          <Button>Default</Button>
-          <Button variant="outline">Outline</Button>
-          <Button variant="destructive">Destructive</Button>
-        </div>
-        <div className="flex flex-wrap gap-3 mt-3">
-          <Button size="sm">Small</Button>
-          <Button size="md">Medium</Button>
-          <Button size="lg">Large</Button>
-        </div>
-      </section>
+        <section className="min-w-0 rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-50px_rgba(15,23,42,0.35)] sm:p-8">
+          <header className="mb-8 grid gap-2 border-b border-slate-100 pb-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+              component
+            </p>
+            <h1 className="text-3xl font-semibold tracking-[-0.03em] text-slate-950">
+              {story.label}
+            </h1>
+            <p className="max-w-2xl text-sm text-slate-500">
+              {story.description}
+            </p>
+          </header>
 
-      <section>
-        <h2 className="text-lg font-semibold mb-4">IconButton</h2>
-        <div className="flex flex-wrap gap-3">
-          <Button iconButton aria-label="Default">
-            ×
-          </Button>
-          <Button variant="outline" iconButton aria-label="Outline">
-            ×
-          </Button>
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-lg font-semibold mb-4">Tabs</h2>
-        <Tabs>
-          <Tab>First</Tab>
-          <Tab>Second</Tab>
-          <Tab>Third</Tab>
-        </Tabs>
-      </section>
-
-      <section className="max-w-sm">
-        <h2 className="mb-4 text-lg font-semibold">NumberInput</h2>
-        <div className="space-y-4">
-          <NumberInput
-            label="Length"
-            min={0}
-            step="0.1"
-            defaultValue={42.5}
-            placeholder="0.0"
-          />
-          <NumberInput
-            label="Load"
-            defaultValue={125}
-            error="Load must be greater than 0"
-          />
-          <NumberInput label="Disabled" defaultValue={12} disabled />
-        </div>
-      </section>
+          <Story />
+        </section>
+      </div>
     </main>
   );
-}
+};
