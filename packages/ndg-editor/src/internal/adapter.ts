@@ -80,6 +80,7 @@ const getNodeReferenceText = (node: EditorNode) => {
 
 type FlowNodeData = {
   canAddChild: boolean;
+  canDelete: boolean;
   isUnreachable: boolean;
   nodeId: string;
   nodeLabel: string;
@@ -89,6 +90,7 @@ type FlowNodeData = {
   nodeReference: string;
   nodeFormula?: string;
   onAddChild: (nodeId: string) => void;
+  onDelete: (nodeId: string) => void;
   onEdit: (nodeId: string) => void;
 };
 
@@ -122,6 +124,7 @@ export const editorStateToFlowNodes = (
   state: EditorState,
   handlers: {
     onAddChild: (nodeId: string) => void;
+    onDelete: (nodeId: string) => void;
     onEdit: (nodeId: string) => void;
   },
   options: { unreachableNodeIds: ReadonlySet<string> },
@@ -140,10 +143,12 @@ export const editorStateToFlowNodes = (
         overflow: "visible",
         padding: 0,
       },
+      deletable: node.type !== "check",
       ...(measured ? { measured } : {}),
       position: state.layoutById[node.id] ?? { x: 0, y: 0 },
       data: {
         canAddChild: canNodeHaveChildren(node),
+        canDelete: node.type !== "check",
         isUnreachable: options.unreachableNodeIds.has(node.id),
         nodeId: node.id,
         nodeLabel: getNodeLabel(node),
@@ -153,6 +158,7 @@ export const editorStateToFlowNodes = (
         nodeReference: getNodeReferenceText(node),
         nodeFormula: getNodeFormulaText(node),
         onAddChild: handlers.onAddChild,
+        onDelete: handlers.onDelete,
         onEdit: handlers.onEdit,
       },
     };

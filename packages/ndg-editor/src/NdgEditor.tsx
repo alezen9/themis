@@ -38,6 +38,7 @@ import {
   applyAutoLayout,
   closeNodeDialog,
   createInitialState,
+  deleteNodes,
   disconnectEdge,
   draftToEditorState,
   editorStateToDraft,
@@ -77,6 +78,7 @@ type NdgEditorAction =
   | { type: "autoLayoutError"; error: string }
   | { type: "clearEdgeCondition"; sourceId: string; targetId: string }
   | { type: "closeDialog" }
+  | { type: "deleteNodes"; nodeIds: string[] }
   | { type: "disconnectEdge"; sourceId: string; targetId: string }
   | {
       type: "reconnectEdge";
@@ -168,6 +170,8 @@ const reducer = (state: EditorState, action: NdgEditorAction) => {
       return setEdgeCondition(state, action.sourceId, action.targetId);
     case "closeDialog":
       return closeNodeDialog(state);
+    case "deleteNodes":
+      return deleteNodes(state, action.nodeIds);
     case "disconnectEdge":
       return {
         ...disconnectEdge(state, action.sourceId, action.targetId),
@@ -205,6 +209,48 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
     useEffect(() => {
       stateRef.current = state;
     }, [state]);
+
+    const unreachableNodeIds = useMemo(
+      () => getUnreachableNodeIds(state.nodesById),
+      [state.nodesById],
+    );
+
+    const edges = useMemo(
+      () =>
+        editorStateToFlowEdges(
+          state.nodesById,
+          {
+            onApplyCondition: (sourceId, targetId, when) =>
+              dispatch({
+                type: "applyEdgeCondition",
+                sourceId,
+                targetId,
+                when,
+              }),
+            onClearCondition: (sourceId, targetId) =>
+              dispatch({ type: "clearEdgeCondition", sourceId, targetId }),
+            onDisconnect: (sourceId, targetId) =>
+              dispatch({ type: "disconnectEdge", sourceId, targetId }),
+          },
+          {
+            hoveredEdgeId,
+            routedEdgePointsById: state.edgeLayoutById,
+            unreachableNodeIds,
+          },
+        ),
+      [
+        state.nodesById,
+        state.edgeLayoutById,
+        hoveredEdgeId,
+        unreachableNodeIds,
+      ],
+    );
+
+    useEffect(() => {
+      if (!hoveredEdgeId) return;
+      if (edges.some((edge) => edge.id === hoveredEdgeId)) return;
+      setHoveredEdgeId(null);
+    }, [edges, hoveredEdgeId]);
 
     const onAutoLayout = useCallback(async () => {
       const currentState = stateRef.current;
@@ -273,11 +319,6 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
       [state],
     );
 
-    const unreachableNodeIds = useMemo(
-      () => getUnreachableNodeIds(state.nodesById),
-      [state.nodesById],
-    );
-
     const nodes = useMemo(
       () =>
         editorStateToFlowNodes(
@@ -285,42 +326,13 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
           {
             onAddChild: (nodeId) =>
               dispatch({ type: "addChild", parentId: nodeId }),
+            onDelete: (nodeId) =>
+              dispatch({ type: "deleteNodes", nodeIds: [nodeId] }),
             onEdit: (nodeId) => dispatch({ type: "openDialog", nodeId }),
           },
           { unreachableNodeIds },
         ),
       [state, unreachableNodeIds],
-    );
-
-    const edges = useMemo(
-      () =>
-        editorStateToFlowEdges(
-          state.nodesById,
-          {
-            onApplyCondition: (sourceId, targetId, when) =>
-              dispatch({
-                type: "applyEdgeCondition",
-                sourceId,
-                targetId,
-                when,
-              }),
-            onClearCondition: (sourceId, targetId) =>
-              dispatch({ type: "clearEdgeCondition", sourceId, targetId }),
-            onDisconnect: (sourceId, targetId) =>
-              dispatch({ type: "disconnectEdge", sourceId, targetId }),
-          },
-          {
-            hoveredEdgeId,
-            routedEdgePointsById: state.edgeLayoutById,
-            unreachableNodeIds,
-          },
-        ),
-      [
-        state.nodesById,
-        state.edgeLayoutById,
-        hoveredEdgeId,
-        unreachableNodeIds,
-      ],
     );
 
     const editingNode = state.editingNodeId
@@ -337,7 +349,7 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
           edges={edges}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
-          deleteKeyCode={null}
+          deleteKeyCode={["Delete", "Backspace"]}
           elementsSelectable
           edgesFocusable
           edgesReconnectable
@@ -381,6 +393,12 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
           }}
           onNodesChange={(changes) =>
             dispatch({ type: "applyNodeChanges", changes })
+          }
+          onNodesDelete={(deletedNodes) =>
+            dispatch({
+              type: "deleteNodes",
+              nodeIds: deletedNodes.map((node) => node.id),
+            })
           }
           proOptions={{ hideAttribution: true }}
         >

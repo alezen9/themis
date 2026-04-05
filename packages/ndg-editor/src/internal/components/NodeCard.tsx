@@ -39,6 +39,7 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
   const {
     data: {
       canAddChild,
+      canDelete,
       isUnreachable,
       nodeId,
       nodeLabel,
@@ -48,6 +49,7 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
       nodeReference,
       nodeFormula,
       onAddChild,
+      onDelete,
       onEdit,
     },
   } = props;
@@ -77,13 +79,25 @@ export const NodeCard = (props: NodeProps<EditorFlowNode>) => {
           <NodeKey>{nodeLabel}</NodeKey>
           <NodeName>{nodeName}</NodeName>
         </div>
-        <NodeIconButton
-          aria-label="Edit node"
-          onClick={() => onEdit(nodeId)}
-          title="Edit node"
-        >
-          <EditIcon />
-        </NodeIconButton>
+        <div className="flex items-center gap-1.5">
+          {canDelete ? (
+            <NodeIconButton
+              aria-label="Delete node"
+              className="border-red-200 text-red-700 hover:border-red-300 hover:bg-red-50"
+              onClick={() => onDelete(nodeId)}
+              title="Delete node"
+            >
+              <TrashIcon />
+            </NodeIconButton>
+          ) : null}
+          <NodeIconButton
+            aria-label="Edit node"
+            onClick={() => onEdit(nodeId)}
+            title="Edit node"
+          >
+            <EditIcon />
+          </NodeIconButton>
+        </div>
       </NodeHeader>
       <NodeType className={theme.textClass}>{nodeTypeLabel}</NodeType>
       <NodeReference>{nodeReference}</NodeReference>
@@ -195,6 +209,25 @@ const EditIcon = () => (
   >
     <path d="M12 20h9" />
     <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg
+    aria-hidden="true"
+    className="h-3.5 w-3.5"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={1.8}
+    viewBox="0 0 24 24"
+  >
+    <path d="M3 6h18" />
+    <path d="M8 6V4.5A1.5 1.5 0 0 1 9.5 3h5A1.5 1.5 0 0 1 16 4.5V6" />
+    <path d="M6.5 6l1 13a1.5 1.5 0 0 0 1.49 1.38h6.02a1.5 1.5 0 0 0 1.49-1.38l1-13" />
+    <path d="M10 10.5v6" />
+    <path d="M14 10.5v6" />
   </svg>
 );
 

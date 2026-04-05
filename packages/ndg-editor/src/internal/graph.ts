@@ -48,6 +48,58 @@ const replaceNodeChildren = (node: EditorNode, children: readonly Child[]) => ({
   children,
 });
 
+const removeNodeIdsFromRecord = <Value>(
+  record: Record<string, Value>,
+  nodeIds: ReadonlySet<string>,
+) => {
+  if (nodeIds.size === 0) return record;
+
+  let hasRemovedEntry = false;
+  const nextRecord: Record<string, Value> = {};
+
+  for (const [key, value] of Object.entries(record)) {
+    if (nodeIds.has(key)) {
+      hasRemovedEntry = true;
+      continue;
+    }
+
+    nextRecord[key] = value;
+  }
+
+  if (!hasRemovedEntry) return record;
+  return nextRecord;
+};
+
+const pruneEdgeLayoutByDeletedNodeIds = (
+  edgeLayoutById: Record<string, XYPosition[]>,
+  deletedNodeIds: ReadonlySet<string>,
+) => {
+  if (deletedNodeIds.size === 0) return edgeLayoutById;
+
+  let hasPrunedEdge = false;
+  const nextEdgeLayoutById: Record<string, XYPosition[]> = {};
+
+  for (const [edgeId, points] of Object.entries(edgeLayoutById)) {
+    const separatorIndex = edgeId.indexOf(":");
+    if (separatorIndex < 0) {
+      nextEdgeLayoutById[edgeId] = points;
+      continue;
+    }
+
+    const sourceNodeId = edgeId.slice(0, separatorIndex);
+    const targetNodeId = edgeId.slice(separatorIndex + 1);
+    if (deletedNodeIds.has(sourceNodeId) || deletedNodeIds.has(targetNodeId)) {
+      hasPrunedEdge = true;
+      continue;
+    }
+
+    nextEdgeLayoutById[edgeId] = points;
+  }
+
+  if (!hasPrunedEdge) return edgeLayoutById;
+  return nextEdgeLayoutById;
+};
+
 const hasChildReference = (node: EditorNode, childId: string) =>
   node.children.some((child) => child.nodeId === childId);
 
@@ -641,6 +693,50 @@ export const addChildNode = (state: EditorState, parentId: string) => {
     },
     dialogError: null,
     editingNodeId: childNode.id,
+  };
+};
+
+export const deleteNodes = (state: EditorState, nodeIds: readonly string[]) => {
+  const deletedNodeIds = new Set<string>();
+
+  for (const nodeId of nodeIds) {
+    const node = getNodeById(state.nodesById, nodeId);
+    if (!node || isCheckNode(node)) continue;
+    deletedNodeIds.add(nodeId);
+  }
+
+  if (deletedNodeIds.size === 0) return state;
+
+  const nextNodesById = new Map<string, EditorNode>();
+
+  for (const node of state.nodesById.values()) {
+    if (deletedNodeIds.has(node.id)) continue;
+
+    const nextChildren = node.children.filter(
+      (child) => !deletedNodeIds.has(child.nodeId),
+    );
+    nextNodesById.set(
+      node.id,
+      nextChildren.length === node.children.length
+        ? node
+        : replaceNodeChildren(node, nextChildren),
+    );
+  }
+
+  return {
+    ...state,
+    nodesById: nextNodesById,
+    layoutById: removeNodeIdsFromRecord(state.layoutById, deletedNodeIds),
+    edgeLayoutById: pruneEdgeLayoutByDeletedNodeIds(
+      state.edgeLayoutById,
+      deletedNodeIds,
+    ),
+    measuredById: removeNodeIdsFromRecord(state.measuredById, deletedNodeIds),
+    editingNodeId:
+      state.editingNodeId && deletedNodeIds.has(state.editingNodeId)
+        ? null
+        : state.editingNodeId,
+    dialogError: null,
   };
 };
 
