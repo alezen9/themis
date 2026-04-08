@@ -9,11 +9,10 @@ type Props = Omit<ComponentPropsWithoutRef<"input">, "children" | "type"> & {
   description?: ReactNode;
   label?: ReactNode;
   error?: ReactNode;
-  suffix?: ReactNode;
 };
 
-export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { label, description, error, suffix, required, ...inputProps } = props;
+export const InputText = forwardRef<HTMLInputElement, Props>((props, ref) => {
+  const { label, description, error, required, ...inputProps } = props;
 
   return (
     <InputWrapper
@@ -25,12 +24,11 @@ export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
       <input
         {...inputProps}
         ref={ref}
-        type="number"
+        type="text"
         required={required}
       />
-      {suffix && <span>{suffix}</span>}
     </InputWrapper>
   );
 });
 
-InputNumber.displayName = "InputNumber";
+InputText.displayName = "InputText";

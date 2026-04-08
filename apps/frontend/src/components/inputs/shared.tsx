@@ -1,44 +1,30 @@
-import { type ComponentProps } from "react";
-import { cva } from "class-variance-authority";
-import { twMerge } from "tailwind-merge";
+import { type ReactNode } from "react";
 
-const labelVariants = cva("inline-flex items-center gap-1", {
-  variants: { invalid: { true: "text-red-600", false: "" } },
-  defaultVariants: { invalid: false },
-});
+const NON_BLOCKING_SPACE = "\u00a0";
 
-type InputLabelProps = ComponentProps<"span"> & {
+type InputWrapperProps = {
+  children: ReactNode;
+  description?: ReactNode;
+  error?: ReactNode;
+  label?: ReactNode;
   required?: boolean;
-  invalid?: boolean;
 };
 
-export const InputLabel = (props: InputLabelProps) => {
-  const { required, children, className, invalid, ...rest } = props;
-
-  if (!children) return null;
+export const InputWrapper = (props: InputWrapperProps) => {
+  const { children, description, error, label, required } = props;
 
   return (
-    <span className={twMerge(labelVariants({ invalid, className }))} {...rest}>
-      {children}
-      {required && <span>*</span>}
-    </span>
-  );
-};
-
-export const InputError = (props: ComponentProps<"span">) => {
-  const { className, children, ...rest } = props;
-  const content = children || "\u00a0";
-
-  return (
-    <span
-      className={twMerge(
-        "min-h-4 text-xs font-light text-red-600",
-        !children && "invisible",
-        className,
+    <div>
+      {label && (
+        <label>
+          {label}
+          {required && " *"}
+          {children}
+        </label>
       )}
-      {...rest}
-    >
-      {content}
-    </span>
+      {!label && children}
+      {description && <p>{description}</p>}
+      <p>{error || NON_BLOCKING_SPACE}</p>
+    </div>
   );
 };

@@ -5,15 +5,15 @@ import {
 } from "react";
 import { InputWrapper } from "./shared";
 
-type Props = Omit<ComponentPropsWithoutRef<"input">, "children" | "type"> & {
+type Props = Omit<ComponentPropsWithoutRef<"select">, "children"> & {
+  children: ReactNode;
   description?: ReactNode;
   label?: ReactNode;
   error?: ReactNode;
-  suffix?: ReactNode;
 };
 
-export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { label, description, error, suffix, required, ...inputProps } = props;
+export const InputSelect = forwardRef<HTMLSelectElement, Props>((props, ref) => {
+  const { children, label, description, error, required, ...selectProps } = props;
 
   return (
     <InputWrapper
@@ -22,15 +22,15 @@ export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
       error={error}
       required={required}
     >
-      <input
-        {...inputProps}
+      <select
+        {...selectProps}
         ref={ref}
-        type="number"
         required={required}
-      />
-      {suffix && <span>{suffix}</span>}
+      >
+        {children}
+      </select>
     </InputWrapper>
   );
 });
 
-InputNumber.displayName = "InputNumber";
+InputSelect.displayName = "InputSelect";
