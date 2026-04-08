@@ -5,6 +5,9 @@ export function PageHome() {
   return (
     <div className="p-8">
       <nav className="mb-8 flex gap-4">
+        <Link to="/ec3-1" className="underline hover:no-underline">
+          EC3 1
+        </Link>
         <Link to="/verifications/ec3" className="underline hover:no-underline">
           EC3 Verifications
         </Link>
