@@ -10,7 +10,10 @@ import {
   circularSections,
   type CircularSection,
 } from "../../data/circularSections";
-import { flangedSections, type FlangedSection } from "../../data/flangedSections";
+import {
+  flangedSections,
+  type FlangedSection,
+} from "../../data/flangedSections";
 import { hollowSections, type HollowSection } from "../../data/hollowSections";
 import type { Ec3FormValues } from "../../domain/formSchema";
 import {
@@ -23,9 +26,7 @@ import { getError } from "./shared";
 
 type ShapeKey = (typeof SHAPE_OPTIONS)[number];
 type CatalogSection = FlangedSection | HollowSection | CircularSection;
-type ShapeFieldsProps = {
-  isCustomSection: boolean;
-};
+type ShapeFieldsProps = { isCustomSection: boolean };
 
 const getSectionsByShape = (shape: ShapeKey): readonly CatalogSection[] => {
   if (shape === "I") return flangedSections;
@@ -207,7 +208,8 @@ export const FormGeometry = () => {
     setValue,
   } = useFormContext<Ec3FormValues>();
   const shape = useWatch({ control, name: "shape" }) ?? SHAPE_OPTIONS[0];
-  const sectionId = useWatch({ control, name: "sectionId" }) ?? CUSTOM_SECTION_ID;
+  const sectionId =
+    useWatch({ control, name: "sectionId" }) ?? CUSTOM_SECTION_ID;
   const previousShape = useRef(shape);
   const sections = getSectionsByShape(shape);
   const isCustomSection = sectionId === CUSTOM_SECTION_ID;
@@ -282,15 +284,18 @@ export const FormGeometry = () => {
         {!isCustomSection && <input hidden {...register("fabricationType")} />}
 
         {shape === "I" && <IShapeFields isCustomSection={isCustomSection} />}
-        {shape === "RHS" && <RhsShapeFields isCustomSection={isCustomSection} />}
-        {shape === "CHS" && <ChsShapeFields isCustomSection={isCustomSection} />}
+        {shape === "RHS" && (
+          <RhsShapeFields isCustomSection={isCustomSection} />
+        )}
+        {shape === "CHS" && (
+          <ChsShapeFields isCustomSection={isCustomSection} />
+        )}
 
         <InputSelect
           label="Class"
           error={getError(errors, "section_class")}
           {...register("section_class", {
-            setValueAs: (value) =>
-              value === "auto" ? "auto" : Number(value),
+            setValueAs: (value) => (value === "auto" ? "auto" : Number(value)),
           })}
         >
           {SECTION_CLASS_OPTIONS.map((option) => (

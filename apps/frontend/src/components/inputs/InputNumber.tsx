@@ -3,6 +3,7 @@ import {
   type ComponentPropsWithoutRef,
   type ReactNode,
 } from "react";
+import { twMerge } from "tailwind-merge";
 import { InputWrapper } from "./shared";
 
 type Props = Omit<ComponentPropsWithoutRef<"input">, "children" | "type"> & {
@@ -13,7 +14,15 @@ type Props = Omit<ComponentPropsWithoutRef<"input">, "children" | "type"> & {
 };
 
 export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { label, description, error, suffix, required, ...inputProps } = props;
+  const {
+    label,
+    description,
+    error,
+    suffix,
+    required,
+    className,
+    ...inputProps
+  } = props;
 
   return (
     <InputWrapper
@@ -22,13 +31,19 @@ export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
       error={error}
       required={required}
     >
-      <input
-        {...inputProps}
-        ref={ref}
-        type="number"
-        required={required}
-      />
-      {suffix && <span>{suffix}</span>}
+      <div className={suffix ? "flex items-center gap-2" : ""}>
+        <input
+          {...inputProps}
+          ref={ref}
+          type="number"
+          required={required}
+          className={twMerge(
+            "w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100",
+            className,
+          )}
+        />
+        {suffix && <span className="text-sm text-gray-600">{suffix}</span>}
+      </div>
     </InputWrapper>
   );
 });

@@ -14,17 +14,21 @@ export const InputWrapper = (props: InputWrapperProps) => {
   const { children, description, error, label, required } = props;
 
   return (
-    <div>
+    <div className="space-y-1">
       {label && (
-        <label>
-          {label}
-          {required && " *"}
+        <label className="flex flex-col gap-1 text-sm font-medium text-gray-900">
+          <span>
+            {label}
+            {required && " *"}
+          </span>
           {children}
         </label>
       )}
       {!label && children}
-      {description && <p>{description}</p>}
-      <p>{error || NON_BLOCKING_SPACE}</p>
+      {description && <p className="text-xs text-gray-500">{description}</p>}
+      <p className="text-xs text-red-600">
+        {error || NON_BLOCKING_SPACE}
+      </p>
     </div>
   );
 };
