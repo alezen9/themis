@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { computeAdditionalProperties } from "../../domain/computeAdditionalProperties";
 import { formSchema, type Ec3FormValues } from "../../domain/formSchema";
 import { createDefaultEc3WorkbenchSessionState } from "../../hooks/useEc3Workbench";
 import { FormActions } from "./FormActions";
@@ -10,10 +11,9 @@ import { FormMaterial } from "./FormMaterial";
 import { FormMomentShape } from "./FormMomentShape";
 import { FormNationalAnnex } from "./FormNationalAnnex";
 import { FormStability } from "./FormStability";
+import verify from "@ndg/ndg-ec3";
 
-type Props = {
-  className?: string;
-};
+type Props = { className?: string };
 
 const DEFAULT_SESSION = createDefaultEc3WorkbenchSessionState();
 
@@ -65,17 +65,23 @@ export const Ec3VerificationForm = (props: Props) => {
     shouldUnregister: true,
   });
   const values = useWatch({ control: form.control });
-  const previousValidValues = useRef("");
+  const computed = useMemo(() => {
+    const parsed = formSchema.safeParse(values);
+    if (!parsed.success) return null;
+
+    try {
+      const computedData = computeAdditionalProperties(parsed.data);
+      return { ...parsed.data, ...computedData };
+    } catch {
+      return null;
+    }
+  }, [values]);
 
   useEffect(() => {
-    if (!form.formState.isValid) return;
-
-    const nextValues = JSON.stringify(values);
-    if (previousValidValues.current === nextValues) return;
-
-    previousValidValues.current = nextValues;
-    console.log(values);
-  }, [form.formState.isValid, values]);
+    if (!computed) return;
+    const res = verify(computed);
+    console.log(res);
+  }, [computed]);
 
   return (
     <FormProvider {...form}>

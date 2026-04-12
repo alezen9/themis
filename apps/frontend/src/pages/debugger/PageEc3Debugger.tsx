@@ -185,9 +185,6 @@ function PageEc3DebuggerContent({
         <Link to="/" className="underline hover:no-underline">
           Home
         </Link>
-        <Link to="/verifications/ec3" className="underline hover:no-underline">
-          EC3 Verifications
-        </Link>
       </nav>
 
       <div className="mb-6 space-y-3">
