@@ -3,7 +3,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { InputNumber } from "../../../../../components/inputs/InputNumber";
 import { InputSelect } from "../../../../../components/inputs/InputSelect";
 import type { Ec3FormValues } from "../../domain/formSchema";
-import { ANNEXES } from "../../hooks/useEc3Workbench";
+import { ANNEXES } from "./config";
 import { getError } from "./shared";
 
 export const FormNationalAnnex = () => {
@@ -35,15 +35,12 @@ export const FormNationalAnnex = () => {
       <div className="space-y-3">
         <InputSelect
           label="Annex"
-          error={getError(errors, "annexId")}
-          {...register("annexId")}
-        >
-          {ANNEXES.map((annex) => (
-            <option key={annex.id} value={annex.id}>
-              {annex.name}
-            </option>
-          ))}
-        </InputSelect>
+          name="annexId"
+          options={ANNEXES.map((annex) => ({
+            label: annex.name,
+            value: annex.id,
+          }))}
+        />
 
         <InputNumber
           label="gamma_M0"

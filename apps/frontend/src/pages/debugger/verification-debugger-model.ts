@@ -11,7 +11,7 @@ import {
   hasError,
   isNotApplicable,
   type VerificationRow,
-} from "../../features/verifications/ec3/hooks/useEc3Evaluate";
+} from "./ec3/useEc3Evaluate";
 
 const INTERNAL_CONSTANTS = { e: Math.E, pi: Math.PI } satisfies Record<
   string,

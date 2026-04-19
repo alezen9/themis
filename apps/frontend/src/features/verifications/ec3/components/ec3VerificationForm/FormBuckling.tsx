@@ -39,23 +39,21 @@ export const FormBuckling = () => {
           {...register("k_z", { valueAsNumber: true })}
         />
 
-        {torsionalActive && (
-          <InputNumber
-            label="k_LT"
-            step="any"
-            error={getError(errors, "k_LT")}
-            {...register("k_LT", { valueAsNumber: true })}
-          />
-        )}
+        <InputNumber
+          label="k_LT"
+          step="any"
+          disabled={!torsionalActive}
+          error={torsionalActive ? getError(errors, "k_LT") : undefined}
+          {...register("k_LT", { valueAsNumber: true })}
+        />
 
-        {torsionalActive && (
-          <InputNumber
-            label="k_T"
-            step="any"
-            error={getError(errors, "k_T")}
-            {...register("k_T", { valueAsNumber: true })}
-          />
-        )}
+        <InputNumber
+          label="k_T"
+          step="any"
+          disabled={!torsionalActive}
+          error={torsionalActive ? getError(errors, "k_T") : undefined}
+          {...register("k_T", { valueAsNumber: true })}
+        />
       </div>
     </fieldset>
   );

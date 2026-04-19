@@ -6,7 +6,7 @@ type InputWrapperProps = {
   children: ReactNode;
   description?: ReactNode;
   error?: ReactNode;
-  label?: ReactNode;
+  label: ReactNode;
   required?: boolean;
 };
 
@@ -14,9 +14,9 @@ export const InputWrapper = (props: InputWrapperProps) => {
   const { children, description, error, label, required } = props;
 
   return (
-    <div className="space-y-1">
+    <div className="flex flex-col gap-2">
       {label && (
-        <label className="flex flex-col gap-1 text-sm font-medium text-gray-900">
+        <label className="flex flex-col gap-1 text-sm font-light text-gray-700">
           <span>
             {label}
             {required && " *"}
@@ -26,9 +26,27 @@ export const InputWrapper = (props: InputWrapperProps) => {
       )}
       {!label && children}
       {description && <p className="text-xs text-gray-500">{description}</p>}
-      <p className="text-xs text-red-600">
-        {error || NON_BLOCKING_SPACE}
-      </p>
+      <p className="text-xs text-red-600">{error || NON_BLOCKING_SPACE}</p>
+    </div>
+  );
+};
+
+export const InputWrapperHorizontal = (props: InputWrapperProps) => {
+  const { children, error, label, required } = props;
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="grid grid-cols-[auto_1fr] items-baseline">
+        <span className="text-sm font-thin text-gray-700">
+          {label}
+          {required && " *"}
+        </span>
+        <span className="justify-self-end">{children}</span>
+        <span>{NON_BLOCKING_SPACE}</span>
+        <p className="text-xs font-light text-red-500 ml-1 justify-self-end">
+          {error || NON_BLOCKING_SPACE}
+        </p>
+      </label>
     </div>
   );
 };

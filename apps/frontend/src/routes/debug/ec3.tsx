@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { DebugEc3Route } from "../../pages/debugger/DebugEc3Route";
+import { DebugEc3Route } from "../../pages/debugger/ec3/DebugEc3Route";
 
 type DebugEc3Search = { session?: string };
 

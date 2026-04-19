@@ -1,5 +1,5 @@
-import { computeBucklingProperties } from "../domain/buckling/buckling";
-import { computeSectionProperties } from "../domain/geometry/sectionProperties";
+import { computeBucklingProperties } from "../../../features/verifications/ec3/domain/buckling/buckling";
+import { computeSectionProperties } from "../../../features/verifications/ec3/domain/geometry/sectionProperties";
 import {
   BUCKLING_CURVES_LT_POLICY_OPTIONS,
   COEFFICIENT_F_METHOD_OPTIONS,
@@ -9,20 +9,22 @@ import {
   SECTION_CLASS_OPTIONS,
   SHAPE_OPTIONS,
   SUPPORT_CONDITION_OPTIONS,
-} from "../options";
-import type { SectionInput } from "../domain/geometry/sectionProperties";
-import type { Ec3EditableInputs } from "../hooks/useEc3Evaluate";
+} from "../../../features/verifications/ec3/options";
+import type { SectionInput } from "../../../features/verifications/ec3/domain/geometry/sectionProperties";
+import type { Ec3EditableInputs } from "./useEc3Evaluate";
 import {
   ANNEXES,
-  ANNEX_FIELDS,
   CUSTOM_SECTION_ID,
+  type ShapeKey,
+} from "./config";
+import {
+  ANNEX_FIELDS,
   FIELD_GROUPS,
   toDisplay,
   type Ec3WorkbenchState,
   type EditableNumericKey,
   type FieldDef,
-  type ShapeKey,
-} from "../hooks/useEc3Workbench";
+} from "./useEc3Workbench";
 
 const clampPsi = (value: number): number => Math.max(-1, Math.min(1, value));
 

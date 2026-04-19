@@ -7,14 +7,9 @@ import {
   INTERACTION_FACTOR_METHOD_OPTIONS,
   TORSIONAL_DEFORMATION_OPTIONS,
 } from "../../options";
-import { getError } from "./shared";
 
 export const FormStability = () => {
-  const {
-    control,
-    formState: { errors },
-    register,
-  } = useFormContext<Ec3FormValues>();
+  const { control } = useFormContext<Ec3FormValues>();
   const torsionalDeformations = useWatch({
     control,
     name: "torsional_deformations",
@@ -27,55 +22,41 @@ export const FormStability = () => {
       <div className="space-y-3">
         <InputSelect
           label="Torsional"
-          error={getError(errors, "torsional_deformations")}
-          {...register("torsional_deformations")}
-        >
-          {TORSIONAL_DEFORMATION_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </InputSelect>
+          name="torsional_deformations"
+          options={TORSIONAL_DEFORMATION_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
 
         <InputSelect
           label="k-method"
-          error={getError(errors, "interaction_factor_method")}
-          {...register("interaction_factor_method")}
-        >
-          {INTERACTION_FACTOR_METHOD_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </InputSelect>
+          name="interaction_factor_method"
+          options={INTERACTION_FACTOR_METHOD_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
 
-        {torsionalActive && (
-          <InputSelect
-            label="f method"
-            error={getError(errors, "coefficient_f_method")}
-            {...register("coefficient_f_method")}
-          >
-            {COEFFICIENT_F_METHOD_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </InputSelect>
-        )}
+        <InputSelect
+          label="f method"
+          name="coefficient_f_method"
+          disabled={!torsionalActive}
+          options={COEFFICIENT_F_METHOD_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
 
-        {torsionalActive && (
-          <InputSelect
-            label="LT curves"
-            error={getError(errors, "buckling_curves_LT_policy")}
-            {...register("buckling_curves_LT_policy")}
-          >
-            {BUCKLING_CURVES_LT_POLICY_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </InputSelect>
-        )}
+        <InputSelect
+          label="LT curves"
+          name="buckling_curves_LT_policy"
+          disabled={!torsionalActive}
+          options={BUCKLING_CURVES_LT_POLICY_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
       </div>
     </fieldset>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   useFormContext,
   useWatch,
@@ -21,12 +21,15 @@ import {
   SECTION_CLASS_OPTIONS,
   SHAPE_OPTIONS,
 } from "../../options";
-import { CUSTOM_SECTION_ID } from "../../hooks/useEc3Workbench";
+import { CUSTOM_SECTION_ID } from "./config";
 import { getError } from "./shared";
 
 type ShapeKey = (typeof SHAPE_OPTIONS)[number];
 type CatalogSection = FlangedSection | HollowSection | CircularSection;
-type ShapeFieldsProps = { isCustomSection: boolean };
+type ShapeFieldsProps = {
+  isCustomSection: boolean;
+  isActiveShape: boolean;
+};
 
 const getSectionsByShape = (shape: ShapeKey): readonly CatalogSection[] => {
   if (shape === "I") return flangedSections;
@@ -68,7 +71,8 @@ const syncCatalogSection = (
   setGeometryValues(section, setValue);
 };
 
-const IShapeFields = ({ isCustomSection }: ShapeFieldsProps) => {
+const IShapeFields = (props: ShapeFieldsProps) => {
+  const { isCustomSection, isActiveShape } = props;
   const {
     formState: { errors },
     register,
@@ -77,50 +81,51 @@ const IShapeFields = ({ isCustomSection }: ShapeFieldsProps) => {
   return (
     <>
       <InputNumber
-        label="h"
+        label="Height (h)"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "h")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "h") : undefined}
         {...register("h", { valueAsNumber: true })}
       />
       <InputNumber
-        label="b"
+        label="Base (b)"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "b")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "b") : undefined}
         {...register("b", { valueAsNumber: true })}
       />
       <InputNumber
-        label="tw"
+        label="Wall Thickness (tw)"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "tw")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "tw") : undefined}
         {...register("tw", { valueAsNumber: true })}
       />
       <InputNumber
-        label="tf"
+        label="Flange Thickness (tf)"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "tf")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "tf") : undefined}
         {...register("tf", { valueAsNumber: true })}
       />
       <InputNumber
-        label="r"
+        label="Radius (r)"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "r")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "r") : undefined}
         {...register("r", { valueAsNumber: true })}
       />
     </>
   );
 };
 
-const RhsShapeFields = ({ isCustomSection }: ShapeFieldsProps) => {
+const RhsShapeFields = (props: ShapeFieldsProps) => {
+  const { isCustomSection, isActiveShape } = props;
   const {
     formState: { errors },
     register,
@@ -131,48 +136,49 @@ const RhsShapeFields = ({ isCustomSection }: ShapeFieldsProps) => {
       <InputNumber
         label="h"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "h")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "h") : undefined}
         {...register("h", { valueAsNumber: true })}
       />
       <InputNumber
         label="b"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "b")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "b") : undefined}
         {...register("b", { valueAsNumber: true })}
       />
       <InputNumber
         label="t"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "tw")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "tw") : undefined}
         {...register("tw", { valueAsNumber: true })}
       />
       <InputNumber
         label="ro"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "ro")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "ro") : undefined}
         {...register("ro", { valueAsNumber: true })}
       />
       <InputNumber
         label="ri"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "ri")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "ri") : undefined}
         {...register("ri", { valueAsNumber: true })}
       />
     </>
   );
 };
 
-const ChsShapeFields = ({ isCustomSection }: ShapeFieldsProps) => {
+const ChsShapeFields = (props: ShapeFieldsProps) => {
+  const { isCustomSection, isActiveShape } = props;
   const {
     formState: { errors },
     register,
@@ -183,17 +189,17 @@ const ChsShapeFields = ({ isCustomSection }: ShapeFieldsProps) => {
       <InputNumber
         label="d"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "d")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "d") : undefined}
         {...register("d", { valueAsNumber: true })}
       />
       <InputNumber
         label="t"
         suffix="mm"
-        step="any"
-        readOnly={!isCustomSection}
-        error={getError(errors, "t")}
+        readOnly={!isCustomSection || !isActiveShape}
+        disabled={!isActiveShape}
+        error={isActiveShape ? getError(errors, "t") : undefined}
         {...register("t", { valueAsNumber: true })}
       />
     </>
@@ -201,17 +207,19 @@ const ChsShapeFields = ({ isCustomSection }: ShapeFieldsProps) => {
 };
 
 export const FormGeometry = () => {
-  const {
-    control,
-    formState: { errors },
-    register,
-    setValue,
-  } = useFormContext<Ec3FormValues>();
+  const { control, setValue } = useFormContext<Ec3FormValues>();
   const shape = useWatch({ control, name: "shape" }) ?? SHAPE_OPTIONS[0];
   const sectionId =
     useWatch({ control, name: "sectionId" }) ?? CUSTOM_SECTION_ID;
   const previousShape = useRef(shape);
   const sections = getSectionsByShape(shape);
+  const sectionOptions = useMemo(
+    () => [
+      { label: "Custom", value: CUSTOM_SECTION_ID },
+      ...sections.map((section) => ({ label: section.id, value: section.id })),
+    ],
+    [sections],
+  );
   const isCustomSection = sectionId === CUSTOM_SECTION_ID;
 
   useEffect(() => {
@@ -225,14 +233,16 @@ export const FormGeometry = () => {
   }, [isCustomSection, sections, setValue, shape]);
 
   useEffect(() => {
-    if (isCustomSection) return;
+    if (isCustomSection || sectionId === "") return;
 
-    const currentSection =
-      sections.find((section) => section.id === sectionId) ?? sections[0];
-    if (!currentSection) return;
+    const currentSection = sections.find((section) => section.id === sectionId);
+    if (!currentSection) {
+      const firstSection = sections[0];
+      if (!firstSection) return;
 
-    if (currentSection.id !== sectionId) {
-      setValue("sectionId", currentSection.id, { shouldValidate: true });
+      setValue("sectionId", firstSection.id, { shouldValidate: true });
+      syncCatalogSection(firstSection, setValue);
+      return;
     }
 
     syncCatalogSection(currentSection, setValue);
@@ -241,69 +251,53 @@ export const FormGeometry = () => {
   return (
     <fieldset className="border p-3">
       <legend className="px-1 text-xs font-semibold">Section</legend>
-      <div className="space-y-3">
+      <div className="flex flex-col">
         <InputSelect
           label="Shape"
-          error={getError(errors, "shape")}
-          {...register("shape")}
-        >
-          {SHAPE_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </InputSelect>
+          name="shape"
+          options={SHAPE_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
 
         <InputSelect
           label="Section"
-          error={getError(errors, "sectionId")}
-          {...register("sectionId")}
-        >
-          <option value={CUSTOM_SECTION_ID}>Custom</option>
-          {sections.map((section) => (
-            <option key={section.id} value={section.id}>
-              {section.id}
-            </option>
-          ))}
-        </InputSelect>
+          name="sectionId"
+          options={sectionOptions}
+        />
 
-        {isCustomSection && (
-          <InputSelect
-            label="Fabrication"
-            error={getError(errors, "fabricationType")}
-            {...register("fabricationType")}
-          >
-            {FABRICATION_TYPE_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </InputSelect>
-        )}
+        <InputSelect
+          label="Fabrication"
+          name="fabricationType"
+          disabled={!isCustomSection}
+          options={FABRICATION_TYPE_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
 
-        {!isCustomSection && <input hidden {...register("fabricationType")} />}
-
-        {shape === "I" && <IShapeFields isCustomSection={isCustomSection} />}
-        {shape === "RHS" && (
-          <RhsShapeFields isCustomSection={isCustomSection} />
-        )}
-        {shape === "CHS" && (
-          <ChsShapeFields isCustomSection={isCustomSection} />
-        )}
+        <IShapeFields
+          isCustomSection={isCustomSection}
+          isActiveShape={shape === "I"}
+        />
+        <RhsShapeFields
+          isCustomSection={isCustomSection}
+          isActiveShape={shape === "RHS"}
+        />
+        <ChsShapeFields
+          isCustomSection={isCustomSection}
+          isActiveShape={shape === "CHS"}
+        />
 
         <InputSelect
           label="Class"
-          error={getError(errors, "section_class")}
-          {...register("section_class", {
-            setValueAs: (value) => (value === "auto" ? "auto" : Number(value)),
-          })}
-        >
-          {SECTION_CLASS_OPTIONS.map((option) => (
-            <option key={String(option)} value={String(option)}>
-              {option}
-            </option>
-          ))}
-        </InputSelect>
+          name="section_class"
+          options={SECTION_CLASS_OPTIONS.map((option) => ({
+            label: String(option),
+            value: option,
+          }))}
+        />
       </div>
     </fieldset>
   );

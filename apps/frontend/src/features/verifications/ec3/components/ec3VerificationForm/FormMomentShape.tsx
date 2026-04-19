@@ -29,6 +29,9 @@ export const FormMomentShape = () => {
     momentShapeZ === "parabolic" || momentShapeZ === "triangular";
   const ltNeedsSupport =
     momentShapeLt === "parabolic" || momentShapeLt === "triangular";
+  const yIsLinear = momentShapeY === "linear";
+  const zIsLinear = momentShapeZ === "linear";
+  const ltIsLinear = momentShapeLt === "linear";
 
   return (
     <fieldset className="border p-3">
@@ -36,127 +39,102 @@ export const FormMomentShape = () => {
       <div className="space-y-3">
         <InputSelect
           label="shape y"
-          error={getError(errors, "moment_shape_y")}
-          {...register("moment_shape_y")}
-        >
-          {MOMENT_SHAPE_OPTIONS.map((option) => (
-            <option key={`y-${option}`} value={option}>
-              {option}
-            </option>
-          ))}
-        </InputSelect>
+          name="moment_shape_y"
+          options={MOMENT_SHAPE_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
 
-        {momentShapeY === "linear" && (
-          <InputNumber
-            label="psi_y"
-            suffix="[-1,1]"
-            step="any"
-            error={getError(errors, "psi_y")}
-            {...register("psi_y", { valueAsNumber: true })}
-          />
-        )}
+        <InputNumber
+          label="psi_y"
+          suffix="[ -1 . . 1 ]"
+          step="any"
+          disabled={!yIsLinear}
+          error={yIsLinear ? getError(errors, "psi_y") : undefined}
+          {...register("psi_y", { valueAsNumber: true })}
+        />
 
-        {yNeedsSupport && (
-          <InputSelect
-            label="support y"
-            error={getError(errors, "support_condition_y")}
-            {...register("support_condition_y")}
-          >
-            {SUPPORT_CONDITION_OPTIONS.map((option) => (
-              <option key={`sy-${option}`} value={option}>
-                {option}
-              </option>
-            ))}
-          </InputSelect>
-        )}
+        <InputSelect
+          label="support y"
+          name="support_condition_y"
+          disabled={!yNeedsSupport}
+          options={SUPPORT_CONDITION_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
 
         <InputSelect
           label="shape z"
-          error={getError(errors, "moment_shape_z")}
-          {...register("moment_shape_z")}
-        >
-          {MOMENT_SHAPE_OPTIONS.map((option) => (
-            <option key={`z-${option}`} value={option}>
-              {option}
-            </option>
-          ))}
-        </InputSelect>
+          name="moment_shape_z"
+          options={MOMENT_SHAPE_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
 
-        {momentShapeZ === "linear" && (
-          <InputNumber
-            label="psi_z"
-            suffix="[-1,1]"
-            step="any"
-            error={getError(errors, "psi_z")}
-            {...register("psi_z", { valueAsNumber: true })}
-          />
-        )}
+        <InputNumber
+          label="psi_z"
+          suffix="[ -1 . . 1 ]"
+          step="any"
+          disabled={!zIsLinear}
+          error={zIsLinear ? getError(errors, "psi_z") : undefined}
+          {...register("psi_z", { valueAsNumber: true })}
+        />
 
-        {zNeedsSupport && (
-          <InputSelect
-            label="support z"
-            error={getError(errors, "support_condition_z")}
-            {...register("support_condition_z")}
-          >
-            {SUPPORT_CONDITION_OPTIONS.map((option) => (
-              <option key={`sz-${option}`} value={option}>
-                {option}
-              </option>
-            ))}
-          </InputSelect>
-        )}
+        <InputSelect
+          label="support z"
+          name="support_condition_z"
+          disabled={!zNeedsSupport}
+          options={SUPPORT_CONDITION_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
 
-        {torsionalActive && (
-          <InputSelect
-            label="shape LT"
-            error={getError(errors, "moment_shape_LT")}
-            {...register("moment_shape_LT")}
-          >
-            {MOMENT_SHAPE_OPTIONS.map((option) => (
-              <option key={`lt-${option}`} value={option}>
-                {option}
-              </option>
-            ))}
-          </InputSelect>
-        )}
+        <InputSelect
+          label="shape LT"
+          name="moment_shape_LT"
+          disabled={!torsionalActive}
+          options={MOMENT_SHAPE_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
 
-        {torsionalActive && momentShapeLt === "linear" && (
-          <InputNumber
-            label="psi_LT"
-            suffix="[-1,1]"
-            step="any"
-            error={getError(errors, "psi_LT")}
-            {...register("psi_LT", { valueAsNumber: true })}
-          />
-        )}
+        <InputNumber
+          label="psi_LT"
+          suffix="[ -1 . . 1 ]"
+          step="any"
+          disabled={!torsionalActive || !ltIsLinear}
+          error={
+            torsionalActive && ltIsLinear
+              ? getError(errors, "psi_LT")
+              : undefined
+          }
+          {...register("psi_LT", { valueAsNumber: true })}
+        />
 
-        {torsionalActive && ltNeedsSupport && (
-          <InputSelect
-            label="support LT"
-            error={getError(errors, "support_condition_LT")}
-            {...register("support_condition_LT")}
-          >
-            {SUPPORT_CONDITION_OPTIONS.map((option) => (
-              <option key={`slt-${option}`} value={option}>
-                {option}
-              </option>
-            ))}
-          </InputSelect>
-        )}
+        <InputSelect
+          label="support LT"
+          name="support_condition_LT"
+          disabled={!torsionalActive || !ltNeedsSupport}
+          options={SUPPORT_CONDITION_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
 
-        {torsionalActive && ltNeedsSupport && (
-          <InputSelect
-            label="load LT"
-            error={getError(errors, "load_application_LT")}
-            {...register("load_application_LT")}
-          >
-            {LOAD_APPLICATION_LT_OPTIONS.map((option) => (
-              <option key={`llt-${option}`} value={option}>
-                {option}
-              </option>
-            ))}
-          </InputSelect>
-        )}
+        <InputSelect
+          label="load LT"
+          name="load_application_LT"
+          disabled={!torsionalActive || !ltNeedsSupport}
+          options={LOAD_APPLICATION_LT_OPTIONS.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+        />
       </div>
     </fieldset>
   );

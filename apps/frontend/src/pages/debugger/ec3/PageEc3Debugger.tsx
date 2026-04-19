@@ -4,21 +4,21 @@ import {
   ec3VerificationDefinitions,
   type Ec3VerificationCatalogEntry,
 } from "@ndg/ndg-ec3";
-import { Verification } from "../../features/verifications/ec3/components/Verification";
-import { decodeEc3DebugSession } from "../../features/verifications/ec3/ec3DebugSession";
+import { Verification } from "./Verification";
+import { decodeEc3DebugSession } from "./ec3DebugSession";
+import { useEc3Workbench } from "./useEc3Workbench";
 import {
   createDefaultEc3WorkbenchSessionState,
-  useEc3Workbench,
   type Ec3WorkbenchSessionState,
-} from "../../features/verifications/ec3/hooks/useEc3Workbench";
+} from "./sessionState";
 import {
   VerificationDebugger,
   type VerificationDebuggerAdapter,
-} from "./VerificationDebugger";
+} from "../VerificationDebugger";
 import {
   buildVerificationDebuggerCheck,
   type VerificationDebuggerContextGroup,
-} from "./verification-debugger-model";
+} from "../verification-debugger-model";
 
 const toAvailableValues = (value: Record<string, unknown> | null | undefined) =>
   value ?? { unavailable: "Not available for this run." };

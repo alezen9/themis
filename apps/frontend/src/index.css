@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @source "../../../packages/ndg-editor/src";
 
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
 @theme {
   --color-primary: #0ea5e9;
 }

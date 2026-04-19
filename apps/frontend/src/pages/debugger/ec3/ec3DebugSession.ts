@@ -1,4 +1,4 @@
-import type { Ec3WorkbenchSessionState } from "./hooks/useEc3Workbench";
+import type { Ec3WorkbenchSessionState } from "./sessionState";
 
 const EC3_DEBUG_SESSION_KIND = "ec3-workbench";
 
