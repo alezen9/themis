@@ -1,6 +1,11 @@
 import { useDeferredValue, useEffect, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
+import {
+  FormProvider,
+  useForm,
+  useFormContext,
+  useWatch,
+} from "react-hook-form";
 import { computeAdditionalProperties } from "../../domain/computeAdditionalProperties";
 import { formSchema, type Ec3FormValues } from "../../domain/formSchema";
 import { FormActions } from "./FormActions";
@@ -52,7 +57,7 @@ export const Ec3VerificationForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <Ec3VerificationObserver />
-      <form className={className || "flex flex-col gap-6 bg-zinc-50"}>
+      <form className={className || "flex flex-col gap-6"}>
         <FormGeometry />
         <FormMaterial />
         <FormActions />

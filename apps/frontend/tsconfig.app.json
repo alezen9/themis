@@ -5,7 +5,10 @@
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "composite": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "paths": {
+      "@components/*": ["./src/components/*"]
+    }
   },
   "include": ["src"]
 }

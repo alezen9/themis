@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "katex/dist/katex.min.css";
 @source "../../../packages/ndg-editor/src";
 
 @layer base {
@@ -11,4 +12,10 @@
 
 @theme {
   --color-primary: #0ea5e9;
+}
+
+.katex {
+  font-size: 0.75em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

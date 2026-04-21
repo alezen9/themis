@@ -1,16 +1,15 @@
 import { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { InputNumber } from "../../../../../components/inputs/InputNumber";
-import { InputSelect } from "../../../../../components/inputs/InputSelect";
+import { InputNumber } from "@components/inputs/InputNumber";
+import { InputSelect } from "@components/inputs/InputSelect";
 import type { Ec3FormValues } from "../../domain/formSchema";
 import { ANNEXES } from "./config";
-import { getError } from "./shared";
+import { Ec3FieldLabel, getError } from "./shared";
 
 export const FormNationalAnnex = () => {
   const {
     control,
     formState: { errors },
-    register,
     setValue,
   } = useFormContext<Ec3FormValues>();
   const annexId = useWatch({ control, name: "annexId" }) || ANNEXES[0]?.id;
@@ -43,28 +42,33 @@ export const FormNationalAnnex = () => {
         />
 
         <InputNumber
-          label="gamma_M0"
+          name="gamma_M0"
+          label={<Ec3FieldLabel text="Resistance Factor" tex="\gamma_{M0}" />}
           step="any"
           error={getError(errors, "gamma_M0")}
-          {...register("gamma_M0", { valueAsNumber: true })}
         />
         <InputNumber
-          label="gamma_M1"
+          name="gamma_M1"
+          label={<Ec3FieldLabel text="Buckling Factor" tex="\gamma_{M1}" />}
           step="any"
           error={getError(errors, "gamma_M1")}
-          {...register("gamma_M1", { valueAsNumber: true })}
         />
         <InputNumber
-          label="lambda_LT_0"
+          name="lambda_LT_0"
+          label={
+            <Ec3FieldLabel
+              text="LT Reference Slenderness"
+              tex="\lambda_{LT,0}"
+            />
+          }
           step="any"
           error={getError(errors, "lambda_LT_0")}
-          {...register("lambda_LT_0", { valueAsNumber: true })}
         />
         <InputNumber
-          label="beta_LT"
+          name="beta_LT"
+          label={<Ec3FieldLabel text="LT Factor" tex="\beta_{LT}" />}
           step="any"
           error={getError(errors, "beta_LT")}
-          {...register("beta_LT", { valueAsNumber: true })}
         />
       </div>
     </fieldset>

@@ -1,20 +1,30 @@
 import {
-  forwardRef,
   type ComponentPropsWithoutRef,
+  type ChangeEvent,
   type ReactNode,
 } from "react";
+import {
+  type FieldValues,
+  useController,
+  useFormContext,
+} from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { InputWrapperHorizontal } from "./shared";
 
-type Props = Omit<ComponentPropsWithoutRef<"input">, "children" | "type"> & {
+type Props = Omit<
+  ComponentPropsWithoutRef<"input">,
+  "children" | "defaultValue" | "name" | "onBlur" | "onChange" | "type" | "value"
+> & {
+  name: string;
   description?: ReactNode;
   label?: ReactNode;
   error?: ReactNode;
   suffix?: ReactNode;
 };
 
-export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
+export const InputNumber = (props: Props) => {
   const {
+    name,
     label,
     description,
     error,
@@ -23,12 +33,29 @@ export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
     className,
     ...inputProps
   } = props;
+  const { control } = useFormContext<FieldValues>();
+  const controller = useController({ name, control });
+  const { field, fieldState } = controller;
+  const { onBlur, onChange, ref, value } = field;
+  const resolvedError =
+    "error" in props ? error : fieldState.error?.message;
+  const inputValue =
+    typeof value === "number" ? (Number.isNaN(value) ? "" : value) : (value ?? "");
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.currentTarget.value === "") {
+      onChange(Number.NaN);
+      return;
+    }
+
+    onChange(event.currentTarget.valueAsNumber);
+  };
 
   return (
     <InputWrapperHorizontal
       label={label}
       description={description}
-      error={error}
+      error={resolvedError}
       required={required}
     >
       <div
@@ -44,7 +71,12 @@ export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
         <input
           ref={ref}
           type="number"
+          name={field.name}
           required={required}
+          value={inputValue}
+          onChange={handleChange}
+          onBlur={onBlur}
+          aria-invalid={fieldState.invalid}
           className={twMerge(
             "w-full h-8 rounded-lg text-center",
             "bg-linear-to-b/oklch from-[#f7f7f7] to-[#fefefe]",
@@ -70,6 +102,4 @@ export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
       </div>
     </InputWrapperHorizontal>
   );
-});
-
-InputNumber.displayName = "InputNumber";
+};

@@ -1,12 +1,11 @@
 import { useFormContext } from "react-hook-form";
-import { InputNumber } from "../../../../../components/inputs/InputNumber";
+import { InputNumber } from "@components/inputs/InputNumber";
 import type { Ec3FormValues } from "../../domain/formSchema";
-import { getError } from "./shared";
+import { Ec3FieldLabel, getError } from "./shared";
 
 export const FormActions = () => {
   const {
     formState: { errors },
-    register,
   } = useFormContext<Ec3FormValues>();
 
   return (
@@ -14,39 +13,39 @@ export const FormActions = () => {
       <legend className="px-1 text-xs font-semibold">Actions</legend>
       <div className="space-y-3">
         <InputNumber
-          label="N_Ed"
+          name="N_Ed"
+          label={<Ec3FieldLabel text="Axial Force" tex="N_{Ed}" />}
           suffix="kN"
           step="any"
           error={getError(errors, "N_Ed")}
-          {...register("N_Ed", { valueAsNumber: true })}
         />
         <InputNumber
-          label="M_y_Ed"
+          name="M_y_Ed"
+          label={<Ec3FieldLabel text="Major-Axis Moment" tex="M_{y,Ed}" />}
           suffix="kNm"
           step="any"
           error={getError(errors, "M_y_Ed")}
-          {...register("M_y_Ed", { valueAsNumber: true })}
         />
         <InputNumber
-          label="M_z_Ed"
+          name="M_z_Ed"
+          label={<Ec3FieldLabel text="Minor-Axis Moment" tex="M_{z,Ed}" />}
           suffix="kNm"
           step="any"
           error={getError(errors, "M_z_Ed")}
-          {...register("M_z_Ed", { valueAsNumber: true })}
         />
         <InputNumber
-          label="V_y_Ed"
+          name="V_y_Ed"
+          label={<Ec3FieldLabel text="Major-Axis Shear" tex="V_{y,Ed}" />}
           suffix="kN"
           step="any"
           error={getError(errors, "V_y_Ed")}
-          {...register("V_y_Ed", { valueAsNumber: true })}
         />
         <InputNumber
-          label="V_z_Ed"
+          name="V_z_Ed"
+          label={<Ec3FieldLabel text="Minor-Axis Shear" tex="V_{z,Ed}" />}
           suffix="kN"
           step="any"
           error={getError(errors, "V_z_Ed")}
-          {...register("V_z_Ed", { valueAsNumber: true })}
         />
       </div>
     </fieldset>

@@ -4,8 +4,10 @@ import {
   useWatch,
   type UseFormSetValue,
 } from "react-hook-form";
-import { InputNumber } from "../../../../../components/inputs/InputNumber";
-import { InputSelect } from "../../../../../components/inputs/InputSelect";
+import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
+import { InputNumber } from "@components/inputs/InputNumber";
+import { InputRadioGroup } from "@components/inputs/InputRadioGroup";
+import { InputSelect } from "@components/inputs/InputSelect";
 import {
   circularSections,
   type CircularSection,
@@ -22,14 +24,11 @@ import {
   SHAPE_OPTIONS,
 } from "../../options";
 import { CUSTOM_SECTION_ID } from "./config";
-import { getError } from "./shared";
+import { Ec3FieldLabel, getError } from "./shared";
 
 type ShapeKey = (typeof SHAPE_OPTIONS)[number];
 type CatalogSection = FlangedSection | HollowSection | CircularSection;
-type ShapeFieldsProps = {
-  isCustomSection: boolean;
-  isActiveShape: boolean;
-};
+type ShapeFieldsProps = { isCustomSection: boolean; isActiveShape: boolean };
 
 const getSectionsByShape = (shape: ShapeKey): readonly CatalogSection[] => {
   if (shape === "I") return flangedSections;
@@ -75,50 +74,49 @@ const IShapeFields = (props: ShapeFieldsProps) => {
   const { isCustomSection, isActiveShape } = props;
   const {
     formState: { errors },
-    register,
   } = useFormContext<Ec3FormValues>();
 
   return (
     <>
       <InputNumber
-        label="Height (h)"
+        name="h"
+        label={<Ec3FieldLabel text="Height" tex="h" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "h") : undefined}
-        {...register("h", { valueAsNumber: true })}
       />
       <InputNumber
-        label="Base (b)"
+        name="b"
+        label={<Ec3FieldLabel text="Width" tex="b" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "b") : undefined}
-        {...register("b", { valueAsNumber: true })}
       />
       <InputNumber
-        label="Wall Thickness (tw)"
+        name="tw"
+        label={<Ec3FieldLabel text="Web Thickness" tex="t_w" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "tw") : undefined}
-        {...register("tw", { valueAsNumber: true })}
       />
       <InputNumber
-        label="Flange Thickness (tf)"
+        name="tf"
+        label={<Ec3FieldLabel text="Flange Thickness" tex="t_f" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "tf") : undefined}
-        {...register("tf", { valueAsNumber: true })}
       />
       <InputNumber
-        label="Radius (r)"
+        name="r"
+        label={<Ec3FieldLabel text="Root Radius" tex="r" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "r") : undefined}
-        {...register("r", { valueAsNumber: true })}
       />
     </>
   );
@@ -128,50 +126,49 @@ const RhsShapeFields = (props: ShapeFieldsProps) => {
   const { isCustomSection, isActiveShape } = props;
   const {
     formState: { errors },
-    register,
   } = useFormContext<Ec3FormValues>();
 
   return (
     <>
       <InputNumber
-        label="h"
+        name="h"
+        label={<Ec3FieldLabel text="Height" tex="h" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "h") : undefined}
-        {...register("h", { valueAsNumber: true })}
       />
       <InputNumber
-        label="b"
+        name="b"
+        label={<Ec3FieldLabel text="Width" tex="b" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "b") : undefined}
-        {...register("b", { valueAsNumber: true })}
       />
       <InputNumber
-        label="t"
+        name="tw"
+        label={<Ec3FieldLabel text="Wall Thickness" tex="t" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "tw") : undefined}
-        {...register("tw", { valueAsNumber: true })}
       />
       <InputNumber
-        label="ro"
+        name="ro"
+        label={<Ec3FieldLabel text="Outer Radius" tex="r_o" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "ro") : undefined}
-        {...register("ro", { valueAsNumber: true })}
       />
       <InputNumber
-        label="ri"
+        name="ri"
+        label={<Ec3FieldLabel text="Inner Radius" tex="r_i" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "ri") : undefined}
-        {...register("ri", { valueAsNumber: true })}
       />
     </>
   );
@@ -181,26 +178,25 @@ const ChsShapeFields = (props: ShapeFieldsProps) => {
   const { isCustomSection, isActiveShape } = props;
   const {
     formState: { errors },
-    register,
   } = useFormContext<Ec3FormValues>();
 
   return (
     <>
       <InputNumber
-        label="d"
+        name="d"
+        label={<Ec3FieldLabel text="Diameter" tex="d" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "d") : undefined}
-        {...register("d", { valueAsNumber: true })}
       />
       <InputNumber
-        label="t"
+        name="t"
+        label={<Ec3FieldLabel text="Thickness" tex="t" />}
         suffix="mm"
         readOnly={!isCustomSection || !isActiveShape}
         disabled={!isActiveShape}
         error={isActiveShape ? getError(errors, "t") : undefined}
-        {...register("t", { valueAsNumber: true })}
       />
     </>
   );
@@ -252,25 +248,27 @@ export const FormGeometry = () => {
     <fieldset className="border p-3">
       <legend className="px-1 text-xs font-semibold">Section</legend>
       <div className="flex flex-col">
-        <InputSelect
+        <InputRadioGroup
           label="Shape"
           name="shape"
+          orientation="inline"
           options={SHAPE_OPTIONS.map((option) => ({
             label: option,
             value: option,
           }))}
         />
 
-        <InputSelect
+        <InputAutocomplete
           label="Section"
           name="sectionId"
           options={sectionOptions}
         />
 
-        <InputSelect
+        <InputRadioGroup
           label="Fabrication"
           name="fabricationType"
           disabled={!isCustomSection}
+          orientation="inline"
           options={FABRICATION_TYPE_OPTIONS.map((option) => ({
             label: option,
             value: option,
@@ -291,7 +289,7 @@ export const FormGeometry = () => {
         />
 
         <InputSelect
-          label="Class"
+          label="Section Class"
           name="section_class"
           options={SECTION_CLASS_OPTIONS.map((option) => ({
             label: String(option),

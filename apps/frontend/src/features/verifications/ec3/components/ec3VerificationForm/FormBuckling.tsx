@@ -1,13 +1,12 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import { InputNumber } from "../../../../../components/inputs/InputNumber";
+import { InputNumber } from "@components/inputs/InputNumber";
 import type { Ec3FormValues } from "../../domain/formSchema";
-import { getError } from "./shared";
+import { Ec3FieldLabel, getError } from "./shared";
 
 export const FormBuckling = () => {
   const {
     control,
     formState: { errors },
-    register,
   } = useFormContext<Ec3FormValues>();
   const torsionalDeformations = useWatch({
     control,
@@ -20,39 +19,41 @@ export const FormBuckling = () => {
       <legend className="px-1 text-xs font-semibold">Buckling</legend>
       <div className="space-y-3">
         <InputNumber
-          label="L"
+          name="L"
+          label={<Ec3FieldLabel text="Member Length" tex="L" />}
           suffix="m"
           step="any"
           error={getError(errors, "L")}
-          {...register("L", { valueAsNumber: true })}
         />
         <InputNumber
-          label="k_y"
+          name="k_y"
+          label={<Ec3FieldLabel text="Effective Length Factor y" tex="k_y" />}
           step="any"
           error={getError(errors, "k_y")}
-          {...register("k_y", { valueAsNumber: true })}
         />
         <InputNumber
-          label="k_z"
+          name="k_z"
+          label={<Ec3FieldLabel text="Effective Length Factor z" tex="k_z" />}
           step="any"
           error={getError(errors, "k_z")}
-          {...register("k_z", { valueAsNumber: true })}
         />
 
         <InputNumber
-          label="k_LT"
+          name="k_LT"
+          label={
+            <Ec3FieldLabel text="Lateral-Torsional Factor" tex="k_{LT}" />
+          }
           step="any"
           disabled={!torsionalActive}
           error={torsionalActive ? getError(errors, "k_LT") : undefined}
-          {...register("k_LT", { valueAsNumber: true })}
         />
 
         <InputNumber
-          label="k_T"
+          name="k_T"
+          label={<Ec3FieldLabel text="Torsional Factor" tex="k_T" />}
           step="any"
           disabled={!torsionalActive}
           error={torsionalActive ? getError(errors, "k_T") : undefined}
-          {...register("k_T", { valueAsNumber: true })}
         />
       </div>
     </fieldset>

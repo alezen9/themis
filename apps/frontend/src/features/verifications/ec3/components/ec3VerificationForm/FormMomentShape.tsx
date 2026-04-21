@@ -1,19 +1,18 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import { InputNumber } from "../../../../../components/inputs/InputNumber";
-import { InputSelect } from "../../../../../components/inputs/InputSelect";
+import { InputNumber } from "@components/inputs/InputNumber";
+import { InputSelect } from "@components/inputs/InputSelect";
 import type { Ec3FormValues } from "../../domain/formSchema";
 import {
   LOAD_APPLICATION_LT_OPTIONS,
   MOMENT_SHAPE_OPTIONS,
   SUPPORT_CONDITION_OPTIONS,
 } from "../../options";
-import { getError } from "./shared";
+import { Ec3FieldLabel, getError } from "./shared";
 
 export const FormMomentShape = () => {
   const {
     control,
     formState: { errors },
-    register,
   } = useFormContext<Ec3FormValues>();
   const momentShapeY = useWatch({ control, name: "moment_shape_y" });
   const momentShapeZ = useWatch({ control, name: "moment_shape_z" });
@@ -38,7 +37,7 @@ export const FormMomentShape = () => {
       <legend className="px-1 text-xs font-semibold">Moment Shape</legend>
       <div className="space-y-3">
         <InputSelect
-          label="shape y"
+          label={<Ec3FieldLabel text="Moment Shape y" tex="\mu_y" />}
           name="moment_shape_y"
           options={MOMENT_SHAPE_OPTIONS.map((option) => ({
             label: option,
@@ -47,16 +46,16 @@ export const FormMomentShape = () => {
         />
 
         <InputNumber
-          label="psi_y"
+          name="psi_y"
+          label={<Ec3FieldLabel text="Moment Gradient y" tex="\psi_y" />}
           suffix="[ -1 . . 1 ]"
           step="any"
           disabled={!yIsLinear}
           error={yIsLinear ? getError(errors, "psi_y") : undefined}
-          {...register("psi_y", { valueAsNumber: true })}
         />
 
         <InputSelect
-          label="support y"
+          label="Support Condition y"
           name="support_condition_y"
           disabled={!yNeedsSupport}
           options={SUPPORT_CONDITION_OPTIONS.map((option) => ({
@@ -66,7 +65,7 @@ export const FormMomentShape = () => {
         />
 
         <InputSelect
-          label="shape z"
+          label={<Ec3FieldLabel text="Moment Shape z" tex="\mu_z" />}
           name="moment_shape_z"
           options={MOMENT_SHAPE_OPTIONS.map((option) => ({
             label: option,
@@ -75,16 +74,16 @@ export const FormMomentShape = () => {
         />
 
         <InputNumber
-          label="psi_z"
+          name="psi_z"
+          label={<Ec3FieldLabel text="Moment Gradient z" tex="\psi_z" />}
           suffix="[ -1 . . 1 ]"
           step="any"
           disabled={!zIsLinear}
           error={zIsLinear ? getError(errors, "psi_z") : undefined}
-          {...register("psi_z", { valueAsNumber: true })}
         />
 
         <InputSelect
-          label="support z"
+          label="Support Condition z"
           name="support_condition_z"
           disabled={!zNeedsSupport}
           options={SUPPORT_CONDITION_OPTIONS.map((option) => ({
@@ -94,7 +93,7 @@ export const FormMomentShape = () => {
         />
 
         <InputSelect
-          label="shape LT"
+          label={<Ec3FieldLabel text="Moment Shape LT" tex="\mu_{LT}" />}
           name="moment_shape_LT"
           disabled={!torsionalActive}
           options={MOMENT_SHAPE_OPTIONS.map((option) => ({
@@ -104,7 +103,8 @@ export const FormMomentShape = () => {
         />
 
         <InputNumber
-          label="psi_LT"
+          name="psi_LT"
+          label={<Ec3FieldLabel text="Moment Gradient LT" tex="\psi_{LT}" />}
           suffix="[ -1 . . 1 ]"
           step="any"
           disabled={!torsionalActive || !ltIsLinear}
@@ -113,11 +113,10 @@ export const FormMomentShape = () => {
               ? getError(errors, "psi_LT")
               : undefined
           }
-          {...register("psi_LT", { valueAsNumber: true })}
         />
 
         <InputSelect
-          label="support LT"
+          label="Support Condition LT"
           name="support_condition_LT"
           disabled={!torsionalActive || !ltNeedsSupport}
           options={SUPPORT_CONDITION_OPTIONS.map((option) => ({
@@ -127,7 +126,7 @@ export const FormMomentShape = () => {
         />
 
         <InputSelect
-          label="load LT"
+          label="Load Application LT"
           name="load_application_LT"
           disabled={!torsionalActive || !ltNeedsSupport}
           options={LOAD_APPLICATION_LT_OPTIONS.map((option) => ({

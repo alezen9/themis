@@ -50,3 +50,23 @@ export const InputWrapperHorizontal = (props: InputWrapperProps) => {
     </div>
   );
 };
+
+export const InputWrapperHorizontalGroup = (props: InputWrapperProps) => {
+  const { children, error, label, required } = props;
+
+  return (
+    <div className="flex flex-col gap-2">
+      <fieldset className="grid grid-cols-[auto_1fr] items-baseline">
+        <legend className="text-sm font-thin text-gray-700">
+          {label}
+          {required && " *"}
+        </legend>
+        <div className="justify-self-end">{children}</div>
+        <span>{NON_BLOCKING_SPACE}</span>
+        <p className="text-xs font-light text-red-500 ml-1 justify-self-end">
+          {error || NON_BLOCKING_SPACE}
+        </p>
+      </fieldset>
+    </div>
+  );
+};
