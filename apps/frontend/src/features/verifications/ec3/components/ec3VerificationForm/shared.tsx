@@ -1,4 +1,4 @@
-import katex from "katex";
+import { Latex } from "@components/Latex";
 import type { ReactNode } from "react";
 import type { FieldErrors } from "react-hook-form";
 import { steelGrades } from "../../data/steelGrades";
@@ -32,22 +32,15 @@ type Ec3FieldLabelProps = { text: ReactNode; tex?: string };
 
 export const Ec3FieldLabel = (props: Ec3FieldLabelProps) => {
   const { text, tex } = props;
-  const mathHtml = tex
-    ? katex.renderToString(`(${tex})`, {
-        displayMode: true,
-        output: "html",
-        strict: true,
-        throwOnError: false,
-      })
-    : null;
 
   return (
     <span className="inline-flex items-baseline gap-1.5">
       <span>{text}</span>
-      {mathHtml && (
-        <span
+      {tex && (
+        <Latex
+          displayMode
           className="text-gray-400 font-thin text-lg"
-          dangerouslySetInnerHTML={{ __html: `${mathHtml}` }}
+          tex={`(${tex})`}
         />
       )}
     </span>

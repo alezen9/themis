@@ -6,8 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import katex from "katex";
-import "katex/dist/katex.min.css";
+import { Latex } from "../../components/Latex";
 import {
   getDefaultSelectedCheckId,
   type BranchStatus,
@@ -56,35 +55,6 @@ const formatScalar = (value: unknown) => {
   return JSON.stringify(value);
 };
 
-const renderKatexHtml = (tex: string, display: boolean) => {
-  try {
-    return katex.renderToString(tex, {
-      displayMode: display,
-      throwOnError: false,
-    });
-  } catch {
-    return null;
-  }
-};
-
-function MathFormula({
-  tex,
-  className,
-  display = false,
-}: {
-  tex: string;
-  className?: string;
-  display?: boolean;
-}) {
-  const html = renderKatexHtml(tex, display);
-  if (html === null) {
-    return <code className={className}>{tex}</code>;
-  }
-  return (
-    <span className={className} dangerouslySetInnerHTML={{ __html: html }} />
-  );
-}
-
 function FormulaBlock({
   tex,
   label,
@@ -116,9 +86,9 @@ function FormulaBlock({
         </div>
       ) : null}
       <div className="overflow-x-auto overflow-y-hidden">
-        <MathFormula
+        <Latex
           tex={tex}
-          display={display}
+          displayMode={display}
           className={
             className ??
             "inline-block min-w-max text-[13px] leading-none [&_.katex]:text-inherit"
@@ -1037,7 +1007,7 @@ function TreeInspector({
                         >
                           {nodeEquationTex ? (
                             <div className="w-full overflow-x-auto overflow-y-hidden text-[12px] text-slate-900">
-                              <MathFormula
+                              <Latex
                                 tex={nodeEquationTex}
                                 className="inline-block min-w-max [&_.katex]:text-inherit"
                               />
@@ -1102,7 +1072,7 @@ function TracePanel({
               </div>
               {entry.unit ? (
                 <div className="overflow-x-auto overflow-y-hidden text-gray-500">
-                  <MathFormula
+                  <Latex
                     tex={entry.unit}
                     className="inline-block min-w-max [&_.katex]:text-inherit"
                   />
@@ -1117,7 +1087,7 @@ function TracePanel({
               <div>
                 <span className="font-medium text-gray-500">Symbol</span>{" "}
                 <span className="inline-block align-middle">
-                  <MathFormula
+                  <Latex
                     tex={entry.symbol}
                     className="inline-block min-w-max text-sm [&_.katex]:text-inherit"
                   />
