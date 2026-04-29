@@ -11,14 +11,14 @@ import {
   isNotApplicable,
   useEc3Evaluate,
 } from "./useEc3Evaluate";
-import { computeAdditionalProperties } from "../../../features/verifications/ec3/domain/computeAdditionalProperties";
-import { formSchema, type Ec3FormValues } from "../../../features/verifications/ec3/domain/formSchema";
+import { computeAdditionalProperties } from "../../../../features/verifications/ec3/domain/computeAdditionalProperties";
+import { formSchema, type Ec3FormValues } from "../../../../features/verifications/ec3/domain/formSchema";
 import {
   steelGrades,
   STEEL_E,
   STEEL_G,
   type SteelGrade,
-} from "../../../features/verifications/ec3/data/steelGrades";
+} from "../../../../features/verifications/ec3/data/steelGrades";
 import type {
   AnnexCoeffs,
   Ec3EditableInputs,
@@ -27,7 +27,7 @@ import type {
   VerificationRow,
 } from "./useEc3Evaluate";
 import { ANNEX_EDITABLE_KEYS } from "./inputContract";
-import { type SectionInput } from "../../../features/verifications/ec3/domain/geometry/sectionProperties";
+import { type SectionInput } from "../../../../features/verifications/ec3/domain/geometry/sectionProperties";
 import {
   ANNEXES,
   CUSTOM_SECTION_ID,

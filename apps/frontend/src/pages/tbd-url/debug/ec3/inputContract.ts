@@ -1,4 +1,4 @@
-export { SECTION_CLASS_OPTIONS } from "../../../features/verifications/ec3/options";
+export { SECTION_CLASS_OPTIONS } from "../../../../features/verifications/ec3/options";
 
 export const ANNEX_EDITABLE_KEYS = [
   "gamma_M0",

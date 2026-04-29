@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Latex } from "../../components/Latex";
+import { Latex } from "@components/Latex";
 import {
   getDefaultSelectedCheckId,
   type BranchStatus,

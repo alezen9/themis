@@ -1,5 +1,5 @@
-import { SUPPORT_CONDITION_VALUES } from "../../../features/verifications/ec3/options";
-import { steelGrades } from "../../../features/verifications/ec3/data/steelGrades";
+import { SUPPORT_CONDITION_VALUES } from "../../../../features/verifications/ec3/options";
+import { steelGrades } from "../../../../features/verifications/ec3/data/steelGrades";
 import type {
   AnnexCoeffs,
   Ec3EditableInputs,

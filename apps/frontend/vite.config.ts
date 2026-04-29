@@ -9,8 +9,10 @@ export default defineConfig({
   build: { chunkSizeWarningLimit: 1536 },
   plugins: [
     tanstackRouter({
-      routesDirectory: "./src/routes",
+      routesDirectory: "./src/pages",
       generatedRouteTree: "./src/routeTree.gen.ts",
+      routeFileIgnorePattern:
+        "^(?!(__root|route)(\\.|$))(?!.*\\.route\\.(tsx?|jsx?)$).*\\.(tsx?|jsx?)$",
     }),
     react(),
     tailwindcss(),

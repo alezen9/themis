@@ -14,11 +14,11 @@ import {
 import {
   VerificationDebugger,
   type VerificationDebuggerAdapter,
-} from "../VerificationDebugger";
+} from "./VerificationDebugger";
 import {
   buildVerificationDebuggerCheck,
   type VerificationDebuggerContextGroup,
-} from "../verification-debugger-model";
+} from "./verification-debugger-model";
 
 const toAvailableValues = (value: Record<string, unknown> | null | undefined) =>
   value ?? { unavailable: "Not available for this run." };

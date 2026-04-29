@@ -17,7 +17,7 @@ export function DebugEc3RouteContent({
   session?: string;
 }) {
   if (!enabled || !LazyPageEc3Debugger) {
-    return <Navigate replace to="/ec3/part-1" />;
+    return <Navigate replace to="/eurocode/ec3-1-1/steel-members" />;
   }
 
   return (

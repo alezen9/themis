@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import verify from "@ndg/ndg-ec3";
-import { computeAdditionalProperties } from "../../../features/verifications/ec3/domain/computeAdditionalProperties";
-import type { Ec3FormValues } from "../../../features/verifications/ec3/domain/formSchema";
+import { computeAdditionalProperties } from "../../../../features/verifications/ec3/domain/computeAdditionalProperties";
+import type { Ec3FormValues } from "../../../../features/verifications/ec3/domain/formSchema";
 import {
   BUCKLING_CURVES_LT_POLICY_OPTIONS,
   COEFFICIENT_F_METHOD_OPTIONS,
@@ -12,7 +12,7 @@ import {
   SHAPE_OPTIONS,
   SUPPORT_CONDITION_VALUES,
   TORSIONAL_DEFORMATION_OPTIONS,
-} from "../../../features/verifications/ec3/options";
+} from "../../../../features/verifications/ec3/options";
 
 export type AnnexCoeffs = Pick<
   Ec3FormValues,

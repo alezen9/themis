@@ -1,5 +1,5 @@
-import { computeBucklingProperties } from "../../../features/verifications/ec3/domain/buckling/buckling";
-import { computeSectionProperties } from "../../../features/verifications/ec3/domain/geometry/sectionProperties";
+import { computeBucklingProperties } from "../../../../features/verifications/ec3/domain/buckling/buckling";
+import { computeSectionProperties } from "../../../../features/verifications/ec3/domain/geometry/sectionProperties";
 import {
   BUCKLING_CURVES_LT_POLICY_OPTIONS,
   COEFFICIENT_F_METHOD_OPTIONS,
@@ -9,8 +9,8 @@ import {
   SECTION_CLASS_OPTIONS,
   SHAPE_OPTIONS,
   SUPPORT_CONDITION_OPTIONS,
-} from "../../../features/verifications/ec3/options";
-import type { SectionInput } from "../../../features/verifications/ec3/domain/geometry/sectionProperties";
+} from "../../../../features/verifications/ec3/options";
+import type { SectionInput } from "../../../../features/verifications/ec3/domain/geometry/sectionProperties";
 import type { Ec3EditableInputs } from "./useEc3Evaluate";
 import {
   ANNEXES,

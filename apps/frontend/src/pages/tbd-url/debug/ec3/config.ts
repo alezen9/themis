@@ -1,18 +1,18 @@
 import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3";
-import { FABRICATION_TYPE_OPTIONS, SHAPE_OPTIONS } from "../../../features/verifications/ec3/options";
+import { FABRICATION_TYPE_OPTIONS, SHAPE_OPTIONS } from "../../../../features/verifications/ec3/options";
 import {
   circularSections,
   type CircularSection,
-} from "../../../features/verifications/ec3/data/circularSections";
+} from "../../../../features/verifications/ec3/data/circularSections";
 import {
   flangedSections,
   type FlangedSection,
-} from "../../../features/verifications/ec3/data/flangedSections";
+} from "../../../../features/verifications/ec3/data/flangedSections";
 import {
   hollowSections,
   type HollowSection,
-} from "../../../features/verifications/ec3/data/hollowSections";
-import { steelGrades } from "../../../features/verifications/ec3/data/steelGrades";
+} from "../../../../features/verifications/ec3/data/hollowSections";
+import { steelGrades } from "../../../../features/verifications/ec3/data/steelGrades";
 
 export type FabricationType = (typeof FABRICATION_TYPE_OPTIONS)[number];
 export type ShapeKey = (typeof SHAPE_OPTIONS)[number];

@@ -1,18 +1,24 @@
 import { Link } from "@tanstack/react-router";
-import { verificationDebuggerEnabled } from "../debugger/ec3/ec3DebuggerEnv";
+import { verificationDebuggerEnabled } from "../tbd-url/debug/ec3/ec3DebuggerEnv";
 
 export function PageHome() {
   return (
     <div className="p-8">
       <nav className="mb-8 flex gap-4">
-        <Link to="/ec3/part-1" className="underline hover:no-underline">
+        <Link
+          to="/eurocode/ec3-1-1/steel-members"
+          className="underline hover:no-underline"
+        >
           EC3 1
         </Link>
-        <Link to="/editor" className="underline hover:no-underline">
+        <Link to="/ndg/editor" className="underline hover:no-underline">
           Editor
         </Link>
         {verificationDebuggerEnabled ? (
-          <Link to="/debug/ec3" className="underline hover:no-underline">
+          <Link
+            to="/tbd-url/debug/ec3"
+            className="underline hover:no-underline"
+          >
             EC3 Debugger
           </Link>
         ) : null}
