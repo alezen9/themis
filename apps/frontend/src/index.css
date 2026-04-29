@@ -8,6 +8,10 @@
     -webkit-appearance: none;
     margin: 0;
   }
+
+  * {
+    font-family: "Inter", sans-serif;
+  }
 }
 
 @theme {

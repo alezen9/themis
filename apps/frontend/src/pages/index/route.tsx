@@ -1,4 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { PageHome } from "./PageHome";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { DEFAULT_LANDING_ROUTE } from "../routeDefaults";
 
-export const Route = createFileRoute("/")({ component: PageHome });
+const IndexRoute = () => <Navigate replace to={DEFAULT_LANDING_ROUTE} />;
+
+export const Route = createFileRoute("/")({ component: IndexRoute });

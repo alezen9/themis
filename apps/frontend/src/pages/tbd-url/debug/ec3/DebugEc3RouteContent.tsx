@@ -1,5 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Navigate } from "@tanstack/react-router";
+import { DEFAULT_LANDING_ROUTE } from "../../../routeDefaults";
 import { verificationDebuggerEnabled } from "./ec3DebuggerEnv";
 
 const LazyPageEc3Debugger = verificationDebuggerEnabled
@@ -17,7 +18,7 @@ export function DebugEc3RouteContent({
   session?: string;
 }) {
   if (!enabled || !LazyPageEc3Debugger) {
-    return <Navigate replace to="/eurocode/ec3-1-1/steel-members" />;
+    return <Navigate replace to={DEFAULT_LANDING_ROUTE} />;
   }
 
   return (
