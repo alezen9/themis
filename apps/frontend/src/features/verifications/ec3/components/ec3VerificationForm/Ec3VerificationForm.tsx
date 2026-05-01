@@ -12,11 +12,13 @@ import { FormActions } from "./FormActions";
 import { FormBuckling } from "./FormBuckling";
 import { DEFAULT_EC3_FORM_VALUES } from "./config";
 import { FormGeometry } from "./FormGeometry";
+import { Ec3FormPanel } from "./Ec3FormLayout";
 import { FormMaterial } from "./FormMaterial";
 import { FormMomentShape } from "./FormMomentShape";
 import { FormNationalAnnex } from "./FormNationalAnnex";
 import { FormStability } from "./FormStability";
 import verify from "@ndg/ndg-ec3";
+import { twMerge } from "tailwind-merge";
 
 type Props = { className?: string };
 
@@ -57,14 +59,18 @@ export const Ec3VerificationForm = (props: Props) => {
   return (
     <FormProvider {...form}>
       <Ec3VerificationObserver />
-      <form className={className || "flex flex-col gap-6"}>
-        <FormGeometry />
-        <FormMaterial />
-        <FormActions />
-        <FormBuckling />
-        <FormStability />
-        <FormMomentShape />
-        <FormNationalAnnex />
+      <form className={twMerge("contents", className)}>
+        <Ec3FormPanel>
+          <div className="flex flex-col gap-6">
+            <FormGeometry />
+            <FormMaterial />
+            <FormActions />
+            <FormBuckling />
+            <FormStability />
+            <FormMomentShape />
+            <FormNationalAnnex />
+          </div>
+        </Ec3FormPanel>
       </form>
     </FormProvider>
   );

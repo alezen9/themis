@@ -8,6 +8,11 @@ import {
   COEFFICIENT_F_METHOD_OPTIONS,
   INTERACTION_FACTOR_METHOD_OPTIONS,
 } from "../../options";
+import {
+  Ec3FormSection,
+  Ec3FormSectionContent,
+  Ec3FormSectionTitle,
+} from "./Ec3FormLayout";
 import { Ec3FieldLabel } from "./shared";
 
 export const FormStability = () => {
@@ -19,9 +24,9 @@ export const FormStability = () => {
   const torsionalActive = torsionalDeformations === "yes";
 
   return (
-    <fieldset className="border p-3">
-      <legend className="px-1 text-xs font-semibold">Stability Options</legend>
-      <div className="space-y-3">
+    <Ec3FormSection>
+      <Ec3FormSectionTitle>Stability Options</Ec3FormSectionTitle>
+      <Ec3FormSectionContent>
         <InputToggle
           label="Torsional Deformations"
           name="torsional_deformations"
@@ -59,7 +64,7 @@ export const FormStability = () => {
             value: option,
           }))}
         />
-      </div>
-    </fieldset>
+      </Ec3FormSectionContent>
+    </Ec3FormSection>
   );
 };

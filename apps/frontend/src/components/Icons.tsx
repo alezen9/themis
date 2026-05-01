@@ -1,6 +1,6 @@
-import { ComponentPropsWithRef } from "react";
+import { ComponentPropsWithoutRef } from "react";
 
-export const IconCube = (props: ComponentPropsWithRef<"svg">) => {
+export const IconCube = (props: ComponentPropsWithoutRef<"svg">) => {
   return (
     <svg
       width="28"
@@ -19,7 +19,7 @@ export const IconCube = (props: ComponentPropsWithRef<"svg">) => {
   );
 };
 
-export const IconCloud = (props: ComponentPropsWithRef<"svg">) => {
+export const IconCloud = (props: ComponentPropsWithoutRef<"svg">) => {
   return (
     <svg
       width="32"
@@ -38,7 +38,7 @@ export const IconCloud = (props: ComponentPropsWithRef<"svg">) => {
   );
 };
 
-export const IconIBeam = (props: ComponentPropsWithRef<"svg">) => {
+export const IconIBeam = (props: ComponentPropsWithoutRef<"svg">) => {
   return (
     <svg
       width="30"
@@ -52,7 +52,60 @@ export const IconIBeam = (props: ComponentPropsWithRef<"svg">) => {
       stroke="currentColor"
       {...props}
     >
-      <path d="M1 1H14.75M28.5 1H14.75M28.5 26H14.75M1 26H14.75M14.75 26V1" />
+      {/* <path d="M1 1H14.75M28.5 1H14.75M28.5 26H14.75M1 26H14.75M14.75 26V1" /> */}
+      <path d="M1 1H11.25M28.5 1H18.25M28.5 26H18.25M1 26H11.25M14.75 4.5L18.25 1M14.75 4.5L11.25 1M14.75 4.5V22.5M18.25 1H14.75H11.25M14.75 22.5L18.25 26M14.75 22.5L11.25 26M18.25 26H14.75H11.25" />
+    </svg>
+  );
+};
+
+export const IconRHSBeam = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      width="22"
+      height="27"
+      viewBox="0 0 22 27"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      stroke="currentColor"
+      {...props}
+    >
+      <rect x="1" y="1" width="20" height="25" rx="2" />
+    </svg>
+  );
+};
+
+export const IconCHSBeam = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      width="27"
+      height="27"
+      viewBox="0 0 27 27"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      stroke="currentColor"
+      {...props}
+    >
+      <circle cx="13.5" cy="13.5" r="12.5" />
+    </svg>
+  );
+};
+
+export const IconMagnifier = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      viewBox="0 0 32 32"
+      xmlns="http://www.w3.org/2000/svg"
+      stroke="currentColor"
+      strokeWidth="2"
+      {...props}
+    >
+      <path d="m31.707 30.282-9.717-9.776c1.811-2.169 2.902-4.96 2.902-8.007 0-6.904-5.596-12.5-12.5-12.5s-12.5 5.596-12.5 12.5 5.596 12.5 12.5 12.5c3.136 0 6.002-1.158 8.197-3.067l9.703 9.764c.39.39 1.024.39 1.415 0s.39-1.023 0-1.415zm-19.314-7.266c-5.808 0-10.517-4.709-10.517-10.517S6.584 1.982 12.393 1.982c5.808 0 10.516 4.708 10.516 10.517S18.2 23.016 12.392 23.016z" />
     </svg>
   );
 };

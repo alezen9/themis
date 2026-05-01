@@ -16,24 +16,24 @@ const sectionFields = {
 };
 
 const iGeometrySchema = z.strictObject({
-  h: z.number().positive(),
-  b: z.number().positive(),
-  tw: z.number().positive(),
-  tf: z.number().positive(),
-  r: z.number().positive(),
+  h: z.number("Invalid value").positive("Value must be a positive number"),
+  b: z.number("Invalid value").positive("Value must be a positive number"),
+  tw: z.number("Invalid value").positive("Value must be a positive number"),
+  tf: z.number("Invalid value").positive("Value must be a positive number"),
+  r: z.number("Invalid value").positive("Value must be a positive number"),
 });
 
 const rhsGeometrySchema = z.strictObject({
-  h: z.number().positive(),
-  b: z.number().positive(),
-  tw: z.number().positive(),
-  ro: z.number().positive(),
-  ri: z.number().positive(),
+  h: z.number("Invalid value").positive("Value must be a positive number"),
+  b: z.number("Invalid value").positive("Value must be a positive number"),
+  tw: z.number("Invalid value").positive("Value must be a positive number"),
+  ro: z.number("Invalid value").positive("Value must be a positive number"),
+  ri: z.number("Invalid value").positive("Value must be a positive number"),
 });
 
 const chsGeometrySchema = z.strictObject({
-  d: z.number().positive(),
-  t: z.number().positive(),
+  d: z.number("Invalid value").positive("Value must be a positive number"),
+  t: z.number("Invalid value").positive("Value must be a positive number"),
 });
 
 const sectionSchema = z
@@ -109,10 +109,18 @@ const classificationSchema = z.strictObject({
 
 const annexSchema = z.strictObject({
   annexId: z.literal(["italian", "eurocode"]),
-  gamma_M0: z.number().positive(),
-  gamma_M1: z.number().positive(),
-  lambda_LT_0: z.number().positive(),
-  beta_LT: z.number().positive(),
+  gamma_M0: z
+    .number("Invalid value")
+    .positive("Value must be a positive number"),
+  gamma_M1: z
+    .number("Invalid value")
+    .positive("Value must be a positive number"),
+  lambda_LT_0: z
+    .number("Invalid value")
+    .positive("Value must be a positive number"),
+  beta_LT: z
+    .number("Invalid value")
+    .positive("Value must be a positive number"),
 });
 
 const materialSchema = z.strictObject({
@@ -126,17 +134,17 @@ const materialSchema = z.strictObject({
 });
 
 const actionsSchema = z.strictObject({
-  N_Ed: z.number(),
-  M_y_Ed: z.number(),
-  M_z_Ed: z.number(),
-  V_y_Ed: z.number(),
-  V_z_Ed: z.number(),
+  N_Ed: z.number("Invalid value"),
+  M_y_Ed: z.number("Invalid value"),
+  M_z_Ed: z.number("Invalid value"),
+  V_y_Ed: z.number("Invalid value"),
+  V_z_Ed: z.number("Invalid value"),
 });
 
 const bucklingSchema = z.strictObject({
-  L: z.number().positive(),
-  k_y: z.number().positive(),
-  k_z: z.number().positive(),
+  L: z.number("Invalid value").positive("Value must be a positive number"),
+  k_y: z.number("Invalid value").positive("Value must be a positive number"),
+  k_z: z.number("Invalid value").positive("Value must be a positive number"),
   interaction_factor_method: z.literal(INTERACTION_FACTOR_METHOD_OPTIONS),
 });
 
@@ -144,7 +152,10 @@ const momentYSchema = z.discriminatedUnion("moment_shape_y", [
   z.strictObject({ moment_shape_y: z.literal("uniform") }),
   z.strictObject({
     moment_shape_y: z.literal("linear"),
-    psi_y: z.number().min(-1).max(1),
+    psi_y: z
+      .number("Invalid value")
+      .min(-1, "Value cannot be smaller than -1")
+      .max(1, "Value cannot be greater than 1"),
   }),
   z.strictObject({
     moment_shape_y: z.literal("parabolic"),
@@ -160,7 +171,10 @@ const momentZSchema = z.discriminatedUnion("moment_shape_z", [
   z.strictObject({ moment_shape_z: z.literal("uniform") }),
   z.strictObject({
     moment_shape_z: z.literal("linear"),
-    psi_z: z.number().min(-1).max(1),
+    psi_z: z
+      .number("Invalid value")
+      .min(-1, "Value cannot be smaller than -1")
+      .max(1, "Value cannot be greater than 1"),
   }),
   z.strictObject({
     moment_shape_z: z.literal("parabolic"),
@@ -174,8 +188,8 @@ const momentZSchema = z.discriminatedUnion("moment_shape_z", [
 
 const ltFields = {
   torsional_deformations: z.literal("yes"),
-  k_LT: z.number().positive(),
-  k_T: z.number().positive(),
+  k_LT: z.number("Invalid value").positive("Value must be a positive number"),
+  k_T: z.number("Invalid value").positive("Value must be a positive number"),
   coefficient_f_method: z.literal(COEFFICIENT_F_METHOD_OPTIONS),
   buckling_curves_LT_policy: z.literal(BUCKLING_CURVES_LT_POLICY_OPTIONS),
 };
@@ -184,7 +198,10 @@ const momentLtSchema = z.discriminatedUnion("moment_shape_LT", [
   z.object({ moment_shape_LT: z.literal("uniform") }),
   z.object({
     moment_shape_LT: z.literal("linear"),
-    psi_LT: z.number().min(-1).max(1),
+    psi_LT: z
+      .number("Invalid value")
+      .min(-1, "Value cannot be smaller than -1")
+      .max(1, "Value cannot be greater than 1"),
   }),
   z.object({
     moment_shape_LT: z.literal("parabolic"),

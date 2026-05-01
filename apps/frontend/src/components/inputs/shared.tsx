@@ -1,4 +1,6 @@
 import { type ReactNode } from "react";
+import { get, useFormState } from "react-hook-form";
+import { twMerge } from "tailwind-merge";
 
 const NON_BLOCKING_SPACE = "\u00a0";
 
@@ -67,6 +69,45 @@ export const InputWrapperHorizontalGroup = (props: InputWrapperProps) => {
           {error || NON_BLOCKING_SPACE}
         </p>
       </fieldset>
+    </div>
+  );
+};
+
+type HorizontalInputProps = {
+  children: ReactNode;
+  name: string;
+  label: ReactNode;
+};
+
+export const HorizontalInput = (props: HorizontalInputProps) => {
+  const { children, label, name } = props;
+  const { errors } = useFormState({ name });
+  const error = get(errors, name)?.message;
+
+  return (
+    <div
+      className={twMerge(
+        "[--bg-default-color:var(--color-zinc-100)]",
+        "[--bg-color:var(--color-zinc-100)]",
+        error && "[--bg-color:var(--color-red-100)]",
+        !error && "focus-within:[--bg-color:var(--color-zinc-200)]",
+        "grid grid-cols-[1fr_2fr] grid-rows-[auto_auto] items-center gap-y-1",
+      )}
+    >
+      <span className="text-sm font-thin text-gray-700">{label}</span>
+      {children}
+      <span className="h-0">{NON_BLOCKING_SPACE}</span>
+      <span
+        className={twMerge(
+          "text-xs font-light text-red-500",
+          "h-0 opacity-0",
+          error && "h-lh opacity-100",
+          "transition-[height] duration-200",
+          "tabular-nums",
+        )}
+      >
+        {error || NON_BLOCKING_SPACE}
+      </span>
     </div>
   );
 };

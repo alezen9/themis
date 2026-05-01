@@ -7,6 +7,11 @@ import {
   MOMENT_SHAPE_OPTIONS,
   SUPPORT_CONDITION_OPTIONS,
 } from "../../options";
+import {
+  Ec3FormSection,
+  Ec3FormSectionContent,
+  Ec3FormSectionTitle,
+} from "./Ec3FormLayout";
 import { Ec3FieldLabel, getError } from "./shared";
 
 export const FormMomentShape = () => {
@@ -33,9 +38,9 @@ export const FormMomentShape = () => {
   const ltIsLinear = momentShapeLt === "linear";
 
   return (
-    <fieldset className="border p-3">
-      <legend className="px-1 text-xs font-semibold">Moment Shape</legend>
-      <div className="space-y-3">
+    <Ec3FormSection>
+      <Ec3FormSectionTitle>Moment Shape</Ec3FormSectionTitle>
+      <Ec3FormSectionContent>
         <InputSelect
           label={<Ec3FieldLabel text="Moment Shape y" tex="\mu_y" />}
           name="moment_shape_y"
@@ -134,7 +139,7 @@ export const FormMomentShape = () => {
             value: option,
           }))}
         />
-      </div>
-    </fieldset>
+      </Ec3FormSectionContent>
+    </Ec3FormSection>
   );
 };

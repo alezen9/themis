@@ -1,129 +1,134 @@
 import { Select } from "@base-ui/react/select";
-import { type ComponentPropsWithoutRef, type ReactNode } from "react";
 import {
-  type FieldValues,
-  useController,
-  useFormContext,
-} from "react-hook-form";
+  ChangeEvent,
+  ComponentProps,
+  forwardRef,
+  useCallback,
+  type ComponentPropsWithoutRef,
+} from "react";
 import { twMerge } from "tailwind-merge";
-import { InputWrapperHorizontal } from "./shared";
 
-type Option = { label: string; value: string | number };
-
-type Props = {
-  name: string;
-  label: ReactNode;
-  description?: ReactNode;
-  options: Option[];
-  required?: boolean;
-  disabled?: boolean;
-  readOnly?: boolean;
-  placeholder?: string;
-  className?: string;
+export type Option<T = unknown> = {
+  label: string;
+  value: string | number;
+  ctx?: T;
 };
 
-export const InputSelect = (props: Props) => {
+type Props = ComponentPropsWithoutRef<"input"> & { options: Option[] };
+
+type OnValueChange = ComponentProps<
+  typeof Select.Root<Option["value"]>
+>["onValueChange"];
+type OnBlur = ComponentProps<typeof Select.Trigger>["onBlur"];
+
+export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
   const {
     name,
-    label,
-    description,
     options,
     required,
     disabled,
     readOnly,
     placeholder,
     className,
+    onBlur,
+    onChange,
+    defaultValue,
+    value,
   } = props;
-  const { control } = useFormContext<FieldValues>();
-  const controller = useController({ name, control });
-  const { field, fieldState } = controller;
-  const { onBlur, onChange, ref, value } = field;
-  const selectedValue = value === "" || value == null ? null : value;
+
+  const onValueChange = useCallback<NonNullable<OnValueChange>>(
+    (value) => {
+      if (!onChange) return;
+      const controlledEvent = { target: { name, value: value } };
+      onChange(controlledEvent as ChangeEvent<HTMLInputElement>);
+    },
+    [onChange, name],
+  );
 
   return (
-    <InputWrapperHorizontal
-      label={label}
-      description={description}
-      error={fieldState.error?.message}
+    <Select.Root<Option["value"]>
+      items={options}
+      defaultValue={defaultValue as Option["value"]}
+      value={value as Option["value"]}
       required={required}
+      disabled={disabled}
+      readOnly={readOnly}
+      inputRef={ref}
+      name={name}
+      onValueChange={onValueChange}
     >
-      <Select.Root<Option>
-        items={options}
-        value={selectedValue}
-        required={required}
-        disabled={disabled}
-        readOnly={readOnly}
-        inputRef={ref}
-        onValueChange={(nextValue) => {
-          onChange(nextValue ?? "");
-        }}
+      <Select.Trigger
+        name={name}
+        onBlur={onBlur as OnBlur}
+        className={twMerge(
+          "flex max-w-100 w-full grow gap-1 items-center h-9",
+          "data-disabled:opacity-30  data-disabled:pointer-events-none",
+        )}
       >
-        <Select.Trigger
-          onBlur={onBlur}
-          aria-invalid={fieldState.invalid}
+        <Select.Value
+          placeholder={placeholder}
           className={twMerge(
-            "bg-white flex w-75 items-center gap-1.5 p-1.5 rounded-xl",
-            "data-popup-open:rounded-b-none",
-            "shadow-[0_10px_20px_#eee]",
-            "data-disabled:opacity-30 data-disabled:bg-gray-200 data-disabled:pointer-events-none",
-            "data-readonly:opacity-60",
+            "flex h-full min-w-0 flex-1 items-center justify-center rounded-l-sm",
+            "bg-(--bg-color)",
+            "text-gray-600",
+            "px-3 py-2",
+            "font-light leading-0 text-left",
+            "data-placeholder:text-gray-400",
+            "focus:outline-none",
+            "transition-colors",
+            className,
+          )}
+        />
+        <span
+          className={twMerge(
+            "h-full w-15 rounded-r-sm flex items-center justify-center",
+            "bg-(--bg-color)",
+            "text-gray-500",
+            "transition-colors",
           )}
         >
-          <Select.Value
-            placeholder={placeholder}
-            className={twMerge(
-              "flex h-8 min-w-0 flex-1 items-center rounded-lg",
-              "bg-linear-to-b/oklch from-[#f7f7f7] to-[#fefefe]",
-              "px-3 py-2",
-              "font-thin text-lg leading-0 text-left",
-              "data-placeholder:text-gray-400",
-              className,
-            )}
-          />
-          <span
-            className={twMerge(
-              "h-8 w-15 rounded-lg flex items-center justify-center",
-              "bg-linear-to-b/oklch from-[#f7f7f7] to-[#fefefe]",
-            )}
-          >
-            <ChevronIcon className="size-3 text-gray-400 overflow-visible" />
-          </span>
-        </Select.Trigger>
-        <Select.Portal>
-          <Select.Positioner
-            alignItemWithTrigger={false}
-            className="z-50 outline-none"
-          >
-            <Select.Popup
-              className={twMerge(
-                "min-w-(--anchor-width) max-h-64 overflow-auto overscroll-none",
-                "rounded-b-xl bg-white p-1",
-                "shadow-[0_10px_20px_#eee]",
-              )}
-            >
-              <Select.List className="w-full">
-                {options.map((option) => (
-                  <Select.Item
-                    key={option.value}
-                    value={option.value}
-                    className={twMerge(
-                      "cursor-pointer rounded-lg border border-transparent",
-                      "px-3 py-2 text-sm font-thin",
-                      "data-highlighted:border-gray-300",
-                      "data-selected:bg-gray-100",
-                    )}
-                  >
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.List>
-            </Select.Popup>
-          </Select.Positioner>
-        </Select.Portal>
-      </Select.Root>
-    </InputWrapperHorizontal>
+          <ChevronIcon className="size-3 overflow-visible" />
+        </span>
+      </Select.Trigger>
+      {/* <Select.Portal> */}
+      <Select.Positioner
+        alignItemWithTrigger={false}
+        className="z-50 outline-none"
+      >
+        <Select.Popup
+          className={twMerge(
+            "min-w-(--anchor-width) max-h-64 overflow-auto overscroll-none my-1",
+            "rounded-sm p-1",
+            "bg-(--bg-default-color)",
+            "shadow-xl shadow-gray-600/25",
+          )}
+        >
+          <Select.List className="w-full flex flex-col gap-1">
+            {options.map((option) => (
+              <Select.Item
+                key={option.value}
+                value={option.value}
+                className={twMerge(
+                  "cursor-pointer rounded-sm border border-transparent",
+                  "px-3 py-2 text-sm font-light text-center",
+                  "data-selected:bg-gray-800",
+                  "data-selected:text-white",
+                  "data-highlighted:not-data-selected:bg-gray-200",
+                  "transition-colors",
+                )}
+              >
+                {option.label}
+              </Select.Item>
+            ))}
+          </Select.List>
+        </Select.Popup>
+      </Select.Positioner>
+      {/* </Select.Portal> */}
+    </Select.Root>
   );
-};
+});
+
+InputSelect.displayName = "InputSelect";
 
 const ChevronIcon = (props: ComponentPropsWithoutRef<"svg">) => {
   return (

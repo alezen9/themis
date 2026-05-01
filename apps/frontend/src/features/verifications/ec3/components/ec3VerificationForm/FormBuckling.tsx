@@ -1,6 +1,11 @@
 import { useFormContext, useWatch } from "react-hook-form";
 import { InputNumber } from "@components/inputs/InputNumber";
 import type { Ec3FormValues } from "../../domain/formSchema";
+import {
+  Ec3FormSection,
+  Ec3FormSectionContent,
+  Ec3FormSectionTitle,
+} from "./Ec3FormLayout";
 import { Ec3FieldLabel, getError } from "./shared";
 
 export const FormBuckling = () => {
@@ -15,9 +20,9 @@ export const FormBuckling = () => {
   const torsionalActive = torsionalDeformations === "yes";
 
   return (
-    <fieldset className="border p-3">
-      <legend className="px-1 text-xs font-semibold">Buckling</legend>
-      <div className="space-y-3">
+    <Ec3FormSection>
+      <Ec3FormSectionTitle>Buckling</Ec3FormSectionTitle>
+      <Ec3FormSectionContent>
         <InputNumber
           name="L"
           label={<Ec3FieldLabel text="Member Length" tex="L" />}
@@ -40,9 +45,7 @@ export const FormBuckling = () => {
 
         <InputNumber
           name="k_LT"
-          label={
-            <Ec3FieldLabel text="Lateral-Torsional Factor" tex="k_{LT}" />
-          }
+          label={<Ec3FieldLabel text="Lateral-Torsional Factor" tex="k_{LT}" />}
           step="any"
           disabled={!torsionalActive}
           error={torsionalActive ? getError(errors, "k_LT") : undefined}
@@ -55,7 +58,7 @@ export const FormBuckling = () => {
           disabled={!torsionalActive}
           error={torsionalActive ? getError(errors, "k_T") : undefined}
         />
-      </div>
-    </fieldset>
+      </Ec3FormSectionContent>
+    </Ec3FormSection>
   );
 };

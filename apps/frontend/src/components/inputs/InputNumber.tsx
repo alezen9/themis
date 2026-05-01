@@ -1,105 +1,52 @@
 import {
+  forwardRef,
   type ComponentPropsWithoutRef,
-  type ChangeEvent,
   type ReactNode,
 } from "react";
-import {
-  type FieldValues,
-  useController,
-  useFormContext,
-} from "react-hook-form";
 import { twMerge } from "tailwind-merge";
-import { InputWrapperHorizontal } from "./shared";
 
-type Props = Omit<
-  ComponentPropsWithoutRef<"input">,
-  "children" | "defaultValue" | "name" | "onBlur" | "onChange" | "type" | "value"
-> & {
-  name: string;
-  description?: ReactNode;
-  label?: ReactNode;
-  error?: ReactNode;
-  suffix?: ReactNode;
-};
+type Props = ComponentPropsWithoutRef<"input"> & { suffix?: ReactNode };
 
-export const InputNumber = (props: Props) => {
-  const {
-    name,
-    label,
-    description,
-    error,
-    suffix,
-    required,
-    className,
-    ...inputProps
-  } = props;
-  const { control } = useFormContext<FieldValues>();
-  const controller = useController({ name, control });
-  const { field, fieldState } = controller;
-  const { onBlur, onChange, ref, value } = field;
-  const resolvedError =
-    "error" in props ? error : fieldState.error?.message;
-  const inputValue =
-    typeof value === "number" ? (Number.isNaN(value) ? "" : value) : (value ?? "");
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.currentTarget.value === "") {
-      onChange(Number.NaN);
-      return;
-    }
-
-    onChange(event.currentTarget.valueAsNumber);
-  };
-
+export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
+  const { className, suffix, ...inputProps } = props;
   return (
-    <InputWrapperHorizontal
-      label={label}
-      description={description}
-      error={resolvedError}
-      required={required}
+    <div
+      className={twMerge(
+        "flex items-center gap-1 max-w-100 w-full h-9",
+        "has-[input:disabled]:opacity-30 has-[input:disabled]:pointer-events-none",
+      )}
     >
-      <div
+      <input
+        ref={ref}
+        type="number"
         className={twMerge(
-          "flex items-center gap-1.5 p-1.5 rounded-xl max-w-50",
-          "bg-white shadow-[0_10px_20px_#eee]",
-          "has-[input:disabled]:opacity-30 has-[input:disabled]:bg-gray-200",
-          "has-[input:read-only]:opacity-30 has-[input:read-only]:bg-gray-200",
-          "has-[input:read-only]:pointer-events-none has-[input:disabled]:pointer-events-none",
-          "has-[input:read-only]:select-none has-[input:disabled]_*:select-none",
+          "w-full h-full text-center",
+          suffix ? "rounded-l-sm" : "rounded-sm",
+          "bg-(--bg-color)",
+          "text-gray-600",
+          "px-3 py-2",
+          "font-light leading-0",
+          "-webkit-appearance-none",
+          "focus:outline-none",
+          "transition-colors",
+          "tabular-nums",
+          className,
         )}
-      >
-        <input
-          ref={ref}
-          type="number"
-          name={field.name}
-          required={required}
-          value={inputValue}
-          onChange={handleChange}
-          onBlur={onBlur}
-          aria-invalid={fieldState.invalid}
+        {...inputProps}
+      />
+      {suffix && (
+        <span
           className={twMerge(
-            "w-full h-8 rounded-lg text-center",
-            "bg-linear-to-b/oklch from-[#f7f7f7] to-[#fefefe]",
-            "py-2",
-            "font-thin text-lg leading-0",
-            "-webkit-appearance-none",
-            "focus:outline-gray-300 focus:outline-1",
-            className,
+            "h-full w-20 rounded-r-sm flex justify-center items-end py-2",
+            "text-gray-500 text-xs font-light",
+            "bg-(--bg-color)",
           )}
-          {...inputProps}
-        />
-        {suffix && (
-          <span
-            className={twMerge(
-              "h-8 w-20 rounded-lg flex justify-center items-end py-2",
-              "text-gray-400 text-xs font-light",
-              "bg-linear-to-b/oklch from-[#f7f7f7] to-[#fefefe]",
-            )}
-          >
-            {suffix}
-          </span>
-        )}
-      </div>
-    </InputWrapperHorizontal>
+        >
+          {suffix}
+        </span>
+      )}
+    </div>
   );
-};
+});
+
+InputNumber.displayName = "InputNumber";

@@ -24,6 +24,11 @@ import {
   SHAPE_OPTIONS,
 } from "../../options";
 import { CUSTOM_SECTION_ID } from "./config";
+import {
+  Ec3FormSection,
+  Ec3FormSectionContent,
+  Ec3FormSectionTitle,
+} from "./Ec3FormLayout";
 import { Ec3FieldLabel, getError } from "./shared";
 
 type ShapeKey = (typeof SHAPE_OPTIONS)[number];
@@ -245,9 +250,9 @@ export const FormGeometry = () => {
   }, [isCustomSection, sectionId, sections, setValue]);
 
   return (
-    <fieldset className="border p-3">
-      <legend className="px-1 text-xs font-semibold">Section</legend>
-      <div className="flex flex-col">
+    <Ec3FormSection>
+      <Ec3FormSectionTitle>Section</Ec3FormSectionTitle>
+      <Ec3FormSectionContent>
         <InputRadioGroup
           label="Shape"
           name="shape"
@@ -296,7 +301,7 @@ export const FormGeometry = () => {
             value: option,
           }))}
         />
-      </div>
-    </fieldset>
+      </Ec3FormSectionContent>
+    </Ec3FormSection>
   );
 };

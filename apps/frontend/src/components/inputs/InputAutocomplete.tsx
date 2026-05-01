@@ -1,11 +1,6 @@
 import { Combobox } from "@base-ui/react/combobox";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import {
-  type ComponentPropsWithoutRef,
-  type ReactNode,
-  useMemo,
-  useState,
-} from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import {
   type FieldValues,
   useController,
@@ -13,9 +8,10 @@ import {
 } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { InputWrapperHorizontal } from "./shared";
+import { IconMagnifier } from "@components/Icons";
 
 type Option = { label: string; value: string | number };
-const ITEM_HEIGHT = 38; // 32px height + 6px padding
+const ITEM_HEIGHT = 42;
 
 type Props = {
   name: string;
@@ -85,9 +81,7 @@ export const InputAutocomplete = (props: Props) => {
       >
         <Combobox.InputGroup
           className={twMerge(
-            "bg-white flex w-75 items-center gap-1.5 p-1.5 rounded-xl",
-            "data-popup-open:rounded-b-none",
-            "shadow-[0_10px_20px_#eee]",
+            "bg-white flex w-75 items-center",
             "has-[input:disabled]:opacity-30 has-[input:disabled]:bg-gray-200 has-[input:disabled]:pointer-events-none",
           )}
         >
@@ -99,22 +93,22 @@ export const InputAutocomplete = (props: Props) => {
             autoComplete="off"
             aria-invalid={fieldState.invalid}
             className={twMerge(
-              "h-8 min-w-0 flex-1 rounded-lg",
-              "bg-linear-to-b/oklch from-[#f7f7f7] to-[#fefefe]",
+              "h-10 min-w-0 flex-1 rounded-l-sm",
+              "bg-zinc-100",
               "px-3 py-2",
               "font-thin text-lg leading-0",
-              "focus:outline-gray-300 focus:outline-1",
+              "focus:outline-none",
               className,
             )}
           />
           <Combobox.Trigger
             aria-label="Open options"
             className={twMerge(
-              "h-8 w-15 rounded-lg flex items-center justify-center",
-              "bg-linear-to-b/oklch from-[#f7f7f7] to-[#fefefe]",
+              "h-10 w-15 rounded-r-sm flex items-center justify-center",
+              "bg-zinc-100",
             )}
           >
-            <MagnifierIcon className="size-3 text-gray-400 overflow-visible" />
+            <IconMagnifier className="size-3 text-gray-400 overflow-visible" />
           </Combobox.Trigger>
         </Combobox.InputGroup>
         <Combobox.Portal>
@@ -122,14 +116,11 @@ export const InputAutocomplete = (props: Props) => {
             <Combobox.Popup
               ref={setPopupElement}
               className={twMerge(
-                "min-w-(--anchor-width) max-h-64 overflow-auto overscroll-none",
-                "rounded-b-xl bg-white p-1",
-                "shadow-[0_10px_20px_#eee]",
+                "min-w-(--anchor-width) max-h-64 overflow-auto overscroll-none my-1",
+                "rounded-sm bg-zinc-100 p-1",
+                "shadow-lg",
               )}
             >
-              <Combobox.Empty className="px-3 py-2 text-sm font-light text-gray-500">
-                No matches found
-              </Combobox.Empty>
               <VirtualizedOptions popupElement={popupElement} />
             </Combobox.Popup>
           </Combobox.Positioner>
@@ -151,6 +142,14 @@ const VirtualizedOptions = (props: VirtualizedOptionsProps) => {
     estimateSize: () => ITEM_HEIGHT,
     overscan: 6,
   });
+
+  if (!filteredOptions.length) {
+    return (
+      <Combobox.Empty className="px-3 py-2 text-sm text-gray-700 font-extralight">
+        No matches found
+      </Combobox.Empty>
+    );
+  }
 
   return (
     <Combobox.List
@@ -176,8 +175,10 @@ const VirtualizedOptions = (props: VirtualizedOptionsProps) => {
             className={twMerge(
               "cursor-pointer rounded-lg border border-transparent",
               "px-3 py-2 text-sm font-thin",
-              "data-highlighted:border-gray-300",
-              "data-selected:bg-gray-100",
+              "data-highlighted:not-[data-selected]:border-gray-500",
+              "data-selected:bg-gray-600",
+              "data-selected:text-white",
+              "transition-[border]",
             )}
           >
             {option.label}
@@ -185,19 +186,5 @@ const VirtualizedOptions = (props: VirtualizedOptionsProps) => {
         );
       })}
     </Combobox.List>
-  );
-};
-
-const MagnifierIcon = (props: ComponentPropsWithoutRef<"svg">) => {
-  return (
-    <svg
-      viewBox="0 0 32 32"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path d="m31.707 30.282-9.717-9.776c1.811-2.169 2.902-4.96 2.902-8.007 0-6.904-5.596-12.5-12.5-12.5s-12.5 5.596-12.5 12.5 5.596 12.5 12.5 12.5c3.136 0 6.002-1.158 8.197-3.067l9.703 9.764c.39.39 1.024.39 1.415 0s.39-1.023 0-1.415zm-19.314-7.266c-5.808 0-10.517-4.709-10.517-10.517S6.584 1.982 12.393 1.982c5.808 0 10.516 4.708 10.516 10.517S18.2 23.016 12.392 23.016z" />
-    </svg>
   );
 };

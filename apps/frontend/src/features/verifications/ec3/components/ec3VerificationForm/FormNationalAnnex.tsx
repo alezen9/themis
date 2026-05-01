@@ -4,6 +4,11 @@ import { InputNumber } from "@components/inputs/InputNumber";
 import { InputSelect } from "@components/inputs/InputSelect";
 import type { Ec3FormValues } from "../../domain/formSchema";
 import { ANNEXES } from "./config";
+import {
+  Ec3FormSection,
+  Ec3FormSectionContent,
+  Ec3FormSectionTitle,
+} from "./Ec3FormLayout";
 import { Ec3FieldLabel, getError } from "./shared";
 
 export const FormNationalAnnex = () => {
@@ -29,9 +34,9 @@ export const FormNationalAnnex = () => {
   }, [annexId, setValue]);
 
   return (
-    <fieldset className="border p-3">
-      <legend className="px-1 text-xs font-semibold">National Annex</legend>
-      <div className="space-y-3">
+    <Ec3FormSection>
+      <Ec3FormSectionTitle>National Annex</Ec3FormSectionTitle>
+      <Ec3FormSectionContent>
         <InputSelect
           label="Annex"
           name="annexId"
@@ -70,7 +75,7 @@ export const FormNationalAnnex = () => {
           step="any"
           error={getError(errors, "beta_LT")}
         />
-      </div>
-    </fieldset>
+      </Ec3FormSectionContent>
+    </Ec3FormSection>
   );
 };

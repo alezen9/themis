@@ -1,6 +1,11 @@
 import { useFormContext } from "react-hook-form";
 import { InputNumber } from "@components/inputs/InputNumber";
 import type { Ec3FormValues } from "../../domain/formSchema";
+import {
+  Ec3FormSection,
+  Ec3FormSectionContent,
+  Ec3FormSectionTitle,
+} from "./Ec3FormLayout";
 import { Ec3FieldLabel, getError } from "./shared";
 
 export const FormActions = () => {
@@ -9,9 +14,9 @@ export const FormActions = () => {
   } = useFormContext<Ec3FormValues>();
 
   return (
-    <fieldset className="border p-3">
-      <legend className="px-1 text-xs font-semibold">Actions</legend>
-      <div className="space-y-3">
+    <Ec3FormSection>
+      <Ec3FormSectionTitle>Actions</Ec3FormSectionTitle>
+      <Ec3FormSectionContent>
         <InputNumber
           name="N_Ed"
           label={<Ec3FieldLabel text="Axial Force" tex="N_{Ed}" />}
@@ -47,7 +52,7 @@ export const FormActions = () => {
           step="any"
           error={getError(errors, "V_z_Ed")}
         />
-      </div>
-    </fieldset>
+      </Ec3FormSectionContent>
+    </Ec3FormSection>
   );
 };
