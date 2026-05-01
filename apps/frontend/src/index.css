@@ -14,6 +14,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  :root {
+    --bg-input-default-color: var(--color-zinc-100);
+    --bg-input-focus-color: var(--color-zinc-200);
+    --bg-input-error-color: var(--color-red-100);
+  }
 }
 
 @theme {

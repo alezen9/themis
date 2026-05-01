@@ -1,4 +1,5 @@
 import { Select } from "@base-ui/react/select";
+import { IconChevron } from "@components/Icons";
 import {
   ChangeEvent,
   ComponentProps,
@@ -38,9 +39,8 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
 
   const onValueChange = useCallback<NonNullable<OnValueChange>>(
     (value) => {
-      if (!onChange) return;
-      const controlledEvent = { target: { name, value: value } };
-      onChange(controlledEvent as ChangeEvent<HTMLInputElement>);
+      const changeEvent = { target: { name, value } };
+      onChange?.(changeEvent as ChangeEvent<HTMLInputElement>);
     },
     [onChange, name],
   );
@@ -79,70 +79,54 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
             className,
           )}
         />
-        <span
+        <Select.Icon
           className={twMerge(
             "h-full w-15 rounded-r-sm flex items-center justify-center",
             "bg-(--bg-color)",
             "text-gray-500",
             "transition-colors",
+            "data-popup-open:[&_svg]:rotate-z-180",
           )}
         >
-          <ChevronIcon className="size-3 overflow-visible" />
-        </span>
+          <IconChevron className="size-4 stroke-1 overflow-visible rotate-z-0 transition-transform" />
+        </Select.Icon>
       </Select.Trigger>
-      {/* <Select.Portal> */}
-      <Select.Positioner
-        alignItemWithTrigger={false}
-        className="z-50 outline-none"
-      >
-        <Select.Popup
-          className={twMerge(
-            "min-w-(--anchor-width) max-h-64 overflow-auto overscroll-none my-1",
-            "rounded-sm p-1",
-            "bg-(--bg-default-color)",
-            "shadow-xl shadow-gray-600/25",
-          )}
+      <Select.Portal>
+        <Select.Positioner
+          alignItemWithTrigger={false}
+          className="z-50 outline-none"
         >
-          <Select.List className="w-full flex flex-col gap-1">
-            {options.map((option) => (
-              <Select.Item
-                key={option.value}
-                value={option.value}
-                className={twMerge(
-                  "cursor-pointer rounded-sm border border-transparent",
-                  "px-3 py-2 text-sm font-light text-center",
-                  "data-selected:bg-gray-800",
-                  "data-selected:text-white",
-                  "data-highlighted:not-data-selected:bg-gray-200",
-                  "transition-colors",
-                )}
-              >
-                {option.label}
-              </Select.Item>
-            ))}
-          </Select.List>
-        </Select.Popup>
-      </Select.Positioner>
-      {/* </Select.Portal> */}
+          <Select.Popup
+            className={twMerge(
+              "min-w-(--anchor-width) max-h-64 overflow-auto overscroll-none my-1",
+              "rounded-sm p-1",
+              "bg-(--bg-input-default-color)",
+              "shadow-xl shadow-gray-600/25",
+            )}
+          >
+            <Select.List className="w-full flex flex-col gap-1">
+              {options.map((option) => (
+                <Select.Item
+                  key={option.value}
+                  value={option.value}
+                  className={twMerge(
+                    "cursor-pointer rounded-sm border border-transparent",
+                    "px-3 py-2 text-sm font-light text-center",
+                    "data-selected:bg-gray-800",
+                    "data-selected:text-white",
+                    "data-highlighted:not-data-selected:bg-gray-200",
+                    "transition-colors",
+                  )}
+                >
+                  {option.label}
+                </Select.Item>
+              ))}
+            </Select.List>
+          </Select.Popup>
+        </Select.Positioner>
+      </Select.Portal>
     </Select.Root>
   );
 });
 
 InputSelect.displayName = "InputSelect";
-
-const ChevronIcon = (props: ComponentPropsWithoutRef<"svg">) => {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      {...props}
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m5 7.5 5 5 5-5" />
-    </svg>
-  );
-};

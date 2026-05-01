@@ -85,12 +85,11 @@ export const HorizontalInput = (props: HorizontalInputProps) => {
   const error = get(errors, name)?.message;
 
   return (
-    <div
+    <label
       className={twMerge(
-        "[--bg-default-color:var(--color-zinc-100)]",
-        "[--bg-color:var(--color-zinc-100)]",
-        error && "[--bg-color:var(--color-red-100)]",
-        !error && "focus-within:[--bg-color:var(--color-zinc-200)]",
+        "[--bg-color:var(--bg-input-default-color)]",
+        error && "[--bg-color:var(--bg-input-error-color)]",
+        !error && "focus-within:[--bg-color:var(--bg-input-focus-color)]",
         "grid grid-cols-[1fr_2fr] grid-rows-[auto_auto] items-center gap-y-1",
       )}
     >
@@ -108,6 +107,6 @@ export const HorizontalInput = (props: HorizontalInputProps) => {
       >
         {error || NON_BLOCKING_SPACE}
       </span>
-    </div>
+    </label>
   );
 };

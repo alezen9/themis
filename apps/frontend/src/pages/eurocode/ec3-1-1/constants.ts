@@ -42,3 +42,10 @@ export const BUCKLING_CURVES_LT_POLICY_OPTIONS = [
   { value: "default", label: "Default" },
   { value: "general", label: "General" },
 ];
+
+export const SECTION_CLASS_OPTIONS = [
+  { value: "auto", label: "Auto" },
+  { value: 1, label: "1" },
+  { value: 2, label: "2" },
+  { value: 3, label: "3" },
+];

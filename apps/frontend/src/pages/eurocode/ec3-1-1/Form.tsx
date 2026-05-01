@@ -8,7 +8,7 @@ import {
   useCallback,
   useEffect,
 } from "react";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { FormProvider, get, useForm, useFormContext } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { DEFAULT_EC3_FORM_VALUES } from "../../../features/verifications/ec3/components/ec3VerificationForm/config";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +24,7 @@ import {
   INTERACTION_FACTOR_METHOD_OPTIONS,
   LOAD_APPLICATION_LT_OPTIONS,
   MOMENT_SHAPE_OPTIONS,
+  SECTION_CLASS_OPTIONS,
   SUPPORT_CONDITION_OPTIONS,
 } from "./constants";
 
@@ -34,14 +35,17 @@ export const Form = () => {
     resolver: zodResolver(formSchema),
     shouldUnregister: true,
   });
-  const { register, getValues } = form;
+  const {
+    register,
+    formState: { defaultValues },
+  } = form;
 
   const registerNumber = (name: Parameters<typeof register>[0]) =>
     register(name, { valueAsNumber: true });
 
   const registerSelect = (name: Parameters<typeof register>[0]) => ({
     ...register(name),
-    defaultValue: getValues(name),
+    defaultValue: get(defaultValues, name),
   });
 
   return (
@@ -62,8 +66,16 @@ export const Form = () => {
             <ul>
               <li>Profile, autocomplete</li>
               <li>Fabrication, radio</li>
-              <li>Class, select</li>
             </ul>
+            <HorizontalInput
+              name="section_class"
+              label={<TextLabel>Class</TextLabel>}
+            >
+              <InputSelect
+                {...registerSelect("section_class")}
+                options={SECTION_CLASS_OPTIONS}
+              />
+            </HorizontalInput>
           </Section>
 
           <SectionSeparator />
@@ -84,6 +96,8 @@ export const Form = () => {
               <InputNumber {...registerNumber("tw")} suffix="mm" />
             </HorizontalInput>
 
+            <Separator />
+
             {/* I section only */}
             <HorizontalInput name="tf" label={<LatexLabel tex="t_f" />}>
               <InputNumber {...registerNumber("tf")} suffix="mm" />
@@ -93,6 +107,8 @@ export const Form = () => {
               <InputNumber {...registerNumber("r")} suffix="mm" />
             </HorizontalInput>
 
+            <Separator />
+
             {/* RHS section only */}
             <HorizontalInput name="ro" label={<LatexLabel tex="r_o" />}>
               <InputNumber {...registerNumber("ro")} suffix="mm" />
@@ -101,6 +117,8 @@ export const Form = () => {
             <HorizontalInput name="ri" label={<LatexLabel tex="r_i" />}>
               <InputNumber {...registerNumber("ri")} suffix="mm" />
             </HorizontalInput>
+
+            <Separator />
 
             {/* CHS section only */}
             <HorizontalInput name="d" label={<LatexLabel tex="d" />}>
@@ -173,11 +191,11 @@ export const Form = () => {
             </HorizontalInput>
 
             <HorizontalInput name="k_y" label={<LatexLabel tex="k_y" />}>
-              <InputNumber {...registerNumber("k_y")} suffix="-" />
+              <InputNumber {...registerNumber("k_y")} />
             </HorizontalInput>
 
             <HorizontalInput name="k_z" label={<LatexLabel tex="k_z" />}>
-              <InputNumber {...registerNumber("k_z")} suffix="-" />
+              <InputNumber {...registerNumber("k_z")} />
             </HorizontalInput>
           </Section>
 
@@ -191,11 +209,11 @@ export const Form = () => {
             </ul>
 
             <HorizontalInput name="k_LT" label={<LatexLabel tex="k_{LT}" />}>
-              <InputNumber {...registerNumber("k_LT")} suffix="-" />
+              <InputNumber {...registerNumber("k_LT")} />
             </HorizontalInput>
 
             <HorizontalInput name="k_T" label={<LatexLabel tex="k_T" />}>
-              <InputNumber {...registerNumber("k_T")} suffix="-" />
+              <InputNumber {...registerNumber("k_T")} />
             </HorizontalInput>
 
             <HorizontalInput
