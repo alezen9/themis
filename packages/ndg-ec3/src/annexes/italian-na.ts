@@ -1,7 +1,7 @@
 import type { Ec3NationalAnnex } from "./types";
 
 /** Italian National Annex (NTC 2018 / Circolare 2019). */
-export const italianAnnex: Ec3NationalAnnex = {
+export const italianAnnex = {
   id: "italian",
   name: "NTC 2018 (Italy)",
   interactionFactorMethod: "B",
@@ -18,4 +18,4 @@ export const italianAnnex: Ec3NationalAnnex = {
     lambda_LT_0: 0.4,
     beta_LT: 0.75,
   },
-};
+} as const satisfies Ec3NationalAnnex;

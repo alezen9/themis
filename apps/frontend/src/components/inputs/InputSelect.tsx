@@ -4,6 +4,7 @@ import {
   ChangeEvent,
   ComponentProps,
   forwardRef,
+  ReactNode,
   useCallback,
   type ComponentPropsWithoutRef,
 } from "react";
@@ -11,6 +12,7 @@ import { twMerge } from "tailwind-merge";
 
 export type Option<T = unknown> = {
   label: string;
+  item?: ReactNode;
   value: string | number;
   ctx?: T;
 };
@@ -72,10 +74,11 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
             "bg-(--bg-color)",
             "text-gray-600",
             "px-3 py-2",
-            "font-light leading-0 text-left",
+            "font-light leading-0",
             "data-placeholder:text-gray-400",
             "focus:outline-none",
             "transition-colors",
+            "text-sm",
             className,
           )}
         />
@@ -116,9 +119,10 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
                     "data-selected:text-white",
                     "data-highlighted:not-data-selected:bg-gray-200",
                     "transition-colors",
+                    "text-sm",
                   )}
                 >
-                  {option.label}
+                  {option.item ?? option.label}
                 </Select.Item>
               ))}
             </Select.List>

@@ -30,6 +30,7 @@ export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
           "focus:outline-none",
           "transition-colors",
           "tabular-nums",
+          "text-sm",
           className,
         )}
         {...inputProps}

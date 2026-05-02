@@ -1,7 +1,7 @@
 import type { Ec3NationalAnnex } from "./types";
 
 /** EN1993-1-1 base Eurocode values (no national modifications). */
-export const eurocodeAnnex: Ec3NationalAnnex = {
+export const eurocodeAnnex = {
   id: "eurocode",
   name: "Eurocode (base)",
   interactionFactorMethod: "both",
@@ -18,4 +18,4 @@ export const eurocodeAnnex: Ec3NationalAnnex = {
     lambda_LT_0: 0.4,
     beta_LT: 0.75,
   },
-};
+} as const satisfies Ec3NationalAnnex;

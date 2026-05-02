@@ -1,5 +1,5 @@
 import { Header, SubHeader } from "@components/Header";
-import { Form } from "./Form";
+import { Form } from "./Form/Form";
 
 export const PageEc3_1_1 = () => {
   return (

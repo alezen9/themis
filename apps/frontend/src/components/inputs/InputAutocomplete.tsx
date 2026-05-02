@@ -1,190 +1,188 @@
 import { Combobox } from "@base-ui/react/combobox";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { type ReactNode, useMemo, useState } from "react";
 import {
-  type FieldValues,
-  useController,
-  useFormContext,
-} from "react-hook-form";
+  ChangeEvent,
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  forwardRef,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { twMerge } from "tailwind-merge";
-import { InputWrapperHorizontal } from "./shared";
 import { IconMagnifier } from "@components/Icons";
 
-type Option = { label: string; value: string | number };
-const ITEM_HEIGHT = 42;
-
-type Props = {
-  name: string;
-  label: ReactNode;
-  description?: ReactNode;
-  options: Option[];
-  required?: boolean;
-  disabled?: boolean;
-  readOnly?: boolean;
-  placeholder?: string;
-  className?: string;
+export type Option<T = unknown> = {
+  label: string;
+  item?: ReactNode;
+  value: string | number;
+  ctx?: T;
 };
 
-export const InputAutocomplete = (props: Props) => {
-  const {
-    name,
-    label,
-    description,
-    options,
-    required,
-    disabled,
-    readOnly,
-    placeholder,
-    className,
-  } = props;
-  const [popupElement, setPopupElement] = useState<HTMLDivElement | null>(null);
-  const { control } = useFormContext<FieldValues>();
-  const controller = useController({ name, control });
-  const { field, fieldState } = controller;
-  const { onChange, onBlur, value, ref } = field;
-  const optionsMap = useMemo(() => {
-    const m = new Map<string | number, Option>();
-    for (const option of options) m.set(option.value, option);
-    return m;
-  }, [options]);
+type Props = ComponentPropsWithoutRef<"input"> & { options: Option[] };
 
-  return (
-    <InputWrapperHorizontal
-      label={label}
-      description={description}
-      error={fieldState.error?.message}
-      required={required}
-    >
+type OnValueChange = ComponentProps<
+  typeof Combobox.Root<Option>
+>["onValueChange"];
+
+export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
+  (props, ref) => {
+    const {
+      name,
+      options,
+      required,
+      disabled,
+      readOnly,
+      placeholder,
+      className,
+      onBlur,
+      onChange,
+      defaultValue,
+      value,
+    } = props;
+
+    const optionsMap = useMemo(
+      () => new Map<typeof value, Option>(options.map((o) => [o.value, o])),
+      [options],
+    );
+
+    const onValueChange = useCallback<NonNullable<OnValueChange>>(
+      (option) => {
+        const changeEvent = { target: { name, value: option?.value } };
+        onChange?.(changeEvent as ChangeEvent<HTMLInputElement>);
+      },
+      [onChange, name],
+    );
+
+    return (
       <Combobox.Root<Option>
         items={options}
-        filter={(option, query) => {
-          const l = option.label.toLocaleLowerCase();
-          const q = query.toLocaleLowerCase();
-          return l.includes(q);
-        }}
+        defaultValue={optionsMap.get(defaultValue)}
         value={optionsMap.get(value)}
-        onValueChange={(option) => {
-          onChange(option?.value ?? "");
-        }}
-        onInputValueChange={(inputValue) => {
-          if (inputValue === "") onChange("");
-        }}
         autoHighlight
         highlightItemOnHover
         virtualized
-        itemToStringValue={(option) => String(option.value)}
-        isItemEqualToValue={(item, selectedValue) => {
-          return item.value === selectedValue.value;
-        }}
+        modal={false}
         disabled={disabled}
         readOnly={readOnly}
+        required={required}
+        name={name}
+        inputRef={ref}
+        onValueChange={onValueChange}
       >
         <Combobox.InputGroup
           className={twMerge(
-            "bg-white flex w-75 items-center",
-            "has-[input:disabled]:opacity-30 has-[input:disabled]:bg-gray-200 has-[input:disabled]:pointer-events-none",
+            "flex max-w-100 w-full grow gap-1 items-center h-9",
+            "has-[data-disabled]:opacity-30 has-[data-disabled]:pointer-events-none",
           )}
         >
           <Combobox.Input
-            ref={ref}
             onBlur={onBlur}
-            required={required}
             placeholder={placeholder}
-            autoComplete="off"
-            aria-invalid={fieldState.invalid}
             className={twMerge(
-              "h-10 min-w-0 flex-1 rounded-l-sm",
-              "bg-zinc-100",
+              "flex h-full w-full min-w-0 flex-1 items-center text-center rounded-l-sm",
+              "bg-(--bg-color)",
+              "text-gray-600",
               "px-3 py-2",
-              "font-thin text-lg leading-0",
+              "font-light leading-0",
+              "data-placeholder:text-gray-400",
               "focus:outline-none",
+              "transition-colors",
+              "text-sm",
               className,
             )}
           />
           <Combobox.Trigger
-            aria-label="Open options"
             className={twMerge(
-              "h-10 w-15 rounded-r-sm flex items-center justify-center",
-              "bg-zinc-100",
+              "h-full w-15 rounded-r-sm flex items-center justify-center",
+              "bg-(--bg-color)",
+              "text-gray-500",
+              "transition-colors",
             )}
           >
-            <IconMagnifier className="size-3 text-gray-400 overflow-visible" />
+            <Combobox.Icon>
+              <IconMagnifier className="size-3 stroke-1 overflow-visible" />
+            </Combobox.Icon>
           </Combobox.Trigger>
         </Combobox.InputGroup>
         <Combobox.Portal>
           <Combobox.Positioner className="z-50 outline-none">
-            <Combobox.Popup
-              ref={setPopupElement}
-              className={twMerge(
-                "min-w-(--anchor-width) max-h-64 overflow-auto overscroll-none my-1",
-                "rounded-sm bg-zinc-100 p-1",
-                "shadow-lg",
-              )}
-            >
-              <VirtualizedOptions popupElement={popupElement} />
-            </Combobox.Popup>
+            <VirtualizedPopup />
           </Combobox.Positioner>
         </Combobox.Portal>
       </Combobox.Root>
-    </InputWrapperHorizontal>
-  );
-};
+    );
+  },
+);
 
-type VirtualizedOptionsProps = { popupElement: HTMLDivElement | null };
+InputAutocomplete.displayName = "InputAutocomplete";
 
-const VirtualizedOptions = (props: VirtualizedOptionsProps) => {
-  const { popupElement } = props;
+const VirtualizedPopup = () => {
+  const popupRef = useRef<HTMLDivElement | null>(null);
+
   const filteredOptions = Combobox.useFilteredItems<Option>();
+
+  // TanStack Virtual is currently flagged by React Compiler as an incompatible library.
+  // This component is intentionally isolated, and the virtualizer instance is used locally only.
   // eslint-disable-next-line react-hooks/incompatible-library
   const rowVirtualizer = useVirtualizer({
     count: filteredOptions.length,
-    getScrollElement: () => popupElement,
-    estimateSize: () => ITEM_HEIGHT,
-    overscan: 6,
+    getScrollElement: () => popupRef.current,
+    estimateSize: () => 44,
+    gap: 4,
+    overscan: 3,
   });
 
-  if (!filteredOptions.length) {
-    return (
-      <Combobox.Empty className="px-3 py-2 text-sm text-gray-700 font-extralight">
-        No matches found
-      </Combobox.Empty>
-    );
-  }
-
   return (
-    <Combobox.List
-      className="relative w-full"
-      style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+    <Combobox.Popup
+      ref={popupRef}
+      className={twMerge(
+        "min-w-(--anchor-width) max-h-64 overflow-auto overscroll-none my-1",
+        "rounded-sm p-1",
+        "bg-(--bg-input-default-color)",
+        "shadow-xl shadow-gray-600/25",
+      )}
     >
-      {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-        const option = filteredOptions[virtualItem.index];
-        if (!option) return null;
+      {!filteredOptions.length && (
+        <Combobox.Empty className="px-3 py-2 text-sm text-gray-700 font-extralight">
+          No matches found
+        </Combobox.Empty>
+      )}
+      {!!filteredOptions.length && (
+        <Combobox.List
+          className="relative w-full flex flex-col gap-1"
+          style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+            const option = filteredOptions[virtualItem.index];
+            if (!option) return null;
 
-        return (
-          <Combobox.Item
-            key={option.value}
-            index={virtualItem.index}
-            value={option}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              transform: `translateY(${virtualItem.start}px)`,
-            }}
-            className={twMerge(
-              "cursor-pointer rounded-lg border border-transparent",
-              "px-3 py-2 text-sm font-thin",
-              "data-highlighted:not-[data-selected]:border-gray-500",
-              "data-selected:bg-gray-600",
-              "data-selected:text-white",
-              "transition-[border]",
-            )}
-          >
-            {option.label}
-          </Combobox.Item>
-        );
-      })}
-    </Combobox.List>
+            return (
+              <Combobox.Item
+                key={option.value}
+                index={virtualItem.index}
+                data-index={virtualItem.index}
+                ref={rowVirtualizer.measureElement}
+                value={option}
+                style={{ transform: `translateY(${virtualItem.start}px)` }}
+                className={twMerge(
+                  "absolute top-0 left-0 w-full",
+                  "cursor-pointer rounded-sm border border-transparent",
+                  "px-3 py-2 text-sm font-light text-center",
+                  "data-selected:bg-gray-800",
+                  "data-selected:text-white",
+                  "data-highlighted:not-data-selected:bg-gray-200",
+                  "transition-colors",
+                  "text-sm",
+                )}
+              >
+                {option.item ?? option.label}
+              </Combobox.Item>
+            );
+          })}
+        </Combobox.List>
+      )}
+    </Combobox.Popup>
   );
 };
