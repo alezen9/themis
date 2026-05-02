@@ -1,11 +1,11 @@
-import { FABRICATION_TYPE_OPTIONS, SHAPE_OPTIONS } from "../../options";
-import type { Ec3FormValues } from "../formSchema";
+import { fabricationTypeValues, shapeValues } from "../../Form/options";
+import type { Ec3FormValues } from "../../Form/schema";
 
-type FabricationType = (typeof FABRICATION_TYPE_OPTIONS)[number];
-type SectionShape = (typeof SHAPE_OPTIONS)[number];
+type FabricationType = (typeof fabricationTypeValues)[number];
+type SectionShape = (typeof shapeValues)[number];
 type HollowSectionShape = Exclude<SectionShape, "I">;
 
-const BUCKLING_CURVE_OPTIONS = ["a0", "a", "b", "c", "d"] as const;
+type BucklingCurve = "a0" | "a" | "b" | "c" | "d";
 
 const EC3_IMPERFECTION_FACTORS = {
   a0: 0.13,
@@ -13,9 +13,8 @@ const EC3_IMPERFECTION_FACTORS = {
   b: 0.34,
   c: 0.49,
   d: 0.76,
-} satisfies Record<(typeof BUCKLING_CURVE_OPTIONS)[number], number>;
+} satisfies Record<BucklingCurve, number>;
 
-type BucklingCurve = (typeof BUCKLING_CURVE_OPTIONS)[number];
 type BucklingCurvesYZ = { y: BucklingCurve; z: BucklingCurve };
 type BucklingCurves = BucklingCurvesYZ & { lt: BucklingCurve };
 

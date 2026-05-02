@@ -1,4 +1,4 @@
-import type { Ec3FormValues } from "../formSchema";
+import type { Ec3FormValues } from "../../Form/schema";
 
 type ComputedSectionClass = 1 | 2 | 3 | 4;
 

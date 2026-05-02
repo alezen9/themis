@@ -1,12 +1,12 @@
-import { steelGradeById } from "../data/steelGrades";
+import { steelGradesMap } from "../data/steelGrades";
 import { additionalPropertiesSchema } from "./additionalPropertiesSchema";
 import { computeBucklingProperties } from "./buckling/buckling";
 import { computeClassificationProperties } from "./classification/sectionClassification";
-import type { Ec3FormValues } from "./formSchema";
+import type { Ec3FormValues } from "../Form/schema";
 import { computeSectionProperties } from "./geometry/sectionProperties";
 
 const computeYieldStrength = (gradeId: Ec3FormValues["gradeId"]) =>
-  steelGradeById.get(gradeId)?.fy ?? Number.NaN;
+  steelGradesMap.get(gradeId)?.fy ?? Number.NaN;
 
 export const computeAdditionalProperties = (inputs: Ec3FormValues) => {
   const fy = computeYieldStrength(inputs.gradeId);

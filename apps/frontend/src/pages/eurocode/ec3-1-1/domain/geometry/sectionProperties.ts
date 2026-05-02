@@ -1,4 +1,4 @@
-import type { Ec3FormValues } from "../formSchema";
+import type { Ec3FormValues } from "../../Form/schema";
 import { computeChsSectionProperties } from "./sectionPropertiesChs";
 import { computeISectionProperties } from "./sectionPropertiesI";
 import { computeRhsSectionProperties } from "./sectionPropertiesRhs";

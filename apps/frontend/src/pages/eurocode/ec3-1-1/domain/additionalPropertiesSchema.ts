@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { SHAPE_OPTIONS } from "../options";
+import { shapeValues } from "../Form/options";
 
-const BUCKLING_CURVE_OPTIONS = ["a0", "a", "b", "c", "d"] as const;
+const bucklingCurveValues = ["a0", "a", "b", "c", "d"] as const;
 
 const computedSectionClassSchema = z.union([
   z.literal(1),
@@ -33,10 +33,10 @@ const computedGeometryPropertiesShape = {
 };
 
 const computedBucklingPropertiesShape = {
-  section_shape: z.enum(SHAPE_OPTIONS),
-  buckling_curve_y: z.enum(BUCKLING_CURVE_OPTIONS),
-  buckling_curve_z: z.enum(BUCKLING_CURVE_OPTIONS),
-  buckling_curve_LT: z.enum(BUCKLING_CURVE_OPTIONS),
+  section_shape: z.enum(shapeValues),
+  buckling_curve_y: z.enum(bucklingCurveValues),
+  buckling_curve_z: z.enum(bucklingCurveValues),
+  buckling_curve_LT: z.enum(bucklingCurveValues),
   alpha_y: z.number().positive(),
   alpha_z: z.number().positive(),
   alpha_LT: z.number().positive(),

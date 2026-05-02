@@ -8,7 +8,7 @@ import {
   composeSteelGradeLabel,
   SteelGrade,
   steelGrades,
-} from "./data/steelGrades";
+} from "../data/steelGrades";
 
 type OptionValue = string | number;
 

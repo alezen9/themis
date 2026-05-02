@@ -1,4 +1,4 @@
-import type { Ec3FormValues } from "../formSchema";
+import type { Ec3FormValues } from "../../Form/schema";
 
 type ISectionInput = Pick<
   Extract<Ec3FormValues, { shape: "I" }>,
