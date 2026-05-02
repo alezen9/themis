@@ -9,19 +9,25 @@ import {
   coefficientFMethodOptions,
   interactionFactorMethodOptions,
 } from "./options";
+import { InputToggle } from "@components/inputs/InputToggle";
 
 export const FormStability = () => {
-  const { registerNumber, registerSelect } = useContext(
+  const { register, registerNumber, registerSelect } = useContext(
     Ec311CustomRegisterContext,
   );
 
   return (
     <Section>
       <SectionTitle>Stability</SectionTitle>
-
-      <ul>
-        <li>Torsional deformations, toggle</li>
-      </ul>
+      <HorizontalInput
+        name="torsional_deformations"
+        label={<TextLabel>Torsion</TextLabel>}
+      >
+        <InputToggle
+          {...register?.("torsional_deformations")}
+          className="justify-self-end"
+        />
+      </HorizontalInput>
 
       <HorizontalInput name="k_LT" label={<LatexLabel tex="k_{LT}" />}>
         <InputNumber {...registerNumber?.("k_LT")} />
