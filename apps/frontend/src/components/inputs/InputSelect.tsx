@@ -4,18 +4,11 @@ import {
   ChangeEvent,
   ComponentProps,
   forwardRef,
-  ReactNode,
   useCallback,
   type ComponentPropsWithoutRef,
 } from "react";
 import { twMerge } from "tailwind-merge";
-
-export type Option<T = unknown> = {
-  label: string;
-  item?: ReactNode;
-  value: string | number;
-  ctx?: T;
-};
+import { Option } from "./shared";
 
 type Props = ComponentPropsWithoutRef<"input"> & { options: Option[] };
 
@@ -65,6 +58,7 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
         className={twMerge(
           "flex max-w-100 w-full grow gap-1 items-center h-9",
           "data-disabled:opacity-30  data-disabled:pointer-events-none",
+          "focus:outline-none",
         )}
       >
         <Select.Value
@@ -76,7 +70,6 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
             "px-3 py-2",
             "font-light leading-0",
             "data-placeholder:text-gray-400",
-            "focus:outline-none",
             "transition-colors",
             "text-sm",
             className,
@@ -115,9 +108,9 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
                   className={twMerge(
                     "cursor-pointer rounded-sm border border-transparent",
                     "px-3 py-2 text-sm font-light text-center",
-                    "data-selected:bg-gray-800",
+                    "data-selected:bg-(--bg-input-selected-color)",
                     "data-selected:text-white",
-                    "data-highlighted:not-data-selected:bg-gray-200",
+                    "data-highlighted:not-data-selected:bg-(--bg-input-focus-color)",
                     "transition-colors",
                     "text-sm",
                   )}

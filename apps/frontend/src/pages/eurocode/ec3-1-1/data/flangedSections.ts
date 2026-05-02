@@ -4982,3 +4982,7 @@ export const flangedSections = [
     Iw: 5370000000000.0,
   },
 ] as const satisfies FlangedSection[];
+
+export const flangedSectionsMap = new Map(
+  flangedSections.map((section) => [section.id, section]),
+);

@@ -2,9 +2,20 @@ import { italianAnnex } from "@ndg/ndg-ec3";
 import { flangedSections } from "../data/flangedSections";
 import { composeSteelGradeId, steelGrades } from "../data/steelGrades";
 import { Ec3FormValues } from "./schema";
+import { hollowSections } from "../data/hollowSections";
+import { circularSections } from "../data/circularSections";
 
-const defaultSection =
+export const defaultISection =
   flangedSections.find(({ id }) => id === "IPE300") ?? flangedSections[0];
+
+export const defaultRHSSection =
+  hollowSections.find(({ id }) => id === "RHS300x200x6.3") ?? hollowSections[0];
+
+export const defaultCHSSection =
+  circularSections.find(({ id }) => id === "CHS323.9x6.3") ??
+  circularSections[0];
+
+const defaultSection = defaultISection;
 
 const defaultSteelGrade =
   steelGrades.find(({ id, norm }) => id === "S235" && norm === "EN10025-2") ??

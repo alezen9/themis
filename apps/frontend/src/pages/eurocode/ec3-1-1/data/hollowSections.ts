@@ -3505,3 +3505,7 @@ export const hollowSections = [
     It: 1125000000.0,
   },
 ] as const satisfies HollowSection[];
+
+export const hollowSectionsMap = new Map(
+  hollowSections.map((section) => [section.id, section]),
+);

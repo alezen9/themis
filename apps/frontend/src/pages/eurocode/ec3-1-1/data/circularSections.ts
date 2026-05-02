@@ -2377,3 +2377,7 @@ export const circularSections = [
     It: 33440000000.0,
   },
 ] as const satisfies CircularSection[];
+
+export const circularSectionsMap = new Map(
+  circularSections.map((section) => [section.id, section]),
+);

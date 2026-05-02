@@ -2,6 +2,13 @@ import { type ReactNode } from "react";
 import { get, useFormState } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
+export type Option<T = unknown> = {
+  label: string;
+  item?: ReactNode;
+  value: string | number;
+  ctx?: T;
+};
+
 const NON_BLOCKING_SPACE = "\u00a0";
 
 type HorizontalInputProps = {

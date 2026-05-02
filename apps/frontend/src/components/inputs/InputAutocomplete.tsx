@@ -5,20 +5,13 @@ import {
   ComponentProps,
   ComponentPropsWithoutRef,
   forwardRef,
-  ReactNode,
   useCallback,
   useMemo,
   useRef,
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { IconMagnifier } from "@components/Icons";
-
-export type Option<T = unknown> = {
-  label: string;
-  item?: ReactNode;
-  value: string | number;
-  ctx?: T;
-};
+import { Option } from "./shared";
 
 type Props = ComponentPropsWithoutRef<"input"> & { options: Option[] };
 

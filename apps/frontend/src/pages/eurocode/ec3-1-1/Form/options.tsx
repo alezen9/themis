@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { Option } from "@components/inputs/InputSelect";
+import { Option } from "@components/inputs/shared";
 import { Latex } from "@components/Latex";
 import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3";
 import { NationalAnnex } from "@ndg/ndg-editor";
@@ -9,6 +9,10 @@ import {
   SteelGrade,
   steelGrades,
 } from "../data/steelGrades";
+import { IconCHSBeam, IconIBeam, IconRHSBeam } from "@components/Icons";
+import { FlangedSection, flangedSections } from "../data/flangedSections";
+import { CircularSection, circularSections } from "../data/circularSections";
+import { HollowSection, hollowSections } from "../data/hollowSections";
 
 type OptionValue = string | number;
 
@@ -26,9 +30,9 @@ export const annexOptions = [italianAnnex, eurocodeAnnex].map<
 >((annex) => ({ label: annex.name, value: annex.id, ctx: annex }));
 
 export const shapeOptions = [
-  { value: "I", label: "I" },
-  { value: "RHS", label: "RHS" },
-  { value: "CHS", label: "CHS" },
+  { value: "I", label: "I", item: <IconIBeam /> },
+  { value: "RHS", label: "RHS", item: <IconRHSBeam /> },
+  { value: "CHS", label: "CHS", item: <IconCHSBeam /> },
 ] as const satisfies Option[];
 export const shapeValues = extractValues(shapeOptions);
 
@@ -117,4 +121,14 @@ export const steelGradeOptions = steelGrades.map<Option<SteelGrade>>(
       value,
     };
   },
+);
+
+export const flangedSectionOptions = flangedSections.map<
+  Option<FlangedSection>
+>(({ id }) => ({ label: id, value: id }));
+export const circularSectionOptions = circularSections.map<
+  Option<CircularSection>
+>(({ id }) => ({ label: id, value: id }));
+export const hollowSectionOptions = hollowSections.map<Option<HollowSection>>(
+  ({ id }) => ({ label: id, value: id }),
 );
