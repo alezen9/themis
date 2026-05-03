@@ -28,7 +28,7 @@ export const HorizontalInput = (props: HorizontalInputProps) => {
         "[--bg-color:var(--bg-input-default-color)]",
         error && "[--bg-color:var(--bg-input-error-color)]",
         !error && "focus-within:[--bg-color:var(--bg-input-focus-color)]",
-        "grid grid-cols-[1fr_2fr] grid-rows-[auto_auto] items-center gap-y-1",
+        "grid grid-cols-[1fr_2.25fr] grid-rows-[auto_auto] items-center gap-y-1",
       )}
     >
       <span className="text-sm font-thin text-gray-700">{label}</span>

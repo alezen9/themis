@@ -6,10 +6,7 @@ export const Header = (props: ComponentPropsWithoutRef<"h1">) => {
 
   return (
     <h1
-      className={twMerge(
-        "text-4xl font-semibold leading-tight text-slate-950",
-        className,
-      )}
+      className={twMerge("text-4xl font-bold", className)}
       {...headingProps}
     />
   );
@@ -21,7 +18,7 @@ export const SubHeader = (props: ComponentPropsWithoutRef<"p">) => {
   return (
     <p
       className={twMerge(
-        "mt-2 text-base font-light leading-snug text-slate-500",
+        "mt-2 text-[1.15rem] leading-none font-extralight text-slate-600",
         className,
       )}
       {...paragraphProps}

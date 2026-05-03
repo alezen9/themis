@@ -9,7 +9,7 @@ export const AppShell = (props: AppShellProps) => {
   return (
     <div className="min-h-screen text-slate-950 flex flex-nowrap relative">
       <AppSidebar />
-      <main className="min-h-screen box-border ml-90 w-full p-6">
+      <main className="min-h-screen box-border ml-84 w-full px-4 py-9">
         {children}
       </main>
     </div>

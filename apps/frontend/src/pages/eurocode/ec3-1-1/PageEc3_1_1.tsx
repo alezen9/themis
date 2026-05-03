@@ -10,7 +10,6 @@ export const PageEc3_1_1 = () => {
       </header>
 
       <div className="flex items-start gap-10">
-        {/* <Ec3VerificationForm /> */}
         <Form />
         <div className="min-w-0 flex-1">Rest</div>
       </div>

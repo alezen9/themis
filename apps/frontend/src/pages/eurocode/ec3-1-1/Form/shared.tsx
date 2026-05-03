@@ -17,10 +17,14 @@ export const Section = (props: ComponentPropsWithRef<"section">) => {
 };
 
 export const SectionTitle = (props: ComponentPropsWithRef<"h4">) => {
+  const { className, ...rest } = props;
   return (
     <h4
-      className={twMerge("w-full uppercase font-semibold tracking-widest mb-2")}
-      {...props}
+      className={twMerge(
+        "w-full uppercase font-semibold tracking-widest mb-2",
+        className,
+      )}
+      {...rest}
     />
   );
 };

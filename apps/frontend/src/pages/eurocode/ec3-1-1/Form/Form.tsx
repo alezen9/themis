@@ -7,12 +7,12 @@ import { FormShape } from "./FormShape";
 import { LineDivider } from "./shared";
 import { FormSection } from "./FormSection";
 import { FormGeometry } from "./FormGeometry";
-import FormMaterial from "./FormMaterial";
+import { FormMaterial } from "./FormMaterial";
 import { FormActions } from "./FormActions";
-import { FormBuckling } from "./FormBuckling";
-import { FormStability } from "./FormStability";
-import { FormMoment } from "./FormMoment";
 import { FormAnnex } from "./FormAnnex";
+import { FormFlexuralBuckling } from "./FormFlexuralBuckling";
+import { FormLaterailTorsionalBuckling } from "./FormLaterailTorsionalBuckling";
+import { FormTorsionalBuckling } from "./FormTorsionalBuckling";
 
 export const Form = () => {
   const form = useForm<Ec3FormValues>({
@@ -33,28 +33,36 @@ export const Form = () => {
     [register],
   );
 
+  const registerBoolean = useCallback<Ec311RegisterBoolean>(
+    (name) => ({ ...register(name), defaultChecked: get(defaultValues, name) }),
+    [register],
+  );
+
   return (
     <FormProvider {...form}>
       <Observer>
         <Ec311CustomRegisterContext
-          value={{ register, registerNumber, registerSelect }}
+          value={{ register, registerNumber, registerSelect, registerBoolean }}
         >
-          <div className="w-96 flex flex-col gap-8 h-full border-r border-slate-300 pr-6">
+          <div className="w-96 flex flex-col gap-8 h-full border-r border-slate-300 pr-4">
             <FormShape />
-            <LineDivider />
-            <FormSection />
-            <LineDivider />
-            <FormGeometry />
             <LineDivider />
             <FormMaterial />
             <LineDivider />
+            <FormSection />
+
+            {/* <LineDivider /> */}
+
+            {/* <FormGeometry /> */}
+
+            <LineDivider />
             <FormActions />
             <LineDivider />
-            <FormBuckling />
+            <FormFlexuralBuckling />
             <LineDivider />
-            <FormStability />
+            <FormLaterailTorsionalBuckling />
             <LineDivider />
-            <FormMoment />
+            <FormTorsionalBuckling />
             <LineDivider />
             <FormAnnex />
           </div>
@@ -95,11 +103,15 @@ type Ec311RegisterNumber = (
 type Ec311RegisterSelect = (
   name: Parameters<Ec311Register>[0],
 ) => ReturnType<Ec311Register> & { defaultValue: string | number | undefined };
+type Ec311RegisterBoolean = (
+  name: Parameters<Ec311Register>[0],
+) => ReturnType<Ec311Register> & { defaultChecked: boolean | undefined };
 
 export const Ec311CustomRegisterContext = createContext<{
   register?: Ec311Register;
   registerNumber?: Ec311RegisterNumber;
   registerSelect?: Ec311RegisterSelect;
+  registerBoolean?: Ec311RegisterBoolean;
 }>({});
 
 const setValueAsNumber = (value: unknown) => {

@@ -1,15 +1,11 @@
-/* eslint-disable react-refresh/only-export-components */
 import { Option } from "@components/inputs/shared";
-import { Latex } from "@components/Latex";
 import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3";
-import { NationalAnnex } from "@ndg/ndg-editor";
 import {
   composeSteelGradeId,
   composeSteelGradeLabel,
   SteelGrade,
   steelGrades,
 } from "../data/steelGrades";
-import { IconCHSBeam, IconIBeam, IconRHSBeam } from "@components/Icons";
 import { FlangedSection, flangedSections } from "../data/flangedSections";
 import { CircularSection, circularSections } from "../data/circularSections";
 import { HollowSection, hollowSections } from "../data/hollowSections";
@@ -25,22 +21,32 @@ export const extractValues = <
     readonly [K in keyof T]: T[K]["value"];
   };
 
-export const annexOptions = [italianAnnex, eurocodeAnnex].map<
-  Option<NationalAnnex>
->((annex) => ({ label: annex.name, value: annex.id, ctx: annex }));
+export const annexOptions = [
+  { value: eurocodeAnnex.id, label: eurocodeAnnex.name },
+  { value: italianAnnex.id, label: italianAnnex.name },
+] as const satisfies Option[];
+export const annexValues = extractValues(annexOptions);
 
 export const shapeOptions = [
-  { value: "I", label: "I", item: <IconIBeam /> },
-  { value: "RHS", label: "RHS", item: <IconRHSBeam /> },
-  { value: "CHS", label: "CHS", item: <IconCHSBeam /> },
+  { value: "I", label: "I" },
+  { value: "RHS", label: "RHS" },
+  { value: "CHS", label: "CHS" },
 ] as const satisfies Option[];
 export const shapeValues = extractValues(shapeOptions);
 
-export const fabricationTypeOptions = [
+export const iFabricationTypeOptions = [
   { value: "rolled", label: "Rolled" },
   { value: "welded", label: "Welded" },
 ] as const;
-export const fabricationTypeValues = extractValues(fabricationTypeOptions);
+export const iFabricationTypeValues = extractValues(iFabricationTypeOptions);
+
+export const rhsChsFabricationTypeOptions = [
+  { value: "cold-formed", label: "Cold formed" },
+  { value: "hot-formed", label: "Hot formed" },
+] as const;
+export const rhsChsFabricationTypeValues = extractValues(
+  rhsChsFabricationTypeOptions,
+);
 
 export const momentShapeOptions = [
   { value: "uniform", label: "Uniform" },
@@ -99,27 +105,11 @@ export const sectionClassOptions = [
 ] as const satisfies Option[];
 export const sectionClassValues = extractValues(sectionClassOptions);
 
-const SteelGradeOption = (props: { label: string; fy: number }) => {
-  const { label, fy } = props;
-  return (
-    <div className="flex flex-col">
-      <p>{label}</p>
-      <span className="text-xs">
-        <Latex tex="fy" className="text-lg" /> = {fy} Mpa
-      </span>
-    </div>
-  );
-};
-
 export const steelGradeOptions = steelGrades.map<Option<SteelGrade>>(
   (grade) => {
     const label = composeSteelGradeLabel(grade);
     const value = composeSteelGradeId(grade);
-    return {
-      label,
-      item: <SteelGradeOption label={label} fy={grade.fy} />,
-      value,
-    };
+    return { label, value };
   },
 );
 

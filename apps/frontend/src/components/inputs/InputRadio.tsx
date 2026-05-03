@@ -20,6 +20,7 @@ export const InputRadio = forwardRef<HTMLInputElement, Props>((props, ref) => {
         "text-gray-600",
         "focus:outline-none",
         "transition-colors",
+        "whitespace-nowrap",
         className,
       )}
     >

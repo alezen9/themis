@@ -26,21 +26,22 @@ export const FormShape = () => {
   const onShapeChange = useCallback<NonNullable<typeof onChange>>(
     async (e) => {
       const { name, value } = e.target;
-      let defaultValue = defaultISection.id;
-      if (value === "RHS") defaultValue = defaultRHSSection.id;
-      if (value === "CHS") defaultValue = defaultCHSSection.id;
-      const iSectionFields = getIShapePatchFields(defaultValue);
-      const rhsSectionFields = getRhsShapePatchFields(defaultValue);
-      const chsSectionFields = getChsShapePatchFields(defaultValue);
+      let section_id = defaultISection.id;
+      if (value === "RHS") section_id = defaultRHSSection.id;
+      if (value === "CHS") section_id = defaultCHSSection.id;
+      const i_geometry = getIShapePatchFields(section_id);
+      const rhs_geometry = getRhsShapePatchFields(section_id);
+      const chs_geometry = getChsShapePatchFields(section_id);
       reset(
         {
           ...getValues(),
           ...{
             [name]: value,
-            sectionId: defaultValue,
-            ...iSectionFields,
-            ...rhsSectionFields,
-            ...chsSectionFields,
+            section_id,
+            ...(value === "I" && { i_geometry }),
+            ...(value === "RHS" && { rhs_geometry }),
+            ...(value === "CHS" && { chs_geometry }),
+            fabrication_type: value === "I" ? "rolled" : "cold-formed",
           },
         },
         { keepErrors: true },

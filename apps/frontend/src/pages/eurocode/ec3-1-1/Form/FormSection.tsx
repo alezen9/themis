@@ -3,16 +3,17 @@ import { Section, SectionTitle, TextLabel } from "./shared";
 import { InputSelect } from "@components/inputs/InputSelect";
 import {
   circularSectionOptions,
-  fabricationTypeOptions,
   flangedSectionOptions,
   hollowSectionOptions,
+  iFabricationTypeOptions,
+  rhsChsFabricationTypeOptions,
   sectionClassOptions,
 } from "./options";
 import { useCallback, useContext } from "react";
 import { Ec311CustomRegisterContext } from "./Form";
 import { InputRadio } from "@components/inputs/InputRadio";
 import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
-import { useFormContext } from "react-hook-form";
+import { ChangeHandler, useFormContext } from "react-hook-form";
 import { Ec3FormValues } from "./schema";
 import {
   defaultCHSSection,
@@ -25,31 +26,67 @@ import {
   getRhsShapePatchFields,
 } from "./utils";
 
-const optionsMap = {
+const sectionOptionsMap = {
   I: { options: flangedSectionOptions, defaultValue: defaultISection.id },
   RHS: { options: hollowSectionOptions, defaultValue: defaultRHSSection.id },
   CHS: { options: circularSectionOptions, defaultValue: defaultCHSSection.id },
 };
 
+const fabricationTypeOptionsMap = {
+  I: { options: iFabricationTypeOptions },
+  RHS: { options: rhsChsFabricationTypeOptions },
+  CHS: { options: rhsChsFabricationTypeOptions },
+};
+
 export const FormSection = () => {
   const { register, registerSelect } = useContext(Ec311CustomRegisterContext);
+  const { watch, reset, getValues } = useFormContext<Ec3FormValues>();
+  const shape = watch("shape");
+
+  const onSectionChange = useCallback<ChangeHandler>(
+    async (e) => {
+      const { name, value } = e.target;
+      const i_geometry = getIShapePatchFields(value);
+      const rhs_geometry = getRhsShapePatchFields(value);
+      const chs_geometry = getChsShapePatchFields(value);
+      reset(
+        {
+          ...getValues(),
+          ...{
+            [name]: value,
+            ...(value === "I" && { i_geometry }),
+            ...(value === "RHS" && { rhs_geometry }),
+            ...(value === "CHS" && { chs_geometry }),
+          },
+        },
+        { keepErrors: true },
+      );
+    },
+    [reset, getValues],
+  );
 
   return (
     <Section>
-      <SectionTitle>Section</SectionTitle>
-      <HorizontalInput name="sectionId" label={<TextLabel>Profile</TextLabel>}>
-        <InputAutocompleteSectionId />
+      <SectionTitle>Cross section</SectionTitle>
+      <HorizontalInput name="sectionId" label={<TextLabel>Section</TextLabel>}>
+        <InputAutocomplete
+          key={shape}
+          {...registerSelect?.("section_id")}
+          onChange={onSectionChange}
+          defaultValue={sectionOptionsMap[shape].defaultValue}
+          options={sectionOptionsMap[shape].options}
+        />
       </HorizontalInput>
       <HorizontalInput
-        name="fabricationType"
+        name="fabrication_type"
         label={<TextLabel>Fabrication</TextLabel>}
       >
         <div className="flex items-center w-full gap-1">
-          {fabricationTypeOptions.map((option) => {
+          {fabricationTypeOptionsMap[shape].options.map((option) => {
             return (
               <InputRadio
-                key={option.value}
-                {...register?.("fabricationType")}
+                key={`${shape}-${option.value}`}
+                {...register?.("fabrication_type")}
                 value={option.value}
                 label={option.label}
               />
@@ -67,46 +104,5 @@ export const FormSection = () => {
         />
       </HorizontalInput>
     </Section>
-  );
-};
-
-const InputAutocompleteSectionId = () => {
-  const { registerSelect } = useContext(Ec311CustomRegisterContext);
-  const { watch, reset, getValues } = useFormContext<Ec3FormValues>();
-  const shape = watch("shape");
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { onChange, ...rest } = registerSelect?.("sectionId") ?? {};
-
-  const onSectionChange = useCallback<NonNullable<typeof onChange>>(
-    async (e) => {
-      const { name, value } = e.target;
-      const iSectionFields = getIShapePatchFields(value);
-      const rhsSectionFields = getRhsShapePatchFields(value);
-      const chsSectionFields = getChsShapePatchFields(value);
-      reset(
-        {
-          ...getValues(),
-          ...{
-            [name]: value,
-            ...iSectionFields,
-            ...rhsSectionFields,
-            ...chsSectionFields,
-          },
-        },
-        { keepErrors: true },
-      );
-    },
-    [reset, getValues],
-  );
-
-  return (
-    <InputAutocomplete
-      key={shape}
-      {...rest}
-      onChange={onSectionChange}
-      defaultValue={optionsMap[shape].defaultValue}
-      options={optionsMap[shape].options}
-    />
   );
 };

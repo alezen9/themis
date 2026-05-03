@@ -507,7 +507,7 @@ export const steelGrades = [
     fy: 460,
     fu: 530,
   },
-] as const satisfies SteelGrade[];
+] satisfies SteelGrade[];
 
 export const composeSteelGradeId = (grade: SteelGrade) =>
   `${grade.norm}:${grade.id}`;
