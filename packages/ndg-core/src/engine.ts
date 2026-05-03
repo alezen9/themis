@@ -2,7 +2,7 @@ import { VerificationSchema, type Node } from "./schema";
 
 export type NationalAnnex = {
   id: string;
-  coefficients: Record<string, number>;
+  coefficients: Record<string, number | string>;
 };
 
 type ComputedNodeType = "formula" | "derived" | "table" | "check";

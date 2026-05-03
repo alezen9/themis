@@ -77,7 +77,7 @@ export const interactionFactorMethodValues = extractValues(
 
 export const coefficientFMethodOptions = [
   { value: "default-equation", label: "Default equation" },
-  { value: "force-1.0", label: "Force 1.0" },
+  { value: 1, label: "1" },
 ] as const satisfies Option[];
 export const coefficientFMethodValues = extractValues(
   coefficientFMethodOptions,
@@ -123,12 +123,26 @@ export const steelGradeOptions = steelGrades.map<Option<SteelGrade>>(
   },
 );
 
-export const flangedSectionOptions = flangedSections.map<
-  Option<FlangedSection>
->(({ id }) => ({ label: id, value: id }));
-export const circularSectionOptions = circularSections.map<
-  Option<CircularSection>
->(({ id }) => ({ label: id, value: id }));
-export const hollowSectionOptions = hollowSections.map<Option<HollowSection>>(
-  ({ id }) => ({ label: id, value: id }),
-);
+const customOption: Option = { label: "Custom", value: "custom" };
+
+export const flangedSectionOptions = [
+  customOption,
+  ...flangedSections.map<Option<FlangedSection>>(({ id }) => ({
+    label: id,
+    value: id,
+  })),
+];
+export const circularSectionOptions = [
+  customOption,
+  ...circularSections.map<Option<CircularSection>>(({ id }) => ({
+    label: id,
+    value: id,
+  })),
+];
+export const hollowSectionOptions = [
+  customOption,
+  ...hollowSections.map<Option<HollowSection>>(({ id }) => ({
+    label: id,
+    value: id,
+  })),
+];

@@ -11,6 +11,7 @@ type DrawingIShapeParams = Pick<
 const drawingIShapeFieldNames = ["h", "b", "tw", "tf", "r"] as const;
 
 const previewHeight = 250;
+const previewWidth = 180;
 
 export const DrawingIShape = () => {
   const ref = useRef<SVGSVGElement>(null);
@@ -72,7 +73,9 @@ const drawIShape = (scene: Pluton2D<DrawingIShapeParams>) => {
   const dimensionOffset = 30;
 
   return scene.draw((p) => {
-    const scale = previewHeight / p.h;
+    const heightScale = previewHeight / p.h;
+    const widthScale = previewWidth / p.b;
+    const scale = Math.min(heightScale, widthScale);
     const h = p.h * scale;
     const b = p.b * scale;
     const tf = p.tf * scale;

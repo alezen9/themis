@@ -17,5 +17,9 @@ export const eurocodeAnnex = {
     // LTB NDP §6.3.2.3
     lambda_LT_0: 0.4,
     beta_LT: 0.75,
+
+    f: "default-equation",
+    interaction_factor_method: "both",
+    buckling_curves_LT_policy: "default",
   },
 } as const satisfies Ec3NationalAnnex;
