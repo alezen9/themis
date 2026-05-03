@@ -19,9 +19,11 @@ import {
   defaultISection,
   defaultRHSSection,
 } from "./defaultValues";
-import { flangedSectionsMap } from "../data/flangedSections";
-import { hollowSectionsMap } from "../data/hollowSections";
-import { circularSectionsMap } from "../data/circularSections";
+import {
+  getChsShapePatchFields,
+  getIShapePatchFields,
+  getRhsShapePatchFields,
+} from "./utils";
 
 const optionsMap = {
   I: { options: flangedSectionOptions, defaultValue: defaultISection.id },
@@ -107,25 +109,4 @@ const InputAutocompleteSectionId = () => {
       options={optionsMap[shape].options}
     />
   );
-};
-
-const getIShapePatchFields = (sectionId: string) => {
-  const section = flangedSectionsMap.get(sectionId);
-  if (!section) return {};
-  const { h, b, tw, tf, r } = section;
-  return { h, b, tw, tf, r };
-};
-
-const getRhsShapePatchFields = (sectionId: string) => {
-  const section = hollowSectionsMap.get(sectionId);
-  if (!section) return {};
-  const { h, b, tw, ro, ri } = section;
-  return { h, b, tw, ro, ri };
-};
-
-const getChsShapePatchFields = (sectionId: string) => {
-  const section = circularSectionsMap.get(sectionId);
-  if (!section) return {};
-  const { d, t } = section;
-  return { d, t };
 };
