@@ -3504,7 +3504,7 @@ export const hollowSections = [
     Wpl_z: 4247.0,
     It: 1125000000.0,
   },
-] as const satisfies HollowSection[];
+] satisfies HollowSection[];
 
 export const hollowSectionsMap = new Map(
   hollowSections.map((section) => [section.id, section]),

@@ -2376,7 +2376,7 @@ export const circularSections = [
     Wpl_y: 35650.0,
     It: 33440000000.0,
   },
-] as const satisfies CircularSection[];
+] satisfies CircularSection[];
 
 export const circularSectionsMap = new Map(
   circularSections.map((section) => [section.id, section]),

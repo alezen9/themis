@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @import "katex/dist/katex.min.css";
+@import "pluton-2d/style.css";
 @source "../../../packages/ndg-editor/src";
+
+svg.pluton-root {
+  --pluton-geometry-stroke: var(--color-zinc-500);
+  --pluton-hatch-color: var(--color-zinc-300);
+  --pluton-dim-color: var(--color-zinc-500);
+  --pluton-dim-text-color: var(--color-zinc-500);
+}
 
 @layer base {
   input[type="number"]::-webkit-inner-spin-button,

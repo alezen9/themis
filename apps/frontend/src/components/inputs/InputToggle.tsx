@@ -14,17 +14,17 @@ export const InputToggle = forwardRef<HTMLInputElement, Props>((props, ref) => {
       inputRef={ref}
       {...inputProps}
       className={twMerge(
-        "relative inline-flex h-9 w-18 items-center rounded-full",
+        "relative inline-flex h-7 w-16 items-center rounded-full",
         "transition-[background-color,opacity]",
         "data-checked:bg-(--bg-input-selected-color)",
         "data-unchecked:bg-(--bg-input-default-color)",
-        "p-1.5",
+        "p-1",
         className,
       )}
     >
       <Switch.Thumb
         className={twMerge(
-          "block h-full w-10 aspect-square rounded-full bg-white",
+          "block h-full w-9 aspect-square rounded-full bg-white",
           "transition-transform duration-200 ease-out",
           "data-checked:translate-x-5",
         )}

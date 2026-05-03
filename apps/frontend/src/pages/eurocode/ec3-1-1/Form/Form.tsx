@@ -19,21 +19,18 @@ export const Form = () => {
     defaultValues,
     mode: "onChange",
     resolver: zodResolver(schema),
-    shouldUnregister: true,
+    shouldUnregister: false,
   });
-  const { register, formState } = form;
+  const { register } = form;
 
   const registerNumber = useCallback<Ec311RegisterNumber>(
-    (name) => register(name, { valueAsNumber: true }),
+    (name) => register(name, { setValueAs: setValueAsNumber }),
     [register],
   );
 
   const registerSelect = useCallback<Ec311RegisterSelect>(
-    (name) => ({
-      ...register(name),
-      defaultValue: get(formState.defaultValues, name),
-    }),
-    [register, formState],
+    (name) => ({ ...register(name), defaultValue: get(defaultValues, name) }),
+    [register],
   );
 
   return (
@@ -68,7 +65,7 @@ export const Form = () => {
 };
 
 const Observer = ({ children }: { children: ReactNode }) => {
-  const { subscribe } = useFormContext();
+  const { subscribe } = useFormContext<Ec3FormValues>();
 
   const onChange = useCallback<Parameters<typeof subscribe>[0]["callback"]>(
     ({ values }) => {
@@ -104,3 +101,15 @@ export const Ec311CustomRegisterContext = createContext<{
   registerNumber?: Ec311RegisterNumber;
   registerSelect?: Ec311RegisterSelect;
 }>({});
+
+const setValueAsNumber = (value: unknown) => {
+  if (!value) return;
+  try {
+    const valueAsNumber = Number(value);
+    if (isNaN(valueAsNumber)) return;
+    return valueAsNumber;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return;
+  }
+};
