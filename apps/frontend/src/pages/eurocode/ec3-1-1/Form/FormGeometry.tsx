@@ -24,58 +24,62 @@ export const FormGeometry = () => {
 
       <SpacingDivider />
 
-      {/* Shared by I and RHS */}
-      {shape !== "CHS" && (
+      {shape === "I" && (
         <>
           <HorizontalInput name="h" label={<LatexLabel tex="h" />}>
-            <InputNumber {...registerNumber?.("h")} suffix="mm" />
+            <InputNumber {...registerNumber?.("i_geometry.h")} suffix="mm" />
           </HorizontalInput>
 
           <HorizontalInput name="b" label={<LatexLabel tex="b" />}>
-            <InputNumber {...registerNumber?.("b")} suffix="mm" />
+            <InputNumber {...registerNumber?.("i_geometry.b")} suffix="mm" />
           </HorizontalInput>
 
           <HorizontalInput name="tw" label={<LatexLabel tex="t_w" />}>
-            <InputNumber {...registerNumber?.("tw")} suffix="mm" />
+            <InputNumber {...registerNumber?.("i_geometry.tw")} suffix="mm" />
           </HorizontalInput>
-        </>
-      )}
 
-      {/* I section only */}
-      {shape === "I" && (
-        <>
           <HorizontalInput name="tf" label={<LatexLabel tex="t_f" />}>
-            <InputNumber {...registerNumber?.("tf")} suffix="mm" />
+            <InputNumber {...registerNumber?.("i_geometry.tf")} suffix="mm" />
           </HorizontalInput>
 
           <HorizontalInput name="r" label={<LatexLabel tex="r" />}>
-            <InputNumber {...registerNumber?.("r")} suffix="mm" />
+            <InputNumber {...registerNumber?.("i_geometry.r")} suffix="mm" />
           </HorizontalInput>
         </>
       )}
 
-      {/* RHS section only */}
       {shape === "RHS" && (
         <>
-          <HorizontalInput name="ro" label={<LatexLabel tex="r_o" />}>
-            <InputNumber {...registerNumber?.("ro")} suffix="mm" />
+          <HorizontalInput name="h" label={<LatexLabel tex="h" />}>
+            <InputNumber {...registerNumber?.("rhs_geometry.h")} suffix="mm" />
+          </HorizontalInput>
+
+          <HorizontalInput name="b" label={<LatexLabel tex="b" />}>
+            <InputNumber {...registerNumber?.("rhs_geometry.b")} suffix="mm" />
+          </HorizontalInput>
+
+          <HorizontalInput name="tw" label={<LatexLabel tex="t_w" />}>
+            <InputNumber {...registerNumber?.("rhs_geometry.tw")} suffix="mm" />
           </HorizontalInput>
 
           <HorizontalInput name="ri" label={<LatexLabel tex="r_i" />}>
-            <InputNumber {...registerNumber?.("ri")} suffix="mm" />
+            <InputNumber {...registerNumber?.("rhs_geometry.ri")} suffix="mm" />
+          </HorizontalInput>
+
+          <HorizontalInput name="ro" label={<LatexLabel tex="r_o" />}>
+            <InputNumber {...registerNumber?.("rhs_geometry.ro")} suffix="mm" />
           </HorizontalInput>
         </>
       )}
 
-      {/* CHS section only */}
       {shape === "CHS" && (
         <>
           <HorizontalInput name="d" label={<LatexLabel tex="d" />}>
-            <InputNumber {...registerNumber?.("d")} suffix="mm" />
+            <InputNumber {...registerNumber?.("chs_geometry.d")} suffix="mm" />
           </HorizontalInput>
 
           <HorizontalInput name="t" label={<LatexLabel tex="t" />}>
-            <InputNumber {...registerNumber?.("t")} suffix="mm" />
+            <InputNumber {...registerNumber?.("chs_geometry.t")} suffix="mm" />
           </HorizontalInput>
         </>
       )}

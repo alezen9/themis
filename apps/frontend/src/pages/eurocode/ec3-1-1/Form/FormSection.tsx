@@ -46,6 +46,8 @@ export const FormSection = () => {
   const onSectionChange = useCallback<ChangeHandler>(
     async (e) => {
       const { name, value } = e.target;
+      const values = getValues();
+      const shape = values.shape;
       const i_geometry = getIShapePatchFields(value);
       const rhs_geometry = getRhsShapePatchFields(value);
       const chs_geometry = getChsShapePatchFields(value);
@@ -54,9 +56,9 @@ export const FormSection = () => {
           ...getValues(),
           ...{
             [name]: value,
-            ...(value === "I" && { i_geometry }),
-            ...(value === "RHS" && { rhs_geometry }),
-            ...(value === "CHS" && { chs_geometry }),
+            ...(shape === "I" && { i_geometry }),
+            ...(shape === "RHS" && { rhs_geometry }),
+            ...(shape === "CHS" && { chs_geometry }),
           },
         },
         { keepErrors: true },

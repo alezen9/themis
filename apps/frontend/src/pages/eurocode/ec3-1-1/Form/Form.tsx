@@ -51,9 +51,8 @@ export const Form = () => {
             <LineDivider />
             <FormSection />
 
-            {/* <LineDivider /> */}
-
-            {/* <FormGeometry /> */}
+            <LineDivider />
+            <FormGeometry />
 
             <LineDivider />
             <FormActions />
