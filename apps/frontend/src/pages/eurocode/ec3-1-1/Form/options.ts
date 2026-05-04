@@ -113,7 +113,8 @@ export const steelGradeOptions = steelGrades.map<Option<SteelGrade>>(
   },
 );
 
-const customOption: Option = { label: "Custom", value: "custom" };
+export const customSectionId = "custom";
+const customOption: Option = { label: "Custom", value: customSectionId };
 
 export const flangedSectionOptions = [
   customOption,

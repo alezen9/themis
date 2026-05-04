@@ -76,9 +76,9 @@ export const AppSidebar = () => {
 
 const Logo = () => {
   return (
-    <div className={twMerge("flex flex-col pl-3", "leading-none")}>
-      <span className="font-[Fredoka] text-4xl">Böbius</span>
-      <span className="mt-2 text-[1.15rem] font-extralight tracking-[0.32em] text-slate-600">
+    <div className="flex flex-col pl-3 leading-none text-envy-600">
+      <span className="font-[Fredoka] text-4xl ">Böbius</span>
+      <span className="mt-2 text-[1.15rem] font-extralight tracking-[0.32em] ">
         Engineering
       </span>
     </div>
@@ -92,8 +92,8 @@ const Tag = (props: { children: ReactNode }) => {
       className={twMerge(
         "rounded px-2 py-px",
         "font-light text-[10px] text-nowrap",
-        "bg-stone-100 text-slate-600",
-        "group-data-item-active:bg-gray-600",
+        "bg-sand-100 text-slate-600",
+        "group-data-item-active:bg-sand-700",
         "group-data-item-active:text-white",
         "transition-colors",
       )}
@@ -108,7 +108,7 @@ const SectionHighlighter = () => {
     <span
       className={twMerge(
         "h-(--section-height) translate-y-(--section-top)",
-        "bg-linear-to-b from-gray-50 from-65% to-transparent",
+        "bg-linear-to-b from-sand-50/50 from-65% to-transparent",
         "absolute top-0 -left-1 w-[calc(100%+0.5rem)] rounded-md transition-transform",
       )}
     />
@@ -120,7 +120,7 @@ const ItemHighlighter = () => {
     <span
       className={twMerge(
         "h-(--item-height) translate-y-(--item-top)",
-        "bg-slate-900",
+        "bg-sand-900",
         "absolute top-0 right-1 w-[calc(100%-2rem)] rounded-md transition-transform",
       )}
     />

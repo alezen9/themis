@@ -134,7 +134,7 @@ const VirtualizedPopup = () => {
         "min-w-(--anchor-width) max-h-64 overflow-auto overscroll-none my-1",
         "rounded-sm p-1",
         "bg-(--bg-input-default-color)",
-        "shadow-xl shadow-gray-600/25",
+        "shadow-xl shadow-sand-600/25",
       )}
     >
       {!filteredOptions.length && (
@@ -163,9 +163,9 @@ const VirtualizedPopup = () => {
                   "absolute top-0 left-0 w-full",
                   "cursor-pointer rounded-sm border border-transparent",
                   "px-3 py-2 text-sm font-light text-center",
-                  "data-selected:bg-gray-800",
+                  "data-selected:bg-(--bg-input-selected-color)",
                   "data-selected:text-white",
-                  "data-highlighted:not-data-selected:bg-gray-200",
+                  "data-highlighted:not-data-selected:bg-(--bg-input-focus-color)",
                   "transition-colors",
                   "text-sm",
                 )}

@@ -97,7 +97,7 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
               "min-w-(--anchor-width) max-h-64 overflow-auto overscroll-none my-1",
               "rounded-sm p-1",
               "bg-(--bg-input-default-color)",
-              "shadow-xl shadow-gray-600/25",
+              "shadow-xl shadow-sand-600/25",
             )}
           >
             <Select.List className="w-full flex flex-col gap-1">

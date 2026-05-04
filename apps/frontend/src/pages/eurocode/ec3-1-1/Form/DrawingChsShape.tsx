@@ -63,7 +63,7 @@ export const DrawingChsShape = () => {
         .tick(0)
         .lineTo(roDrawing * 2, 0)
         .tick(0)
-        .textAt(-roDrawing, dimensionTextOffsetY, `${formattedDiameter}mm`);
+        .textAt(-roDrawing, dimensionTextOffsetY, `Ø ${formattedDiameter}mm`);
 
       // wall thickness dimension
       const thicknessDirX = Math.cos(thicknessDimensionAngle);

@@ -8,6 +8,7 @@ import {
   iFabricationTypeOptions,
   rhsChsFabricationTypeOptions,
   sectionClassOptions,
+  customSectionId,
 } from "./options";
 import { useCallback, useContext } from "react";
 import { Ec311CustomRegisterContext } from "./Form";
@@ -51,14 +52,15 @@ export const FormSection = () => {
       const i_geometry = getIShapePatchFields(value);
       const rhs_geometry = getRhsShapePatchFields(value);
       const chs_geometry = getChsShapePatchFields(value);
+      const isCustomSection = value === customSectionId;
       reset(
         {
           ...getValues(),
           ...{
             [name]: value,
-            ...(shape === "I" && { i_geometry }),
-            ...(shape === "RHS" && { rhs_geometry }),
-            ...(shape === "CHS" && { chs_geometry }),
+            ...(!isCustomSection && shape === "I" ? { i_geometry } : {}),
+            ...(!isCustomSection && shape === "RHS" ? { rhs_geometry } : {}),
+            ...(!isCustomSection && shape === "CHS" ? { chs_geometry } : {}),
           },
         },
         { keepErrors: true },
