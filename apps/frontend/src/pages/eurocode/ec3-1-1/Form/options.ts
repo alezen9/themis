@@ -22,8 +22,8 @@ export const extractValues = <
   };
 
 export const annexOptions = [
-  { value: eurocodeAnnex.id, label: eurocodeAnnex.name },
-  { value: italianAnnex.id, label: italianAnnex.name },
+  { value: eurocodeAnnex.id, label: `🇪🇺\xa0\xa0\xa0${eurocodeAnnex.name}` },
+  { value: italianAnnex.id, label: `🇮🇹\xa0\xa0\xa0${italianAnnex.name}` },
 ] as const satisfies Option[];
 export const annexValues = extractValues(annexOptions);
 

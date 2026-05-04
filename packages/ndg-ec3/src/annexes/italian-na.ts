@@ -3,7 +3,7 @@ import type { Ec3NationalAnnex } from "./types";
 /** Italian National Annex (NTC 2018 / Circolare 2019). */
 export const italianAnnex = {
   id: "italian",
-  name: "🇮🇹 NTC 2018",
+  name: "NTC 2018",
   interactionFactorMethod: "B",
   coefficients: {
     // Partial factors — NTC 2018 §4.2.4.1.2

@@ -3,7 +3,7 @@ import type { Ec3NationalAnnex } from "./types";
 /** EN1993-1-1 base Eurocode values (no national modifications). */
 export const eurocodeAnnex = {
   id: "eurocode",
-  name: "🇪🇺 Eurocode",
+  name: "Eurocode",
   interactionFactorMethod: "both",
   coefficients: {
     // Partial factors §6.1
