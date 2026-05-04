@@ -1,7 +1,17 @@
 import { HorizontalInput } from "@components/inputs/shared";
-import { LatexLabel, Section, SectionTitle, SpacingDivider } from "./shared";
+import {
+  InfoTable,
+  InfoTableHeaderCell,
+  InfoTableLabelCell,
+  InfoTableUnitCell,
+  InfoTableValueCell,
+  LatexLabel,
+  Section,
+  SectionTitle,
+  SpacingDivider,
+} from "./shared";
 import { InputNumber } from "@components/inputs/InputNumber";
-import { ComponentProps, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Ec311CustomRegisterContext } from "./Form";
 import { useFormContext } from "react-hook-form";
 import { Ec3FormValues } from "./schema";
@@ -11,14 +21,7 @@ import { DrawingChsShape } from "./DrawingChsShape";
 import { customSectionId } from "./options";
 import { Latex } from "@components/Latex";
 import { computeSectionProperties } from "../domain/geometry/sectionProperties";
-import {
-  Table,
-  TableBody,
-  TableDataCell,
-  TableHeader,
-  TableHeaderCell,
-  TableRow,
-} from "@components/Table";
+import { TableBody, TableHeader, TableRow } from "@components/Table";
 
 const mm2Unit = String.raw`\mathrm{mm}^2`;
 const mm3Unit = String.raw`\mathrm{mm}^3`;
@@ -141,174 +144,137 @@ const SectionPropertiesInfo = () => {
 
   return (
     <div className="flex flex-col gap-3 text-sand-900">
-      <div className="border border-sand-200 rounded-sm">
-        <Table className="overflow-hidden rounded-sm [&_tr]:border-none">
-          <TableHeader>
-            <TableRow className=" bg-sand-100">
-              <TableHeaderCell
-                colSpan={3}
-                className="px-2 py-1 text-xs uppercase tracking-widest text-sand-900"
-              >
-                Area
-              </TableHeaderCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <CellLabel>
-                <Latex tex="A" />
-              </CellLabel>
-              <CellValue>
-                {propertyFormatter.format(computedProperties.A)}
-              </CellValue>
-              <CellUnit>
-                <Latex tex={mm2Unit} />
-              </CellUnit>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
+      <InfoTable>
+        <TableHeader>
+          <TableRow className="bg-sand-100">
+            <InfoTableHeaderCell>Area</InfoTableHeaderCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <InfoTableLabelCell>
+              <Latex tex="A" />
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {propertyFormatter.format(computedProperties.A)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell>
+              <Latex tex={mm2Unit} />
+            </InfoTableUnitCell>
+          </TableRow>
+        </TableBody>
+      </InfoTable>
 
-      <div className="border border-sand-200 rounded-sm">
-        <Table className="overflow-hidden rounded-sm [&_tr]:border-none">
-          <TableHeader>
-            <TableRow className="bg-sand-100">
-              <TableHeaderCell
-                colSpan={3}
-                className="px-2 py-1 text-xs uppercase tracking-widest text-sand-900"
-              >
-                Inertia
-              </TableHeaderCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <CellLabel>
-                <Latex tex="I_y" />
-              </CellLabel>
-              <CellValue>
-                {propertyFormatter.format(computedProperties.Iy)}
-              </CellValue>
-              <CellUnit>
-                <Latex tex={mm4Unit} />
-              </CellUnit>
-            </TableRow>
-            <TableRow>
-              <CellLabel>
-                <Latex tex="I_z" />
-              </CellLabel>
-              <CellValue>
-                {propertyFormatter.format(computedProperties.Iz)}
-              </CellValue>
-              <CellUnit>
-                <Latex tex={mm4Unit} />
-              </CellUnit>
-            </TableRow>
-            <TableRow>
-              <CellLabel>
-                <Latex tex="I_t" />
-              </CellLabel>
-              <CellValue>
-                {propertyFormatter.format(computedProperties.It)}
-              </CellValue>
-              <CellUnit>
-                <Latex tex={mm4Unit} />
-              </CellUnit>
-            </TableRow>
-            <TableRow>
-              <CellLabel>
-                <Latex tex="I_w" />
-              </CellLabel>
-              <CellValue>
-                {propertyFormatter.format(computedProperties.Iw)}
-              </CellValue>
-              <CellUnit>
-                <Latex tex={mm6Unit} />
-              </CellUnit>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
+      <InfoTable>
+        <TableHeader>
+          <TableRow className="bg-sand-100">
+            <InfoTableHeaderCell>Inertia</InfoTableHeaderCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <InfoTableLabelCell>
+              <Latex tex="I_y" />
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {propertyFormatter.format(computedProperties.Iy)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell>
+              <Latex tex={mm4Unit} />
+            </InfoTableUnitCell>
+          </TableRow>
+          <TableRow>
+            <InfoTableLabelCell>
+              <Latex tex="I_z" />
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {propertyFormatter.format(computedProperties.Iz)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell>
+              <Latex tex={mm4Unit} />
+            </InfoTableUnitCell>
+          </TableRow>
+          <TableRow>
+            <InfoTableLabelCell>
+              <Latex tex="I_t" />
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {propertyFormatter.format(computedProperties.It)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell>
+              <Latex tex={mm4Unit} />
+            </InfoTableUnitCell>
+          </TableRow>
+          <TableRow>
+            <InfoTableLabelCell>
+              <Latex tex="I_w" />
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {propertyFormatter.format(computedProperties.Iw)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell>
+              <Latex tex={mm6Unit} />
+            </InfoTableUnitCell>
+          </TableRow>
+        </TableBody>
+      </InfoTable>
 
-      <div className="border border-sand-200 rounded-sm">
-        <Table className="overflow-hidden rounded-sm [&_tr]:border-none">
-          <TableHeader>
-            <TableRow className="bg-sand-100">
-              <TableHeaderCell
-                colSpan={3}
-                className="px-2 py-1 text-xs uppercase tracking-widest text-sand-900"
-              >
-                Moduli
-              </TableHeaderCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <CellLabel>
-                <Latex tex="W_{el,y}" />
-              </CellLabel>
-              <CellValue>
-                {propertyFormatter.format(computedProperties.Wel_y)}
-              </CellValue>
-              <CellUnit>
-                <Latex tex={mm3Unit} />
-              </CellUnit>
-            </TableRow>
-            <TableRow>
-              <CellLabel>
-                <Latex tex="W_{el,z}" />
-              </CellLabel>
-              <CellValue>
-                {propertyFormatter.format(computedProperties.Wel_z)}
-              </CellValue>
-              <CellUnit>
-                <Latex tex={mm3Unit} />
-              </CellUnit>
-            </TableRow>
-            <TableRow>
-              <CellLabel>
-                <Latex tex="W_{pl,y}" />
-              </CellLabel>
-              <CellValue>
-                {propertyFormatter.format(computedProperties.Wpl_y)}
-              </CellValue>
-              <CellUnit>
-                <Latex tex={mm3Unit} />
-              </CellUnit>
-            </TableRow>
-            <TableRow>
-              <CellLabel>
-                <Latex tex="W_{pl,z}" />
-              </CellLabel>
-              <CellValue>
-                {propertyFormatter.format(computedProperties.Wpl_z)}
-              </CellValue>
-              <CellUnit>
-                <Latex tex={mm3Unit} />
-              </CellUnit>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
+      <InfoTable>
+        <TableHeader>
+          <TableRow className="bg-sand-100">
+            <InfoTableHeaderCell>Moduli</InfoTableHeaderCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <InfoTableLabelCell>
+              <Latex tex="W_{el,y}" />
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {propertyFormatter.format(computedProperties.Wel_y)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell>
+              <Latex tex={mm3Unit} />
+            </InfoTableUnitCell>
+          </TableRow>
+          <TableRow>
+            <InfoTableLabelCell>
+              <Latex tex="W_{el,z}" />
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {propertyFormatter.format(computedProperties.Wel_z)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell>
+              <Latex tex={mm3Unit} />
+            </InfoTableUnitCell>
+          </TableRow>
+          <TableRow>
+            <InfoTableLabelCell>
+              <Latex tex="W_{pl,y}" />
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {propertyFormatter.format(computedProperties.Wpl_y)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell>
+              <Latex tex={mm3Unit} />
+            </InfoTableUnitCell>
+          </TableRow>
+          <TableRow>
+            <InfoTableLabelCell>
+              <Latex tex="W_{pl,z}" />
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {propertyFormatter.format(computedProperties.Wpl_z)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell>
+              <Latex tex={mm3Unit} />
+            </InfoTableUnitCell>
+          </TableRow>
+        </TableBody>
+      </InfoTable>
     </div>
   );
 };
-
-const CellLabel = (props: ComponentProps<typeof TableHeaderCell>) => (
-  <TableHeaderCell
-    scope="row"
-    className="w-14 font-normal text-xl leading-1"
-    {...props}
-  />
-);
-
-const CellValue = (props: ComponentProps<typeof TableDataCell>) => (
-  <TableDataCell align="right" className="min-w-0 tabular-nums" {...props} />
-);
-
-const CellUnit = (props: ComponentProps<typeof TableDataCell>) => (
-  <TableDataCell className="w-16 text-sm opacity-50" {...props} />
-);
 
 const propertyFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0,

@@ -16,8 +16,9 @@ export const defaultCHSSection =
   circularSections[0];
 
 const defaultSteelGrade =
-  steelGrades.find(({ id, norm }) => id === "S235" && norm === "EN10025-2") ??
-  steelGrades[0];
+  steelGrades.find(
+    ({ id, standard }) => id === "S235" && standard === "EN10025-2",
+  ) ?? steelGrades[0];
 
 export const defaultValues = {
   // SHAPE

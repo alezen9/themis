@@ -47,22 +47,28 @@ export const Form = () => {
           <div className="w-96 flex flex-col gap-8 h-full border-r border-slate-300 pr-4">
             <FormShape />
             <LineDivider />
+
             <FormMaterial />
             <LineDivider />
+
             <FormSection />
-
             <LineDivider />
+
             <FormGeometry />
-
             <LineDivider />
+
             <FormActions />
             <LineDivider />
+
             <FormFlexuralBuckling />
             <LineDivider />
+
             <FormLaterailTorsionalBuckling />
             <LineDivider />
+
             <FormTorsionalBuckling />
             <LineDivider />
+
             <FormAnnex />
           </div>
         </Ec311CustomRegisterContext>
