@@ -66,8 +66,7 @@ export const DrawingIShape = () => {
         .lineTo(bDrawing / 2, 0)
         .close();
 
-      const webThicknessDimensionPositionY =
-        (hDrawing / 2 - tfDrawing) / 2;
+      const webThicknessDimensionPositionY = (hDrawing / 2 - tfDrawing) / 2;
       const dimensions = dimensionsGroup.dimension();
 
       dimensions

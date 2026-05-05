@@ -4,10 +4,10 @@
 @source "../../../packages/ndg-editor/src";
 
 svg.pluton-root {
-  --pluton-geometry-stroke: var(--color-zinc-500);
-  --pluton-hatch-color: var(--color-zinc-300);
-  --pluton-dim-color: var(--color-zinc-500);
-  --pluton-dim-text-color: var(--color-zinc-500);
+  --pluton-geometry-stroke: var(--color-envy-700);
+  --pluton-hatch-color: var(--color-envy-200);
+  --pluton-dim-color: var(--color-sand-800);
+  --pluton-dim-text-color: var(--color-sand-800);
 }
 
 .katex {

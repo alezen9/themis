@@ -3,9 +3,10 @@ import { Table, TableDataCell, TableHeaderCell } from "@components/Table";
 import { ComponentProps, ComponentPropsWithRef } from "react";
 import { twMerge } from "tailwind-merge";
 
-export const LatexLabel = (props: ComponentProps<typeof Latex>) => (
-  <Latex {...props} className="text-2xl" />
-);
+export const LatexLabel = (props: ComponentProps<typeof Latex>) => {
+  const { className, ...rest } = props;
+  return <Latex className={twMerge("text-2xl", className)} {...rest} />;
+};
 
 export const TextLabel = (props: ComponentProps<"span">) => (
   <span {...props} className="text-md font-light" />

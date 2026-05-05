@@ -11,8 +11,7 @@ import { FormMaterial } from "./FormMaterial";
 import { FormActions } from "./FormActions";
 import { FormAnnex } from "./FormAnnex";
 import { FormFlexuralBuckling } from "./FormFlexuralBuckling";
-import { FormLaterailTorsionalBuckling } from "./FormLaterailTorsionalBuckling";
-import { FormTorsionalBuckling } from "./FormTorsionalBuckling";
+import { FormStabilityChecks } from "./FormStabilityChecks";
 
 export const Form = () => {
   const form = useForm<Ec3FormValues>({
@@ -63,10 +62,7 @@ export const Form = () => {
             <FormFlexuralBuckling />
             <LineDivider />
 
-            <FormLaterailTorsionalBuckling />
-            <LineDivider />
-
-            <FormTorsionalBuckling />
+            <FormStabilityChecks />
             <LineDivider />
 
             <FormAnnex />

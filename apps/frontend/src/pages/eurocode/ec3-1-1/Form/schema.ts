@@ -64,7 +64,7 @@ const actionsSchema = z.strictObject({
 
 const flexuralBucklingSchema = z.strictObject({
   k_y: z.number("Invalid value").positive("Value must be a positive number"),
-  M_y_shape: z.literal(momentShapeValues),
+  M_y_Ed_shape: z.literal(momentShapeValues),
   psi_y: z
     .number("Invalid value")
     .min(-1, "Value cannot be smaller than -1")
@@ -72,7 +72,7 @@ const flexuralBucklingSchema = z.strictObject({
   support_condition_y: z.literal(supportConditionValues),
 
   k_z: z.number("Invalid value").positive("Value must be a positive number"),
-  M_z_shape: z.literal(momentShapeValues),
+  M_z_Ed_shape: z.literal(momentShapeValues),
   psi_z: z
     .number("Invalid value")
     .min(-1, "Value cannot be smaller than -1")
@@ -80,21 +80,17 @@ const flexuralBucklingSchema = z.strictObject({
   support_condition_z: z.literal(supportConditionValues),
 });
 
-const lateralTorsionalBucklingSchema = z.strictObject({
-  active_LT: z.boolean(),
+const stabilityChecksSchema = z.strictObject({
+  include_torsional_modes: z.boolean(),
+  k_T: z.number("Invalid value").positive("Value must be a positive number"),
   k_LT: z.number("Invalid value").positive("Value must be a positive number"),
-  M_LT_shape: z.literal(momentShapeValues),
-  psi_LT: z
+  M_y_Ed_shape_LT: z.literal(momentShapeValues),
+  psi_y_LT: z
     .number("Invalid value")
     .min(-1, "Value cannot be smaller than -1")
     .max(1, "Value cannot be greater than 1"),
   support_condition_LT: z.literal(supportConditionValues),
   load_LT: z.literal(loadApplicationLTValues),
-});
-
-const torsionalBucklingSchema = z.strictObject({
-  active_T: z.boolean(),
-  k_T: z.number("Invalid value").positive("Value must be a positive number"),
 });
 
 const annexSchema = z.strictObject({
@@ -123,8 +119,7 @@ export const schema = shapeSchema
   .and(geometrySchema)
   .and(actionsSchema)
   .and(flexuralBucklingSchema)
-  .and(lateralTorsionalBucklingSchema)
-  .and(torsionalBucklingSchema)
+  .and(stabilityChecksSchema)
   .and(annexSchema);
 
 export type Ec3FormValues = z.infer<typeof schema>;

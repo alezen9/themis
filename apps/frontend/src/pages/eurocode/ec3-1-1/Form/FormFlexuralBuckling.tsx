@@ -30,7 +30,7 @@ const MomentY = () => {
     Ec311CustomRegisterContext,
   );
   const { watch } = useFormContext<Ec3FormValues>();
-  const momentShape = watch("M_y_shape");
+  const momentShape = watch("M_y_Ed_shape");
   const isMomentShapeLinear = momentShape === "linear";
   const isMomentShapeParabolic = momentShape === "parabolic";
   const isMomentShapeTriangular = momentShape === "triangular";
@@ -44,9 +44,17 @@ const MomentY = () => {
         <InputNumber {...registerNumber?.("k_y")} />
       </HorizontalInput>
 
-      <HorizontalInput name="M_y_shape" label={<LatexLabel tex="M_y" />}>
+      <HorizontalInput
+        name="M_y_Ed_shape"
+        label={
+          <span className="flex items-baseline gap-2">
+            <LatexLabel tex="M_{y,Ed}" className="text-[1.25rem]" />
+            <TextLabel>shape</TextLabel>
+          </span>
+        }
+      >
         <InputSelect
-          {...registerSelect?.("M_y_shape")}
+          {...registerSelect?.("M_y_Ed_shape")}
           options={momentShapeOptions}
         />
       </HorizontalInput>
@@ -77,7 +85,7 @@ const MomentZ = () => {
     Ec311CustomRegisterContext,
   );
   const { watch } = useFormContext<Ec3FormValues>();
-  const momentShape = watch("M_z_shape");
+  const momentShape = watch("M_z_Ed_shape");
   const isMomentShapeLinear = momentShape === "linear";
   const isMomentShapeParabolic = momentShape === "parabolic";
   const isMomentShapeTriangular = momentShape === "triangular";
@@ -91,9 +99,17 @@ const MomentZ = () => {
         <InputNumber {...registerNumber?.("k_z")} />
       </HorizontalInput>
 
-      <HorizontalInput name="M_z_shape" label={<LatexLabel tex="M_z" />}>
+      <HorizontalInput
+        name="M_z_Ed_shape"
+        label={
+          <span className="flex items-baseline gap-2">
+            <LatexLabel tex="M_{z,Ed}" className="text-[1.25rem]" />
+            <TextLabel>shape</TextLabel>
+          </span>
+        }
+      >
         <InputSelect
-          {...registerSelect?.("M_z_shape")}
+          {...registerSelect?.("M_z_Ed_shape")}
           options={momentShapeOptions}
         />
       </HorizontalInput>

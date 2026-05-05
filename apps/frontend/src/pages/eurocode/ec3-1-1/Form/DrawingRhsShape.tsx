@@ -83,11 +83,7 @@ export const DrawingRhsShape = () => {
         .tick(0)
         .lineTo(bDrawing, 0)
         .tick(0)
-        .textAt(
-          -bDrawing / 2,
-          dimensionTextOffsetY,
-          `${formatDimension(b)}mm`,
-        );
+        .textAt(-bDrawing / 2, dimensionTextOffsetY, `${formatDimension(b)}mm`);
 
       dimensions
         .moveToAbs(bDrawing / 2 + dimensionOffset, -hDrawing / 2)

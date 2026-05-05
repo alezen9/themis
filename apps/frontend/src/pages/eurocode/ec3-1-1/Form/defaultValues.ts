@@ -62,25 +62,22 @@ export const defaultValues = {
 
   // FLEXURAL BUCKLING
   k_y: 1,
-  M_y_shape: "linear",
+  M_y_Ed_shape: "linear",
   psi_y: 0,
   support_condition_y: "fixed-fixed",
   k_z: 1,
-  M_z_shape: "linear",
+  M_z_Ed_shape: "linear",
   psi_z: 0,
   support_condition_z: "fixed-fixed",
 
-  // LATERAL TORSIONAL BUCKLING
-  active_LT: true,
+  // STABILITY CHECKS
+  include_torsional_modes: true,
+  k_T: 1,
   k_LT: 1,
-  M_LT_shape: "uniform",
-  psi_LT: 0,
+  M_y_Ed_shape_LT: "uniform",
+  psi_y_LT: 0,
   support_condition_LT: "fixed-fixed",
   load_LT: "top-flange",
-
-  // TORSIONAL BUCKLING
-  active_T: true,
-  k_T: 1,
 
   // NATIONAL ANNEX
   annex_id: italianAnnex.id,

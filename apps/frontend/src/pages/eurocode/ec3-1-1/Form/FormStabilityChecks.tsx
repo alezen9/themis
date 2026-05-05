@@ -1,25 +1,31 @@
-import { HorizontalInput } from "@components/inputs/shared";
-import { LatexLabel, Section, SectionTitle, TextLabel } from "./shared";
-import { InputSelect } from "@components/inputs/InputSelect";
 import { InputNumber } from "@components/inputs/InputNumber";
+import { InputSelect } from "@components/inputs/InputSelect";
+import { InputToggle } from "@components/inputs/InputToggle";
+import { HorizontalInput } from "@components/inputs/shared";
+import { useContext } from "react";
+import { useFormContext } from "react-hook-form";
+import { Ec311CustomRegisterContext } from "./Form";
 import {
   loadApplicationLTOptions,
   momentShapeOptions,
   supportConditionOptions,
 } from "./options";
-import { Ec311CustomRegisterContext } from "./Form";
-import { useContext } from "react";
-import { useFormContext } from "react-hook-form";
 import { Ec3FormValues } from "./schema";
-import { InputToggle } from "@components/inputs/InputToggle";
+import {
+  LatexLabel,
+  Section,
+  SectionTitle,
+  SpacingDivider,
+  TextLabel,
+} from "./shared";
 
-export const FormLaterailTorsionalBuckling = () => {
+export const FormStabilityChecks = () => {
   const { registerBoolean, registerNumber, registerSelect } = useContext(
     Ec311CustomRegisterContext,
   );
   const { watch } = useFormContext<Ec3FormValues>();
-  const isActive = watch("active_LT");
-  const momentShape = watch("M_LT_shape");
+  const includeTorsionalModes = watch("include_torsional_modes");
+  const momentShape = watch("M_y_Ed_shape_LT");
   const isMomentShapeLinear = momentShape === "linear";
   const isMomentShapeParabolic = momentShape === "parabolic";
   const isMomentShapeTriangular = momentShape === "triangular";
@@ -29,30 +35,48 @@ export const FormLaterailTorsionalBuckling = () => {
 
   return (
     <Section>
-      <div className="flex items-center justify-between gap-4 w-full mb-2">
-        <SectionTitle className="mb-0">Lateral Torsional Buckling</SectionTitle>
-        <InputToggle {...registerBoolean?.("active_LT")} className="h-6 w-12" />
+      <div className="mb-2 flex w-full items-center justify-between gap-4">
+        <SectionTitle className="mb-0">Stability Checks</SectionTitle>
+        <InputToggle
+          {...registerBoolean?.("include_torsional_modes")}
+          aria-label="Toggle stability checks"
+          className="h-6 w-12"
+        />
       </div>
 
-      {isActive && (
+      {includeTorsionalModes && (
         <>
+          <HorizontalInput name="k_T" label={<LatexLabel tex="k_T" />}>
+            <InputNumber {...registerNumber?.("k_T")} />
+          </HorizontalInput>
+
+          <SpacingDivider />
+
           <HorizontalInput name="k_LT" label={<LatexLabel tex="k_{LT}" />}>
             <InputNumber {...registerNumber?.("k_LT")} />
           </HorizontalInput>
 
           <HorizontalInput
-            name="M_LT_shape"
-            label={<LatexLabel tex="M_{LT}" />}
+            name="M_y_Ed_shape_LT"
+            label={
+              <span className="flex items-baseline gap-2">
+                <LatexLabel tex="M_{y,Ed}" className="text-[1.25rem]" />
+                <TextLabel>shape</TextLabel>
+              </span>
+            }
           >
             <InputSelect
-              {...registerSelect?.("M_LT_shape")}
+              {...registerSelect?.("M_y_Ed_shape_LT")}
               options={momentShapeOptions}
             />
           </HorizontalInput>
 
           {showPsi && (
-            <HorizontalInput name="psi_LT" label={<LatexLabel tex="\psi_LT" />}>
-              <InputNumber {...registerNumber?.("psi_LT")} />
+            <HorizontalInput
+              name="psi_y_LT"
+              label={<LatexLabel tex="\psi_{y,LT}" />}
+            >
+              <InputNumber {...registerNumber?.("psi_y_LT")} />
             </HorizontalInput>
           )}
 
@@ -60,7 +84,7 @@ export const FormLaterailTorsionalBuckling = () => {
             <>
               <HorizontalInput
                 name="support_condition_LT"
-                label={<TextLabel>Support LT</TextLabel>}
+                label={<TextLabel>LT support</TextLabel>}
               >
                 <InputSelect
                   {...registerSelect?.("support_condition_LT")}
