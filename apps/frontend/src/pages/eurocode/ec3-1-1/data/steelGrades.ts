@@ -8,7 +8,7 @@ export type SteelGrade = {
   fu_above_40?: number;
 };
 
-export const steelGrades = [
+export const steelGrades: SteelGrade[] = [
   {
     id: "S235",
     standard: "EN10025-2",
@@ -303,7 +303,7 @@ export const steelGrades = [
     fy: 460,
     fu: 530,
   },
-] satisfies SteelGrade[];
+];
 
 export const composeSteelGradeId = (grade: SteelGrade) =>
   `${grade.standard}:${grade.id}`;
