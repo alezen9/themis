@@ -8,27 +8,39 @@ export const computeChsSectionProperties = (
   geometry: Geometry,
 ) => {
   const existing = getExistingSectionProperties(section_id);
-  const d = geometry.d; // outer diameter
-  const t = geometry.t; // wall thickness
-  const di = d - 2 * t;
+  const d_mm = geometry.d_mm;
+  const t_mm = geometry.t_mm;
+  const di_mm = d_mm - 2 * t_mm;
 
-  const A = existing?.A ?? (Math.PI / 4) * (d ** 2 - di ** 2);
-  const Iy = existing?.Iy ?? (Math.PI / 64) * (d ** 4 - di ** 4);
-  const Iz = Iy;
-  const Wel_y = Iy / (d / 2);
-  const Wel_z = Wel_y;
-  const Wpl_y = existing?.Wpl_y ?? (d ** 3 - di ** 3) / 6;
-  const Wpl_z = Wpl_y;
-  const Av_y = (2 * A) / Math.PI;
-  const Av_z = Av_y;
-  const It = existing?.It ?? 2 * Iy;
+  const A_mm2 = existing?.A_mm2 ?? (Math.PI / 4) * (d_mm ** 2 - di_mm ** 2);
+  const Iy_mm4 = existing?.Iy_mm4 ?? (Math.PI / 64) * (d_mm ** 4 - di_mm ** 4);
+  const Iz_mm4 = Iy_mm4;
+  const Wel_y_mm3 = Iy_mm4 / (d_mm / 2);
+  const Wel_z_mm3 = Wel_y_mm3;
+  const Wpl_y_mm3 = existing?.Wpl_y_mm3 ?? (d_mm ** 3 - di_mm ** 3) / 6;
+  const Wpl_z_mm3 = Wpl_y_mm3;
+  const Av_y_mm2 = (2 * A_mm2) / Math.PI;
+  const Av_z_mm2 = Av_y_mm2;
+  const It_mm4 = existing?.It_mm4 ?? 2 * Iy_mm4;
 
-  return { A, Iy, Iz, Wel_y, Wel_z, Wpl_y, Wpl_z, Av_y, Av_z, It, Iw: 0 };
+  return {
+    A_mm2,
+    Iy_mm4,
+    Iz_mm4,
+    Wel_y_mm3,
+    Wel_z_mm3,
+    Wpl_y_mm3,
+    Wpl_z_mm3,
+    Av_y_mm2,
+    Av_z_mm2,
+    It_mm4,
+    Iw_mm6: 0,
+  };
 };
 
 const getExistingSectionProperties = (section_id: string) => {
   const section = circularSectionsMap.get(section_id);
   if (!section) return;
-  const { A, Iy, Wpl_y, It } = section;
-  return { A, Iy, Wpl_y, It };
+  const { A_mm2, Iy_mm4, Wpl_y_mm3, It_mm4 } = section;
+  return { A_mm2, Iy_mm4, Wpl_y_mm3, It_mm4 };
 };

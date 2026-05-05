@@ -21,10 +21,10 @@ import { computeSectionProperties } from "../domain/geometry/computeSectionPrope
 import { TableBody, TableHeader, TableRow } from "@components/Table";
 import { useEc311FormContext } from "./useEc311FormContext";
 
-const mm2Unit = "\mathrm{mm}^2";
-const mm3Unit = "\mathrm{mm}^3";
-const mm4Unit = "\mathrm{mm}^4";
-const mm6Unit = "\mathrm{mm}^6";
+const mm2Unit = String.raw`\mathrm{mm}^2`;
+const mm3Unit = String.raw`\mathrm{mm}^3`;
+const mm4Unit = String.raw`\mathrm{mm}^4`;
+const mm6Unit = String.raw`\mathrm{mm}^6`;
 
 export const FormGeometry = () => {
   const { registerNumber, watch } = useEc311FormContext();
@@ -44,66 +44,93 @@ export const FormGeometry = () => {
       <SectionPropertiesInfo />
       <SpacingDivider />
 
-      <HorizontalInput name="L" label={<LatexLabel tex="L" />}>
-        <InputNumber {...registerNumber?.("L")} suffix="m" />
+      <HorizontalInput name="L_m" label={<LatexLabel tex="L" />}>
+        <InputNumber {...registerNumber?.("L_m")} suffix="m" />
       </HorizontalInput>
 
       {isCustomSection && shape === "I" && (
         <>
-          <HorizontalInput name="h" label={<LatexLabel tex="h" />}>
-            <InputNumber {...registerNumber?.("i_geometry.h")} suffix="mm" />
+          <HorizontalInput name="h_mm" label={<LatexLabel tex="h" />}>
+            <InputNumber {...registerNumber?.("i_geometry.h_mm")} suffix="mm" />
           </HorizontalInput>
 
-          <HorizontalInput name="b" label={<LatexLabel tex="b" />}>
-            <InputNumber {...registerNumber?.("i_geometry.b")} suffix="mm" />
+          <HorizontalInput name="b_mm" label={<LatexLabel tex="b" />}>
+            <InputNumber {...registerNumber?.("i_geometry.b_mm")} suffix="mm" />
           </HorizontalInput>
 
-          <HorizontalInput name="tw" label={<LatexLabel tex="t_w" />}>
-            <InputNumber {...registerNumber?.("i_geometry.tw")} suffix="mm" />
+          <HorizontalInput name="tw_mm" label={<LatexLabel tex="t_w" />}>
+            <InputNumber
+              {...registerNumber?.("i_geometry.tw_mm")}
+              suffix="mm"
+            />
           </HorizontalInput>
 
-          <HorizontalInput name="tf" label={<LatexLabel tex="t_f" />}>
-            <InputNumber {...registerNumber?.("i_geometry.tf")} suffix="mm" />
+          <HorizontalInput name="tf_mm" label={<LatexLabel tex="t_f" />}>
+            <InputNumber
+              {...registerNumber?.("i_geometry.tf_mm")}
+              suffix="mm"
+            />
           </HorizontalInput>
 
-          <HorizontalInput name="r" label={<LatexLabel tex="r" />}>
-            <InputNumber {...registerNumber?.("i_geometry.r")} suffix="mm" />
+          <HorizontalInput name="r_mm" label={<LatexLabel tex="r" />}>
+            <InputNumber {...registerNumber?.("i_geometry.r_mm")} suffix="mm" />
           </HorizontalInput>
         </>
       )}
 
       {isCustomSection && shape === "RHS" && (
         <>
-          <HorizontalInput name="h" label={<LatexLabel tex="h" />}>
-            <InputNumber {...registerNumber?.("rhs_geometry.h")} suffix="mm" />
+          <HorizontalInput name="h_mm" label={<LatexLabel tex="h" />}>
+            <InputNumber
+              {...registerNumber?.("rhs_geometry.h_mm")}
+              suffix="mm"
+            />
           </HorizontalInput>
 
-          <HorizontalInput name="b" label={<LatexLabel tex="b" />}>
-            <InputNumber {...registerNumber?.("rhs_geometry.b")} suffix="mm" />
+          <HorizontalInput name="b_mm" label={<LatexLabel tex="b" />}>
+            <InputNumber
+              {...registerNumber?.("rhs_geometry.b_mm")}
+              suffix="mm"
+            />
           </HorizontalInput>
 
-          <HorizontalInput name="tw" label={<LatexLabel tex="t_w" />}>
-            <InputNumber {...registerNumber?.("rhs_geometry.tw")} suffix="mm" />
+          <HorizontalInput name="tw_mm" label={<LatexLabel tex="t_w" />}>
+            <InputNumber
+              {...registerNumber?.("rhs_geometry.tw_mm")}
+              suffix="mm"
+            />
           </HorizontalInput>
 
-          <HorizontalInput name="ri" label={<LatexLabel tex="r_i" />}>
-            <InputNumber {...registerNumber?.("rhs_geometry.ri")} suffix="mm" />
+          <HorizontalInput name="ri_mm" label={<LatexLabel tex="r_i" />}>
+            <InputNumber
+              {...registerNumber?.("rhs_geometry.ri_mm")}
+              suffix="mm"
+            />
           </HorizontalInput>
 
-          <HorizontalInput name="ro" label={<LatexLabel tex="r_o" />}>
-            <InputNumber {...registerNumber?.("rhs_geometry.ro")} suffix="mm" />
+          <HorizontalInput name="ro_mm" label={<LatexLabel tex="r_o" />}>
+            <InputNumber
+              {...registerNumber?.("rhs_geometry.ro_mm")}
+              suffix="mm"
+            />
           </HorizontalInput>
         </>
       )}
 
       {isCustomSection && shape === "CHS" && (
         <>
-          <HorizontalInput name="d" label={<LatexLabel tex="d" />}>
-            <InputNumber {...registerNumber?.("chs_geometry.d")} suffix="mm" />
+          <HorizontalInput name="d_mm" label={<LatexLabel tex="d" />}>
+            <InputNumber
+              {...registerNumber?.("chs_geometry.d_mm")}
+              suffix="mm"
+            />
           </HorizontalInput>
 
-          <HorizontalInput name="t" label={<LatexLabel tex="t" />}>
-            <InputNumber {...registerNumber?.("chs_geometry.t")} suffix="mm" />
+          <HorizontalInput name="t_mm" label={<LatexLabel tex="t" />}>
+            <InputNumber
+              {...registerNumber?.("chs_geometry.t_mm")}
+              suffix="mm"
+            />
           </HorizontalInput>
         </>
       )}
@@ -153,7 +180,7 @@ const SectionPropertiesInfo = () => {
               <Latex tex="A" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.A)}
+              {propertyFormatter.format(computedProperties.A_mm2)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm2Unit} />
@@ -174,7 +201,7 @@ const SectionPropertiesInfo = () => {
               <Latex tex="I_y" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Iy)}
+              {propertyFormatter.format(computedProperties.Iy_mm4)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm4Unit} />
@@ -185,7 +212,7 @@ const SectionPropertiesInfo = () => {
               <Latex tex="I_z" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Iz)}
+              {propertyFormatter.format(computedProperties.Iz_mm4)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm4Unit} />
@@ -196,7 +223,7 @@ const SectionPropertiesInfo = () => {
               <Latex tex="I_t" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.It)}
+              {propertyFormatter.format(computedProperties.It_mm4)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm4Unit} />
@@ -207,7 +234,7 @@ const SectionPropertiesInfo = () => {
               <Latex tex="I_w" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Iw)}
+              {propertyFormatter.format(computedProperties.Iw_mm6)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm6Unit} />
@@ -228,7 +255,7 @@ const SectionPropertiesInfo = () => {
               <Latex tex="W_{el,y}" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Wel_y)}
+              {propertyFormatter.format(computedProperties.Wel_y_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm3Unit} />
@@ -239,7 +266,7 @@ const SectionPropertiesInfo = () => {
               <Latex tex="W_{el,z}" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Wel_z)}
+              {propertyFormatter.format(computedProperties.Wel_z_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm3Unit} />
@@ -250,7 +277,7 @@ const SectionPropertiesInfo = () => {
               <Latex tex="W_{pl,y}" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Wpl_y)}
+              {propertyFormatter.format(computedProperties.Wpl_y_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm3Unit} />
@@ -261,7 +288,7 @@ const SectionPropertiesInfo = () => {
               <Latex tex="W_{pl,z}" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Wpl_z)}
+              {propertyFormatter.format(computedProperties.Wpl_z_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm3Unit} />

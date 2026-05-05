@@ -27,39 +27,39 @@ const crossSectionSchema = z.strictObject({
 });
 
 const iGeometrySchema = z.strictObject({
-  h: z.number("Invalid value").positive("Value must be a positive number"),
-  b: z.number("Invalid value").positive("Value must be a positive number"),
-  tw: z.number("Invalid value").positive("Value must be a positive number"),
-  tf: z.number("Invalid value").positive("Value must be a positive number"),
-  r: z.number("Invalid value").positive("Value must be a positive number"),
+  h_mm: z.number("Invalid value").positive("Value must be a positive number"),
+  b_mm: z.number("Invalid value").positive("Value must be a positive number"),
+  tw_mm: z.number("Invalid value").positive("Value must be a positive number"),
+  tf_mm: z.number("Invalid value").positive("Value must be a positive number"),
+  r_mm: z.number("Invalid value").positive("Value must be a positive number"),
 });
 
 const rhsGeometrySchema = z.strictObject({
-  h: z.number("Invalid value").positive("Value must be a positive number"),
-  b: z.number("Invalid value").positive("Value must be a positive number"),
-  tw: z.number("Invalid value").positive("Value must be a positive number"),
-  ro: z.number("Invalid value").positive("Value must be a positive number"),
-  ri: z.number("Invalid value").positive("Value must be a positive number"),
+  h_mm: z.number("Invalid value").positive("Value must be a positive number"),
+  b_mm: z.number("Invalid value").positive("Value must be a positive number"),
+  tw_mm: z.number("Invalid value").positive("Value must be a positive number"),
+  ro_mm: z.number("Invalid value").positive("Value must be a positive number"),
+  ri_mm: z.number("Invalid value").positive("Value must be a positive number"),
 });
 
 const chsGeometrySchema = z.strictObject({
-  d: z.number("Invalid value").positive("Value must be a positive number"),
-  t: z.number("Invalid value").positive("Value must be a positive number"),
+  d_mm: z.number("Invalid value").positive("Value must be a positive number"),
+  t_mm: z.number("Invalid value").positive("Value must be a positive number"),
 });
 
 const geometrySchema = z.strictObject({
   i_geometry: iGeometrySchema,
   rhs_geometry: rhsGeometrySchema,
   chs_geometry: chsGeometrySchema,
-  L: z.number("Invalid value").positive("Value must be a positive number"),
+  L_m: z.number("Invalid value").positive("Value must be a positive number"),
 });
 
 const actionsSchema = z.strictObject({
-  N_Ed: z.number("Invalid value"),
-  V_y_Ed: z.number("Invalid value"),
-  V_z_Ed: z.number("Invalid value"),
-  M_y_Ed: z.number("Invalid value"),
-  M_z_Ed: z.number("Invalid value"),
+  N_Ed_kN: z.number("Invalid value"),
+  V_y_Ed_kN: z.number("Invalid value"),
+  V_z_Ed_kN: z.number("Invalid value"),
+  M_y_Ed_kNm: z.number("Invalid value"),
+  M_z_Ed_kNm: z.number("Invalid value"),
 });
 
 const flexuralBucklingSchema = z.strictObject({

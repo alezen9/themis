@@ -5,34 +5,38 @@ import { classifyOutstandPart } from "./classifyOutstandPart";
 import { max } from "./utils";
 
 type Geometry = Ec3FormValues["i_geometry"];
-type Actions = Pick<Ec3FormValues, "N_Ed" | "M_y_Ed" | "M_z_Ed">;
+type Actions = Pick<Ec3FormValues, "N_Ed_kN" | "M_y_Ed_kNm" | "M_z_Ed_kNm">;
 type FabricationType = Ec3FormValues["fabrication_type"];
 
 export const classifyISection = (
   section_id: string,
   i_geometry: Geometry,
-  fy: number,
+  fy_MPa: number,
   fabrication_type: FabricationType,
   actions: Actions,
 ) => {
-  const { N_Ed, M_y_Ed, M_z_Ed } = actions;
-  const { h, b, tw, tf, r } = i_geometry;
-  const { A, Wel_y, Wel_z } = computeSectionProperties({
+  const { N_Ed_kN, M_y_Ed_kNm, M_z_Ed_kNm } = actions;
+  const { h_mm, b_mm, tw_mm, tf_mm, r_mm } = i_geometry;
+  const { A_mm2, Wel_y_mm3, Wel_z_mm3 } = computeSectionProperties({
     shape: "I",
     section_id,
     i_geometry,
   });
 
-  const epsilon = Math.sqrt(235 / fy);
-  const webHeight = Math.max(h - 2 * tf - 2 * r, 0);
-  const webSlenderness = webHeight / tw;
-  const flangeOutstand = Math.max((b - tw - 2 * r) / 2, 0);
-  const flangeSlenderness = flangeOutstand / tf;
+  const N_Ed_N = N_Ed_kN * 1_000;
+  const M_y_Ed_Nmm = M_y_Ed_kNm * 1_000_000;
+  const M_z_Ed_Nmm = M_z_Ed_kNm * 1_000_000;
 
-  const axialCompression = -N_Ed / A;
-  const yBendingCompression = -M_y_Ed / Wel_y;
-  const zBendingTipCompression = -M_z_Ed / Wel_z;
-  const webToTipRatio = Math.min((tw + 2 * r) / b, 1);
+  const epsilon = Math.sqrt(235 / fy_MPa);
+  const webHeight_mm = Math.max(h_mm - 2 * tf_mm - 2 * r_mm, 0);
+  const webSlenderness = webHeight_mm / tw_mm;
+  const flangeOutstand_mm = Math.max((b_mm - tw_mm - 2 * r_mm) / 2, 0);
+  const flangeSlenderness = flangeOutstand_mm / tf_mm;
+
+  const axialCompression = -N_Ed_N / A_mm2;
+  const yBendingCompression = -M_y_Ed_Nmm / Wel_y_mm3;
+  const zBendingTipCompression = -M_z_Ed_Nmm / Wel_z_mm3;
+  const webToTipRatio = Math.min((tw_mm + 2 * r_mm) / b_mm, 1);
   const zBendingWebCompression = zBendingTipCompression * webToTipRatio;
 
   const topStress = axialCompression + yBendingCompression;
@@ -41,7 +45,7 @@ export const classifyISection = (
   const webClass = classifyInternalPart({
     slenderness: webSlenderness,
     epsilon,
-    fy,
+    fy_MPa,
     stressEdgeA: topStress,
     stressEdgeB: bottomStress,
   });

@@ -19,12 +19,10 @@ import {
   defaultISection,
   defaultRHSSection,
 } from "./defaultValues";
-import {
-  getChsShapePatchFields,
-  getIShapePatchFields,
-  getRhsShapePatchFields,
-} from "./utils";
 import { useEc311FormContext } from "./useEc311FormContext";
+import { flangedSectionsMap } from "../data/flangedSections";
+import { hollowSectionsMap } from "../data/hollowSections";
+import { circularSectionsMap } from "../data/circularSections";
 
 const sectionOptionsMap = {
   I: { options: flangedSectionOptions, defaultValue: defaultISection.id },
@@ -48,9 +46,9 @@ export const FormSection = () => {
       const { name, value } = e.target;
       const values = getValues();
       const shape = values.shape;
-      const i_geometry = getIShapePatchFields(value);
-      const rhs_geometry = getRhsShapePatchFields(value);
-      const chs_geometry = getChsShapePatchFields(value);
+      const i_geometry = flangedSectionsMap.get(value);
+      const rhs_geometry = hollowSectionsMap.get(value);
+      const chs_geometry = circularSectionsMap.get(value);
       const isCustomSection = value === customSectionId;
       reset(
         {

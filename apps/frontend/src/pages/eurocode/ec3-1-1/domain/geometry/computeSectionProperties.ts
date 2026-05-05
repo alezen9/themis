@@ -24,17 +24,17 @@ type CHS_Input = { shape: "CHS" } & SectionIdObj &
 type Inputs = I_Input | RHs_Input | CHS_Input;
 
 type GeometricProperties = {
-  A: number;
-  Iy: number;
-  Iz: number;
-  Wel_y: number;
-  Wel_z: number;
-  Wpl_y: number;
-  Wpl_z: number;
-  Av_y: number;
-  Av_z: number;
-  It: number;
-  Iw: number;
+  A_mm2: number;
+  Iy_mm4: number;
+  Iz_mm4: number;
+  Wel_y_mm3: number;
+  Wel_z_mm3: number;
+  Wpl_y_mm3: number;
+  Wpl_z_mm3: number;
+  Av_y_mm2: number;
+  Av_z_mm2: number;
+  It_mm4: number;
+  Iw_mm6: number;
 };
 
 export const computeSectionProperties = (

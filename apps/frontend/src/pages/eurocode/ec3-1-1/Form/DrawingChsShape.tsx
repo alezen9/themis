@@ -35,10 +35,10 @@ export const DrawingChsShape = () => {
     const dimensionsGroup = scene.current.dimensions.group();
 
     scene.current.draw((p) => {
-      const { d, t } = p;
-      const scale = targetHeight / (d / 2);
-      const roDrawing = (d / 2) * scale;
-      const tDrawing = t * scale;
+      const { d_mm, t_mm } = p;
+      const scale = targetHeight / (d_mm / 2);
+      const roDrawing = (d_mm / 2) * scale;
+      const tDrawing = t_mm * scale;
       const riDrawing = roDrawing - tDrawing;
 
       const path = geometryGroup.path();
@@ -57,7 +57,7 @@ export const DrawingChsShape = () => {
       const dimensions = dimensionsGroup.dimension();
 
       // outer diameter dimension
-      const formattedDiameter = formatDimension(d);
+      const formattedDiameter = formatDimension(d_mm);
       dimensions
         .moveToAbs(-roDrawing, roDrawing + dimensionOffset)
         .tick(0)
@@ -68,7 +68,7 @@ export const DrawingChsShape = () => {
       // wall thickness dimension
       const thicknessDirX = Math.cos(thicknessDimensionAngle);
       const thicknessDirY = Math.sin(thicknessDimensionAngle);
-      const formattedThickness = formatDimension(t);
+      const formattedThickness = formatDimension(t_mm);
       dimensions
         .moveToAbs(
           (riDrawing - dimensionOverflow) * thicknessDirX,
@@ -96,7 +96,7 @@ export const DrawingChsShape = () => {
 
   useEffect(() => {
     const unsubscribe = subscribe({
-      name: ["chs_geometry.d", "chs_geometry.t"],
+      name: ["chs_geometry.d_mm", "chs_geometry.t_mm"],
       exact: true,
       formState: { values: true },
       callback: updateSceneParams,

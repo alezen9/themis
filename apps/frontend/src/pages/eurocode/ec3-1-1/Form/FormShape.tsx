@@ -7,13 +7,11 @@ import {
   defaultISection,
   defaultRHSSection,
 } from "./defaultValues";
-import {
-  getChsShapePatchFields,
-  getIShapePatchFields,
-  getRhsShapePatchFields,
-} from "./utils";
 import { useEc311FormContext } from "./useEc311FormContext";
 import { ChangeHandler } from "react-hook-form";
+import { flangedSectionsMap } from "../data/flangedSections";
+import { hollowSectionsMap } from "../data/hollowSections";
+import { circularSectionsMap } from "../data/circularSections";
 
 export const FormShape = () => {
   const { register, reset, getValues } = useEc311FormContext();
@@ -24,9 +22,9 @@ export const FormShape = () => {
       let section_id = defaultISection.id;
       if (value === "RHS") section_id = defaultRHSSection.id;
       if (value === "CHS") section_id = defaultCHSSection.id;
-      const i_geometry = getIShapePatchFields(section_id);
-      const rhs_geometry = getRhsShapePatchFields(section_id);
-      const chs_geometry = getChsShapePatchFields(section_id);
+      const i_geometry = flangedSectionsMap.get(section_id);
+      const rhs_geometry = hollowSectionsMap.get(section_id);
+      const chs_geometry = circularSectionsMap.get(section_id);
       reset(
         {
           ...getValues(),

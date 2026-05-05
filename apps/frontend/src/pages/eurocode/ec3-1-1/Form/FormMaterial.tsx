@@ -71,7 +71,7 @@ const AdditionalInfoRow = () => {
             <InfoTableLabelCell>
               <Latex tex="f_y" />
             </InfoTableLabelCell>
-            <InfoTableValueCell>{grade?.fy ?? "-"}</InfoTableValueCell>
+            <InfoTableValueCell>{grade?.fy_MPa ?? "-"}</InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex="MPa" />
             </InfoTableUnitCell>
@@ -80,7 +80,7 @@ const AdditionalInfoRow = () => {
             <InfoTableLabelCell />
             <InfoTableValueCell>
               <span className="mr-2 opacity-75 text-xs">thickness &ge; 40</span>
-              {grade?.fy_above_40 ?? grade?.fy ?? "-"}
+              {grade?.fy_above_40_MPa ?? grade?.fy_MPa ?? "-"}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex="MPa" />
@@ -91,7 +91,7 @@ const AdditionalInfoRow = () => {
             <InfoTableLabelCell>
               <Latex tex="f_u" />
             </InfoTableLabelCell>
-            <InfoTableValueCell>{grade?.fu ?? "-"}</InfoTableValueCell>
+            <InfoTableValueCell>{grade?.fu_MPa ?? "-"}</InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex="MPa" />
             </InfoTableUnitCell>
@@ -100,7 +100,7 @@ const AdditionalInfoRow = () => {
             <InfoTableLabelCell />
             <InfoTableValueCell>
               <span className="mr-2 opacity-75 text-xs">thickness &ge; 40</span>
-              {grade?.fu_above_40 ?? grade?.fu ?? "-"}
+              {grade?.fu_above_40_MPa ?? grade?.fu_MPa ?? "-"}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex="MPa" />

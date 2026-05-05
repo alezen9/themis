@@ -38,15 +38,15 @@ export const DrawingRhsShape = () => {
     const dimensionsGroup = scene.current.dimensions.group();
 
     scene.current.draw((p) => {
-      const { h, b, tw, ro, ri } = p;
-      const heightScale = targetHeight / h;
-      const widthScale = targetWidth / b;
+      const { h_mm, b_mm, tw_mm, ro_mm, ri_mm } = p;
+      const heightScale = targetHeight / h_mm;
+      const widthScale = targetWidth / b_mm;
       const scale = Math.min(heightScale, widthScale);
-      const hDrawing = h * scale;
-      const bDrawing = b * scale;
-      const twDrawing = tw * scale;
-      const roDrawing = ro * scale;
-      const riDrawing = ri * scale;
+      const hDrawing = h_mm * scale;
+      const bDrawing = b_mm * scale;
+      const twDrawing = tw_mm * scale;
+      const roDrawing = ro_mm * scale;
+      const riDrawing = ri_mm * scale;
       const innerHeightDrawing = hDrawing - 2 * twDrawing;
       const innerWidthDrawing = bDrawing - 2 * twDrawing;
 
@@ -83,18 +83,22 @@ export const DrawingRhsShape = () => {
         .tick(0)
         .lineTo(bDrawing, 0)
         .tick(0)
-        .textAt(-bDrawing / 2, dimensionTextOffsetY, `${formatDimension(b)}mm`);
+        .textAt(
+          -bDrawing / 2,
+          dimensionTextOffsetY,
+          `${formatDimension(b_mm)}mm`,
+        );
 
       dimensions
         .moveToAbs(bDrawing / 2 + dimensionOffset, -hDrawing / 2)
         .tick(-Math.PI / 2)
         .lineTo(0, hDrawing)
         .tick(Math.PI / 2)
-        .textAt(10, -hDrawing / 2, `${formatDimension(h)}mm`, "start");
+        .textAt(10, -hDrawing / 2, `${formatDimension(h_mm)}mm`, "start");
 
       dimensions
         .moveToAbs(-bDrawing / 2 - dimensionOverflow * 2, 15)
-        .textAt(-5, 0, `${formatDimension(tw)}mm`, "end")
+        .textAt(-5, 0, `${formatDimension(tw_mm)}mm`, "end")
         .lineTo(dimensionOverflow * 2, 0)
         .tick(0)
         .moveTo(twDrawing, 0)
@@ -109,7 +113,7 @@ export const DrawingRhsShape = () => {
         .arrowFilled(outerRadiusDimensionAngle)
         .lineTo(-radiusCalloutOffset, -radiusCalloutOffset)
         .lineTo(-radiusCalloutOffset / 2, 0)
-        .textAt(-5, 0, `R ${formatDimension(ro)}mm`, "end");
+        .textAt(-5, 0, `R ${formatDimension(ro_mm)}mm`, "end");
 
       const innerRadiusDirX = Math.cos(innerRadiusDimensionAngle);
       const innerRadiusDirY = Math.sin(innerRadiusDimensionAngle);
@@ -122,7 +126,7 @@ export const DrawingRhsShape = () => {
         .arrowFilled(innerRadiusDimensionAngle)
         .lineTo(radiusCalloutOffset, radiusCalloutOffset)
         .lineTo(radiusCalloutOffset / 2, 0)
-        .textAt(5, 0, `R ${formatDimension(ri)}mm`, "start");
+        .textAt(5, 0, `R ${formatDimension(ri_mm)}mm`, "start");
     });
 
     return () => {
@@ -133,11 +137,11 @@ export const DrawingRhsShape = () => {
   useEffect(() => {
     const unsubscribe = subscribe({
       name: [
-        "rhs_geometry.h",
-        "rhs_geometry.b",
-        "rhs_geometry.tw",
-        "rhs_geometry.ro",
-        "rhs_geometry.ri",
+        "rhs_geometry.h_mm",
+        "rhs_geometry.b_mm",
+        "rhs_geometry.tw_mm",
+        "rhs_geometry.ro_mm",
+        "rhs_geometry.ri_mm",
       ],
       exact: true,
       formState: { values: true },

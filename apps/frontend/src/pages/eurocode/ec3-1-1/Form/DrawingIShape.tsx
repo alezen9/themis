@@ -34,15 +34,15 @@ export const DrawingIShape = () => {
     const dimensionsGroup = scene.current.dimensions.group();
 
     scene.current.draw((p) => {
-      const { h, b, tf, tw, r } = p;
-      const heightScale = targetHeight / h;
-      const widthScale = targetWidth / b;
+      const { h_mm, b_mm, tf_mm, tw_mm, r_mm } = p;
+      const heightScale = targetHeight / h_mm;
+      const widthScale = targetWidth / b_mm;
       const scale = Math.min(heightScale, widthScale);
-      const hDrawing = h * scale;
-      const bDrawing = b * scale;
-      const tfDrawing = tf * scale;
-      const twDrawing = tw * scale;
-      const rDrawing = r * scale;
+      const hDrawing = h_mm * scale;
+      const bDrawing = b_mm * scale;
+      const tfDrawing = tf_mm * scale;
+      const twDrawing = tw_mm * scale;
+      const rDrawing = r_mm * scale;
 
       geometryGroup
         .path()
@@ -76,21 +76,21 @@ export const DrawingIShape = () => {
         .moveToAbs(twDrawing / 2, webThicknessDimensionPositionY)
         .tick(Math.PI)
         .lineTo(dimensionOverflow * 2, 0)
-        .textAt(5, 0, `${formatDimension(tw)}mm`, "start");
+        .textAt(5, 0, `${formatDimension(tw_mm)}mm`, "start");
 
       dimensions
         .moveToAbs(-bDrawing / 2, -hDrawing / 2 - dimensionOffset)
         .tick(0)
         .lineTo(bDrawing, 0)
         .tick(0)
-        .textAt(-bDrawing / 2, -15, `${formatDimension(b)}mm`);
+        .textAt(-bDrawing / 2, -15, `${formatDimension(b_mm)}mm`);
 
       dimensions
         .moveToAbs(bDrawing / 2 + dimensionOffset, -hDrawing / 2)
         .tick(-Math.PI / 2)
         .lineTo(0, hDrawing)
         .tick(Math.PI / 2)
-        .textAt(15, -hDrawing / 2, `${formatDimension(h)}mm`, "start");
+        .textAt(15, -hDrawing / 2, `${formatDimension(h_mm)}mm`, "start");
 
       const filletRadiusDimensionDirX = Math.cos(Math.PI / 4);
       const filletRadiusDimensionDirY = Math.sin(Math.PI / 4);
@@ -105,7 +105,7 @@ export const DrawingIShape = () => {
         .arrowFilled(Math.PI / 4)
         .lineTo(-30, -30)
         .lineTo(-15, 0)
-        .textAt(-5, 0, `R ${formatDimension(r)}mm`, "end");
+        .textAt(-5, 0, `R ${formatDimension(r_mm)}mm`, "end");
     });
 
     return () => {
@@ -116,11 +116,11 @@ export const DrawingIShape = () => {
   useEffect(() => {
     const unsubscribe = subscribe({
       name: [
-        "i_geometry.h",
-        "i_geometry.b",
-        "i_geometry.tf",
-        "i_geometry.tw",
-        "i_geometry.r",
+        "i_geometry.h_mm",
+        "i_geometry.b_mm",
+        "i_geometry.tf_mm",
+        "i_geometry.tw_mm",
+        "i_geometry.r_mm",
       ],
       exact: true,
       formState: { values: true },

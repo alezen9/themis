@@ -13,9 +13,9 @@ type Inputs = Pick<
   | "chs_geometry"
   | "steel_grade_id"
   | "fabrication_type"
-  | "N_Ed"
-  | "M_y_Ed"
-  | "M_z_Ed"
+  | "N_Ed_kN"
+  | "M_y_Ed_kNm"
+  | "M_z_Ed_kNm"
 >;
 
 const getSteelGrade = (steel_grade_id: string) => {
@@ -43,26 +43,26 @@ export const classifySection = (inputs: Inputs) => {
     i_geometry,
     rhs_geometry,
     chs_geometry,
-    N_Ed,
-    M_y_Ed,
-    M_z_Ed,
+    N_Ed_kN,
+    M_y_Ed_kNm,
+    M_z_Ed_kNm,
   } = inputs;
 
-  const { fy } = getSteelGrade(steel_grade_id);
-  const actions = { N_Ed, M_y_Ed, M_z_Ed };
+  const { fy_MPa } = getSteelGrade(steel_grade_id);
+  const actions = { N_Ed_kN, M_y_Ed_kNm, M_z_Ed_kNm };
 
   switch (shape) {
     case "I":
       return classifyISection(
         section_id,
         i_geometry,
-        fy,
+        fy_MPa,
         getIFabricationType(fabrication_type),
         actions,
       );
     case "RHS":
-      return classifyRhsSection(section_id, rhs_geometry, fy, actions);
+      return classifyRhsSection(section_id, rhs_geometry, fy_MPa, actions);
     case "CHS":
-      return classifyChsSection(chs_geometry, fy);
+      return classifyChsSection(chs_geometry, fy_MPa);
   }
 };

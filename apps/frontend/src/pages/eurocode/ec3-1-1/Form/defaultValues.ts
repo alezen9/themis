@@ -33,32 +33,29 @@ export const defaultValues = {
   section_class: "auto",
 
   // GEOMETRY
-  L: 5, // m
+  L_m: 5,
   i_geometry: {
-    h: defaultISection.h, // mm
-    b: defaultISection.b, // mm
-    tw: defaultISection.tw, // mm
-    tf: defaultISection.tf, // mm
-    r: defaultISection.r, // mm
+    h_mm: defaultISection.h_mm,
+    b_mm: defaultISection.b_mm,
+    tw_mm: defaultISection.tw_mm,
+    tf_mm: defaultISection.tf_mm,
+    r_mm: defaultISection.r_mm,
   },
   rhs_geometry: {
-    h: defaultRHSSection.h, // mm
-    b: defaultRHSSection.b, // mm
-    tw: defaultRHSSection.tw, // mm
-    ri: defaultRHSSection.ri, // mm
-    ro: defaultRHSSection.ro, // mm
+    h_mm: defaultRHSSection.h_mm,
+    b_mm: defaultRHSSection.b_mm,
+    tw_mm: defaultRHSSection.tw_mm,
+    ri_mm: defaultRHSSection.ri_mm,
+    ro_mm: defaultRHSSection.ro_mm,
   },
-  chs_geometry: {
-    d: defaultCHSSection.d, // mm
-    t: defaultCHSSection.t, // mm
-  },
+  chs_geometry: { d_mm: defaultCHSSection.d_mm, t_mm: defaultCHSSection.t_mm },
 
   // ACTIONS
-  N_Ed: -100_000, // kN
-  V_y_Ed: 10_000, // kN
-  V_z_Ed: 50_000, // kN
-  M_y_Ed: 20_000_000, // kNm
-  M_z_Ed: 5_000_000, // kN
+  N_Ed_kN: -100,
+  V_y_Ed_kN: 10,
+  V_z_Ed_kN: 50,
+  M_y_Ed_kNm: 20,
+  M_z_Ed_kNm: 5,
 
   // FLEXURAL BUCKLING
   k_y: 1,
