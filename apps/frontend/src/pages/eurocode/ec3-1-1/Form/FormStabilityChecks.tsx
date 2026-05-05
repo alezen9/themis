@@ -2,15 +2,11 @@ import { InputNumber } from "@components/inputs/InputNumber";
 import { InputSelect } from "@components/inputs/InputSelect";
 import { InputToggle } from "@components/inputs/InputToggle";
 import { HorizontalInput } from "@components/inputs/shared";
-import { useContext } from "react";
-import { useFormContext } from "react-hook-form";
-import { Ec311CustomRegisterContext } from "./Form";
 import {
   loadApplicationLTOptions,
   momentShapeOptions,
   supportConditionOptions,
 } from "./options";
-import { Ec3FormValues } from "./schema";
 import {
   LatexLabel,
   Section,
@@ -18,12 +14,11 @@ import {
   SpacingDivider,
   TextLabel,
 } from "./shared";
+import { useEc311FormContext } from "./useEc311FormContext";
 
 export const FormStabilityChecks = () => {
-  const { registerBoolean, registerNumber, registerSelect } = useContext(
-    Ec311CustomRegisterContext,
-  );
-  const { watch } = useFormContext<Ec3FormValues>();
+  const { registerBoolean, registerNumber, registerSelect, watch } =
+    useEc311FormContext();
   const includeTorsionalModes = watch("include_torsional_modes");
   const momentShape = watch("M_y_Ed_shape_LT");
   const isMomentShapeLinear = momentShape === "linear";

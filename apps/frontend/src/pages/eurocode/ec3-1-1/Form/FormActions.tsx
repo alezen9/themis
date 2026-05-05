@@ -1,11 +1,10 @@
 import { HorizontalInput } from "@components/inputs/shared";
 import { LatexLabel, Section, SectionTitle, SpacingDivider } from "./shared";
 import { InputNumber } from "@components/inputs/InputNumber";
-import { Ec311CustomRegisterContext } from "./Form";
-import { useContext } from "react";
+import { useEc311FormContext } from "./useEc311FormContext";
 
 export const FormActions = () => {
-  const { registerNumber } = useContext(Ec311CustomRegisterContext);
+  const { registerNumber } = useEc311FormContext();
 
   return (
     <Section>

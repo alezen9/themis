@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import {
   InfoTable,
   InfoTableHeaderCell,
@@ -12,15 +11,13 @@ import {
 import { HorizontalInput } from "@components/inputs/shared";
 import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
 import { steelGradeOptions } from "./options";
-import { Ec311CustomRegisterContext } from "./Form";
-import { useFormContext } from "react-hook-form";
-import { Ec3FormValues } from "./schema";
 import { steelGradesMap } from "../data/steelGrades";
 import { Latex } from "@components/Latex";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
+import { useEc311FormContext } from "./useEc311FormContext";
 
 export const FormMaterial = () => {
-  const { registerSelect } = useContext(Ec311CustomRegisterContext);
+  const { registerSelect } = useEc311FormContext();
   return (
     <Section>
       <SectionTitle>Material</SectionTitle>
@@ -39,7 +36,7 @@ export const FormMaterial = () => {
 };
 
 const AdditionalInfoRow = () => {
-  const { watch } = useFormContext<Ec3FormValues>();
+  const { watch } = useEc311FormContext();
   const gradeId = watch("steel_grade_id");
 
   const grade = steelGradesMap.get(gradeId);

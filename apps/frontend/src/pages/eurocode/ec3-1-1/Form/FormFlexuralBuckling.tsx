@@ -9,10 +9,7 @@ import {
 import { InputSelect } from "@components/inputs/InputSelect";
 import { InputNumber } from "@components/inputs/InputNumber";
 import { momentShapeOptions, supportConditionOptions } from "./options";
-import { Ec311CustomRegisterContext } from "./Form";
-import { useContext } from "react";
-import { useFormContext } from "react-hook-form";
-import { Ec3FormValues } from "./schema";
+import { useEc311FormContext } from "./useEc311FormContext";
 
 export const FormFlexuralBuckling = () => {
   return (
@@ -26,10 +23,7 @@ export const FormFlexuralBuckling = () => {
 };
 
 const MomentY = () => {
-  const { registerNumber, registerSelect } = useContext(
-    Ec311CustomRegisterContext,
-  );
-  const { watch } = useFormContext<Ec3FormValues>();
+  const { registerNumber, registerSelect, watch } = useEc311FormContext();
   const momentShape = watch("M_y_Ed_shape");
   const isMomentShapeLinear = momentShape === "linear";
   const isMomentShapeParabolic = momentShape === "parabolic";
@@ -81,10 +75,7 @@ const MomentY = () => {
 };
 
 const MomentZ = () => {
-  const { registerNumber, registerSelect } = useContext(
-    Ec311CustomRegisterContext,
-  );
-  const { watch } = useFormContext<Ec3FormValues>();
+  const { registerNumber, registerSelect, watch } = useEc311FormContext();
   const momentShape = watch("M_z_Ed_shape");
   const isMomentShapeLinear = momentShape === "linear";
   const isMomentShapeParabolic = momentShape === "parabolic";

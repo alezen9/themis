@@ -10,12 +10,10 @@ import {
   sectionClassOptions,
   customSectionId,
 } from "./options";
-import { useCallback, useContext } from "react";
-import { Ec311CustomRegisterContext } from "./Form";
+import { useCallback } from "react";
 import { InputRadio } from "@components/inputs/InputRadio";
 import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
-import { ChangeHandler, useFormContext } from "react-hook-form";
-import { Ec3FormValues } from "./schema";
+import { ChangeHandler } from "react-hook-form";
 import {
   defaultCHSSection,
   defaultISection,
@@ -26,6 +24,7 @@ import {
   getIShapePatchFields,
   getRhsShapePatchFields,
 } from "./utils";
+import { useEc311FormContext } from "./useEc311FormContext";
 
 const sectionOptionsMap = {
   I: { options: flangedSectionOptions, defaultValue: defaultISection.id },
@@ -40,8 +39,8 @@ const fabricationTypeOptionsMap = {
 };
 
 export const FormSection = () => {
-  const { register, registerSelect } = useContext(Ec311CustomRegisterContext);
-  const { watch, reset, getValues } = useFormContext<Ec3FormValues>();
+  const { register, registerSelect, watch, reset, getValues } =
+    useEc311FormContext();
   const shape = watch("shape");
 
   const onSectionChange = useCallback<ChangeHandler>(

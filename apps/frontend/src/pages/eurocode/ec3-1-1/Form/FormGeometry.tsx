@@ -11,10 +11,7 @@ import {
   SpacingDivider,
 } from "./shared";
 import { InputNumber } from "@components/inputs/InputNumber";
-import { useContext, useEffect, useState } from "react";
-import { Ec311CustomRegisterContext } from "./Form";
-import { useFormContext } from "react-hook-form";
-import { Ec3FormValues } from "./schema";
+import { useEffect, useState } from "react";
 import { DrawingIShape } from "./DrawingIShape";
 import { DrawingRhsShape } from "./DrawingRhsShape";
 import { DrawingChsShape } from "./DrawingChsShape";
@@ -22,15 +19,15 @@ import { customSectionId } from "./options";
 import { Latex } from "@components/Latex";
 import { computeSectionProperties } from "../domain/geometry/sectionProperties";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
+import { useEc311FormContext } from "./useEc311FormContext";
 
-const mm2Unit = String.raw`\mathrm{mm}^2`;
-const mm3Unit = String.raw`\mathrm{mm}^3`;
-const mm4Unit = String.raw`\mathrm{mm}^4`;
-const mm6Unit = String.raw`\mathrm{mm}^6`;
+const mm2Unit = "\mathrm{mm}^2";
+const mm3Unit = "\mathrm{mm}^3";
+const mm4Unit = "\mathrm{mm}^4";
+const mm6Unit = "\mathrm{mm}^6";
 
 export const FormGeometry = () => {
-  const { registerNumber } = useContext(Ec311CustomRegisterContext);
-  const { watch } = useFormContext<Ec3FormValues>();
+  const { registerNumber, watch } = useEc311FormContext();
   const shape = watch("shape");
   const sectionId = watch("section_id");
   const isCustomSection = sectionId === customSectionId;
@@ -115,7 +112,7 @@ export const FormGeometry = () => {
 };
 
 const SectionPropertiesInfo = () => {
-  const { subscribe, getValues } = useFormContext<Ec3FormValues>();
+  const { subscribe, getValues } = useEc311FormContext();
   const [computedProperties, setComputedProperties] = useState(() =>
     computeSectionProperties(getValues()),
   );

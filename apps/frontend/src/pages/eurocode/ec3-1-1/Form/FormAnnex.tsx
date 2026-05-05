@@ -8,13 +8,10 @@ import {
   interactionFactorMethodOptions,
 } from "./options";
 import { InputNumber } from "@components/inputs/InputNumber";
-import { Ec311CustomRegisterContext } from "./Form";
-import { useContext } from "react";
+import { useEc311FormContext } from "./useEc311FormContext";
 
 export const FormAnnex = () => {
-  const { registerNumber, registerSelect } = useContext(
-    Ec311CustomRegisterContext,
-  );
+  const { registerNumber, registerSelect } = useEc311FormContext();
 
   return (
     <Section>

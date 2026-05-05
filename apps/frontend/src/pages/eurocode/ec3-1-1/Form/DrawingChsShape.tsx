@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useFormContext } from "react-hook-form";
 import { Pluton2D } from "pluton-2d";
 import { Ec3FormValues } from "./schema";
 import { formatDimension } from "./utils";
+import { useEc311FormContext } from "./useEc311FormContext";
 
 type DrawingShapeParams = Ec3FormValues["chs_geometry"];
 
@@ -15,7 +15,7 @@ const thicknessDimensionAngle = -Math.PI / 4; // -45deg
 export const DrawingChsShape = () => {
   const ref = useRef<SVGSVGElement>(null);
   const scene = useRef<Pluton2D<DrawingShapeParams> | undefined>(undefined);
-  const { getValues, subscribe } = useFormContext<Ec3FormValues>();
+  const { getValues, subscribe } = useEc311FormContext();
 
   const updateSceneParams = useCallback<
     Parameters<typeof subscribe>[0]["callback"]

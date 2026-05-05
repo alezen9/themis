@@ -1,8 +1,3 @@
-import { createContext, ReactNode, useCallback, useEffect } from "react";
-import { FormProvider, get, useForm, useFormContext } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Ec3FormValues, schema } from "./schema";
-import { defaultValues } from "./defaultValues";
 import { FormShape } from "./FormShape";
 import { LineDivider } from "./shared";
 import { FormSection } from "./FormSection";
@@ -14,115 +9,30 @@ import { FormFlexuralBuckling } from "./FormFlexuralBuckling";
 import { FormStabilityChecks } from "./FormStabilityChecks";
 
 export const Form = () => {
-  const form = useForm<Ec3FormValues>({
-    defaultValues,
-    mode: "onChange",
-    resolver: zodResolver(schema),
-    shouldUnregister: false,
-  });
-  const { register } = form;
-
-  const registerNumber = useCallback<Ec311RegisterNumber>(
-    (name) => register(name, { setValueAs: setValueAsNumber }),
-    [register],
-  );
-
-  const registerSelect = useCallback<Ec311RegisterSelect>(
-    (name) => ({ ...register(name), defaultValue: get(defaultValues, name) }),
-    [register],
-  );
-
-  const registerBoolean = useCallback<Ec311RegisterBoolean>(
-    (name) => ({ ...register(name), defaultChecked: get(defaultValues, name) }),
-    [register],
-  );
-
   return (
-    <FormProvider {...form}>
-      <Observer>
-        <Ec311CustomRegisterContext
-          value={{ register, registerNumber, registerSelect, registerBoolean }}
-        >
-          <div className="w-96 flex flex-col gap-8 h-full border-r border-slate-300 pr-4">
-            <FormShape />
-            <LineDivider />
+    <div className="w-96 flex flex-col gap-8 h-full border-r border-slate-300 pr-4">
+      <FormShape />
+      <LineDivider />
 
-            <FormMaterial />
-            <LineDivider />
+      <FormMaterial />
+      <LineDivider />
 
-            <FormSection />
-            <LineDivider />
+      <FormSection />
+      <LineDivider />
 
-            <FormGeometry />
-            <LineDivider />
+      <FormGeometry />
+      <LineDivider />
 
-            <FormActions />
-            <LineDivider />
+      <FormActions />
+      <LineDivider />
 
-            <FormFlexuralBuckling />
-            <LineDivider />
+      <FormFlexuralBuckling />
+      <LineDivider />
 
-            <FormStabilityChecks />
-            <LineDivider />
+      <FormStabilityChecks />
+      <LineDivider />
 
-            <FormAnnex />
-          </div>
-        </Ec311CustomRegisterContext>
-      </Observer>
-    </FormProvider>
+      <FormAnnex />
+    </div>
   );
-};
-
-const Observer = ({ children }: { children: ReactNode }) => {
-  const { subscribe } = useFormContext<Ec3FormValues>();
-
-  const onChange = useCallback<Parameters<typeof subscribe>[0]["callback"]>(
-    ({ values }) => {
-      console.log(values);
-    },
-    [],
-  );
-
-  useEffect(() => {
-    const unsubscribe = subscribe({
-      formState: { values: true },
-      callback: onChange,
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [subscribe, onChange]);
-
-  return children;
-};
-
-type Ec311Register = ReturnType<typeof useForm<Ec3FormValues>>["register"];
-type Ec311RegisterNumber = (
-  name: Parameters<Ec311Register>[0],
-) => ReturnType<Ec311Register>;
-type Ec311RegisterSelect = (
-  name: Parameters<Ec311Register>[0],
-) => ReturnType<Ec311Register> & { defaultValue: string | number | undefined };
-type Ec311RegisterBoolean = (
-  name: Parameters<Ec311Register>[0],
-) => ReturnType<Ec311Register> & { defaultChecked: boolean | undefined };
-
-export const Ec311CustomRegisterContext = createContext<{
-  register?: Ec311Register;
-  registerNumber?: Ec311RegisterNumber;
-  registerSelect?: Ec311RegisterSelect;
-  registerBoolean?: Ec311RegisterBoolean;
-}>({});
-
-const setValueAsNumber = (value: unknown) => {
-  if (!value) return;
-  try {
-    const valueAsNumber = Number(value);
-    if (isNaN(valueAsNumber)) return;
-    return valueAsNumber;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    return;
-  }
 };
