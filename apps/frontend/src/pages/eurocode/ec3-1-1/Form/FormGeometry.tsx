@@ -17,7 +17,7 @@ import { DrawingRhsShape } from "./DrawingRhsShape";
 import { DrawingChsShape } from "./DrawingChsShape";
 import { customSectionId } from "./options";
 import { Latex } from "@components/Latex";
-import { computeSectionProperties } from "../domain/geometry/sectionProperties";
+import { computeSectionProperties } from "../domain/geometry/computeSectionProperties";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
 import { useEc311FormContext } from "./useEc311FormContext";
 

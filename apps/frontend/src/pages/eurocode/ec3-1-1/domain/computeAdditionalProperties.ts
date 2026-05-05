@@ -3,7 +3,7 @@ import { additionalPropertiesSchema } from "./additionalPropertiesSchema";
 import { computeBucklingProperties } from "./buckling/buckling";
 import { computeClassificationProperties } from "./classification/sectionClassification";
 import type { Ec3FormValues } from "../Form/schema";
-import { computeSectionProperties } from "./geometry/sectionProperties";
+import { computeSectionProperties } from "./geometry/computeSectionProperties";
 
 const computeYieldStrength = (gradeId: Ec3FormValues["gradeId"]) =>
   steelGradesMap.get(gradeId)?.fy ?? Number.NaN;

@@ -1,5 +1,5 @@
 import type { Ec3FormValues } from "../../Form/schema";
-import { computeSectionProperties } from "../geometry/sectionProperties";
+import { computeSectionProperties } from "../geometry/computeSectionProperties";
 import { computeChsSectionClassification } from "./sectionClassificationChs";
 import { computeISectionClassification } from "./sectionClassificationI";
 import { computeRhsSectionClassification } from "./sectionClassificationRhs";
