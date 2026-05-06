@@ -3,11 +3,11 @@ import type { Ec3FormValues } from "../../Form/schema";
 
 type Geometry = Ec3FormValues["chs_geometry"];
 
-export const computeChsSectionProperties = (
+export const computeChsGeometryProperties = (
   section_id: string,
   geometry: Geometry,
 ) => {
-  const existing = getExistingSectionProperties(section_id);
+  const existing = getExistingGeometryProperties(section_id);
   const d_mm = geometry.d_mm;
   const t_mm = geometry.t_mm;
   const di_mm = d_mm - 2 * t_mm;
@@ -38,7 +38,7 @@ export const computeChsSectionProperties = (
   };
 };
 
-const getExistingSectionProperties = (section_id: string) => {
+const getExistingGeometryProperties = (section_id: string) => {
   const section = circularSectionsMap.get(section_id);
   if (!section) return;
   const { A_mm2, Iy_mm4, Wpl_y_mm3, It_mm4 } = section;

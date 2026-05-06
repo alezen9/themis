@@ -17,7 +17,7 @@ import { DrawingRhsShape } from "./DrawingRhsShape";
 import { DrawingChsShape } from "./DrawingChsShape";
 import { customSectionId } from "./options";
 import { Latex } from "@components/Latex";
-import { computeSectionProperties } from "../domain/geometry/computeSectionProperties";
+import { computeGeometryProperties } from "../domain/geometry/computeGeometryProperties";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
 import { useEc311FormContext } from "./useEc311FormContext";
 
@@ -41,7 +41,7 @@ export const FormGeometry = () => {
       {shape === "CHS" && <DrawingChsShape />}
 
       <SpacingDivider />
-      <SectionPropertiesInfo />
+      <GeometryPropertiesInfo />
       <SpacingDivider />
 
       <HorizontalInput name="L_m" label={<LatexLabel tex="L" />}>
@@ -138,10 +138,10 @@ export const FormGeometry = () => {
   );
 };
 
-const SectionPropertiesInfo = () => {
+const GeometryPropertiesInfo = () => {
   const { subscribe, getValues } = useEc311FormContext();
   const [computedProperties, setComputedProperties] = useState(() =>
-    computeSectionProperties(getValues()),
+    computeGeometryProperties(getValues()),
   );
 
   useEffect(() => {
@@ -156,7 +156,7 @@ const SectionPropertiesInfo = () => {
       exact: true,
       formState: { values: true },
       callback: ({ values }) => {
-        const computed = computeSectionProperties(values);
+        const computed = computeGeometryProperties(values);
         setComputedProperties(computed);
       },
     });

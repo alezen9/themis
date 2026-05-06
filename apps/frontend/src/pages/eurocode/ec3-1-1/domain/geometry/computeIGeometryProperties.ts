@@ -3,11 +3,11 @@ import type { Ec3FormValues } from "../../Form/schema";
 
 type Geometry = Ec3FormValues["i_geometry"];
 
-export const computeISectionProperties = (
+export const computeIGeometryProperties = (
   section_id: string,
   geometry: Geometry,
 ) => {
-  const existing = getExistingSectionProperties(section_id);
+  const existing = getExistingGeometryProperties(section_id);
   const h_mm = geometry.h_mm;
   const b_mm = geometry.b_mm;
   const tw_mm = geometry.tw_mm;
@@ -61,7 +61,7 @@ export const computeISectionProperties = (
   };
 };
 
-const getExistingSectionProperties = (section_id: string) => {
+const getExistingGeometryProperties = (section_id: string) => {
   const section = flangedSectionsMap.get(section_id);
   if (!section) return;
   const { A_mm2, Iy_mm4, Iz_mm4, Wpl_y_mm3, Wpl_z_mm3, It_mm4, Iw_mm6 } =

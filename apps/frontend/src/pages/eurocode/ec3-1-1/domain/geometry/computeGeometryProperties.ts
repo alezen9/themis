@@ -1,7 +1,7 @@
 import type { Ec3FormValues } from "../../Form/schema";
-import { computeChsSectionProperties } from "./computeChsSectionProperties";
-import { computeISectionProperties } from "./computeISectionProperties";
-import { computeRhsSectionProperties } from "./computeRhsSectionProperties";
+import { computeChsGeometryProperties } from "./computeChsGeometryProperties";
+import { computeIGeometryProperties } from "./computeIGeometryProperties";
+import { computeRhsGeometryProperties } from "./computeRhsGeometryProperties";
 
 type SectionIdObj = Pick<Ec3FormValues, "section_id">;
 type I_GeometryObj = Pick<Ec3FormValues, "i_geometry">;
@@ -37,16 +37,16 @@ type GeometricProperties = {
   Iw_mm6: number;
 };
 
-export const computeSectionProperties = (
+export const computeGeometryProperties = (
   inputs: Inputs,
 ): GeometricProperties => {
   const { shape, section_id, i_geometry, rhs_geometry, chs_geometry } = inputs;
   switch (shape) {
     case "I":
-      return computeISectionProperties(section_id, i_geometry);
+      return computeIGeometryProperties(section_id, i_geometry);
     case "RHS":
-      return computeRhsSectionProperties(section_id, rhs_geometry);
+      return computeRhsGeometryProperties(section_id, rhs_geometry);
     case "CHS":
-      return computeChsSectionProperties(section_id, chs_geometry);
+      return computeChsGeometryProperties(section_id, chs_geometry);
   }
 };

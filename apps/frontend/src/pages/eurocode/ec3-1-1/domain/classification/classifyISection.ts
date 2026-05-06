@@ -1,6 +1,6 @@
 import type { SteelGrade } from "../../data/steelGrades";
 import type { Ec3FormValues } from "../../Form/schema";
-import { computeSectionProperties } from "../geometry/computeSectionProperties";
+import { computeGeometryProperties } from "../geometry/computeGeometryProperties";
 import { classifyInternalPart } from "./classifyInternalPart";
 import { classifyOutstandPart } from "./classifyOutstandPart";
 import {
@@ -30,7 +30,7 @@ export const classifyISection = (
 ) => {
   const { N_Ed_kN, M_y_Ed_kNm, M_z_Ed_kNm } = actions;
   const { h_mm, b_mm, tw_mm, tf_mm, r_mm } = i_geometry;
-  const { A_mm2, Iy_mm4, Iz_mm4 } = computeSectionProperties({
+  const { A_mm2, Iy_mm4, Iz_mm4 } = computeGeometryProperties({
     shape: "I",
     section_id,
     i_geometry,
