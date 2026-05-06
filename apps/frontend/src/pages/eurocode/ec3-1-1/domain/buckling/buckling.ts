@@ -1,122 +1,126 @@
-import { fabricationTypeValues, shapeValues } from "../../Form/options";
+import { steelGradesMap } from "../../data/steelGrades";
 import type { Ec3FormValues } from "../../Form/schema";
 
-type FabricationType = (typeof fabricationTypeValues)[number];
-type SectionShape = (typeof shapeValues)[number];
-type HollowSectionShape = Exclude<SectionShape, "I">;
-
 type BucklingCurve = "a0" | "a" | "b" | "c" | "d";
+type FlexuralBucklingCurves = { y: BucklingCurve; z: BucklingCurve };
 
-const EC3_IMPERFECTION_FACTORS = {
-  a0: 0.13,
-  a: 0.21,
-  b: 0.34,
-  c: 0.49,
-  d: 0.76,
-} satisfies Record<BucklingCurve, number>;
-
-type BucklingCurvesYZ = { y: BucklingCurve; z: BucklingCurve };
-type BucklingCurves = BucklingCurvesYZ & { lt: BucklingCurve };
-
-type ISectionBucklingInput = Pick<
-  Extract<Ec3FormValues, { shape: "I" }>,
-  "shape" | "fabricationType" | "h" | "b" | "tf"
+type Input = Pick<
+  Ec3FormValues,
+  | "shape"
+  | "fabrication_type"
+  | "steel_grade_id"
+  | "i_geometry"
+  | "buckling_curves_LT_policy"
 >;
 
-type RhsSectionBucklingInput = Pick<
-  Extract<Ec3FormValues, { shape: "RHS" }>,
-  "shape" | "fabricationType"
->;
-
-type ChsSectionBucklingInput = Pick<
-  Extract<Ec3FormValues, { shape: "CHS" }>,
-  "shape" | "fabricationType"
->;
-
-type SectionBucklingInput =
-  | ISectionBucklingInput
-  | RhsSectionBucklingInput
-  | ChsSectionBucklingInput;
-
-const EC3_HOLLOW_SECTION_BUCKLING_CURVES: Record<
-  HollowSectionShape,
-  Record<FabricationType, BucklingCurvesYZ>
-> = {
-  RHS: { rolled: { y: "a", z: "a" }, welded: { y: "b", z: "b" } },
-  CHS: { rolled: { y: "a", z: "a" }, welded: { y: "a", z: "a" } },
+type ISectionBucklingInput = {
+  fabrication_type: Ec3FormValues["fabrication_type"];
+  hOverB: number;
+  tf_mm: number;
+  isS460: boolean;
 };
 
-const EC3_HOLLOW_SECTION_LT_CURVES: Record<
-  HollowSectionShape,
-  Record<FabricationType, BucklingCurve>
-> = { RHS: { rolled: "a", welded: "a" }, CHS: { rolled: "a", welded: "a" } };
+type HollowSectionBucklingInput = {
+  fabrication_type: Ec3FormValues["fabrication_type"];
+  isS460: boolean;
+};
 
-type BucklingSelectionInput =
-  | { shape: "I"; fabricationType: FabricationType; hOverB: number; tf: number }
-  | { shape: HollowSectionShape; fabricationType: FabricationType };
+type LateralTorsionalBucklingInput = {
+  fabrication_type: Ec3FormValues["fabrication_type"];
+  hOverB: number;
+  policy: Ec3FormValues["buckling_curves_LT_policy"];
+};
 
-export const getImperfectionFactor = (curve: BucklingCurve) =>
-  EC3_IMPERFECTION_FACTORS[curve];
-
-const computeISectionBucklingCurves = (
-  fabricationType: FabricationType,
-  hOverB: number,
-  tf: number,
-): BucklingCurves => ({
-  ...(fabricationType === "rolled"
-    ? hOverB > 1.2
-      ? tf <= 40
-        ? { y: "a", z: "b" }
-        : { y: "b", z: "c" }
-      : tf <= 100
-        ? { y: "b", z: "c" }
-        : { y: "d", z: "d" }
-    : tf <= 40
-      ? { y: "b", z: "c" }
-      : { y: "c", z: "d" }),
-  lt: hOverB > 2 ? "a" : "b",
-});
-
-export const getBucklingCurves = (
-  input: BucklingSelectionInput,
-): BucklingCurves => {
-  if (input.shape === "I") {
-    return computeISectionBucklingCurves(
-      input.fabricationType,
-      input.hOverB,
-      input.tf,
+const getIFlexuralBucklingCurves = (
+  input: ISectionBucklingInput,
+): FlexuralBucklingCurves => {
+  const { fabrication_type, tf_mm, isS460, hOverB } = input;
+  if (fabrication_type !== "welded" && fabrication_type !== "rolled")
+    throw new Error(
+      `Received fabrication_type ${fabrication_type} but expected either "rolled" or "welded`,
     );
+  if (fabrication_type === "welded") {
+    if (tf_mm <= 40) return { y: "b", z: "c" };
+    return { y: "c", z: "d" };
+  }
+
+  if (hOverB > 1.2) {
+    if (tf_mm <= 40) {
+      if (isS460) return { y: "a0", z: "a0" };
+      return { y: "a", z: "b" };
+    }
+
+    if (isS460) return { y: "a", z: "a" };
+    return { y: "b", z: "c" };
+  }
+
+  if (tf_mm <= 100) {
+    if (isS460) return { y: "a", z: "a" };
+    return { y: "b", z: "c" };
+  }
+
+  if (isS460) return { y: "c", z: "c" };
+
+  return { y: "d", z: "d" };
+};
+
+const getHollowFlexuralBucklingCurves = (
+  input: HollowSectionBucklingInput,
+): FlexuralBucklingCurves => {
+  const { fabrication_type, isS460 } = input;
+  if (fabrication_type === "cold-formed") return { y: "c", z: "c" };
+  if (isS460) return { y: "a0", z: "a0" };
+  return { y: "a", z: "a" };
+};
+
+const getILateralTorsionalBucklingCurve = (
+  input: LateralTorsionalBucklingInput,
+): BucklingCurve => {
+  const { hOverB, policy, fabrication_type } = input;
+  const isSlender = hOverB > 2;
+
+  if (policy === "general") {
+    if (fabrication_type === "rolled") return isSlender ? "b" : "a";
+    return isSlender ? "d" : "c";
+  }
+
+  if (fabrication_type === "rolled") return isSlender ? "c" : "b";
+  return isSlender ? "d" : "c";
+};
+
+export const getBucklingCurves = (input: Input) => {
+  const {
+    steel_grade_id,
+    shape,
+    fabrication_type,
+    i_geometry,
+    buckling_curves_LT_policy,
+  } = input;
+
+  const steelGrade = steelGradesMap.get(steel_grade_id);
+  if (!steelGrade) throw new Error(`Unknown steel grade: ${steel_grade_id}`);
+  const isS460 = steelGrade.fy_MPa === 460;
+
+  if (shape === "I") {
+    const hOverB = i_geometry.h_mm / i_geometry.b_mm;
+
+    return {
+      ...getIFlexuralBucklingCurves({
+        fabrication_type,
+        hOverB,
+        tf_mm: i_geometry.tf_mm,
+        isS460,
+      }),
+      lt: getILateralTorsionalBucklingCurve({
+        fabrication_type,
+        hOverB,
+        policy: buckling_curves_LT_policy,
+      }),
+    };
   }
 
   return {
-    ...EC3_HOLLOW_SECTION_BUCKLING_CURVES[input.shape][input.fabricationType],
-    lt: EC3_HOLLOW_SECTION_LT_CURVES[input.shape][input.fabricationType],
-  };
-};
-
-export const computeBucklingProperties = (
-  inputs: SectionBucklingInput | Ec3FormValues,
-) => {
-  const curves =
-    inputs.shape === "I"
-      ? getBucklingCurves({
-          shape: "I",
-          fabricationType: inputs.fabricationType,
-          hOverB: inputs.h / inputs.b,
-          tf: inputs.tf,
-        })
-      : getBucklingCurves({
-          shape: inputs.shape,
-          fabricationType: inputs.fabricationType,
-        });
-
-  return {
-    section_shape: inputs.shape,
-    buckling_curve_y: curves.y,
-    buckling_curve_z: curves.z,
-    buckling_curve_LT: curves.lt,
-    alpha_y: getImperfectionFactor(curves.y),
-    alpha_z: getImperfectionFactor(curves.z),
-    alpha_LT: getImperfectionFactor(curves.lt),
+    ...getHollowFlexuralBucklingCurves({ fabrication_type, isS460 }),
+    lt: "d",
   };
 };

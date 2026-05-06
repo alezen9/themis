@@ -37,16 +37,6 @@ export const steelGrades: SteelGrade[] = [
     fu_above_40_MPa: 470,
   },
   {
-    id: "S450",
-    standard: "EN10025-2",
-    standardDescription: "Hot rolled products - Non-alloy structural steels",
-    fy_MPa: 450,
-    fy_above_40_MPa: 410,
-    fu_MPa: 550,
-    fu_above_40_MPa: 550,
-  },
-
-  {
     id: "S275 N / NL",
     standard: "EN10025-3",
     standardDescription:
