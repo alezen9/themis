@@ -3,7 +3,16 @@ import type { Ec3FormValues } from "../../Form/schema";
 import { computeSectionProperties } from "../geometry/computeSectionProperties";
 import { classifyInternalPart } from "./classifyInternalPart";
 import { classifyOutstandPart } from "./classifyOutstandPart";
-import { max } from "./utils";
+import {
+  computeInternalElasticState,
+  computeOutstandElasticState,
+} from "./elasticStress";
+import {
+  computeCompressionFraction,
+  isCompressed,
+  solvePlasticCompressionState,
+} from "./plasticCompression";
+import { createRectangle, max } from "./utils";
 
 type Geometry = Ec3FormValues["i_geometry"];
 type Actions = Pick<Ec3FormValues, "N_Ed_kN" | "M_y_Ed_kNm" | "M_z_Ed_kNm">;
@@ -47,53 +56,76 @@ export const classifyISection = (
     N_Ed_N / A_mm2 +
     (M_y_Ed_Nmm * z_mm) / Iy_mm4 +
     (M_z_Ed_Nmm * y_mm) / Iz_mm4;
+  const compressionStressAt = (y_mm: number, z_mm: number) =>
+    -stressAt(y_mm, z_mm);
+  const plasticState = solvePlasticCompressionState({
+    polygons: [
+      createRectangle({ y_mm: 0, z_mm: h_mm / 2 - tf_mm / 2 }, b_mm, tf_mm),
+      createRectangle({ y_mm: 0, z_mm: -h_mm / 2 + tf_mm / 2 }, b_mm, tf_mm),
+      createRectangle({ y_mm: 0, z_mm: 0 }, tw_mm, h_mm - 2 * tf_mm),
+    ],
+    fy_MPa,
+    N_Ed_N,
+    M_y_Ed_Nmm,
+    M_z_Ed_Nmm,
+  });
 
-  const webTopStress = stressAt(0, h_mm / 2 - tf_mm - r_mm);
-  const webBottomStress = stressAt(0, -h_mm / 2 + tf_mm + r_mm);
+  const webTop = { y_mm: 0, z_mm: h_mm / 2 - tf_mm - r_mm };
+  const webBottom = { y_mm: 0, z_mm: -h_mm / 2 + tf_mm + r_mm };
+  const webElasticState = computeInternalElasticState({
+    stressA_MPa: compressionStressAt(webTop.y_mm, webTop.z_mm),
+    stressB_MPa: compressionStressAt(webBottom.y_mm, webBottom.z_mm),
+  });
 
   const topFlangeZ_mm = h_mm / 2 - tf_mm / 2;
   const bottomFlangeZ_mm = -h_mm / 2 + tf_mm / 2;
-  const leftFreeEdgeY_mm = -b_mm / 2;
-  const leftWebEdgeY_mm = -tw_mm / 2 - r_mm;
-  const rightWebEdgeY_mm = tw_mm / 2 + r_mm;
-  const rightFreeEdgeY_mm = b_mm / 2;
 
   const webClass = classifyInternalPart({
     slenderness: webSlenderness,
     epsilon,
     fy_MPa,
-    stressEdgeA: webTopStress,
-    stressEdgeB: webBottomStress,
+    alpha: computeCompressionFraction(plasticState, webTop, webBottom),
+    psi: webElasticState.psi,
+    compressionStress_MPa: webElasticState.compressionStress_MPa,
+    tensionStress_MPa: webElasticState.tensionStress_MPa,
   });
 
   const flangeClass = max(
-    classifyOutstandPart({
+    classifyFlangeOutstand({
       slenderness: flangeSlenderness,
       epsilon,
       fabrication_type,
-      webStress: stressAt(leftWebEdgeY_mm, topFlangeZ_mm),
-      tipStress: stressAt(leftFreeEdgeY_mm, topFlangeZ_mm),
+      plasticState,
+      compressionStressAt,
+      webPoint: { y_mm: -tw_mm / 2 - r_mm, z_mm: topFlangeZ_mm },
+      tipPoint: { y_mm: -b_mm / 2, z_mm: topFlangeZ_mm },
     }),
-    classifyOutstandPart({
+    classifyFlangeOutstand({
       slenderness: flangeSlenderness,
       epsilon,
       fabrication_type,
-      webStress: stressAt(rightWebEdgeY_mm, topFlangeZ_mm),
-      tipStress: stressAt(rightFreeEdgeY_mm, topFlangeZ_mm),
+      plasticState,
+      compressionStressAt,
+      webPoint: { y_mm: tw_mm / 2 + r_mm, z_mm: topFlangeZ_mm },
+      tipPoint: { y_mm: b_mm / 2, z_mm: topFlangeZ_mm },
     }),
-    classifyOutstandPart({
+    classifyFlangeOutstand({
       slenderness: flangeSlenderness,
       epsilon,
       fabrication_type,
-      webStress: stressAt(leftWebEdgeY_mm, bottomFlangeZ_mm),
-      tipStress: stressAt(leftFreeEdgeY_mm, bottomFlangeZ_mm),
+      plasticState,
+      compressionStressAt,
+      webPoint: { y_mm: -tw_mm / 2 - r_mm, z_mm: bottomFlangeZ_mm },
+      tipPoint: { y_mm: -b_mm / 2, z_mm: bottomFlangeZ_mm },
     }),
-    classifyOutstandPart({
+    classifyFlangeOutstand({
       slenderness: flangeSlenderness,
       epsilon,
       fabrication_type,
-      webStress: stressAt(rightWebEdgeY_mm, bottomFlangeZ_mm),
-      tipStress: stressAt(rightFreeEdgeY_mm, bottomFlangeZ_mm),
+      plasticState,
+      compressionStressAt,
+      webPoint: { y_mm: tw_mm / 2 + r_mm, z_mm: bottomFlangeZ_mm },
+      tipPoint: { y_mm: b_mm / 2, z_mm: bottomFlangeZ_mm },
     }),
   );
 
@@ -101,4 +133,42 @@ export const classifyISection = (
   if (sectionClass === 4) throw new Error("Class 4 is not supported");
 
   return sectionClass;
+};
+
+type Point = { y_mm: number; z_mm: number };
+
+type ClassifyFlangeOutstandInput = {
+  slenderness: number;
+  epsilon: number;
+  fabrication_type: FabricationType;
+  plasticState: Parameters<typeof computeCompressionFraction>[0];
+  compressionStressAt: (y_mm: number, z_mm: number) => number;
+  webPoint: Point;
+  tipPoint: Point;
+};
+
+const classifyFlangeOutstand = (input: ClassifyFlangeOutstandInput) => {
+  const {
+    slenderness,
+    epsilon,
+    fabrication_type,
+    plasticState,
+    compressionStressAt,
+    webPoint,
+    tipPoint,
+  } = input;
+  const elasticState = computeOutstandElasticState(
+    compressionStressAt(webPoint.y_mm, webPoint.z_mm),
+    compressionStressAt(tipPoint.y_mm, tipPoint.z_mm),
+  );
+
+  return classifyOutstandPart({
+    slenderness,
+    epsilon,
+    fabrication_type,
+    alpha: computeCompressionFraction(plasticState, webPoint, tipPoint),
+    plasticTipInCompression: isCompressed(plasticState, tipPoint),
+    elasticPsi: elasticState.psi,
+    elasticTipInCompression: elasticState.tipInCompression,
+  });
 };

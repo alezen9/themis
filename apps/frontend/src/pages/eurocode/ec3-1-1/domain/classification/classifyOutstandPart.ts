@@ -4,18 +4,18 @@ type Input = {
   slenderness: number;
   epsilon: number;
   fabrication_type: Ec3FormValues["fabrication_type"];
-  webStress: number;
-  tipStress: number;
+  alpha: number;
+  plasticTipInCompression: boolean;
+  elasticPsi: number;
+  elasticTipInCompression: boolean;
 };
 
 const classifyRolledOutstandPart = (
   slenderness: number,
   epsilon: number,
-  webStress: number,
-  tipStress: number,
+  alpha: number,
 ) => {
-  const compressionStress = Math.min(webStress, tipStress);
-  if (compressionStress >= 0) return 1;
+  if (alpha <= 0) return 1;
   if (slenderness <= 9 * epsilon) return 1;
   if (slenderness <= 10 * epsilon) return 2;
   if (slenderness <= 14 * epsilon) return 3;
@@ -23,59 +23,40 @@ const classifyRolledOutstandPart = (
 };
 
 const computeWeldedOutstandKSigma = (
-  webCompressionStress: number,
-  tipCompressionStress: number,
+  psi: number,
+  tipInCompression: boolean,
 ) => {
-  const isTipInCompression =
-    tipCompressionStress > 0 && tipCompressionStress >= webCompressionStress;
-
-  if (isTipInCompression) {
-    const stressRatio = webCompressionStress / tipCompressionStress;
-    if (stressRatio >= 1) return 0.43;
-    if (stressRatio > 0) return 0.578 / (stressRatio + 0.34);
-    if (stressRatio > -1)
-      return 1.7 - 5 * stressRatio + 17.1 * stressRatio ** 2;
-    return 23.8;
+  if (tipInCompression) {
+    const clampedPsi = Math.max(-3, Math.min(1, psi));
+    return 0.57 - 0.21 * clampedPsi + 0.07 * clampedPsi ** 2;
   }
 
-  if (webCompressionStress <= 0) return 0.43;
-
-  const stressRatio = tipCompressionStress / webCompressionStress;
-  const clampedStressRatio = Math.max(-3, Math.min(1, stressRatio));
-  return 0.57 - 0.21 * clampedStressRatio + 0.07 * clampedStressRatio ** 2;
+  if (psi >= 1) return 0.43;
+  if (psi > 0) return 0.578 / (psi + 0.34);
+  if (psi > -1) return 1.7 - 5 * psi + 17.1 * psi ** 2;
+  return 23.8;
 };
 
 const classifyWeldedOutstandPart = (
   slenderness: number,
   epsilon: number,
-  webStress: number,
-  tipStress: number,
+  alpha: number,
+  plasticTipInCompression: boolean,
+  elasticPsi: number,
+  elasticTipInCompression: boolean,
 ) => {
-  const webCompressionStress = -webStress;
-  const tipCompressionStress = -tipStress;
-  const maxCompressionStress = Math.max(
-    webCompressionStress,
-    tipCompressionStress,
-  );
-  if (maxCompressionStress <= 0) return 1;
+  if (alpha <= 0) return 1;
 
-  const minCompressionStress = Math.min(
-    webCompressionStress,
-    tipCompressionStress,
-  );
-  const alpha =
-    minCompressionStress >= 0
-      ? 1
-      : maxCompressionStress / (maxCompressionStress - minCompressionStress);
+  const class12Denominator = plasticTipInCompression
+    ? alpha
+    : alpha * Math.sqrt(alpha);
 
-  if (alpha <= 0) return 4;
-
-  if (slenderness <= (9 * epsilon) / alpha) return 1;
-  if (slenderness <= (10 * epsilon) / alpha) return 2;
+  if (slenderness <= (9 * epsilon) / class12Denominator) return 1;
+  if (slenderness <= (10 * epsilon) / class12Denominator) return 2;
 
   const kSigma = computeWeldedOutstandKSigma(
-    webCompressionStress,
-    tipCompressionStress,
+    elasticPsi,
+    elasticTipInCompression,
   );
   if (kSigma <= 0) return 4;
   if (slenderness <= 21 * epsilon * Math.sqrt(kSigma)) return 3;
@@ -84,18 +65,27 @@ const classifyWeldedOutstandPart = (
 };
 
 export const classifyOutstandPart = (input: Input) => {
-  const { slenderness, epsilon, fabrication_type, webStress, tipStress } =
-    input;
+  const {
+    slenderness,
+    epsilon,
+    fabrication_type,
+    alpha,
+    plasticTipInCompression,
+    elasticPsi,
+    elasticTipInCompression,
+  } = input;
   if (slenderness <= 0) return 4;
 
   if (fabrication_type === "welded") {
     return classifyWeldedOutstandPart(
       slenderness,
       epsilon,
-      webStress,
-      tipStress,
+      alpha,
+      plasticTipInCompression,
+      elasticPsi,
+      elasticTipInCompression,
     );
   }
 
-  return classifyRolledOutstandPart(slenderness, epsilon, webStress, tipStress);
+  return classifyRolledOutstandPart(slenderness, epsilon, alpha);
 };

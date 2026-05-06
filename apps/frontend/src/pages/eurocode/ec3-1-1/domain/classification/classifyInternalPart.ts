@@ -2,8 +2,10 @@ type Input = {
   slenderness: number;
   epsilon: number;
   fy_MPa: number;
-  stressEdgeA: number;
-  stressEdgeB: number;
+  alpha: number;
+  psi: number;
+  compressionStress_MPa: number;
+  tensionStress_MPa: number;
 };
 
 const computeClass1Limit = (alpha: number, epsilon: number) => {
@@ -29,30 +31,24 @@ const computeClass3Limit = (
 };
 
 export const classifyInternalPart = (input: Input) => {
-  const { slenderness, epsilon, fy_MPa, stressEdgeA, stressEdgeB } = input;
+  const {
+    slenderness,
+    epsilon,
+    fy_MPa,
+    alpha,
+    psi,
+    compressionStress_MPa,
+    tensionStress_MPa,
+  } = input;
   if (slenderness <= 0) return 4;
+  if (alpha <= 0) return 1;
 
-  const compressionStress = Math.min(stressEdgeA, stressEdgeB);
-  if (compressionStress >= 0) return 1;
-
-  const otherStress = Math.max(stressEdgeA, stressEdgeB);
-  const compressionMagnitude = -compressionStress;
-  const stressRatio = otherStress / compressionStress;
-  const tensionStress = Math.max(otherStress, 0);
   const canUseTensionBranch =
-    compressionMagnitude <= fy_MPa || tensionStress >= fy_MPa;
-  const alpha =
-    otherStress <= 0
-      ? 1
-      : compressionMagnitude / (otherStress - compressionStress);
-
-  if (alpha <= 0) return 4;
+    compressionStress_MPa <= fy_MPa || tensionStress_MPa >= fy_MPa;
 
   if (slenderness <= computeClass1Limit(alpha, epsilon)) return 1;
   if (slenderness <= computeClass2Limit(alpha, epsilon)) return 2;
-  if (
-    slenderness <= computeClass3Limit(stressRatio, epsilon, canUseTensionBranch)
-  )
+  if (slenderness <= computeClass3Limit(psi, epsilon, canUseTensionBranch))
     return 3;
 
   return 4;
