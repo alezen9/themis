@@ -32,18 +32,19 @@ export const classifyInternalPart = (input: Input) => {
   const { slenderness, epsilon, fy_MPa, stressEdgeA, stressEdgeB } = input;
   if (slenderness <= 0) return 4;
 
-  const maxCompressionStress = Math.max(stressEdgeA, stressEdgeB);
-  if (maxCompressionStress <= 0) return 1;
+  const compressionStress = Math.min(stressEdgeA, stressEdgeB);
+  if (compressionStress >= 0) return 1;
 
-  const minCompressionStress = Math.min(stressEdgeA, stressEdgeB);
-  const stressRatio = minCompressionStress / maxCompressionStress;
-  const tensionStress = Math.max(-minCompressionStress, 0);
+  const otherStress = Math.max(stressEdgeA, stressEdgeB);
+  const compressionMagnitude = -compressionStress;
+  const stressRatio = otherStress / compressionStress;
+  const tensionStress = Math.max(otherStress, 0);
   const canUseTensionBranch =
-    maxCompressionStress <= fy_MPa || tensionStress >= fy_MPa;
+    compressionMagnitude <= fy_MPa || tensionStress >= fy_MPa;
   const alpha =
-    minCompressionStress >= 0
+    otherStress <= 0
       ? 1
-      : maxCompressionStress / (maxCompressionStress - minCompressionStress);
+      : compressionMagnitude / (otherStress - compressionStress);
 
   if (alpha <= 0) return 4;
 

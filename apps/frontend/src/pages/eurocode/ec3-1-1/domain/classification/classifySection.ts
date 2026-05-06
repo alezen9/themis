@@ -48,7 +48,7 @@ export const classifySection = (inputs: Inputs) => {
     M_z_Ed_kNm,
   } = inputs;
 
-  const { fy_MPa } = getSteelGrade(steel_grade_id);
+  const steelGrade = getSteelGrade(steel_grade_id);
   const actions = { N_Ed_kN, M_y_Ed_kNm, M_z_Ed_kNm };
 
   switch (shape) {
@@ -56,13 +56,13 @@ export const classifySection = (inputs: Inputs) => {
       return classifyISection(
         section_id,
         i_geometry,
-        fy_MPa,
+        steelGrade,
         getIFabricationType(fabrication_type),
         actions,
       );
     case "RHS":
-      return classifyRhsSection(section_id, rhs_geometry, fy_MPa, actions);
+      return classifyRhsSection(section_id, rhs_geometry, steelGrade, actions);
     case "CHS":
-      return classifyChsSection(chs_geometry, fy_MPa);
+      return classifyChsSection(chs_geometry, steelGrade);
   }
 };

@@ -14,19 +14,23 @@ const classifyRolledOutstandPart = (
   webStress: number,
   tipStress: number,
 ) => {
-  const maxCompressionStress = Math.max(webStress, tipStress);
-  if (maxCompressionStress <= 0) return 1;
+  const compressionStress = Math.min(webStress, tipStress);
+  if (compressionStress >= 0) return 1;
   if (slenderness <= 9 * epsilon) return 1;
   if (slenderness <= 10 * epsilon) return 2;
   if (slenderness <= 14 * epsilon) return 3;
   return 4;
 };
 
-const computeWeldedOutstandKSigma = (webStress: number, tipStress: number) => {
-  const isTipInCompression = tipStress > 0 && tipStress >= webStress;
+const computeWeldedOutstandKSigma = (
+  webCompressionStress: number,
+  tipCompressionStress: number,
+) => {
+  const isTipInCompression =
+    tipCompressionStress > 0 && tipCompressionStress >= webCompressionStress;
 
   if (isTipInCompression) {
-    const stressRatio = webStress / tipStress;
+    const stressRatio = webCompressionStress / tipCompressionStress;
     if (stressRatio >= 1) return 0.43;
     if (stressRatio > 0) return 0.578 / (stressRatio + 0.34);
     if (stressRatio > -1)
@@ -34,9 +38,9 @@ const computeWeldedOutstandKSigma = (webStress: number, tipStress: number) => {
     return 23.8;
   }
 
-  if (webStress <= 0) return 0.43;
+  if (webCompressionStress <= 0) return 0.43;
 
-  const stressRatio = tipStress / webStress;
+  const stressRatio = tipCompressionStress / webCompressionStress;
   const clampedStressRatio = Math.max(-3, Math.min(1, stressRatio));
   return 0.57 - 0.21 * clampedStressRatio + 0.07 * clampedStressRatio ** 2;
 };
@@ -47,10 +51,18 @@ const classifyWeldedOutstandPart = (
   webStress: number,
   tipStress: number,
 ) => {
-  const maxCompressionStress = Math.max(webStress, tipStress);
+  const webCompressionStress = -webStress;
+  const tipCompressionStress = -tipStress;
+  const maxCompressionStress = Math.max(
+    webCompressionStress,
+    tipCompressionStress,
+  );
   if (maxCompressionStress <= 0) return 1;
 
-  const minCompressionStress = Math.min(webStress, tipStress);
+  const minCompressionStress = Math.min(
+    webCompressionStress,
+    tipCompressionStress,
+  );
   const alpha =
     minCompressionStress >= 0
       ? 1
@@ -61,7 +73,10 @@ const classifyWeldedOutstandPart = (
   if (slenderness <= (9 * epsilon) / alpha) return 1;
   if (slenderness <= (10 * epsilon) / alpha) return 2;
 
-  const kSigma = computeWeldedOutstandKSigma(webStress, tipStress);
+  const kSigma = computeWeldedOutstandKSigma(
+    webCompressionStress,
+    tipCompressionStress,
+  );
   if (kSigma <= 0) return 4;
   if (slenderness <= 21 * epsilon * Math.sqrt(kSigma)) return 3;
 
