@@ -1,5 +1,5 @@
 import { FormShape } from "./FormShape";
-import { LineDivider } from "./shared";
+import { LineDivider } from "@components/Dividers";
 import { FormSection } from "./FormSection";
 import { FormGeometry } from "./FormGeometry";
 import { FormMaterial } from "./FormMaterial";

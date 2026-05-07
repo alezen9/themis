@@ -31,10 +31,6 @@ export const SectionTitle = (props: ComponentPropsWithRef<"h4">) => {
   );
 };
 
-export const LineDivider = () => <div className="w-full h-px bg-slate-300" />;
-
-export const SpacingDivider = () => <div className="h-4" />;
-
 export const InfoTable = (props: ComponentProps<typeof Table>) => {
   const { className, ...rest } = props;
 

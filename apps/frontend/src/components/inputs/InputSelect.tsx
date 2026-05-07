@@ -56,8 +56,10 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
         name={name}
         onBlur={onBlur as OnBlur}
         className={twMerge(
+          "[--bg-color:var(--bg-input-default-color)]",
           "flex max-w-100 w-full grow gap-1 items-center h-9",
           "data-disabled:opacity-30  data-disabled:pointer-events-none",
+          "focus-within:[--bg-color:var(--bg-input-focus-color)]",
           "focus:outline-none",
         )}
       >
@@ -90,7 +92,7 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
       <Select.Portal>
         <Select.Positioner
           alignItemWithTrigger={false}
-          className="z-50 outline-none"
+          className="z-auto outline-none"
         >
           <Select.Popup
             className={twMerge(

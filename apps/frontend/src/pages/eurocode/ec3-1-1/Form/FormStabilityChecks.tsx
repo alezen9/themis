@@ -2,6 +2,7 @@ import { InputNumber } from "@components/inputs/InputNumber";
 import { InputSelect } from "@components/inputs/InputSelect";
 import { InputToggle } from "@components/inputs/InputToggle";
 import { HorizontalInput } from "@components/inputs/shared";
+import { SpacingDivider } from "@components/Dividers";
 import {
   loadApplicationLTOptions,
   momentShapeOptions,
@@ -11,7 +12,6 @@ import {
   LatexLabel,
   Section,
   SectionTitle,
-  SpacingDivider,
   TextLabel,
 } from "./shared";
 import { useEc311FormContext } from "./useEc311FormContext";

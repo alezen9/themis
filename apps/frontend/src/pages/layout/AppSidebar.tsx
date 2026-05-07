@@ -7,7 +7,7 @@ export const AppSidebar = () => {
   return (
     <aside
       className={twMerge(
-        "fixed left-0 top-0 z-10",
+        "fixed left-0 top-0 z-auto",
         "flex h-dvh w-84 flex-col",
         "bg-white px-4 py-9 text-slate-950",
         "before:absolute before:content-[' '] before:top-9 before:right-0 before:w-px before:h-[calc(100%-4rem)] before:bg-slate-300",

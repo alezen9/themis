@@ -25,16 +25,6 @@ export type EditorState = {
   autoLayoutVersion: number;
 };
 
-export const ndgEditorDraftFormat = "ndg-editor-draft" as const;
-export const ndgEditorDraftVersion = 1 as const;
-
-export type NdgEditorDraftV1 = {
-  format: typeof ndgEditorDraftFormat;
-  version: typeof ndgEditorDraftVersion;
-  nodesById: Record<string, Node>;
-  layoutById: Record<string, XYPosition>;
-};
-
 const horizontalGap = 320;
 const verticalGap = 220;
 const childStagger = 72;
@@ -111,55 +101,6 @@ const getCheckNodeId = (nodesById: Map<string, EditorNode>) => {
   }
 
   return null;
-};
-
-export const buildParentsByChildId = (nodesById: Map<string, EditorNode>) => {
-  const parentsByChildId = new Map<string, Set<string>>();
-
-  for (const node of nodesById.values()) {
-    for (const child of node.children) {
-      const parentIds = parentsByChildId.get(child.nodeId) ?? new Set<string>();
-      parentIds.add(node.id);
-      parentsByChildId.set(child.nodeId, parentIds);
-    }
-  }
-
-  return parentsByChildId;
-};
-
-export const buildReachableNodeIds = (nodesById: Map<string, EditorNode>) => {
-  const checkNodeId = getCheckNodeId(nodesById);
-  if (!checkNodeId) return new Set<string>();
-
-  const visited = new Set<string>();
-  const stack = [checkNodeId];
-
-  while (stack.length > 0) {
-    const nodeId = stack.pop();
-    if (!nodeId || visited.has(nodeId)) continue;
-
-    visited.add(nodeId);
-    const node = nodesById.get(nodeId);
-    if (!node) continue;
-
-    for (const child of node.children) {
-      stack.push(child.nodeId);
-    }
-  }
-
-  return visited;
-};
-
-export const getUnreachableNodeIds = (nodesById: Map<string, EditorNode>) => {
-  const reachableNodeIds = buildReachableNodeIds(nodesById);
-  const unreachableNodeIds = new Set<string>();
-
-  for (const nodeId of nodesById.keys()) {
-    if (reachableNodeIds.has(nodeId)) continue;
-    unreachableNodeIds.add(nodeId);
-  }
-
-  return unreachableNodeIds;
 };
 
 const hasPath = (
@@ -263,7 +204,7 @@ const getChildOffset = (childIndex: number) => {
   return direction * step * childStagger;
 };
 
-const buildInitialLayout = (nodesById: Map<string, EditorNode>) => {
+export const buildInitialLayout = (nodesById: Map<string, EditorNode>) => {
   if (nodesById.size === 0) return {};
 
   const components = collectWeakComponents(
@@ -398,7 +339,7 @@ const findCycleNodeId = (nodesById: Map<string, Node>) => {
   return null;
 };
 
-const validateNodes = (nodes: readonly Node[]): ValidateNodesResult => {
+export const validateNodes = (nodes: readonly Node[]): ValidateNodesResult => {
   const parsedNodes = VerificationSchema.safeParse([...nodes]);
   if (!parsedNodes.success) {
     return {
@@ -473,13 +414,13 @@ const validateNodes = (nodes: readonly Node[]): ValidateNodesResult => {
   return { error: null, nodes: parsedNodes.data } as const;
 };
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
+export const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
 const isFiniteNumber = (value: unknown): value is number =>
   typeof value === "number" && Number.isFinite(value);
 
-const isValidPosition = (value: unknown): value is XYPosition =>
+export const isValidPosition = (value: unknown): value is XYPosition =>
   isRecord(value) && isFiniteNumber(value.x) && isFiniteNumber(value.y);
 
 const hasDuplicateKey = (
@@ -537,117 +478,13 @@ export const createInitialState = (): EditorState => {
   };
 };
 
-export const editorStateToDraft = (state: EditorState): NdgEditorDraftV1 => {
-  const nodesById: Record<string, Node> = {};
-
-  for (const node of state.nodesById.values()) {
-    nodesById[node.id] = node;
-  }
-
-  return {
-    format: ndgEditorDraftFormat,
-    version: ndgEditorDraftVersion,
-    nodesById,
-    layoutById: { ...state.layoutById },
-  };
-};
-
-export const draftToEditorState = (draft: unknown) => {
-  if (!isRecord(draft)) {
-    return { error: "Draft must be a JSON object", state: null } as const;
-  }
-
-  if (draft.format !== ndgEditorDraftFormat) {
-    return {
-      error: `Draft format must be "${ndgEditorDraftFormat}"`,
-      state: null,
-    } as const;
-  }
-
-  if (draft.version !== ndgEditorDraftVersion) {
-    return {
-      error: `Draft version must be ${ndgEditorDraftVersion}`,
-      state: null,
-    } as const;
-  }
-
-  if (!isRecord(draft.nodesById)) {
-    return { error: "Draft nodesById must be an object", state: null } as const;
-  }
-
-  if (!isRecord(draft.layoutById)) {
-    return {
-      error: "Draft layoutById must be an object",
-      state: null,
-    } as const;
-  }
-
-  const rawNodesById = draft.nodesById;
-  const rawNodes: Node[] = [];
-
-  for (const [nodeId, nodeValue] of Object.entries(rawNodesById)) {
-    if (!isRecord(nodeValue)) {
-      return {
-        error: `Draft node "${nodeId}" must be an object`,
-        state: null,
-      } as const;
-    }
-
-    if (nodeValue.id !== nodeId) {
-      return {
-        error: `Draft node key "${nodeId}" must match node.id`,
-        state: null,
-      } as const;
-    }
-
-    rawNodes.push(nodeValue as Node);
-  }
-
-  const validatedNodes = validateNodes(rawNodes);
-  if (validatedNodes.error || !validatedNodes.nodes) {
-    return {
-      error: validatedNodes.error ?? "Draft graph is invalid",
-      state: null,
-    } as const;
-  }
-
-  const nodesById = new Map<string, EditorNode>(
-    validatedNodes.nodes.map((node) => [node.id, node]),
-  );
-
-  const initialLayout = buildInitialLayout(nodesById);
-  const rawLayoutById = draft.layoutById;
-  const layoutById: Record<string, XYPosition> = { ...initialLayout };
-
-  for (const nodeId of nodesById.keys()) {
-    const position = rawLayoutById[nodeId];
-    if (!isValidPosition(position)) continue;
-
-    layoutById[nodeId] = { x: position.x, y: position.y };
-  }
-
-  return {
-    error: null,
-    state: {
-      nodesById,
-      layoutById,
-      edgeLayoutById: {},
-      measuredById: {},
-      editingNodeId: null,
-      dialogError: null,
-      autoLayoutError: null,
-      autoLayoutVersion: 0,
-    } satisfies EditorState,
-  } as const;
-};
-
-export const openNodeDialog = (state: EditorState, nodeId: string) => {
+export const openNodeEditor = (state: EditorState, nodeId: string) => {
   if (!state.nodesById.has(nodeId)) return state;
 
   return { ...state, dialogError: null, editingNodeId: nodeId };
 };
 
-export const closeNodeDialog = (state: EditorState) => ({
+export const closeNodeEditor = (state: EditorState) => ({
   ...state,
   dialogError: null,
   editingNodeId: null,

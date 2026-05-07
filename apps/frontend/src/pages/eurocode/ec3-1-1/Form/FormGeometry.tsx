@@ -1,4 +1,5 @@
 import { HorizontalInput } from "@components/inputs/shared";
+import { SpacingDivider } from "@components/Dividers";
 import {
   InfoTable,
   InfoTableHeaderCell,
@@ -8,7 +9,6 @@ import {
   LatexLabel,
   Section,
   SectionTitle,
-  SpacingDivider,
 } from "./shared";
 import { InputNumber } from "@components/inputs/InputNumber";
 import { useEffect, useState } from "react";

@@ -1,5 +1,6 @@
 import { HorizontalInput } from "@components/inputs/shared";
-import { LatexLabel, Section, SectionTitle, SpacingDivider } from "./shared";
+import { SpacingDivider } from "@components/Dividers";
+import { LatexLabel, Section, SectionTitle } from "./shared";
 import { InputNumber } from "@components/inputs/InputNumber";
 import { useEc311FormContext } from "./useEc311FormContext";
 

@@ -1,9 +1,9 @@
 import { HorizontalInput } from "@components/inputs/shared";
+import { SpacingDivider } from "@components/Dividers";
 import {
   LatexLabel,
   Section,
   SectionTitle,
-  SpacingDivider,
   TextLabel,
 } from "./shared";
 import { InputSelect } from "@components/inputs/InputSelect";

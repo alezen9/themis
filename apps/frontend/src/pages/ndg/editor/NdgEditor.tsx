@@ -14,16 +14,14 @@ import {
   Controls,
   Panel,
   ReactFlow,
-  type XYPosition,
-  type Connection,
-  type NodeChange,
 } from "@xyflow/react";
-import type { Condition } from "@ndg/ndg-core";
+import {
+  Dialog,
+  DialogHeader,
+  DialogTitle,
+} from "@components/Dialog";
 import "@xyflow/react/dist/style.css";
 import {
-  applyConnection,
-  applyNodePositionChanges,
-  applyReconnect,
   flowEdgeType,
   editorStateToFlowEdges,
   editorStateToFlowNodes,
@@ -31,175 +29,41 @@ import {
 } from "./config/adapter";
 import { ConditionEdge } from "./components/ConditionEdge";
 import { NodeCard } from "./components/NodeCard";
-import { NodeDialog } from "./components/NodeDialog";
+import { Form } from "./Form";
 import { runElkAutoLayout } from "./config/elkLayout";
 import {
-  addChildNode,
-  applyAutoLayout,
-  closeNodeDialog,
   createInitialState,
-  deleteNodes,
-  disconnectEdge,
+  getMeasuredNodeSizesById,
+} from "./config/graph";
+import {
   draftToEditorState,
   editorStateToDraft,
-  getMeasuredNodeSizesById,
-  getUnreachableNodeIds,
-  setAutoLayoutError,
   type NdgEditorDraftV1,
-  openNodeDialog,
-  saveNode,
-  setEdgeCondition,
-  type EditorState,
-} from "./config/graph";
-import type { NodeDraft } from "./config/nodeFactory";
+} from "./config/draft";
+import { getUnreachableNodeIds } from "./config/graphQueries";
+import { editorReducer } from "./config/editorReducer";
+import type { Option } from "@components/inputs/shared";
 
-type NdgEditorProps = { className?: string };
+type NdgEditorProps = {
+  className?: string;
+  inputKeyOptions?: Option[];
+};
 
-export type { NdgEditorDraftV1 } from "./config/graph";
+export type { NdgEditorDraftV1 } from "./config/draft";
 
 export type NdgEditorRef = {
   save: () => NdgEditorDraftV1;
   load: (draft: NdgEditorDraftV1) => void;
 };
 
-type NdgEditorAction =
-  | { type: "addChild"; parentId: string }
-  | {
-      type: "applyEdgeCondition";
-      sourceId: string;
-      targetId: string;
-      when: Condition;
-    }
-  | {
-      type: "applyAutoLayout";
-      edgeLayoutById: Record<string, XYPosition[]>;
-      layoutById: Record<string, XYPosition>;
-    }
-  | { type: "applyConnection"; connection: Connection }
-  | { type: "applyNodeChanges"; changes: NodeChange[] }
-  | { type: "autoLayoutError"; error: string }
-  | { type: "clearEdgeCondition"; sourceId: string; targetId: string }
-  | { type: "closeDialog" }
-  | { type: "deleteNodes"; nodeIds: string[] }
-  | { type: "disconnectEdge"; sourceId: string; targetId: string }
-  | {
-      type: "reconnectEdge";
-      oldEdge: { source?: string | null; target?: string | null };
-      connection: Connection;
-    }
-  | { type: "hydrate"; state: EditorState }
-  | { type: "openDialog"; nodeId: string }
-  | { type: "saveNode"; nodeId: string; draft: NodeDraft };
-
 const nodeTypes = { [flowNodeType]: NodeCard };
 const edgeTypes = { [flowEdgeType]: ConditionEdge };
 const edgeHoverKeepSelector = ".react-flow__edge, .ndg-edge-overlay";
 
-const getMovedNodeIds = (changes: readonly NodeChange[]) => {
-  const movedNodeIds = new Set<string>();
-
-  for (const change of changes) {
-    if (change.type !== "position" || !change.position) continue;
-    movedNodeIds.add(change.id);
-  }
-
-  return movedNodeIds;
-};
-
-const pruneEdgeLayoutByMovedNodeIds = (
-  edgeLayoutById: Record<string, XYPosition[]>,
-  movedNodeIds: ReadonlySet<string>,
-) => {
-  if (movedNodeIds.size === 0) return edgeLayoutById;
-
-  let hasPrunedEdge = false;
-  const nextEdgeLayoutById: Record<string, XYPosition[]> = {};
-
-  for (const [edgeId, points] of Object.entries(edgeLayoutById)) {
-    const separatorIndex = edgeId.indexOf(":");
-    if (separatorIndex < 0) {
-      nextEdgeLayoutById[edgeId] = points;
-      continue;
-    }
-
-    const sourceNodeId = edgeId.slice(0, separatorIndex);
-    const targetNodeId = edgeId.slice(separatorIndex + 1);
-    if (movedNodeIds.has(sourceNodeId) || movedNodeIds.has(targetNodeId)) {
-      hasPrunedEdge = true;
-      continue;
-    }
-
-    nextEdgeLayoutById[edgeId] = points;
-  }
-
-  if (!hasPrunedEdge) return edgeLayoutById;
-  return nextEdgeLayoutById;
-};
-
-const reducer = (state: EditorState, action: NdgEditorAction) => {
-  switch (action.type) {
-    case "addChild":
-      return { ...addChildNode(state, action.parentId), edgeLayoutById: {} };
-    case "applyEdgeCondition":
-      return setEdgeCondition(
-        state,
-        action.sourceId,
-        action.targetId,
-        action.when,
-      );
-    case "applyAutoLayout":
-      return applyAutoLayout(state, action.layoutById, action.edgeLayoutById);
-    case "applyConnection":
-      return {
-        ...applyConnection(state, action.connection),
-        edgeLayoutById: {},
-      };
-    case "applyNodeChanges": {
-      const nextState = applyNodePositionChanges(state, action.changes);
-      if (nextState === state) return state;
-      if (Object.keys(state.edgeLayoutById).length === 0) return nextState;
-      const movedNodeIds = getMovedNodeIds(action.changes);
-      const nextEdgeLayoutById = pruneEdgeLayoutByMovedNodeIds(
-        state.edgeLayoutById,
-        movedNodeIds,
-      );
-      if (nextEdgeLayoutById === state.edgeLayoutById) return nextState;
-      return { ...nextState, edgeLayoutById: nextEdgeLayoutById };
-    }
-    case "autoLayoutError":
-      return setAutoLayoutError(state, action.error);
-    case "clearEdgeCondition":
-      return setEdgeCondition(state, action.sourceId, action.targetId);
-    case "closeDialog":
-      return closeNodeDialog(state);
-    case "deleteNodes":
-      return deleteNodes(state, action.nodeIds);
-    case "disconnectEdge":
-      return {
-        ...disconnectEdge(state, action.sourceId, action.targetId),
-        edgeLayoutById: {},
-      };
-    case "reconnectEdge":
-      return {
-        ...applyReconnect(state, action.oldEdge, action.connection),
-        edgeLayoutById: {},
-      };
-    case "hydrate":
-      return action.state;
-    case "openDialog":
-      return openNodeDialog(state, action.nodeId);
-    case "saveNode":
-      return {
-        ...saveNode(state, action.nodeId, action.draft),
-        edgeLayoutById: {},
-      };
-  }
-};
-
 export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
-  function NdgEditor({ className }, ref) {
+  function NdgEditor({ className, inputKeyOptions }, ref) {
     const [state, dispatch] = useReducer(
-      reducer,
+      editorReducer,
       undefined,
       createInitialState,
     );
@@ -440,16 +304,30 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
           ) : null}
         </ReactFlow>
 
-        {editingNode ? (
-          <NodeDialog
-            node={editingNode}
-            error={state.dialogError}
-            onClose={() => dispatch({ type: "closeDialog" })}
-            onSave={(draft) =>
-              dispatch({ type: "saveNode", nodeId: editingNode.id, draft })
-            }
-          />
-        ) : null}
+        <Dialog
+          open={Boolean(editingNode)}
+          onOpenChange={(open) => {
+            if (open) return;
+            dispatch({ type: "closeDialog" });
+          }}
+        >
+          {editingNode && (
+            <>
+              <DialogHeader>
+                <DialogTitle>Edit node</DialogTitle>
+              </DialogHeader>
+              <Form
+                node={editingNode}
+                error={state.dialogError}
+                inputKeyOptions={inputKeyOptions}
+                onCancel={() => dispatch({ type: "closeDialog" })}
+                onSave={(draft) =>
+                  dispatch({ type: "saveNode", nodeId: editingNode.id, draft })
+                }
+              />
+            </>
+          )}
+        </Dialog>
       </div>
     );
   },

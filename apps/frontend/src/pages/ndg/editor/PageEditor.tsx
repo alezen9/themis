@@ -1,10 +1,12 @@
-import { useRef, useState, type ChangeEvent } from "react";
+import { useRef, useState, type ChangeEvent, type ComponentProps } from "react";
 import {
   NdgEditor,
   type NdgEditorDraftV1,
   type NdgEditorRef,
 } from "./NdgEditor";
 import { Header, SubHeader } from "@components/Header";
+import { ec311InputKeyOptions } from "../../eurocode/ec3-1-1/Form/ec311InputKeyOptions";
+import { twMerge } from "tailwind-merge";
 
 const downloadTextFile = (filename: string, content: string) => {
   const blob = new Blob([content], { type: "application/json" });
@@ -65,17 +67,16 @@ export const PageEditor = () => {
       <header className="flex shrink-0 items-start justify-between gap-6">
         <div>
           <Header>NDG editor</Header>
-          <SubHeader>Build and edit verification graph drafts</SubHeader>
+          <SubHeader>Draft and inspect verification graphs</SubHeader>
         </div>
         <div className="flex flex-wrap justify-end gap-2 pt-1">
-          <button
-            className="cursor-pointer rounded-sm border border-envy-700 bg-envy-700 px-4 py-2 text-xs font-medium text-white transition-colors hover:border-envy-800 hover:bg-envy-800"
-            onClick={onSaveDraft}
-            type="button"
+          <PageActionButton onClick={onSaveDraft}>Save draft</PageActionButton>
+          <label
+            className={twMerge(
+              pageActionButtonClassName,
+              "border-sand-300 bg-white text-slate-800 hover:border-sand-400 hover:bg-sand-50",
+            )}
           >
-            Save draft
-          </button>
-          <label className="cursor-pointer rounded-sm border border-sand-300 bg-white px-4 py-2 text-xs font-medium text-slate-800 transition-colors hover:border-sand-400 hover:bg-sand-50">
             Load draft
             <input
               accept=".ndg.json,.json"
@@ -95,8 +96,28 @@ export const PageEditor = () => {
 
       <NdgEditor
         ref={editorRef}
+        inputKeyOptions={ec311InputKeyOptions}
         className="min-h-0 flex-1 rounded-sm border border-sand-200"
       />
     </main>
+  );
+};
+
+const pageActionButtonClassName =
+  "cursor-pointer rounded-sm border px-4 py-2 text-xs font-medium transition-colors";
+
+const PageActionButton = (props: ComponentProps<"button">) => {
+  const { className, type = "button", ...buttonProps } = props;
+
+  return (
+    <button
+      className={twMerge(
+        pageActionButtonClassName,
+        "border-envy-700 bg-envy-700 text-white hover:border-envy-800 hover:bg-envy-800",
+        className,
+      )}
+      type={type}
+      {...buttonProps}
+    />
   );
 };

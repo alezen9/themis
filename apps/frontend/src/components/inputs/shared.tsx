@@ -11,13 +11,21 @@ export type Option<T = unknown> = {
 
 const NON_BLOCKING_SPACE = "\u00a0";
 
-type HorizontalInputProps = {
+type FieldProps = {
   children: ReactNode;
   name: string;
   label: ReactNode;
+  orientation?: "vertical" | "horizontal";
 };
 
-export const HorizontalInput = (props: HorizontalInputProps) => {
+export const FormField = (props: FieldProps) => {
+  const { orientation = "vertical", ...rest } = props;
+
+  if (orientation === "horizontal") return <HorizontalInput {...rest} />;
+  return <VerticallInput {...rest} />;
+};
+
+export const HorizontalInput = (props: FieldProps) => {
   const { children, label, name } = props;
   const { errors } = useFormState({ name });
   const error = get(errors, name)?.message;
@@ -34,6 +42,39 @@ export const HorizontalInput = (props: HorizontalInputProps) => {
       <span className="text-sm font-thin text-gray-700">{label}</span>
       {children}
       <span className="h-0">{NON_BLOCKING_SPACE}</span>
+      <span
+        className={twMerge(
+          "text-xs font-light text-red-500",
+          "h-0 opacity-0",
+          error && "h-lh opacity-100",
+          "transition-[height] duration-200",
+          "tabular-nums",
+        )}
+      >
+        {error || NON_BLOCKING_SPACE}
+      </span>
+    </label>
+  );
+};
+
+const VerticallInput = (props: FieldProps) => {
+  const { children, label, name } = props;
+  const { errors } = useFormState({ name });
+  const error = get(errors, name)?.message;
+
+  return (
+    <label
+      className={twMerge(
+        "[--bg-color:var(--bg-input-default-color)]",
+        error && "[--bg-color:var(--bg-input-error-color)]",
+        !error && "focus-within:[--bg-color:var(--bg-input-focus-color)]",
+        "flex flex-col gap-1.5",
+      )}
+    >
+      <span className="text-sm font-thin text-gray-700">{label}</span>
+
+      {children}
+
       <span
         className={twMerge(
           "text-xs font-light text-red-500",
