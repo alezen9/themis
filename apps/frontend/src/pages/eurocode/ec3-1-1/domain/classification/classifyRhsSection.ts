@@ -2,15 +2,15 @@ import { steelGradesMap } from "../../data/steelGrades";
 import { Ec3FormValues } from "../../Form/schema";
 import { getEpsilon, maxClass, throwClass4NotSupported } from "./utils";
 
-type Geometry = Ec3FormValues["i_geometry"];
+type Geometry = Ec3FormValues["rhs_geometry"];
 type Actions = Pick<Ec3FormValues, "N_Ed_kN" | "M_y_Ed_kNm">;
 
-export const classifyISection = (
+export const classifyRhsSection = (
   geometry: Geometry,
   steel_grade_id: Ec3FormValues["steel_grade_id"],
   actions: Actions,
 ) => {
-  const { h_mm, b_mm, tw_mm, tf_mm } = geometry;
+  const { b_mm, tw_mm, ri_mm } = geometry;
   const { N_Ed_kN, M_y_Ed_kNm } = actions;
 
   if (N_Ed_kN >= 0 && M_y_Ed_kNm === 0) return 1;
@@ -18,23 +18,22 @@ export const classifyISection = (
   const steelGrade = steelGradesMap.get(steel_grade_id);
   if (!steelGrade) throw new Error("Steel grade not found");
   const { fy_MPa, fy_above_40_MPa } = steelGrade;
-  const thickness_mm = Math.max(tw_mm, tf_mm);
-  const fy = thickness_mm > 40 ? (fy_above_40_MPa ?? fy_MPa) : fy_MPa;
+  const fy = tw_mm > 40 ? (fy_above_40_MPa ?? fy_MPa) : fy_MPa;
 
   const epsilon = getEpsilon(fy);
-  const webDepth_mm = h_mm - 2 * tf_mm;
-  const webRatio = webDepth_mm / tw_mm;
-  const flangeWidth_mm = (b_mm - tw_mm) / 2;
-  const flangeRatio = flangeWidth_mm / tf_mm;
-
-  const flangeClass = classifyOutstandPartInCompression(flangeRatio, epsilon);
+  const flangeWidth_mm = b_mm - 2 * tw_mm - 2 * ri_mm;
+  const flangeRatio = flangeWidth_mm / tw_mm;
+  const flangeClass = classifyInternalPartInCompression(flangeRatio, epsilon);
 
   const isPureCompression = N_Ed_kN < 0 && M_y_Ed_kNm === 0;
   const isCompressionAndBending = N_Ed_kN < 0 && M_y_Ed_kNm !== 0;
 
   let webClass: 1 | 2 | 3;
   if (isPureCompression)
-    webClass = classifyInternalPartInCompression(webRatio, epsilon);
+    webClass = classifyInternalPartInCompression(
+      getWebRatio(geometry),
+      epsilon,
+    );
   else if (isCompressionAndBending)
     webClass = classifyInternalPartInCompressionAndBending(
       geometry,
@@ -42,17 +41,15 @@ export const classifyISection = (
       epsilon,
       N_Ed_kN,
     );
-  else webClass = classifyInternalPartInBending(webRatio, epsilon);
+  else webClass = classifyInternalPartInBending(getWebRatio(geometry), epsilon);
 
   return maxClass(webClass, flangeClass);
 };
 
-const classifyOutstandPartInCompression = (ratio: number, epsilon: number) => {
-  if (ratio <= 9 * epsilon) return 1;
-  if (ratio <= 10 * epsilon) return 2;
-  if (ratio <= 14 * epsilon) return 3;
-
-  return throwClass4NotSupported();
+const getWebRatio = (geometry: Geometry) => {
+  const { h_mm, tw_mm, ri_mm } = geometry;
+  const webDepth_mm = h_mm - 2 * tw_mm - 2 * ri_mm;
+  return webDepth_mm / tw_mm;
 };
 
 const classifyInternalPartInCompression = (ratio: number, epsilon: number) => {
@@ -77,14 +74,14 @@ const classifyInternalPartInCompressionAndBending = (
   epsilon: number,
   N_Ed_kN: number,
 ) => {
-  const { h_mm, b_mm, tw_mm, tf_mm } = geometry;
+  const { h_mm, b_mm, tw_mm, ri_mm } = geometry;
 
-  const webDepth_mm = h_mm - 2 * tf_mm;
+  const webDepth_mm = h_mm - 2 * tw_mm - 2 * ri_mm;
   const webRatio = webDepth_mm / tw_mm;
   const compressionForce_N = Math.abs(N_Ed_kN) * 1000;
-  const area_mm2 = 2 * b_mm * tf_mm + webDepth_mm * tw_mm;
+  const area_mm2 = h_mm * b_mm - (h_mm - 2 * tw_mm) * (b_mm - 2 * tw_mm);
   const alphaRaw =
-    compressionForce_N / (2 * webDepth_mm * fy_MPa * tw_mm) + 0.5;
+    compressionForce_N / (4 * webDepth_mm * fy_MPa * tw_mm) + 0.5;
   const alpha = Math.min(alphaRaw, 1);
 
   const class1Limit =

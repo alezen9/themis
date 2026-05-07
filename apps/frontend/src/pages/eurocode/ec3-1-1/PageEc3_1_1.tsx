@@ -28,7 +28,11 @@ export const PageEc3_1_1 = () => {
 
           <div className="flex items-start gap-10">
             <Form />
-            <div className="min-w-0 flex-1">Rest</div>
+            <div className="min-w-0 flex-1 justify-center w-full flex">
+              <span className="text-3xl text-sand-800">
+                Verifications coming soon here
+              </span>
+            </div>
           </div>
         </main>
       </Observer>

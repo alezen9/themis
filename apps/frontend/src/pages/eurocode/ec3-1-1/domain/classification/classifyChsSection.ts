@@ -1,6 +1,6 @@
 import { steelGradesMap } from "../../data/steelGrades";
 import { Ec3FormValues } from "../../Form/schema";
-import { getEpsilon2 } from "./utils";
+import { getEpsilon2, throwClass4NotSupported } from "./utils";
 
 type Geometry = Ec3FormValues["chs_geometry"];
 
@@ -22,5 +22,5 @@ export const classifyChsSection = (
   if (ratio <= 70 * epsilon2) return 2;
   if (ratio <= 90 * epsilon2) return 3;
 
-  throw new Error("Class 4 is not supported");
+  return throwClass4NotSupported();
 };
