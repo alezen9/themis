@@ -12,7 +12,7 @@ import {
   nodeTypeOptions,
   type EditorNode,
   type NodeDraft,
-} from "../node-factory";
+} from "../config/nodeFactory";
 import { NodeDialogField } from "./NodeDialogField";
 import { NodeDialogSection } from "./NodeDialogSection";
 
@@ -24,12 +24,12 @@ type NodeDialogProps = {
 };
 
 const inputClassName =
-  "w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-700/20 disabled:bg-slate-50 disabled:text-slate-500";
+  "w-full rounded-sm border border-sand-300 bg-white px-3 py-2 text-sm font-light text-slate-900 outline-none transition focus:border-envy-700 focus:ring-2 focus:ring-envy-700/20 disabled:bg-sand-50 disabled:text-slate-500";
 
 const textareaClassName = `${inputClassName} min-h-[76px] resize-y`;
 
 const buttonClassName =
-  "rounded-[10px] border px-3 py-2 text-[12px] font-semibold transition-colors";
+  "cursor-pointer rounded-sm border px-3 py-2 text-xs font-medium transition-colors";
 
 const nodeTypesWithReferences = new Set<NodeDraft["nodeType"]>([
   "check",
@@ -129,15 +129,15 @@ export const NodeDialog = ({
     >
       <div
         aria-modal="true"
-        className="max-h-[80vh] w-[min(560px,calc(100vw-32px))] overflow-auto rounded-[20px] border border-slate-300 bg-white/95 shadow-[0_20px_44px_rgba(15,23,42,0.22)]"
+        className="max-h-[80vh] w-[min(560px,calc(100vw-32px))] overflow-auto rounded-sm border border-sand-300 bg-white shadow-xl shadow-sand-600/20"
         role="dialog"
       >
         <div className="flex items-start justify-between gap-4 px-5 pt-[18px]">
           <div>
-            <h2 className="text-[20px] leading-[1.1] font-semibold text-slate-900">
+            <h2 className="text-[20px] leading-[1.1] font-semibold text-slate-950">
               Edit node
             </h2>
-            <p className="mt-1.5 text-[13px] text-slate-600">
+            <p className="mt-1.5 text-[13px] font-light text-slate-500">
               Tailored NDG node editing.
             </p>
           </div>
@@ -396,27 +396,27 @@ export const NodeDialog = ({
           </NodeDialogSection>
 
           {draft.nodeType === "user-input" && node.children.length > 0 ? (
-            <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-[13px] text-blue-700">
+            <div className="mt-4 rounded-sm border border-blue-200 bg-blue-50 px-3 py-2 text-[13px] text-blue-700">
               Saving as user input detaches this node&apos;s direct children.
             </div>
           ) : null}
 
           {error ? (
-            <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-[13px] text-red-700">
+            <div className="mt-4 rounded-sm border border-red-200 bg-red-50 px-3 py-2 text-[13px] text-red-700">
               {error}
             </div>
           ) : null}
 
           <div className="mt-5 flex justify-end gap-2.5">
             <button
-              className={`${buttonClassName} border-slate-300 bg-white text-slate-900 hover:border-slate-400 hover:bg-slate-50`}
+              className={`${buttonClassName} border-sand-300 bg-white text-slate-900 hover:border-sand-400 hover:bg-sand-50`}
               onClick={onClose}
               type="button"
             >
               Cancel
             </button>
             <button
-              className={`${buttonClassName} border-teal-800 bg-teal-700 text-white hover:border-teal-900 hover:bg-teal-800 disabled:border-slate-300 disabled:bg-slate-50 disabled:text-slate-400`}
+              className={`${buttonClassName} border-envy-700 bg-envy-700 text-white hover:border-envy-800 hover:bg-envy-800 disabled:border-slate-300 disabled:bg-slate-50 disabled:text-slate-400`}
               type="submit"
             >
               Save changes

@@ -28,11 +28,11 @@ import {
   editorStateToFlowEdges,
   editorStateToFlowNodes,
   flowNodeType,
-} from "./internal/adapter";
-import { ConditionEdge } from "./internal/components/ConditionEdge";
-import { NodeCard } from "./internal/components/NodeCard";
-import { NodeDialog } from "./internal/components/NodeDialog";
-import { runElkAutoLayout } from "./internal/elk-layout";
+} from "./config/adapter";
+import { ConditionEdge } from "./components/ConditionEdge";
+import { NodeCard } from "./components/NodeCard";
+import { NodeDialog } from "./components/NodeDialog";
+import { runElkAutoLayout } from "./config/elkLayout";
 import {
   addChildNode,
   applyAutoLayout,
@@ -50,10 +50,12 @@ import {
   saveNode,
   setEdgeCondition,
   type EditorState,
-} from "./internal/graph";
-import type { NodeDraft } from "./internal/node-factory";
+} from "./config/graph";
+import type { NodeDraft } from "./config/nodeFactory";
 
 type NdgEditorProps = { className?: string };
+
+export type { NdgEditorDraftV1 } from "./config/graph";
 
 export type NdgEditorRef = {
   save: () => NdgEditorDraftV1;

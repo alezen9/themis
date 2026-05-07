@@ -8,7 +8,9 @@ export const NodeDialogSection = ({
 }: NodeDialogSectionProps) => {
   return (
     <div className="mt-[18px]">
-      <h3 className="mb-2.5 text-[14px] font-bold text-slate-900">{title}</h3>
+      <h3 className="mb-2.5 text-xs font-semibold tracking-wide text-slate-950 uppercase">
+        {title}
+      </h3>
       {children}
     </div>
   );

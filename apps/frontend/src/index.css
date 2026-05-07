@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "katex/dist/katex.min.css";
 @import "pluton-2d/style.css";
-@source "../../../packages/ndg-editor/src";
 
 svg.pluton-root {
   --pluton-geometry-stroke: var(--color-envy-700);

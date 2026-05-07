@@ -14,7 +14,7 @@ import {
   updateNodePositions,
   type EditorState,
 } from "./graph";
-import { canNodeHaveChildren, type EditorNode } from "./node-factory";
+import { canNodeHaveChildren, type EditorNode } from "./nodeFactory";
 
 type FlowNodeType = NodeType;
 

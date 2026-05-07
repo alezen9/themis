@@ -2,36 +2,37 @@ import katex from "katex";
 import "katex/dist/katex.min.css";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { type ComponentProps } from "react";
-import type { EditorFlowNode } from "../adapter";
+import { twMerge } from "tailwind-merge";
+import type { EditorFlowNode } from "../config/adapter";
 
 const nodeTypeThemes = {
   check: {
     textClass: "text-red-700",
-    formulaClass: "border-red-200 bg-red-50/70",
+    formulaClass: "border-red-100 bg-red-50/60",
   },
   coefficient: {
-    textClass: "text-teal-700",
-    formulaClass: "border-teal-200 bg-teal-50/70",
+    textClass: "text-envy-700",
+    formulaClass: "border-envy-100 bg-envy-50/60",
   },
   constant: {
-    textClass: "text-zinc-700",
-    formulaClass: "border-zinc-300 bg-zinc-100/80",
+    textClass: "text-slate-600",
+    formulaClass: "border-slate-200 bg-slate-50",
   },
   derived: {
-    textClass: "text-green-700",
-    formulaClass: "border-green-200 bg-green-50/70",
+    textClass: "text-envy-700",
+    formulaClass: "border-envy-100 bg-envy-50/60",
   },
   formula: {
-    textClass: "text-indigo-700",
-    formulaClass: "border-indigo-200 bg-indigo-50/70",
+    textClass: "text-sand-800",
+    formulaClass: "border-sand-200 bg-sand-50",
   },
   table: {
-    textClass: "text-orange-700",
-    formulaClass: "border-orange-200 bg-orange-50/70",
+    textClass: "text-sand-700",
+    formulaClass: "border-sand-200 bg-sand-50",
   },
   "user-input": {
-    textClass: "text-fuchsia-700",
-    formulaClass: "border-fuchsia-200 bg-fuchsia-50/70",
+    textClass: "text-slate-700",
+    formulaClass: "border-slate-200 bg-slate-50",
   },
 } as const;
 
@@ -115,11 +116,13 @@ const NodeWrapper = ({
   ...rest
 }: ComponentProps<"div"> & { isUnreachable: boolean }) => (
   <div
-    className={`relative flex min-w-72 cursor-grab select-none flex-col gap-1 rounded-sm border px-3 py-2 shadow-xl shadow-gray-200 active:cursor-grabbing ${
+    className={twMerge(
+      "relative flex min-w-72 cursor-grab select-none flex-col gap-1 rounded-sm border px-3 py-2",
+      "shadow-sm shadow-sand-300/40 active:cursor-grabbing",
       isUnreachable
         ? "border-amber-300 bg-amber-50/70"
-        : "border-slate-200 bg-white"
-    }`}
+        : "border-sand-200 bg-white",
+    )}
     {...rest}
   >
     {children}
@@ -133,16 +136,19 @@ const NodeHeader = ({ children, ...rest }: ComponentProps<"div">) => (
 );
 
 const NodeKey = ({ children }: ComponentProps<"p">) => (
-  <p className="text-sm font-bold">{children}</p>
+  <p className="text-sm font-medium text-slate-950">{children}</p>
 );
 
 const NodeName = ({ children }: ComponentProps<"p">) => (
-  <p className="text-[0.7rem] font-medium text-slate-500">{children}</p>
+  <p className="text-[0.7rem] font-light text-slate-500">{children}</p>
 );
 
 const NodeType = ({ children, className, ...rest }: ComponentProps<"p">) => (
   <p
-    className={`text-[0.65rem] font-semibold uppercase tracking-widest ${className ?? ""}`}
+    className={twMerge(
+      "text-[0.65rem] font-medium uppercase tracking-widest",
+      className,
+    )}
     {...rest}
   >
     {children}
@@ -160,7 +166,7 @@ const NodeFormula = ({ children, className = "" }: ComponentProps<"span">) => {
   });
 
   return (
-    <div className={`rounded-xs border p-2 ${className}`}>
+    <div className={twMerge("rounded-xs border p-2", className)}>
       <span
         className="inline-block min-w-max text-[12px] leading-none [&_.katex-display]:my-0 [&_.katex]:text-inherit"
         dangerouslySetInnerHTML={{ __html: html }}
@@ -174,7 +180,7 @@ const NodeAddChildButton = ({ ...rest }: ComponentProps<"button">) => (
     type="button"
     aria-label="Add child"
     title="Add child"
-    className="nodrag nopan absolute -bottom-3 left-1/2 z-10 inline-flex h-6 w-6 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border border-teal-800 bg-teal-700 text-white shadow-sm transition-colors hover:border-teal-900 hover:bg-teal-800"
+    className="nodrag nopan absolute -bottom-3 left-1/2 z-10 inline-flex h-6 w-6 -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border border-envy-700 bg-envy-700 text-white shadow-sm transition-colors hover:border-envy-800 hover:bg-envy-800"
     {...rest}
   >
     <PlusIcon />
@@ -189,7 +195,11 @@ const NodeIconButton = ({
 }: ComponentProps<"button">) => (
   <button
     type={type}
-    className={`nodrag nopan inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm border border-slate-300 bg-white text-slate-700 transition-colors hover:border-slate-400 hover:bg-slate-50 ${className ?? ""}`}
+    className={twMerge(
+      "nodrag nopan inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm border",
+      "border-sand-300 bg-white text-slate-700 transition-colors hover:border-sand-400 hover:bg-sand-50",
+      className,
+    )}
     {...rest}
   >
     {children}

@@ -7,7 +7,7 @@ import {
   type EdgeProps,
 } from "@xyflow/react";
 import { useState, type ComponentProps } from "react";
-import type { EditorFlowEdge } from "../adapter";
+import type { EditorFlowEdge } from "../config/adapter";
 import { ConditionPopover } from "./ConditionPopover";
 
 export const ConditionEdge = (props: EdgeProps<EditorFlowEdge>) => {

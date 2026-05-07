@@ -1,6 +1,6 @@
 import type { XYPosition } from "@xyflow/react";
 import type { MeasuredNodeSize } from "./graph";
-import type { EditorNode } from "./node-factory";
+import type { EditorNode } from "./nodeFactory";
 
 type RunElkAutoLayoutParams = {
   measuredNodeSizesById: Record<string, MeasuredNodeSize>;

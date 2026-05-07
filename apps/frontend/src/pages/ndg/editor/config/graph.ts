@@ -12,7 +12,7 @@ import {
   createDefaultRootNode,
   type EditorNode,
   type NodeDraft,
-} from "./node-factory";
+} from "./nodeFactory";
 
 export type EditorState = {
   nodesById: Map<string, EditorNode>;

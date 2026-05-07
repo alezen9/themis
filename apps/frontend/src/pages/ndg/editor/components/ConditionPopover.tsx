@@ -14,7 +14,7 @@ import {
   type GroupOperator,
   type OperandMode,
   type OperandValueType,
-} from "../condition";
+} from "../config/condition";
 
 type ConditionPopoverProps = {
   condition?: Condition;
@@ -39,7 +39,7 @@ type ConditionEntryEditorProps = {
 };
 
 const inputClassName =
-  "w-full rounded-sm border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-700/20";
+  "w-full rounded-sm border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-900 outline-none transition focus:border-envy-700 focus:ring-2 focus:ring-envy-700/20";
 
 const buttonClassByTone: Record<"neutral" | "danger" | "primary", string> = {
   neutral:
@@ -47,7 +47,7 @@ const buttonClassByTone: Record<"neutral" | "danger" | "primary", string> = {
   danger:
     "border-red-200 bg-red-50 text-red-700 hover:border-red-300 hover:bg-red-100",
   primary:
-    "border-teal-800 bg-teal-700 text-white hover:border-teal-900 hover:bg-teal-800",
+    "border-envy-700 bg-envy-700 text-white hover:border-envy-800 hover:bg-envy-700",
 };
 
 const Input = (props: ComponentProps<"input">) => (

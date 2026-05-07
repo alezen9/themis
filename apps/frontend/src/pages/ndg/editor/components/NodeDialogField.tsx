@@ -19,9 +19,11 @@ export const NodeDialogField = ({
 
   return (
     <label className={classes}>
-      <span className="text-[12px] font-bold text-slate-700">{label}</span>
+      <span className="text-xs font-medium text-slate-800">{label}</span>
       {hint ? (
-        <span className="text-[11px] leading-tight text-slate-500">{hint}</span>
+        <span className="text-[11px] leading-tight font-light text-slate-500">
+          {hint}
+        </span>
       ) : null}
       {children}
     </label>
