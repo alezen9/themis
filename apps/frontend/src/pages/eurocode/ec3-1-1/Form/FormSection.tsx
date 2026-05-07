@@ -1,5 +1,14 @@
 import { HorizontalInput } from "@components/inputs/shared";
-import { Section, SectionTitle, TextLabel } from "./shared";
+import {
+  InfoTable,
+  InfoTableHeaderCell,
+  InfoTableLabelCell,
+  InfoTableUnitCell,
+  InfoTableValueCell,
+  Section,
+  SectionTitle,
+  TextLabel,
+} from "./shared";
 import { InputSelect } from "@components/inputs/InputSelect";
 import {
   circularSectionOptions,
@@ -10,7 +19,7 @@ import {
   sectionClassOptions,
   customSectionId,
 } from "./options";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { InputRadio } from "@components/inputs/InputRadio";
 import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
 import { ChangeHandler } from "react-hook-form";
@@ -23,6 +32,8 @@ import { useEc311FormContext } from "./useEc311FormContext";
 import { flangedSectionsMap } from "../data/flangedSections";
 import { hollowSectionsMap } from "../data/hollowSections";
 import { circularSectionsMap } from "../data/circularSections";
+import { TableBody, TableHeader, TableRow } from "@components/Table";
+import { classifySection } from "../domain/classification/classifySection";
 
 const sectionOptionsMap = {
   I: { options: flangedSectionOptions, defaultValue: defaultISection.id },
@@ -104,6 +115,79 @@ export const FormSection = () => {
           options={sectionClassOptions}
         />
       </HorizontalInput>
+      <ClassificationInfo />
     </Section>
   );
+};
+
+const ClassificationInfo = () => {
+  const { subscribe, watch, getValues } = useEc311FormContext();
+  const [computedClass, setComputedClass] = useState(() =>
+    classifySection(getValues()),
+  );
+  const providedClass = watch("section_class");
+  const isAutoMode = providedClass === "auto";
+
+  useEffect(() => {
+    const unsubscribe = subscribe({
+      name: [
+        "shape",
+        "steel_grade_id",
+        "section_class",
+        "i_geometry",
+        "rhs_geometry",
+        "chs_geometry",
+        "N_Ed_kN",
+        "M_y_Ed_kNm",
+      ],
+      exact: true,
+      formState: { values: true },
+      callback: ({ values }) => {
+        setComputedClass(classifySection(values));
+      },
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [subscribe]);
+
+  return (
+    <div className="flex flex-col gap-3 text-sand-900">
+      <InfoTable>
+        <TableHeader>
+          <TableRow className="bg-sand-100">
+            <InfoTableHeaderCell>Classification</InfoTableHeaderCell>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          <TableRow>
+            <InfoTableLabelCell className="text-sm font-light">
+              Provided
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {formatSectionClass(providedClass)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell />
+          </TableRow>
+
+          <TableRow className={isAutoMode ? "" : "opacity-50"}>
+            <InfoTableLabelCell className="text-sm font-light">
+              Computed
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {formatSectionClass(computedClass)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell />
+          </TableRow>
+        </TableBody>
+      </InfoTable>
+    </div>
+  );
+};
+
+const formatSectionClass = (sectionClass: string | number) => {
+  if (sectionClass === "auto") return "Auto";
+  return `Class ${sectionClass}`;
 };
