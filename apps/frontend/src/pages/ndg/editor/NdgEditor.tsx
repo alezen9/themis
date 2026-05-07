@@ -25,6 +25,7 @@ import {
   flowEdgeType,
   editorStateToFlowEdges,
   editorStateToFlowNodes,
+  edgeIdFromNodes,
   flowNodeType,
 } from "./config/adapter";
 import { ConditionEdge } from "./components/ConditionEdge";
@@ -81,6 +82,19 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
       [state.nodesById],
     );
 
+    const edgeIds = useMemo(() => {
+      const ids = new Set<string>();
+      for (const node of state.nodesById.values()) {
+        for (const child of node.children) {
+          ids.add(edgeIdFromNodes(node.id, child.nodeId));
+        }
+      }
+      return ids;
+    }, [state.nodesById]);
+
+    const activeHoveredEdgeId =
+      hoveredEdgeId && edgeIds.has(hoveredEdgeId) ? hoveredEdgeId : null;
+
     const edges = useMemo(
       () =>
         editorStateToFlowEdges(
@@ -99,7 +113,7 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
               dispatch({ type: "disconnectEdge", sourceId, targetId }),
           },
           {
-            hoveredEdgeId,
+            hoveredEdgeId: activeHoveredEdgeId,
             routedEdgePointsById: state.edgeLayoutById,
             unreachableNodeIds,
           },
@@ -107,16 +121,10 @@ export const NdgEditor = forwardRef<NdgEditorRef, NdgEditorProps>(
       [
         state.nodesById,
         state.edgeLayoutById,
-        hoveredEdgeId,
+        activeHoveredEdgeId,
         unreachableNodeIds,
       ],
     );
-
-    useEffect(() => {
-      if (!hoveredEdgeId) return;
-      if (edges.some((edge) => edge.id === hoveredEdgeId)) return;
-      setHoveredEdgeId(null);
-    }, [edges, hoveredEdgeId]);
 
     const onAutoLayout = useCallback(async () => {
       const currentState = stateRef.current;

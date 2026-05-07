@@ -19,10 +19,10 @@ export const Dialog = (props: DialogProps) => {
     <BaseDialog.Root {...rootProps}>
       <BaseDialog.Portal>
         <BaseDialog.Backdrop className="fixed inset-0 bg-sand-950/25 backdrop-blur-sm min-h-dvh" />
-        <BaseDialog.Viewport className="fixed inset-0 py-6 overflow-y-auto">
+        <BaseDialog.Viewport className="fixed inset-0 py-6 overflow-y-auto grid place-items-center">
           <BaseDialog.Popup
             className={twMerge(
-              "m-auto w-full max-w-3xl",
+              "w-full max-w-3xl",
               "rounded-sm border border-sand-200 bg-white",
               "shadow-xl shadow-sand-600/20",
               "focus:outline-none",

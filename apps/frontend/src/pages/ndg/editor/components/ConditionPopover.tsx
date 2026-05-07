@@ -1,4 +1,4 @@
-import { useEffect, useState, type ComponentProps } from "react";
+import { useState, type ComponentProps } from "react";
 import type { Condition } from "@ndg/ndg-core";
 import {
   buildConditionFromDraft,
@@ -280,17 +280,27 @@ export const ConditionPopover = ({
   onClear,
   onClose,
 }: ConditionPopoverProps) => {
+  return (
+    <ConditionPopoverContent
+      key={condition ? JSON.stringify(condition) : "empty-condition"}
+      condition={condition}
+      onApply={onApply}
+      onClear={onClear}
+      onClose={onClose}
+    />
+  );
+};
+
+const ConditionPopoverContent = ({
+  condition,
+  onApply,
+  onClear,
+  onClose,
+}: ConditionPopoverProps) => {
   const [draft, setDraft] = useState<ConditionDraftEntry>(() =>
     condition ? conditionToDraft(condition) : createDefaultConditionDraft(),
   );
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setDraft(
-      condition ? conditionToDraft(condition) : createDefaultConditionDraft(),
-    );
-    setError(null);
-  }, [condition]);
 
   const updateDraft = (
     updater: (currentDraft: ConditionDraftEntry) => ConditionDraftEntry,

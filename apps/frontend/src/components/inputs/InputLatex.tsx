@@ -27,6 +27,7 @@ export const InputLatex = forwardRef<HTMLInputElement, Props>((props, ref) => {
       <PopoverTrigger
         nativeButton={false}
         unstyled
+        openOnHover
         render={
           <InputText
             ref={ref}
