@@ -4,6 +4,7 @@ import {
   type NdgEditorDraftV1,
   type NdgEditorRef,
 } from "@ndg/ndg-editor";
+import { Header, SubHeader } from "@components/Header";
 
 const downloadTextFile = (filename: string, content: string) => {
   const blob = new Blob([content], { type: "application/json" });
@@ -60,12 +61,14 @@ export const PageEditor = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 px-6 py-8 grid grid-rows-[auto_1fr]">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-semibold text-slate-950">Editor</h1>
-        <p className="max-w-3xl text-sm text-slate-600">
-          NDG graph editor with manual save/load draft actions
-        </p>
+    <main className="flex min-h-0 flex-1 flex-col gap-8 overflow-hidden">
+      <header className="flex shrink-0 justify-between">
+        <div>
+          <Header>Steel members</Header>
+          <SubHeader>
+            EC3-1-1 · Member checks according to EN 1993-1-1
+          </SubHeader>
+        </div>
         <div className="flex flex-wrap gap-2 pt-2">
           <button
             className="rounded-md border border-teal-800 bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:border-teal-900 hover:bg-teal-800"
@@ -87,9 +90,10 @@ export const PageEditor = () => {
         {error ? <p className="text-xs text-red-700">{error}</p> : null}
       </header>
 
-      <section className="h-full border border-slate-200 bg-white flex">
-        <NdgEditor ref={editorRef} className="h-full w-full" />
-      </section>
-    </div>
+      <NdgEditor
+        ref={editorRef}
+        className="min-h-0 flex-1 rounded-sm border border-sand-200"
+      />
+    </main>
   );
 };

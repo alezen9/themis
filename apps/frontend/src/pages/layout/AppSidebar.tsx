@@ -1,4 +1,4 @@
-import { IconCloud, IconCube, IconIBeam } from "@components/Icons";
+import { IconGraph, IconIBeam } from "@components/Icons";
 import { Link, useLocation } from "@tanstack/react-router";
 import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
@@ -16,7 +16,7 @@ export const AppSidebar = () => {
       <Logo />
 
       <Nav>
-        <Section>
+        {/* <Section>
           <SectionHeader>
             <IconCloud className="w-5" />
             <SectionHeaderLabel> Eurocode 1 · Actions</SectionHeaderLabel>
@@ -32,9 +32,9 @@ export const AppSidebar = () => {
               <Tag>EC1-1-4</Tag>
             </SubSectionItem>
           </SubSection>
-        </Section>
+        </Section> */}
 
-        <Section>
+        {/* <Section>
           <SectionHeader>
             <IconCube className="w-5" />
             <SectionHeaderLabel>Eurocode 2 · Concrete</SectionHeaderLabel>
@@ -46,7 +46,7 @@ export const AppSidebar = () => {
               <Tag>EC2-1-1</Tag>
             </SubSectionItem>
           </SubSection>
-        </Section>
+        </Section> */}
 
         <Section>
           <SectionHeader>
@@ -59,13 +59,25 @@ export const AppSidebar = () => {
               <SubSectionItemLabel>Steel members</SubSectionItemLabel>
               <Tag>EC3-1-1</Tag>
             </SubSectionItem>
-            <SubSectionItem to="/eurocode/ec3-1-2/fire-design">
+            {/* <SubSectionItem to="/eurocode/ec3-1-2/fire-design">
               <SubSectionItemLabel>Fire design</SubSectionItemLabel>
               <Tag>EC3-1-2</Tag>
             </SubSectionItem>
             <SubSectionItem to="/eurocode/ec3-1-8/connections">
               <SubSectionItemLabel>Connections</SubSectionItemLabel>
               <Tag>EC3-1-8</Tag>
+            </SubSectionItem> */}
+          </SubSection>
+        </Section>
+
+        <Section>
+          <SectionHeader>
+            <IconGraph className="w-5" />
+            <SectionHeaderLabel>Workspace</SectionHeaderLabel>
+          </SectionHeader>
+          <SubSection>
+            <SubSectionItem to="/ndg/editor">
+              <SubSectionItemLabel>NDG Editor</SubSectionItemLabel>
             </SubSectionItem>
           </SubSection>
         </Section>
