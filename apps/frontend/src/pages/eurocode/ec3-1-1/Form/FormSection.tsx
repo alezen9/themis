@@ -34,6 +34,7 @@ import { hollowSectionsMap } from "../data/hollowSections";
 import { circularSectionsMap } from "../data/circularSections";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
 import { classifySection } from "../domain/classification/classifySection";
+import { groupBy } from "lodash-es";
 
 const sectionOptionsMap = {
   I: { options: flangedSectionOptions, defaultValue: defaultISection.id },
@@ -122,11 +123,13 @@ export const FormSection = () => {
 
 const ClassificationInfo = () => {
   const { subscribe, watch, getValues } = useEc311FormContext();
-  const [computedClass, setComputedClass] = useState(() =>
+  const [[computedClass, trace], setComputedClass] = useState(() =>
     classifySection(getValues()),
   );
   const providedClass = watch("section_class");
   const isAutoMode = providedClass === "auto";
+
+  const traceParts = groupBy(trace, "part");
 
   useEffect(() => {
     const unsubscribe = subscribe({
@@ -183,6 +186,79 @@ const ClassificationInfo = () => {
           </TableRow>
         </TableBody>
       </InfoTable>
+
+      {Object.entries(traceParts).map(([part, partTrace]) => {
+        // for shared metadata
+        const firstTrace = partTrace[0];
+
+        return (
+          <InfoTable key={part}>
+            <TableHeader>
+              <TableRow className="bg-sand-100">
+                <InfoTableHeaderCell>{part}</InfoTableHeaderCell>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              <TableRow>
+                <InfoTableValueCell colSpan={3} align="left">
+                  <span className="inline-flex items-center gap-1">
+                    <span>{firstTrace.ratio.label}</span>
+                    <span>=</span>
+                    <span>
+                      {traceNumberFormatter.format(firstTrace.ratio.value)}
+                    </span>
+                  </span>
+                </InfoTableValueCell>
+              </TableRow>
+
+              {firstTrace.values.map((value) => (
+                <TableRow key={value.label}>
+                  <InfoTableValueCell colSpan={3} align="left">
+                    <span className="inline-flex items-center gap-1">
+                      <span>{value.label}</span>
+                      <span>=</span>
+                      <span>{traceNumberFormatter.format(value.value)}</span>
+                      {value.unit && <span>{value.unit}</span>}
+                    </span>
+                  </InfoTableValueCell>
+                </TableRow>
+              ))}
+
+              {partTrace.map((row) => (
+                <TableRow key={row.label}>
+                  <InfoTableValueCell colSpan={3} align="left">
+                    <span className="inline-flex items-center gap-2">
+                      <span>{row.label}</span>
+                      {row.limit && (
+                        <span className="inline-flex items-center gap-1">
+                          <span>
+                            {traceNumberFormatter.format(row.ratio.value)}
+                          </span>
+                          <span>&le;</span>
+                          <span>{row.limit.formula}</span>
+                          <span className="ml-4">&rarr;</span>
+                          <span>
+                            {row.passed ? "Satisfied" : "Not satisfied"}
+                          </span>
+                        </span>
+                      )}
+                    </span>
+                  </InfoTableValueCell>
+                </TableRow>
+              ))}
+
+              {computedClass === 4 && (
+                <TableRow>
+                  <InfoTableValueCell colSpan={3} align="left">
+                    Class 4 (Not supported)
+                  </InfoTableValueCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </InfoTable>
+        );
+      })}
     </div>
   );
 };
@@ -191,3 +267,7 @@ const formatSectionClass = (sectionClass: string | number) => {
   if (sectionClass === "auto") return "Auto";
   return `Class ${sectionClass}`;
 };
+
+const traceNumberFormatter = new Intl.NumberFormat(undefined, {
+  maximumFractionDigits: 2,
+});

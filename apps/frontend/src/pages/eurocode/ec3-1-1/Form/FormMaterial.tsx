@@ -79,7 +79,10 @@ const AdditionalInfoRow = () => {
           <TableRow>
             <InfoTableLabelCell />
             <InfoTableValueCell>
-              <span className="mr-2 opacity-75 text-xs">thickness &ge; 40</span>
+              <span className="mr-2 opacity-75 text-xs">
+                thickness &ge; 40
+                <Latex tex="mm" className=" text-lg" />
+              </span>
               {grade?.fy_above_40_MPa ?? grade?.fy_MPa ?? "-"}
             </InfoTableValueCell>
             <InfoTableUnitCell>
@@ -99,7 +102,10 @@ const AdditionalInfoRow = () => {
           <TableRow>
             <InfoTableLabelCell />
             <InfoTableValueCell>
-              <span className="mr-2 opacity-75 text-xs">thickness &ge; 40</span>
+              <span className="mr-2 opacity-75 text-xs">
+                thickness &ge; 40
+                <Latex tex="mm" className=" text-lg" />
+              </span>
               {grade?.fu_above_40_MPa ?? grade?.fu_MPa ?? "-"}
             </InfoTableValueCell>
             <InfoTableUnitCell>

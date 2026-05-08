@@ -33,7 +33,7 @@ export const defaultValues = {
   section_class: "auto",
 
   // GEOMETRY
-  L_m: 5,
+  L_m: 5.0,
   i_geometry: {
     h_mm: defaultISection.h_mm,
     b_mm: defaultISection.b_mm,

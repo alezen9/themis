@@ -300,6 +300,6 @@ const GeometryPropertiesInfo = () => {
   );
 };
 
-const propertyFormatter = new Intl.NumberFormat("en-US", {
+const propertyFormatter = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 0,
 });

@@ -1,6 +1,11 @@
 import { steelGradesMap } from "../../data/steelGrades";
 import { Ec3FormValues } from "../../Form/schema";
-import { getEpsilon, maxClass, throwClass4NotSupported } from "./utils";
+import {
+  ClassificationTrace,
+  getEpsilon,
+  maxClass,
+  SectionClass,
+} from "./utils";
 
 type Geometry = Ec3FormValues["rhs_geometry"];
 type Actions = Pick<Ec3FormValues, "N_Ed_kN" | "M_y_Ed_kNm">;
@@ -13,7 +18,9 @@ export const classifyRhsSection = (
   const { b_mm, tw_mm, ri_mm } = geometry;
   const { N_Ed_kN, M_y_Ed_kNm } = actions;
 
-  if (N_Ed_kN >= 0 && M_y_Ed_kNm === 0) return 1;
+  const trace: ClassificationTrace[] = [];
+
+  if (N_Ed_kN >= 0 && M_y_Ed_kNm === 0) return [1, trace] as const;
 
   const steelGrade = steelGradesMap.get(steel_grade_id);
   if (!steelGrade) throw new Error("Steel grade not found");
@@ -28,7 +35,7 @@ export const classifyRhsSection = (
   const isPureCompression = N_Ed_kN < 0 && M_y_Ed_kNm === 0;
   const isCompressionAndBending = N_Ed_kN < 0 && M_y_Ed_kNm !== 0;
 
-  let webClass: 1 | 2 | 3;
+  let webClass: SectionClass;
   if (isPureCompression)
     webClass = classifyInternalPartInCompression(
       getWebRatio(geometry),
@@ -43,7 +50,7 @@ export const classifyRhsSection = (
     );
   else webClass = classifyInternalPartInBending(getWebRatio(geometry), epsilon);
 
-  return maxClass(webClass, flangeClass);
+  return [maxClass(webClass, flangeClass), trace] as const;
 };
 
 const getWebRatio = (geometry: Geometry) => {
@@ -57,7 +64,7 @@ const classifyInternalPartInCompression = (ratio: number, epsilon: number) => {
   if (ratio <= 38 * epsilon) return 2;
   if (ratio <= 42 * epsilon) return 3;
 
-  return throwClass4NotSupported();
+  return 4;
 };
 
 const classifyInternalPartInBending = (ratio: number, epsilon: number) => {
@@ -65,7 +72,7 @@ const classifyInternalPartInBending = (ratio: number, epsilon: number) => {
   if (ratio <= 83 * epsilon) return 2;
   if (ratio <= 124 * epsilon) return 3;
 
-  return throwClass4NotSupported();
+  return 4;
 };
 
 const classifyInternalPartInCompressionAndBending = (
@@ -104,5 +111,5 @@ const classifyInternalPartInCompressionAndBending = (
       : 62 * epsilon * (1 - psi) * Math.sqrt(-psi);
   if (webRatio <= class3Limit) return 3;
 
-  return throwClass4NotSupported();
+  return 4;
 };
