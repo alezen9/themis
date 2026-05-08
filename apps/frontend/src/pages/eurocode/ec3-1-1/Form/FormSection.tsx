@@ -226,7 +226,7 @@ const ClassificationInfo = () => {
 
               {partTrace.map((row) => (
                 <TableRow key={row.label}>
-                  <InfoTableValueCell colSpan={3} align="left">
+                  <InfoTableValueCell colSpan={2} align="left">
                     <span className="inline-flex items-center gap-2">
                       <span>{row.label}</span>
                       {row.limit && (
@@ -236,21 +236,27 @@ const ClassificationInfo = () => {
                           </span>
                           <span>&le;</span>
                           <span>{row.limit.formula}</span>
-                          <span className="ml-4">&rarr;</span>
-                          <span>
-                            {row.passed ? "Satisfied" : "Not satisfied"}
-                          </span>
                         </span>
                       )}
                     </span>
                   </InfoTableValueCell>
+                  {row.limit && (
+                    <InfoTableValueCell align="left">
+                      <span className="mr-2">&rarr;</span>
+                      <span>{row.passed ? "Satisfied" : "Not satisfied"}</span>
+                    </InfoTableValueCell>
+                  )}
                 </TableRow>
               ))}
 
               {computedClass === 4 && (
                 <TableRow>
-                  <InfoTableValueCell colSpan={3} align="left">
-                    Class 4 (Not supported)
+                  <InfoTableValueCell colSpan={2} align="left">
+                    Class 4
+                  </InfoTableValueCell>
+                  <InfoTableValueCell align="left">
+                    <span className="mr-2">&rarr;</span>
+                    <span className="uppercase">Not supported</span>
                   </InfoTableValueCell>
                 </TableRow>
               )}
