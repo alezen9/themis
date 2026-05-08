@@ -136,14 +136,7 @@ export const DrawingRhsShape = () => {
 
   useEffect(() => {
     const unsubscribe = subscribe({
-      name: [
-        "rhs_geometry.h_mm",
-        "rhs_geometry.b_mm",
-        "rhs_geometry.tw_mm",
-        "rhs_geometry.ro_mm",
-        "rhs_geometry.ri_mm",
-      ],
-      exact: true,
+      name: "rhs_geometry",
       formState: { values: true },
       callback: updateSceneParams,
     });

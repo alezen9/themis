@@ -41,8 +41,6 @@ export const FormGeometry = () => {
       {shape === "CHS" && <DrawingChsShape />}
 
       <SpacingDivider />
-      <GeometryPropertiesInfo />
-      <SpacingDivider />
 
       <HorizontalInput name="L_m" label={<LatexLabel tex="L" />}>
         <InputNumber {...registerNumber?.("L_m")} suffix="m" />
@@ -50,6 +48,7 @@ export const FormGeometry = () => {
 
       {isCustomSection && shape === "I" && (
         <>
+          <SpacingDivider />
           <HorizontalInput name="h_mm" label={<LatexLabel tex="h" />}>
             <InputNumber {...registerNumber?.("i_geometry.h_mm")} suffix="mm" />
           </HorizontalInput>
@@ -80,6 +79,7 @@ export const FormGeometry = () => {
 
       {isCustomSection && shape === "RHS" && (
         <>
+          <SpacingDivider />
           <HorizontalInput name="h_mm" label={<LatexLabel tex="h" />}>
             <InputNumber
               {...registerNumber?.("rhs_geometry.h_mm")}
@@ -119,6 +119,7 @@ export const FormGeometry = () => {
 
       {isCustomSection && shape === "CHS" && (
         <>
+          <SpacingDivider />
           <HorizontalInput name="d_mm" label={<LatexLabel tex="d" />}>
             <InputNumber
               {...registerNumber?.("chs_geometry.d_mm")}
@@ -134,6 +135,10 @@ export const FormGeometry = () => {
           </HorizontalInput>
         </>
       )}
+
+      <SpacingDivider />
+      <GeometryPropertiesInfo />
+      <SpacingDivider />
     </Section>
   );
 };
@@ -153,7 +158,6 @@ const GeometryPropertiesInfo = () => {
         "shape",
         "section_id",
       ],
-      exact: true,
       formState: { values: true },
       callback: ({ values }) => {
         const computed = computeGeometryProperties(values);

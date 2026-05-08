@@ -115,14 +115,7 @@ export const DrawingIShape = () => {
 
   useEffect(() => {
     const unsubscribe = subscribe({
-      name: [
-        "i_geometry.h_mm",
-        "i_geometry.b_mm",
-        "i_geometry.tf_mm",
-        "i_geometry.tw_mm",
-        "i_geometry.r_mm",
-      ],
-      exact: true,
+      name: "i_geometry",
       formState: { values: true },
       callback: updateSceneParams,
     });

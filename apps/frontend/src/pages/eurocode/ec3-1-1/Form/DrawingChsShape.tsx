@@ -96,8 +96,7 @@ export const DrawingChsShape = () => {
 
   useEffect(() => {
     const unsubscribe = subscribe({
-      name: ["chs_geometry.d_mm", "chs_geometry.t_mm"],
-      exact: true,
+      name: "chs_geometry",
       formState: { values: true },
       callback: updateSceneParams,
     });

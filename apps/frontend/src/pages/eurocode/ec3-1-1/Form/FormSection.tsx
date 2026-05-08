@@ -143,7 +143,6 @@ const ClassificationInfo = () => {
         "N_Ed_kN",
         "M_y_Ed_kNm",
       ],
-      exact: true,
       formState: { values: true },
       callback: ({ values }) => {
         setComputedClass(classifySection(values));
