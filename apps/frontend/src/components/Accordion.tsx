@@ -41,7 +41,7 @@ export const AccordionHeader = forwardRef<
     <BaseCollapsible.Trigger
       ref={ref}
       className={twMerge(
-        "flex w-full list-none items-center gap-3 bg-transparent p-3 text-left",
+        "group/trigger flex w-full list-none items-center gap-3 bg-transparent p-3 text-left",
         "group-data-[expandable=true]:cursor-pointer",
         "group-data-[expandable=false]:pointer-events-none",
         className,
@@ -73,7 +73,7 @@ export const AccordionContent = forwardRef<
       ref={ref}
       className={twMerge(
         "px-3",
-        "[&[hidden]:not([hidden='until-found'])]:hidden h-(--collapsible-panel-height) justify-end overflow-hidden text-sm transition-all ease-out data-ending-style:h-0 data-starting-style:h-0 duration-150",
+        "[&[hidden]:not([hidden='until-found'])]:hidden h-(--collapsible-panel-height) justify-end overflow-hidden text-sm transition-all ease-in-out data-ending-style:h-0 data-starting-style:h-0 duration-450",
         className,
       )}
       keepMounted={keepMounted}
