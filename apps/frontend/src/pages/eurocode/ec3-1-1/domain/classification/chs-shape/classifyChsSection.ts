@@ -69,7 +69,7 @@ type ChsTraceLimitInput = ChsTraceInput & {
 
 const createChsTrace = (input: ChsTraceLimitInput): ClassificationTrace => ({
   label: input.label,
-  part: "Panel",
+  part: "Panel n.1 - Tube",
   sectionClass: input.sectionClass,
   ratio: { label: "d / t", value: input.ratio },
   limit: { label: "Limit", value: input.limit, formula: input.formula },

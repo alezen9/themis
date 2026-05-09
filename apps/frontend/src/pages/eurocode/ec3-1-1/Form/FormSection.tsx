@@ -192,10 +192,13 @@ const ClassificationInfo = () => {
         </TableBody>
       </InfoTable>
 
-      <Accordion>
+      <Accordion open>
         <AccordionHeader iconPosition="left" className="p-0">
-          <span className="text-xs text-sand-800 ">
-            Show auto-classification details
+          <span className="text-xs text-sand-800 group-data-panel-open/trigger:hidden">
+            Show classification details
+          </span>
+          <span className="hidden text-xs text-sand-800 group-data-panel-open/trigger:inline">
+            Hide classification details
           </span>
         </AccordionHeader>
         <AccordionContent className="px-0 mt-2">
