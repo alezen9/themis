@@ -5,14 +5,14 @@ import {
   maxClass,
   SectionClass,
 } from "./utils";
-import { classifyIFlangeInCompression } from "./classifyIFlange";
+import { classifyIFlangeInCompression } from "./_classifyIFlange";
 import {
   classifyIWebInBending,
   classifyIWebInCompression,
   classifyIWebInCompressionAndBending,
-} from "./classifyIWeb";
-import { getIClassificationGeometry } from "./getIClassificationGeometry";
-import { getISteelDesignStrength } from "./getISteelDesignStrength";
+} from "./_classifyIWeb";
+import { getIClassificationGeometry } from "./_getIClassificationGeometry";
+import { getISteelDesignStrength } from "./_getISteelDesignStrength";
 
 type Geometry = Ec3FormValues["i_geometry"];
 type Actions = Pick<Ec3FormValues, "N_Ed_kN" | "M_y_Ed_kNm">;

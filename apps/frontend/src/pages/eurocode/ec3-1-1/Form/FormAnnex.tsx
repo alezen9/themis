@@ -11,7 +11,9 @@ import { InputNumber } from "@components/inputs/InputNumber";
 import { useEc311FormContext } from "./useEc311FormContext";
 
 export const FormAnnex = () => {
-  const { registerNumber, registerSelect } = useEc311FormContext();
+  const { registerNumber, registerSelect, watch } = useEc311FormContext();
+  const bucklingCase = watch("buckling_curves_LT_policy");
+  const isBucklingCaseDefault = bucklingCase === "default-rolled-welded";
 
   return (
     <Section>
@@ -39,30 +41,40 @@ export const FormAnnex = () => {
         <InputNumber {...registerNumber?.("beta_LT")} />
       </HorizontalInput>
 
-      <HorizontalInput name="f_method" label={<TextLabel>TBD</TextLabel>}>
-        <InputSelect
-          {...registerSelect?.("f_method")}
-          options={coefficientFMethodOptions}
-        />
-      </HorizontalInput>
-
-      <HorizontalInput
-        name="interaction_factor_method"
-        label={<TextLabel>Method</TextLabel>}
-      >
-        <InputSelect
-          {...registerSelect?.("interaction_factor_method")}
-          options={interactionFactorMethodOptions}
-        />
-      </HorizontalInput>
-
       <HorizontalInput
         name="buckling_curves_LT_policy"
-        label={<TextLabel>TBD</TextLabel>}
+        label={<TextLabel>Buckling curves</TextLabel>}
       >
         <InputSelect
           {...registerSelect?.("buckling_curves_LT_policy")}
           options={bucklingCurvesLTPolicyOptions}
+        />
+      </HorizontalInput>
+
+      {isBucklingCaseDefault && (
+        <HorizontalInput
+          name="f_method"
+          label={<LatexLabel tex="f" className="font-thin" />}
+        >
+          <InputSelect
+            {...registerSelect?.("f_method")}
+            options={coefficientFMethodOptions}
+          />
+        </HorizontalInput>
+      )}
+
+      <HorizontalInput
+        name="interaction_factor_method"
+        label={
+          <LatexLabel
+            tex="k_{ij} \; method"
+            className="text-[1.25rem] font-thin"
+          />
+        }
+      >
+        <InputSelect
+          {...registerSelect?.("interaction_factor_method")}
+          options={interactionFactorMethodOptions}
         />
       </HorizontalInput>
     </Section>

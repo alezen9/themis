@@ -20,6 +20,11 @@ import { Latex } from "@components/Latex";
 import { computeGeometryProperties } from "../domain/geometry/computeGeometryProperties";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
 import { useEc311FormContext } from "./useEc311FormContext";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionHeader,
+} from "@components/Accordion";
 
 const mm2Unit = String.raw`\mathrm{mm}^2`;
 const mm3Unit = String.raw`\mathrm{mm}^3`;
@@ -35,17 +40,13 @@ export const FormGeometry = () => {
   return (
     <Section>
       <SectionTitle>Geometry</SectionTitle>
-
       {shape === "I" && <DrawingIShape />}
       {shape === "RHS" && <DrawingRhsShape />}
       {shape === "CHS" && <DrawingChsShape />}
-
       <SpacingDivider />
-
       <HorizontalInput name="L_m" label={<LatexLabel tex="L" />}>
         <InputNumber {...registerNumber?.("L_m")} suffix="m" />
       </HorizontalInput>
-
       {isCustomSection && shape === "I" && (
         <>
           <SpacingDivider />
@@ -76,7 +77,6 @@ export const FormGeometry = () => {
           </HorizontalInput>
         </>
       )}
-
       {isCustomSection && shape === "RHS" && (
         <>
           <SpacingDivider />
@@ -116,7 +116,6 @@ export const FormGeometry = () => {
           </HorizontalInput>
         </>
       )}
-
       {isCustomSection && shape === "CHS" && (
         <>
           <SpacingDivider />
@@ -136,9 +135,16 @@ export const FormGeometry = () => {
         </>
       )}
 
-      <SpacingDivider />
-      <GeometryPropertiesInfo />
-      <SpacingDivider />
+      <Accordion>
+        <AccordionHeader iconPosition="left" className="px-0">
+          <span className="text-xs text-sand-800">
+            See all geometry properties
+          </span>
+        </AccordionHeader>
+        <AccordionContent className="px-0">
+          <GeometryPropertiesInfo />
+        </AccordionContent>
+      </Accordion>
     </Section>
   );
 };

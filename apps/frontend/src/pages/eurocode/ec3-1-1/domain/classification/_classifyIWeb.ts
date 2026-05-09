@@ -1,5 +1,5 @@
 import { SectionClass } from "./utils";
-import { IClassificationGeometry } from "./getIClassificationGeometry";
+import { IClassificationGeometry } from "./_getIClassificationGeometry";
 
 export const classifyIWebInCompression = (
   ratio: number,

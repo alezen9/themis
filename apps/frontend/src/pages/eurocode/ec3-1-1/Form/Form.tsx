@@ -14,13 +14,13 @@ export const Form = () => {
       <FormShape />
       <LineDivider />
 
-      <FormMaterial />
-      <LineDivider />
-
       <FormSection />
       <LineDivider />
 
       <FormGeometry />
+      <LineDivider />
+
+      <FormMaterial />
       <LineDivider />
 
       <FormActions />

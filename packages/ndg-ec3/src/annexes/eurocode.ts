@@ -20,6 +20,6 @@ export const eurocodeAnnex = {
 
     f_method: "default-equation",
     interaction_factor_method: "both",
-    buckling_curves_LT_policy: "default",
+    buckling_curves_LT_policy: "default-rolled-welded",
   },
 } as const satisfies Ec3NationalAnnex;

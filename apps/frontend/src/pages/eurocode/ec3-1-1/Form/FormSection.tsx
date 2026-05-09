@@ -35,6 +35,11 @@ import { circularSectionsMap } from "../data/circularSections";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
 import { classifySection } from "../domain/classification/classifySection";
 import { groupBy } from "lodash-es";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionHeader,
+} from "@components/Accordion";
 
 const sectionOptionsMap = {
   I: { options: flangedSectionOptions, defaultValue: defaultISection.id },
@@ -142,6 +147,7 @@ const ClassificationInfo = () => {
         "chs_geometry",
         "N_Ed_kN",
         "M_y_Ed_kNm",
+        "M_z_Ed_kNm",
       ],
       formState: { values: true },
       callback: ({ values }) => {
@@ -186,84 +192,97 @@ const ClassificationInfo = () => {
         </TableBody>
       </InfoTable>
 
-      {Object.entries(traceParts).map(([part, partTrace]) => {
-        // for shared metadata
-        const firstTrace = partTrace[0];
+      <Accordion>
+        <AccordionHeader iconPosition="left" className="p-0">
+          <span className="text-xs text-sand-800 ">
+            Show auto-classification details
+          </span>
+        </AccordionHeader>
+        <AccordionContent className="px-0 mt-2">
+          {Object.entries(traceParts).map(([part, partTrace]) => {
+            // for shared metadata
+            const firstTrace = partTrace[0];
 
-        return (
-          <InfoTable key={part}>
-            <TableHeader>
-              <TableRow className="bg-sand-100">
-                <InfoTableHeaderCell>{part}</InfoTableHeaderCell>
-              </TableRow>
-            </TableHeader>
+            return (
+              <InfoTable key={part}>
+                <TableHeader>
+                  <TableRow className="bg-sand-100">
+                    <InfoTableHeaderCell>{part}</InfoTableHeaderCell>
+                  </TableRow>
+                </TableHeader>
 
-            <TableBody>
-              <TableRow>
-                <InfoTableValueCell colSpan={3} align="left">
-                  <span className="inline-flex items-center gap-1">
-                    <span>{firstTrace.ratio.label}</span>
-                    <span>=</span>
-                    <span>
-                      {traceNumberFormatter.format(firstTrace.ratio.value)}
-                    </span>
-                  </span>
-                </InfoTableValueCell>
-              </TableRow>
-
-              {firstTrace.values.map((value) => (
-                <TableRow key={value.label}>
-                  <InfoTableValueCell colSpan={3} align="left">
-                    <span className="inline-flex items-center gap-1">
-                      <span>{value.label}</span>
-                      <span>=</span>
-                      <span>{traceNumberFormatter.format(value.value)}</span>
-                      {value.unit && <span>{value.unit}</span>}
-                    </span>
-                  </InfoTableValueCell>
-                </TableRow>
-              ))}
-
-              {partTrace.map((row) => (
-                <TableRow key={row.label}>
-                  <InfoTableValueCell colSpan={2} align="left">
-                    <span className="inline-flex items-center gap-2">
-                      <span>{row.label}</span>
-                      {row.limit && (
-                        <span className="inline-flex items-center gap-1">
-                          <span>
-                            {traceNumberFormatter.format(row.ratio.value)}
-                          </span>
-                          <span>&le;</span>
-                          <span>{row.limit.formula}</span>
+                <TableBody>
+                  <TableRow>
+                    <InfoTableValueCell colSpan={3} align="left">
+                      <span className="inline-flex items-center gap-1">
+                        <span>{firstTrace.ratio.label}</span>
+                        <span>=</span>
+                        <span>
+                          {traceNumberFormatter.format(firstTrace.ratio.value)}
                         </span>
-                      )}
-                    </span>
-                  </InfoTableValueCell>
-                  {row.limit && (
-                    <InfoTableValueCell align="left">
-                      <span className="mr-2">&rarr;</span>
-                      <span>{row.passed ? "Satisfied" : "Not satisfied"}</span>
+                      </span>
                     </InfoTableValueCell>
-                  )}
-                </TableRow>
-              ))}
+                  </TableRow>
 
-              {computedClass === 4 && (
-                <TableRow>
-                  <InfoTableValueCell colSpan={2} align="left">
-                    Class 4
-                  </InfoTableValueCell>
-                  <InfoTableValueCell align="left">
-                    <span className="mr-2">&rarr;</span>
-                    <span className="uppercase">Not supported</span>
-                  </InfoTableValueCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </InfoTable>
-        );
-      })}
+                  {firstTrace.values.map((value) => (
+                    <TableRow key={value.label}>
+                      <InfoTableValueCell colSpan={3} align="left">
+                        <span className="inline-flex items-center gap-1">
+                          <span>{value.label}</span>
+                          <span>=</span>
+                          <span>
+                            {traceNumberFormatter.format(value.value)}
+                          </span>
+                          {value.unit && <span>{value.unit}</span>}
+                        </span>
+                      </InfoTableValueCell>
+                    </TableRow>
+                  ))}
+
+                  {partTrace.map((row) => (
+                    <TableRow key={row.label}>
+                      <InfoTableValueCell colSpan={2} align="left">
+                        <span className="inline-flex items-center gap-2">
+                          <span>{row.label}</span>
+                          {row.limit && (
+                            <span className="inline-flex items-center gap-1">
+                              <span>
+                                {traceNumberFormatter.format(row.ratio.value)}
+                              </span>
+                              <span>&le;</span>
+                              <span>{row.limit.formula}</span>
+                            </span>
+                          )}
+                        </span>
+                      </InfoTableValueCell>
+                      {row.limit && (
+                        <InfoTableValueCell align="left">
+                          <span className="mr-2">&rarr;</span>
+                          <span>
+                            {row.passed ? "Satisfied" : "Not satisfied"}
+                          </span>
+                        </InfoTableValueCell>
+                      )}
+                    </TableRow>
+                  ))}
+
+                  {computedClass === 4 && (
+                    <TableRow>
+                      <InfoTableValueCell colSpan={2} align="left">
+                        Class 4
+                      </InfoTableValueCell>
+                      <InfoTableValueCell align="left">
+                        <span className="mr-2">&rarr;</span>
+                        <span className="uppercase">Not supported</span>
+                      </InfoTableValueCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </InfoTable>
+            );
+          })}
+        </AccordionContent>
+      </Accordion>
     </div>
   );
 };

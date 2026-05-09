@@ -90,7 +90,7 @@ export const coefficientFMethodValues = extractValues(
 );
 
 export const bucklingCurvesLTPolicyOptions = [
-  { value: "default", label: "Default" },
+  { value: "default-rolled-welded", label: "Default (Rolled / Welded)" },
   { value: "general", label: "General" },
 ] as const satisfies Option[];
 export const bucklingCurvesLTPolicyValues = extractValues(

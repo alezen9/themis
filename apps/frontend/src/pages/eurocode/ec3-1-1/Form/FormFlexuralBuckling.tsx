@@ -1,11 +1,6 @@
 import { HorizontalInput } from "@components/inputs/shared";
 import { SpacingDivider } from "@components/Dividers";
-import {
-  LatexLabel,
-  Section,
-  SectionTitle,
-  TextLabel,
-} from "./shared";
+import { LatexLabel, Section, SectionTitle, TextLabel } from "./shared";
 import { InputSelect } from "@components/inputs/InputSelect";
 import { InputNumber } from "@components/inputs/InputNumber";
 import { momentShapeOptions, supportConditionOptions } from "./options";
@@ -40,12 +35,7 @@ const MomentY = () => {
 
       <HorizontalInput
         name="M_y_Ed_shape"
-        label={
-          <span className="flex items-baseline gap-2">
-            <LatexLabel tex="M_{y,Ed}" className="text-[1.25rem]" />
-            <TextLabel>shape</TextLabel>
-          </span>
-        }
+        label={<LatexLabel tex="M_{y} \; shape" className="text-[1.25rem]" />}
       >
         <InputSelect
           {...registerSelect?.("M_y_Ed_shape")}
@@ -92,12 +82,7 @@ const MomentZ = () => {
 
       <HorizontalInput
         name="M_z_Ed_shape"
-        label={
-          <span className="flex items-baseline gap-2">
-            <LatexLabel tex="M_{z,Ed}" className="text-[1.25rem]" />
-            <TextLabel>shape</TextLabel>
-          </span>
-        }
+        label={<LatexLabel tex="M_{z} \; shape" className="text-[1.25rem]" />}
       >
         <InputSelect
           {...registerSelect?.("M_z_Ed_shape")}

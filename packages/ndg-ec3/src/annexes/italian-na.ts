@@ -20,6 +20,6 @@ export const italianAnnex = {
 
     f_method: "default-equation",
     interaction_factor_method: "any",
-    buckling_curves_LT_policy: "default",
+    buckling_curves_LT_policy: "default-rolled-welded",
   },
 } as const satisfies Ec3NationalAnnex;

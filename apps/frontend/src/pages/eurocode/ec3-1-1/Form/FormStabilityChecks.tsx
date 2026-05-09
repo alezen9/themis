@@ -8,12 +8,7 @@ import {
   momentShapeOptions,
   supportConditionOptions,
 } from "./options";
-import {
-  LatexLabel,
-  Section,
-  SectionTitle,
-  TextLabel,
-} from "./shared";
+import { LatexLabel, Section, SectionTitle, TextLabel } from "./shared";
 import { useEc311FormContext } from "./useEc311FormContext";
 
 export const FormStabilityChecks = () => {
@@ -31,7 +26,7 @@ export const FormStabilityChecks = () => {
   return (
     <Section>
       <div className="mb-2 flex w-full items-center justify-between gap-4">
-        <SectionTitle className="mb-0">Stability Checks</SectionTitle>
+        <SectionTitle className="mb-0">Lateral Torsional Buckling</SectionTitle>
         <InputToggle
           {...registerBoolean?.("include_torsional_modes")}
           aria-label="Toggle stability checks"
@@ -54,10 +49,10 @@ export const FormStabilityChecks = () => {
           <HorizontalInput
             name="M_y_Ed_shape_LT"
             label={
-              <span className="flex items-baseline gap-2">
-                <LatexLabel tex="M_{y,Ed}" className="text-[1.25rem]" />
-                <TextLabel>shape</TextLabel>
-              </span>
+              <LatexLabel
+                tex="M_{y} \; shape \; (LT)"
+                className="text-[1.25rem]"
+              />
             }
           >
             <InputSelect

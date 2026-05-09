@@ -1,6 +1,6 @@
-import { steelGradesMap } from "../../data/steelGrades";
-import { Ec3FormValues } from "../../Form/schema";
-import { ClassificationTrace, getEpsilon2 } from "./utils";
+import { steelGradesMap } from "../../../data/steelGrades";
+import { Ec3FormValues } from "../../../Form/schema";
+import { ClassificationTrace, getEpsilon2 } from "../utils";
 
 type Geometry = Ec3FormValues["chs_geometry"];
 
@@ -69,7 +69,7 @@ type ChsTraceLimitInput = ChsTraceInput & {
 
 const createChsTrace = (input: ChsTraceLimitInput): ClassificationTrace => ({
   label: input.label,
-  part: "Tube",
+  part: "Panel",
   sectionClass: input.sectionClass,
   ratio: { label: "d / t", value: input.ratio },
   limit: { label: "Limit", value: input.limit, formula: input.formula },

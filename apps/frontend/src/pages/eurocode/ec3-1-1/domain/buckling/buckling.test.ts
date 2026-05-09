@@ -4,7 +4,7 @@ import { getBucklingCurves } from "./buckling";
 const baseInput = {
   i_geometry: { h_mm: 300, b_mm: 150, tf_mm: 40, tw_mm: 7.1, r_mm: 15 },
   steel_grade_id: "EN10025-2:S355",
-  buckling_curves_LT_policy: "default",
+  buckling_curves_LT_policy: "default-rolled-welded",
 } as const;
 
 describe("getBucklingCurves", () => {

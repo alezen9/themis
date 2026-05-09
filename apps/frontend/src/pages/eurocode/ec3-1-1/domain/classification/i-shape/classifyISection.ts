@@ -1,13 +1,13 @@
-import { Ec3FormValues } from "../../Form/schema";
-import { ClassificationTrace } from "./utils";
+import { Ec3FormValues } from "../../../Form/schema";
+import { ClassificationTrace } from "../utils";
 
-type Geometry = Ec3FormValues["rhs_geometry"];
+type Geometry = Ec3FormValues["i_geometry"];
 type Actions = Pick<
   Ec3FormValues,
   "N_Ed_kN" | "M_y_Ed_kNm" | "M_z_Ed_kNm"
 >;
 
-export const classifyRhsSection = (
+export const classifyISection = (
   _geometry: Geometry,
   _steel_grade_id: Ec3FormValues["steel_grade_id"],
   _actions: Actions,
