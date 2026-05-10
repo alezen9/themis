@@ -88,6 +88,7 @@ const PSI = "\u03c8";
 export const formatMetadata = (key: keyof Metadata, value: string | number) => {
   const formattedValue =
     typeof value === "number" ? numberFormatter.format(value) : value;
+
   if (key === "alpha") return `${ALPHA} = ${formattedValue}`;
   if (key === "cOverT") return `c / t = ${formattedValue}`;
   if (key === "dOverT") return `d / t = ${formattedValue}`;
@@ -97,8 +98,8 @@ export const formatMetadata = (key: keyof Metadata, value: string | number) => {
   if (key === "sigmaTipPoint") return `${SIGMA} tip = ${formattedValue} MPa`;
   if (key === "sigmaSupportedPoint")
     return `${SIGMA} supported = ${formattedValue} MPa`;
-  if (key === "psi") return `${PSI} = ${formattedValue} MPa`;
-  if (key === "kSigma") return `k${SIGMA} = ${formattedValue} MPa`;
+  if (key === "psi") return `${PSI} = ${formattedValue}`;
+  if (key === "kSigma") return `k${SIGMA} = ${formattedValue}`;
   if (key === "stressDistribution")
     return `Stress distribution = ${formattedValue}`;
 };
