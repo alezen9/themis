@@ -1,14 +1,14 @@
 import { steelGradesMap } from "../../../data/steelGrades";
 import { Ec3FormValues } from "../../../Form/schema";
-import { ClassificationTrace, getEpsilon2 } from "../utils";
+import { getEpsilon2, type Part, type SectionClass } from "../utils";
 
 type Geometry = Ec3FormValues["chs_geometry"];
 
 export const classifyChsSection = (
   geometry: Geometry,
   steel_grade_id: Ec3FormValues["steel_grade_id"],
-) => {
-  const trace: ClassificationTrace[] = [];
+  actions: Pick<Ec3FormValues, "N_Ed_kN">,
+): [SectionClass, Part[]] => {
   const { d_mm, t_mm } = geometry;
   const ratio = d_mm / t_mm;
 
@@ -19,27 +19,55 @@ export const classifyChsSection = (
 
   const epsilon2 = getEpsilon2(fy);
 
-  trace.push(trace1({ ratio, epsilon2, fy_MPa: fy }));
-  if (ratio <= 50 * epsilon2) return [1, trace] as const;
+  const part: Part = {
+    label: "Tube",
+    type: "tubular",
+    metadata: {
+      fy,
+      epsilon2,
+      dOverT: ratio,
+      stressDistribution: actions.N_Ed_kN >= 0 ? "tension" : "compression",
+    },
+    trace: [],
+  };
 
-  trace.push(trace2({ ratio, epsilon2, fy_MPa: fy }));
-  if (ratio <= 70 * epsilon2) return [2, trace] as const;
+  if (actions.N_Ed_kN >= 0) {
+    part.trace.push({
+      label: "Class 1",
+      satisfied: true,
+      note: "Tension only",
+    });
 
-  trace.push(trace3({ ratio, epsilon2, fy_MPa: fy }));
-  if (ratio <= 90 * epsilon2) return [3, trace] as const;
+    return [1, [part]];
+  }
 
-  return [4, trace] as const;
+  part.trace.push(trace1({ ratio, epsilon2 }));
+  if (ratio <= 50 * epsilon2) return [1, [part]];
+
+  part.trace.push(trace2({ ratio, epsilon2 }));
+  if (ratio <= 70 * epsilon2) return [2, [part]];
+
+  part.trace.push(trace3({ ratio, epsilon2 }));
+  if (ratio <= 90 * epsilon2) return [3, [part]];
+
+  part.trace.push({
+    label: "Class 4",
+    satisfied: false,
+    note: "Not supported",
+  });
+
+  return [4, [part]];
 };
 
-type ChsTraceInput = { ratio: number; epsilon2: number; fy_MPa: number };
+type ChsTraceInput = { ratio: number; epsilon2: number };
 
 const trace1 = (input: ChsTraceInput) =>
   createChsTrace({
     ...input,
     label: "Class 1",
     sectionClass: 1,
-    limit: 50 * input.epsilon2,
-    formula: "50\ε²",
+    limit: "50ε²",
+    satisfied: input.ratio <= 50 * input.epsilon2,
   });
 
 const trace2 = (input: ChsTraceInput) =>
@@ -47,8 +75,8 @@ const trace2 = (input: ChsTraceInput) =>
     ...input,
     label: "Class 2",
     sectionClass: 2,
-    limit: 70 * input.epsilon2,
-    formula: "70\ε²",
+    limit: "70ε²",
+    satisfied: input.ratio <= 70 * input.epsilon2,
   });
 
 const trace3 = (input: ChsTraceInput) =>
@@ -56,26 +84,20 @@ const trace3 = (input: ChsTraceInput) =>
     ...input,
     label: "Class 3",
     sectionClass: 3,
-    limit: 90 * input.epsilon2,
-    formula: "90\ε²",
+    limit: "90ε²",
+    satisfied: input.ratio <= 90 * input.epsilon2,
   });
 
 type ChsTraceLimitInput = ChsTraceInput & {
-  label: string;
+  label: `Class ${SectionClass}`;
   sectionClass: 1 | 2 | 3;
-  limit: number;
-  formula: string;
+  limit: string;
+  satisfied: boolean;
 };
 
-const createChsTrace = (input: ChsTraceLimitInput): ClassificationTrace => ({
+const createChsTrace = (input: ChsTraceLimitInput) => ({
   label: input.label,
-  part: "Panel n.1 - Tube",
-  sectionClass: input.sectionClass,
-  ratio: { label: "d / t", value: input.ratio },
-  limit: { label: "Limit", value: input.limit, formula: input.formula },
-  values: [
-    { label: "fᵧ", value: input.fy_MPa, unit: "MPa" },
-    { label: "\ε²", value: input.epsilon2 },
-  ],
-  passed: input.ratio <= input.limit,
+  ratio: input.ratio,
+  limit: input.limit,
+  satisfied: input.satisfied,
 });

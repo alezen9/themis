@@ -22,6 +22,7 @@ export const computeChsGeometryProperties = (
   const Av_y_mm2 = (2 * A_mm2) / Math.PI;
   const Av_z_mm2 = Av_y_mm2;
   const It_mm4 = existing?.It_mm4 ?? 2 * Iy_mm4;
+  const centroid = { y_mm: d_mm / 2, z_mm: d_mm / 2 };
 
   return {
     A_mm2,
@@ -35,6 +36,7 @@ export const computeChsGeometryProperties = (
     Av_z_mm2,
     It_mm4,
     Iw_mm6: 0,
+    centroid,
   };
 };
 
