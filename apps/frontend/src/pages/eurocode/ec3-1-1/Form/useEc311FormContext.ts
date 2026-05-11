@@ -7,15 +7,10 @@ type Ec311Register = ReturnType<typeof useForm<Ec3FormValues>>["register"];
 type Ec311FormName = Parameters<Ec311Register>[0];
 
 const setValueAsNumber = (value: unknown) => {
-  if (!value) return;
-  try {
-    const valueAsNumber = Number(value);
-    if (isNaN(valueAsNumber)) return;
-    return valueAsNumber;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    return;
-  }
+  if (value === "" || value === null || value === undefined) return;
+  const valueAsNumber = Number(value);
+  if (Number.isNaN(valueAsNumber)) return;
+  return valueAsNumber;
 };
 
 export const useEc311FormContext = () => {

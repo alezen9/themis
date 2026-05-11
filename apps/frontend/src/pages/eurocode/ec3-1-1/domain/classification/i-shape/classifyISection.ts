@@ -1,8 +1,8 @@
+import { clamp } from "lodash-es";
 import { steelGradesMap } from "../../../data/steelGrades";
 import { Ec3FormValues } from "../../../Form/schema";
-import { maxClass, SectionClass, type Part, type RawPart } from "../utils";
 import { computeGeometryProperties } from "../../geometry/computeGeometryProperties";
-import { clamp } from "lodash-es";
+import { maxClass, SectionClass, type Part, type RawPart } from "../utils";
 
 type Geometry = Ec3FormValues["i_geometry"];
 type Actions = Pick<Ec3FormValues, "N_Ed_kN" | "M_y_Ed_kNm" | "M_z_Ed_kNm">;
@@ -28,7 +28,7 @@ export const classifyISection = (
   const classifiedParts = rawParts.map((rawPart) => {
     if (rawPart.type === "outstand")
       return classifyOutstandPart(rawPart, steel_grade_id, ctx);
-    return classifyInternalPart(rawPart, steel_grade_id); // will need ctx as well later
+    return classifyInternalPart(rawPart, steel_grade_id, ctx);
   });
 
   const sectionClass = maxClass(...classifiedParts.map(([c]) => c));
@@ -107,7 +107,7 @@ const classifyOutstandPart = (
   const stressDistribution = getPartStressDistribution(
     sigma_supported_MPa,
     sigma_tip_MPa,
-    ctx.N_Ed_kN,
+    ctx.N_Ed_kN ?? 0,
   );
 
   const part: Part = {
@@ -257,6 +257,7 @@ const computeKSigma = (
     const cappedPsi2 = cappedPsi * cappedPsi;
     return 0.57 - 0.21 * cappedPsi + 0.07 * cappedPsi2;
   }
+
   const cappedPsi = clamp(psi, -1, 1);
   const cappedPsi2 = cappedPsi * cappedPsi;
   if (cappedPsi >= 0) return 0.578 / (cappedPsi + 0.34);
@@ -266,6 +267,7 @@ const computeKSigma = (
 const classifyInternalPart = (
   rawPart: RawPart,
   steel_grade_id: SteelGradeId,
+  ctx: Context,
 ): [SectionClass, Part] => {
   const { c_mm, t_mm } = rawPart;
   if (!c_mm || !t_mm) throw new Error("Invalid internal part");
@@ -276,27 +278,226 @@ const classifyInternalPart = (
   const { fy_MPa, fy_above_40_MPa } = steelGrade;
   const final_fy_Mpa = t_mm > 40 ? (fy_above_40_MPa ?? fy_MPa) : fy_MPa;
   const epsilon = Math.sqrt(235 / final_fy_Mpa);
+  const cOverT = c_mm / t_mm;
+  const stressDistribution = getInternalPartStressDistribution(ctx);
 
-  return [
-    1,
-    {
-      label: rawPart.label,
-      type: rawPart.type,
-      metadata: {
-        fy_MPa: final_fy_Mpa,
-        epsilon,
-        cOverT: c_mm / t_mm,
-        stressDistribution: "compression",
-      },
-      trace: [
-        { label: "Class 1", satisfied: true, note: "Not yet implemented" },
-      ],
-    },
-  ];
+  const part: Part = {
+    label: rawPart.label,
+    type: rawPart.type,
+    metadata: { fy_MPa: final_fy_Mpa, epsilon, cOverT, stressDistribution },
+    trace: [],
+  };
+
+  switch (stressDistribution) {
+    case "tension":
+      return classifyInternalPartTension(part);
+    case "compression":
+      return classifyInternalPartCompression(part);
+    case "bending":
+      return classifyInternalPartBending(part);
+    case "compression-bending":
+      return classifyInternalPartCompressionBending(part, rawPart, ctx);
+  }
+};
+
+const classifyInternalPartTension = (part: Part): [SectionClass, Part] => {
+  part.trace.push({ label: "Class 1", satisfied: true, note: "Tension only" });
+  return [1, part];
+};
+
+const classifyInternalPartCompression = (part: Part): [SectionClass, Part] => {
+  const { cOverT, epsilon } = part.metadata;
+  if (cOverT === undefined || epsilon === undefined) throw new Error();
+
+  part.trace.push({
+    label: "Class 1",
+    ratio: cOverT,
+    limit: "33ε",
+    satisfied: cOverT <= 33 * epsilon,
+  });
+  if (cOverT <= 33 * epsilon) return [1, part];
+
+  part.trace.push({
+    label: "Class 2",
+    ratio: cOverT,
+    limit: "38ε",
+    satisfied: cOverT <= 38 * epsilon,
+  });
+  if (cOverT <= 38 * epsilon) return [2, part];
+
+  part.trace.push({
+    label: "Class 3",
+    ratio: cOverT,
+    limit: "42ε",
+    satisfied: cOverT <= 42 * epsilon,
+  });
+  if (cOverT <= 42 * epsilon) return [3, part];
+
+  part.trace.push({
+    label: "Class 4",
+    satisfied: false,
+    note: "Not supported",
+  });
+
+  return [4, part];
+};
+
+const classifyInternalPartBending = (part: Part): [SectionClass, Part] => {
+  const { cOverT, epsilon } = part.metadata;
+  if (cOverT === undefined || epsilon === undefined) throw new Error();
+
+  part.trace.push({
+    label: "Class 1",
+    ratio: cOverT,
+    limit: "72ε",
+    satisfied: cOverT <= 72 * epsilon,
+  });
+  if (cOverT <= 72 * epsilon) return [1, part];
+
+  part.trace.push({
+    label: "Class 2",
+    ratio: cOverT,
+    limit: "83ε",
+    satisfied: cOverT <= 83 * epsilon,
+  });
+  if (cOverT <= 83 * epsilon) return [2, part];
+
+  part.trace.push({
+    label: "Class 3",
+    ratio: cOverT,
+    limit: "124ε",
+    satisfied: cOverT <= 124 * epsilon,
+  });
+  if (cOverT <= 124 * epsilon) return [3, part];
+
+  part.trace.push({
+    label: "Class 4",
+    satisfied: false,
+    note: "Not supported",
+  });
+
+  return [4, part];
+};
+
+const classifyInternalPartCompressionBending = (
+  part: Part,
+  rawPart: RawPart,
+  ctx: Context,
+): [SectionClass, Part] => {
+  const { cOverT, epsilon, fy_MPa } = part.metadata;
+  const { c_mm, t_mm } = rawPart;
+
+  if (
+    cOverT === undefined ||
+    epsilon === undefined ||
+    fy_MPa === undefined ||
+    c_mm === undefined ||
+    t_mm === undefined
+  )
+    throw new Error();
+
+  const alpha =
+    Math.abs((ctx.N_Ed_kN ?? 0) * 1_000) / (2 * c_mm * fy_MPa * t_mm) + 0.5;
+  part.metadata.alpha = alpha;
+
+  if (alpha > 0.5) {
+    part.trace.push({
+      label: "Class 1",
+      ratio: cOverT,
+      limit: "396ε / (13α - 1)",
+      satisfied: cOverT <= (396 * epsilon) / (13 * alpha - 1),
+    });
+    if (cOverT <= (396 * epsilon) / (13 * alpha - 1)) return [1, part];
+  } else {
+    part.trace.push({
+      label: "Class 1",
+      ratio: cOverT,
+      limit: "36ε / α",
+      satisfied: cOverT <= (36 * epsilon) / alpha,
+    });
+    if (cOverT <= (36 * epsilon) / alpha) return [1, part];
+  }
+
+  if (alpha > 0.5) {
+    part.trace.push({
+      label: "Class 2",
+      ratio: cOverT,
+      limit: "456ε / (13α - 1)",
+      satisfied: cOverT <= (456 * epsilon) / (13 * alpha - 1),
+    });
+    if (cOverT <= (456 * epsilon) / (13 * alpha - 1)) return [2, part];
+  } else {
+    part.trace.push({
+      label: "Class 2",
+      ratio: cOverT,
+      limit: "41.5ε / α",
+      satisfied: cOverT <= (41.5 * epsilon) / alpha,
+    });
+    if (cOverT <= (41.5 * epsilon) / alpha) return [2, part];
+  }
+
+  const sigma_top_MPa = computePointStress({ y_mm: c_mm / 2, z_mm: 0 }, ctx);
+  const sigma_bottom_MPa = computePointStress(
+    { y_mm: -c_mm / 2, z_mm: 0 },
+    ctx,
+  );
+  const psi = computeInternalPsi(sigma_top_MPa, sigma_bottom_MPa);
+  part.metadata.psi = psi;
+
+  if (psi > -1) {
+    part.trace.push({
+      label: "Class 3",
+      ratio: cOverT,
+      limit: "42ε / (0.67 + 0.33ψ)",
+      satisfied: cOverT <= (42 * epsilon) / (0.67 + 0.33 * psi),
+    });
+    if (cOverT <= (42 * epsilon) / (0.67 + 0.33 * psi)) return [3, part];
+  } else {
+    part.trace.push({
+      label: "Class 3",
+      ratio: cOverT,
+      limit: "62ε(1 - ψ)√(-ψ)",
+      satisfied: cOverT <= 62 * epsilon * (1 - psi) * Math.sqrt(-psi),
+    });
+    if (cOverT <= 62 * epsilon * (1 - psi) * Math.sqrt(-psi)) return [3, part];
+  }
+
+  part.trace.push({
+    label: "Class 4",
+    satisfied: false,
+    note: "Not supported",
+  });
+
+  return [4, part];
+};
+
+const computeInternalPsi = (sigmaTop_MPa: number, sigmaBottom_MPa: number) => {
+  const sigma1_MPa = Math.min(sigmaTop_MPa, sigmaBottom_MPa);
+  const sigma2_MPa = Math.max(sigmaTop_MPa, sigmaBottom_MPa);
+  return sigma2_MPa / sigma1_MPa;
+};
+
+const getInternalPartStressDistribution = (
+  ctx: Context,
+): NonNullable<Part["metadata"]["stressDistribution"]> => {
+  const N_Ed_kN = ctx.N_Ed_kN ?? 0;
+  const M_y_Ed_kNm = ctx.M_y_Ed_kNm ?? 0;
+  const M_z_Ed_kNm = ctx.M_z_Ed_kNm ?? 0;
+  const hasCompression = N_Ed_kN < 0;
+  const hasBending = M_y_Ed_kNm !== 0 || M_z_Ed_kNm !== 0;
+
+  if (!hasCompression && !hasBending) return "tension";
+  if (hasCompression && !hasBending) return "compression";
+  if (!hasCompression && hasBending) return "bending";
+  return "compression-bending";
 };
 
 const computePointStress = (point: Point, ctx: Context) => {
-  const { A_mm2, Iy_mm4, Iz_mm4, N_Ed_kN, M_y_Ed_kNm, M_z_Ed_kNm } = ctx;
+  const { A_mm2, Iy_mm4, Iz_mm4 } = ctx;
+  const N_Ed_kN = ctx.N_Ed_kN ?? 0;
+  const M_y_Ed_kNm = ctx.M_y_Ed_kNm ?? 0;
+  const M_z_Ed_kNm = ctx.M_z_Ed_kNm ?? 0;
+
   const sigmaN_MPa = (N_Ed_kN * 1_000) / A_mm2;
   const sigmaMy_MPa = ((M_y_Ed_kNm * 1_000_000) / Iy_mm4) * point.y_mm;
   const sigmaMz_MPa = ((M_z_Ed_kNm * 1_000_000) / Iz_mm4) * point.z_mm;
