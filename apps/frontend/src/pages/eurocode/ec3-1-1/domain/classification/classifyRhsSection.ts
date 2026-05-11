@@ -41,12 +41,9 @@ const decompose = (geometry: Geometry): RawPart[] => {
       type: "internal",
       c_mm: horizontalWall_c_mm,
       t_mm: tw_mm,
-      points: {
-        supported: {
-          y_mm: -horizontalWall_c_mm / 2,
-          z_mm: h_mm / 2 - tw_mm / 2,
-        },
-        tip: { y_mm: horizontalWall_c_mm / 2, z_mm: h_mm / 2 - tw_mm / 2 },
+      internalPoints: {
+        a: { y_mm: -horizontalWall_c_mm / 2, z_mm: h_mm / 2 - tw_mm / 2 },
+        b: { y_mm: horizontalWall_c_mm / 2, z_mm: h_mm / 2 - tw_mm / 2 },
       },
     },
     {
@@ -54,9 +51,9 @@ const decompose = (geometry: Geometry): RawPart[] => {
       type: "internal",
       c_mm: verticalWall_c_mm,
       t_mm: tw_mm,
-      points: {
-        supported: { y_mm: b_mm / 2 - tw_mm / 2, z_mm: verticalWall_c_mm / 2 },
-        tip: { y_mm: b_mm / 2 - tw_mm / 2, z_mm: -verticalWall_c_mm / 2 },
+      internalPoints: {
+        a: { y_mm: b_mm / 2 - tw_mm / 2, z_mm: verticalWall_c_mm / 2 },
+        b: { y_mm: b_mm / 2 - tw_mm / 2, z_mm: -verticalWall_c_mm / 2 },
       },
     },
     {
@@ -64,12 +61,9 @@ const decompose = (geometry: Geometry): RawPart[] => {
       type: "internal",
       c_mm: horizontalWall_c_mm,
       t_mm: tw_mm,
-      points: {
-        supported: {
-          y_mm: -horizontalWall_c_mm / 2,
-          z_mm: -h_mm / 2 + tw_mm / 2,
-        },
-        tip: { y_mm: horizontalWall_c_mm / 2, z_mm: -h_mm / 2 + tw_mm / 2 },
+      internalPoints: {
+        a: { y_mm: -horizontalWall_c_mm / 2, z_mm: -h_mm / 2 + tw_mm / 2 },
+        b: { y_mm: horizontalWall_c_mm / 2, z_mm: -h_mm / 2 + tw_mm / 2 },
       },
     },
     {
@@ -77,9 +71,9 @@ const decompose = (geometry: Geometry): RawPart[] => {
       type: "internal",
       c_mm: verticalWall_c_mm,
       t_mm: tw_mm,
-      points: {
-        supported: { y_mm: -b_mm / 2 + tw_mm / 2, z_mm: verticalWall_c_mm / 2 },
-        tip: { y_mm: -b_mm / 2 + tw_mm / 2, z_mm: -verticalWall_c_mm / 2 },
+      internalPoints: {
+        a: { y_mm: -b_mm / 2 + tw_mm / 2, z_mm: verticalWall_c_mm / 2 },
+        b: { y_mm: -b_mm / 2 + tw_mm / 2, z_mm: -verticalWall_c_mm / 2 },
       },
     },
   ];

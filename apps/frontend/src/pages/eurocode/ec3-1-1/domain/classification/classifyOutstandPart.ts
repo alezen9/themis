@@ -9,8 +9,9 @@ export const classifyOutstandPart = (
   steel_grade_id: string,
   ctx: Context,
 ): [SectionClass, Part] => {
-  const { c_mm, t_mm, points } = rawPart;
-  if (!c_mm || !t_mm || !points) throw new Error("Invalid outstand part");
+  const { c_mm, t_mm, outstandPoints } = rawPart;
+  if (!c_mm || !t_mm || !outstandPoints)
+    throw new Error("Invalid outstand part");
 
   const steelGrade = steelGradesMap.get(steel_grade_id);
   if (!steelGrade) throw new Error("Steel grade not found");
@@ -19,8 +20,8 @@ export const classifyOutstandPart = (
   const final_fy_Mpa = t_mm > 40 ? (fy_above_40_MPa ?? fy_MPa) : fy_MPa;
   const epsilon = Math.sqrt(235 / final_fy_Mpa);
   const cOverT = c_mm / t_mm;
-  const sigma_supported_MPa = computePointStress(points.supported, ctx);
-  const sigma_tip_MPa = computePointStress(points.tip, ctx);
+  const sigma_supported_MPa = computePointStress(outstandPoints.supported, ctx);
+  const sigma_tip_MPa = computePointStress(outstandPoints.tip, ctx);
   const stressDistribution = getPartStressDistribution(
     sigma_supported_MPa,
     sigma_tip_MPa,

@@ -21,6 +21,8 @@ export type Metadata = {
   dOverT?: number;
   sigma_supported_MPa?: number;
   sigma_tip_MPa?: number;
+  sigma_a_MPa?: number;
+  sigma_b_MPa?: number;
   stressDistribution:
     | "tension"
     | "compression"
@@ -54,5 +56,6 @@ export type RawPart = {
   c_mm?: number;
   d_mm?: number;
   t_mm?: number;
-  points?: { supported: Point; tip: Point };
+  outstandPoints?: { supported: Point; tip: Point };
+  internalPoints?: { a: Point; b: Point };
 };
