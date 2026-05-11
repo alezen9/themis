@@ -1,6 +1,6 @@
 import { steelGradesMap } from "../../../data/steelGrades";
 import { Ec3FormValues } from "../../../Form/schema";
-import { getEpsilon2, type Part, type SectionClass } from "../utils";
+import { type Part, type SectionClass } from "../utils";
 
 type Geometry = Ec3FormValues["chs_geometry"];
 
@@ -15,15 +15,15 @@ export const classifyChsSection = (
   const steelGrade = steelGradesMap.get(steel_grade_id);
   if (!steelGrade) throw new Error("Steel grade not found");
   const { fy_MPa, fy_above_40_MPa } = steelGrade;
-  const fy = t_mm > 40 ? (fy_above_40_MPa ?? fy_MPa) : fy_MPa;
+  const final_fy_Mpa = t_mm > 40 ? (fy_above_40_MPa ?? fy_MPa) : fy_MPa;
 
-  const epsilon2 = getEpsilon2(fy);
+  const epsilon2 = 235 / final_fy_Mpa;
 
   const part: Part = {
     label: "Tube",
     type: "tubular",
     metadata: {
-      fy,
+      fy_MPa: final_fy_Mpa,
       epsilon2,
       dOverT: ratio,
       stressDistribution: actions.N_Ed_kN >= 0 ? "tension" : "compression",
