@@ -19,16 +19,16 @@ export const maxClass = <T extends number>(...classes: T[]) =>
   Math.max(...classes) as T;
 
 type Metadata = {
-  fy: number;
+  fy_MPa: number;
   epsilon?: number;
   epsilon2?: number;
   alpha?: number;
   kSigma?: number;
-  sigmaTipPoint?: number;
-  sigmaSupportedPoint?: number;
   psi?: number;
   cOverT?: number;
   dOverT?: number;
+  sigma_supported_MPa?: number;
+  sigma_tip_MPa?: number;
   stressDistribution:
     | "tension"
     | "compression"
@@ -71,11 +71,11 @@ export const metadataLabels: Record<keyof Metadata, string> = {
   dOverT: "d / t",
   epsilon: "\u03b5",
   epsilon2: "\u03b5\u00b2",
-  fy: "f\u1d67",
+  fy_MPa: "f\u1d67",
   kSigma: "k\u03c3",
   psi: "\u03c8",
-  sigmaSupportedPoint: "\u03c3 supported point",
-  sigmaTipPoint: "\u03c3 tip point",
+  sigma_supported_MPa: "\u03c3 supported point",
+  sigma_tip_MPa: "\u03c3 tip point",
   stressDistribution: "Stress distribution",
 };
 
@@ -94,9 +94,9 @@ export const formatMetadata = (key: keyof Metadata, value: string | number) => {
   if (key === "dOverT") return `d / t = ${formattedValue}`;
   if (key === "epsilon") return `${EPSILON} = ${formattedValue}`;
   if (key === "epsilon2") return `${EPSILON2} = ${formattedValue}`;
-  if (key === "fy") return `fy = ${formattedValue} MPa`;
-  if (key === "sigmaTipPoint") return `${SIGMA} tip = ${formattedValue} MPa`;
-  if (key === "sigmaSupportedPoint")
+  if (key === "fy_MPa") return `fy = ${formattedValue} MPa`;
+  if (key === "sigma_tip_MPa") return `${SIGMA} tip = ${formattedValue} MPa`;
+  if (key === "sigma_supported_MPa")
     return `${SIGMA} supported = ${formattedValue} MPa`;
   if (key === "psi") return `${PSI} = ${formattedValue}`;
   if (key === "kSigma") return `k${SIGMA} = ${formattedValue}`;

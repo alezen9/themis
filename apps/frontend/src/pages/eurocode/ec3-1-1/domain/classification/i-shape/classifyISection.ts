@@ -99,14 +99,14 @@ const classifyOutstandPart = (
   if (!steelGrade) throw new Error("Steel grade not found");
 
   const { fy_MPa, fy_above_40_MPa } = steelGrade;
-  const fy = t_mm > 40 ? (fy_above_40_MPa ?? fy_MPa) : fy_MPa;
-  const epsilon = Math.sqrt(235 / fy);
+  const final_fy_Mpa = t_mm > 40 ? (fy_above_40_MPa ?? fy_MPa) : fy_MPa;
+  const epsilon = Math.sqrt(235 / final_fy_Mpa);
   const cOverT = c_mm / t_mm;
-  const sigmaSupportedPoint = computePointStress(points.supported, ctx);
-  const sigmaTipPoint = computePointStress(points.tip, ctx);
+  const sigma_supported_MPa = computePointStress(points.supported, ctx);
+  const sigma_tip_MPa = computePointStress(points.tip, ctx);
   const stressDistribution = getPartStressDistribution(
-    sigmaSupportedPoint,
-    sigmaTipPoint,
+    sigma_supported_MPa,
+    sigma_tip_MPa,
     ctx.N_Ed_kN,
   );
 
@@ -114,11 +114,11 @@ const classifyOutstandPart = (
     label: rawPart.label,
     type: rawPart.type,
     metadata: {
-      fy,
+      fy_MPa: final_fy_Mpa,
       epsilon,
       cOverT,
-      sigmaSupportedPoint,
-      sigmaTipPoint,
+      sigma_supported_MPa,
+      sigma_tip_MPa,
       stressDistribution,
     },
     trace: [],
@@ -180,19 +180,19 @@ const classifyOutstandPartCompression = (part: Part): [SectionClass, Part] => {
 const classifyOutstandPartBendingCompression = (
   part: Part,
 ): [SectionClass, Part] => {
-  const { cOverT, epsilon, sigmaSupportedPoint, sigmaTipPoint } = part.metadata;
+  const { cOverT, epsilon, sigma_supported_MPa, sigma_tip_MPa } = part.metadata;
   if (
     cOverT === undefined ||
     epsilon === undefined ||
-    sigmaSupportedPoint === undefined ||
-    sigmaTipPoint === undefined
+    sigma_supported_MPa === undefined ||
+    sigma_tip_MPa === undefined
   )
     throw new Error();
 
   const alpha = 1;
   part.metadata.alpha = alpha;
 
-  const isTipInCompression = sigmaTipPoint < 0;
+  const isTipInCompression = sigma_tip_MPa < 0;
   const denominator = isTipInCompression ? alpha : alpha * Math.sqrt(alpha);
 
   part.trace.push({
@@ -211,8 +211,8 @@ const classifyOutstandPartBendingCompression = (
   });
   if (cOverT <= (10 * epsilon) / denominator) return [2, part];
 
-  const psi = computePsi(sigmaSupportedPoint, sigmaTipPoint);
-  const kSigma = computeKSigma(psi, sigmaSupportedPoint, sigmaTipPoint);
+  const psi = computePsi(sigma_supported_MPa, sigma_tip_MPa);
+  const kSigma = computeKSigma(psi, sigma_supported_MPa, sigma_tip_MPa);
   part.metadata.psi = psi;
   part.metadata.kSigma = kSigma;
 
@@ -274,8 +274,8 @@ const classifyInternalPart = (
   if (!steelGrade) throw new Error("Steel grade not found");
 
   const { fy_MPa, fy_above_40_MPa } = steelGrade;
-  const fy = t_mm > 40 ? (fy_above_40_MPa ?? fy_MPa) : fy_MPa;
-  const epsilon = Math.sqrt(235 / fy);
+  const final_fy_Mpa = t_mm > 40 ? (fy_above_40_MPa ?? fy_MPa) : fy_MPa;
+  const epsilon = Math.sqrt(235 / final_fy_Mpa);
 
   return [
     1,
@@ -283,7 +283,7 @@ const classifyInternalPart = (
       label: rawPart.label,
       type: rawPart.type,
       metadata: {
-        fy,
+        fy_MPa: final_fy_Mpa,
         epsilon,
         cOverT: c_mm / t_mm,
         stressDistribution: "compression",
