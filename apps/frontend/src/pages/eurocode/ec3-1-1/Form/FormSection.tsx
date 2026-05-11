@@ -237,7 +237,10 @@ const ClassificationInfo = () => {
 
                       return (
                         <TableRow key={row.label}>
-                          <InfoTableValueCell colSpan={2} align="left">
+                          <InfoTableValueCell
+                            align="left"
+                            className="text-nowrap"
+                          >
                             <span className="inline-flex items-center gap-2">
                               <span>{row.label}</span>
                               {row.limit && ratio && (
@@ -250,13 +253,19 @@ const ClassificationInfo = () => {
                             </span>
                           </InfoTableValueCell>
                           {row.note && (
-                            <InfoTableValueCell align="left">
+                            <InfoTableValueCell
+                              align="left"
+                              className="text-nowrap w-32"
+                            >
                               <span className="mr-2">&rarr;</span>
                               <span>{row.note}</span>
                             </InfoTableValueCell>
                           )}
                           {!row.note && (
-                            <InfoTableValueCell align="left">
+                            <InfoTableValueCell
+                              align="left"
+                              className="text-nowrap w-32"
+                            >
                               <span className="mr-2">&rarr;</span>
                               <span>
                                 {row.satisfied ? "Satisfied" : "Not satisfied"}

@@ -1,69 +1,8 @@
 import { numberFormatter } from "../../../../../utils";
-
-export const getEpsilon = (fy_Mpa: number) => Math.sqrt(235 / fy_Mpa);
-export const getEpsilon2 = (fy_Mpa: number) => 235 / fy_Mpa;
-
-export type SectionClass = 1 | 2 | 3 | 4;
-
-export type ClassificationTrace = {
-  label: string;
-  part: string;
-  sectionClass: SectionClass;
-  ratio: { label: string; value: number };
-  limit?: { label: string; value: number; formula: string };
-  values: { label: string; value: number; unit?: string }[];
-  passed: boolean;
-};
+import { Metadata } from "./types";
 
 export const maxClass = <T extends number>(...classes: T[]) =>
   Math.max(...classes) as T;
-
-type Metadata = {
-  fy_MPa: number;
-  epsilon?: number;
-  epsilon2?: number;
-  alpha?: number;
-  kSigma?: number;
-  psi?: number;
-  cOverT?: number;
-  dOverT?: number;
-  sigma_supported_MPa?: number;
-  sigma_tip_MPa?: number;
-  stressDistribution:
-    | "tension"
-    | "compression"
-    | "bending"
-    | "compression-bending";
-};
-
-export type Part = {
-  label: string;
-  type: "outstand" | "internal" | "tubular";
-  metadata: Metadata;
-  trace: Trace[];
-};
-
-export type Trace = {
-  label: "Class 1" | "Class 2" | "Class 3" | "Class 4";
-  ratio?: number;
-  limit?: string; // 50ε²
-  satisfied: boolean;
-  note?: string; // Tension only, Not supported
-};
-
-type Point = {
-  y_mm: number; // vertical distance from centroid
-  z_mm: number; // horizontal distance from centroid
-};
-
-export type RawPart = {
-  label: string;
-  type: Part["type"];
-  c_mm?: number;
-  d_mm?: number;
-  t_mm?: number;
-  points?: { supported: Point; tip: Point };
-};
 
 export const metadataLabels: Record<keyof Metadata, string> = {
   alpha: "\u03b1",

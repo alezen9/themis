@@ -23,23 +23,9 @@ type CHS_Input = { shape: "CHS" } & SectionIdObj &
 
 type Inputs = I_Input | RHs_Input | CHS_Input;
 
-type GeometricProperties = {
-  A_mm2: number;
-  Iy_mm4: number;
-  Iz_mm4: number;
-  Wel_y_mm3: number;
-  Wel_z_mm3: number;
-  Wpl_y_mm3: number;
-  Wpl_z_mm3: number;
-  Av_y_mm2: number;
-  Av_z_mm2: number;
-  It_mm4: number;
-  Iw_mm6: number;
-};
+export type GeometricProperties = ReturnType<typeof computeGeometryProperties>;
 
-export const computeGeometryProperties = (
-  inputs: Inputs,
-): GeometricProperties => {
+export const computeGeometryProperties = (inputs: Inputs) => {
   const { shape, section_id, i_geometry, rhs_geometry, chs_geometry } = inputs;
   switch (shape) {
     case "I":

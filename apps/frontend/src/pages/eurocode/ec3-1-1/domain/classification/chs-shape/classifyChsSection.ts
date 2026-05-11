@@ -1,6 +1,6 @@
 import { steelGradesMap } from "../../../data/steelGrades";
 import { Ec3FormValues } from "../../../Form/schema";
-import { type Part, type SectionClass } from "../utils";
+import { type Part, type SectionClass } from "../types";
 
 type Geometry = Ec3FormValues["chs_geometry"];
 
