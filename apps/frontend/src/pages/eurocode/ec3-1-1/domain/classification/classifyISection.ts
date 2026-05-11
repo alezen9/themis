@@ -60,7 +60,16 @@ const decompose = (geometry: Geometry): RawPart[] => {
         tip: { y_mm: b_mm / 2, z_mm: h_mm / 2 - tf_mm / 2 },
       },
     },
-    { label: "Web", type: "internal", c_mm: web_c_mm, t_mm: tw_mm },
+    {
+      label: "Web",
+      type: "internal",
+      c_mm: web_c_mm,
+      t_mm: tw_mm,
+      points: {
+        supported: { y_mm: 0, z_mm: web_c_mm / 2 },
+        tip: { y_mm: 0, z_mm: -web_c_mm / 2 },
+      },
+    },
     {
       label: "Bottom left flange",
       type: "outstand",

@@ -8,8 +8,8 @@ export const classifyInternalPart = (
   steel_grade_id: string,
   ctx: Context,
 ): [SectionClass, Part] => {
-  const { c_mm, t_mm } = rawPart;
-  if (!c_mm || !t_mm) throw new Error("Invalid internal part");
+  const { c_mm, t_mm, points } = rawPart;
+  if (!c_mm || !t_mm || !points) throw new Error("Invalid internal part");
 
   const steelGrade = steelGradesMap.get(steel_grade_id);
   if (!steelGrade) throw new Error("Steel grade not found");
@@ -18,12 +18,25 @@ export const classifyInternalPart = (
   const final_fy_Mpa = t_mm > 40 ? (fy_above_40_MPa ?? fy_MPa) : fy_MPa;
   const epsilon = Math.sqrt(235 / final_fy_Mpa);
   const cOverT = c_mm / t_mm;
-  const stressDistribution = getInternalPartStressDistribution(ctx);
+  const sigma_supported_MPa = computePointStress(points.supported, ctx);
+  const sigma_tip_MPa = computePointStress(points.tip, ctx);
+  const stressDistribution = getInternalPartStressDistribution(
+    sigma_supported_MPa,
+    sigma_tip_MPa,
+    ctx,
+  );
 
   const part: Part = {
     label: rawPart.label,
     type: rawPart.type,
-    metadata: { fy_MPa: final_fy_Mpa, epsilon, cOverT, stressDistribution },
+    metadata: {
+      fy_MPa: final_fy_Mpa,
+      epsilon,
+      cOverT,
+      sigma_supported_MPa,
+      sigma_tip_MPa,
+      stressDistribution,
+    },
     trace: [],
   };
 
@@ -35,7 +48,7 @@ export const classifyInternalPart = (
     case "bending":
       return classifyInternalPartBending(part);
     case "compression-bending":
-      return classifyInternalPartCompressionBending(part, rawPart, ctx);
+      return classifyInternalPartCompressionBending(part);
   }
 };
 
@@ -120,23 +133,18 @@ const classifyInternalPartBending = (part: Part): [SectionClass, Part] => {
 
 const classifyInternalPartCompressionBending = (
   part: Part,
-  rawPart: RawPart,
-  ctx: Context,
 ): [SectionClass, Part] => {
-  const { cOverT, epsilon, fy_MPa } = part.metadata;
-  const { c_mm, t_mm } = rawPart;
+  const { cOverT, epsilon, sigma_supported_MPa, sigma_tip_MPa } = part.metadata;
 
   if (
     cOverT === undefined ||
     epsilon === undefined ||
-    fy_MPa === undefined ||
-    c_mm === undefined ||
-    t_mm === undefined
+    sigma_supported_MPa === undefined ||
+    sigma_tip_MPa === undefined
   )
     throw new Error();
 
-  const alpha =
-    Math.abs((ctx.N_Ed_kN ?? 0) * 1_000) / (2 * c_mm * fy_MPa * t_mm) + 0.5;
+  const alpha = computeInternalAlpha(sigma_supported_MPa, sigma_tip_MPa);
   part.metadata.alpha = alpha;
 
   if (alpha > 0.5) {
@@ -175,12 +183,7 @@ const classifyInternalPartCompressionBending = (
     if (cOverT <= (41.5 * epsilon) / alpha) return [2, part];
   }
 
-  const sigma_top_MPa = computePointStress({ y_mm: c_mm / 2, z_mm: 0 }, ctx);
-  const sigma_bottom_MPa = computePointStress(
-    { y_mm: -c_mm / 2, z_mm: 0 },
-    ctx,
-  );
-  const psi = computePsi(sigma_top_MPa, sigma_bottom_MPa);
+  const psi = computePsi(sigma_supported_MPa, sigma_tip_MPa);
   part.metadata.psi = psi;
 
   if (psi > -1) {
@@ -210,15 +213,41 @@ const classifyInternalPartCompressionBending = (
   return [4, part];
 };
 
+const computeInternalAlpha = (
+  sigma_supported_MPa: number,
+  sigma_tip_MPa: number,
+) => {
+  const isSupportedInCompression = sigma_supported_MPa < 0;
+  const isTipInCompression = sigma_tip_MPa < 0;
+
+  if (isSupportedInCompression && isTipInCompression) return 1;
+  if (!isSupportedInCompression && !isTipInCompression) return 0;
+
+  const sigma_supported_abs_MPa = Math.abs(sigma_supported_MPa);
+  const sigma_tip_abs_MPa = Math.abs(sigma_tip_MPa);
+  const compressionStress_MPa = isSupportedInCompression
+    ? sigma_supported_abs_MPa
+    : sigma_tip_abs_MPa;
+  const tensionStress_MPa = isSupportedInCompression
+    ? sigma_tip_abs_MPa
+    : sigma_supported_abs_MPa;
+
+  return compressionStress_MPa / (compressionStress_MPa + tensionStress_MPa);
+};
+
 const getInternalPartStressDistribution = (
+  sigma_supported_MPa: number,
+  sigma_tip_MPa: number,
   ctx: Context,
 ): NonNullable<Part["metadata"]["stressDistribution"]> => {
   const { N_Ed_kN = 0, M_y_Ed_kNm = 0, M_z_Ed_kNm = 0 } = ctx;
-  const hasCompression = N_Ed_kN < 0;
   const hasBending = M_y_Ed_kNm !== 0 || M_z_Ed_kNm !== 0;
+  const areBothInTension = sigma_supported_MPa >= 0 && sigma_tip_MPa >= 0;
+  const areBothInCompression = sigma_supported_MPa < 0 && sigma_tip_MPa < 0;
 
-  if (!hasCompression && !hasBending) return "tension";
-  if (hasCompression && !hasBending) return "compression";
-  if (!hasCompression && hasBending) return "bending";
+  if (areBothInTension) return "tension";
+  if (areBothInCompression)
+    return hasBending ? "compression-bending" : "compression";
+  if (N_Ed_kN === 0) return "bending";
   return "compression-bending";
 };
