@@ -213,9 +213,7 @@ const classifyInternalPartCompressionBending = (
 const getInternalPartStressDistribution = (
   ctx: Context,
 ): NonNullable<Part["metadata"]["stressDistribution"]> => {
-  const N_Ed_kN = ctx.N_Ed_kN ?? 0;
-  const M_y_Ed_kNm = ctx.M_y_Ed_kNm ?? 0;
-  const M_z_Ed_kNm = ctx.M_z_Ed_kNm ?? 0;
+  const { N_Ed_kN = 0, M_y_Ed_kNm = 0, M_z_Ed_kNm = 0 } = ctx;
   const hasCompression = N_Ed_kN < 0;
   const hasBending = M_y_Ed_kNm !== 0 || M_z_Ed_kNm !== 0;
 

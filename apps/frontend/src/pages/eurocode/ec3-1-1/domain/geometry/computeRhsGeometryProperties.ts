@@ -42,7 +42,7 @@ export const computeRhsGeometryProperties = (
   const Ap_mm = A_mm2 / p_mm;
   const It_mm4 =
     existing?.It_mm4 ?? (4 * Ap_mm ** 2 * (p_mm - 2.8 * Ap_mm)) / 3;
-  const centroid = { y_mm: h_mm / 2, z_mm: b_mm / 2 };
+  const centroid = { y_mm: b_mm / 2, z_mm: h_mm / 2 };
 
   return {
     A_mm2,

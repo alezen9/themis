@@ -45,7 +45,7 @@ export const computeIGeometryProperties = (
         ((r_mm + tw_mm / 2) ** 4 - tw_mm ** 4 / 16);
   const Iw_mm6 =
     existing?.Iw_mm6 ?? ((tf_mm * b_mm ** 3) / 24) * (h_mm - tf_mm) ** 2;
-  const centroid = { y_mm: h_mm / 2, z_mm: b_mm / 2 };
+  const centroid = { y_mm: b_mm / 2, z_mm: h_mm / 2 };
 
   return {
     A_mm2,

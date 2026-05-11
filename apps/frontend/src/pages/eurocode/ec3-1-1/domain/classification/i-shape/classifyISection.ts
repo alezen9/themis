@@ -46,8 +46,8 @@ const decompose = (geometry: Geometry): RawPart[] => {
       c_mm: flange_c_mm,
       t_mm: tf_mm,
       points: {
-        supported: { y_mm: h_mm / 2 - tf_mm / 2, z_mm: -(tw_mm / 2 + r_mm) },
-        tip: { y_mm: h_mm / 2 - tf_mm / 2, z_mm: -b_mm / 2 },
+        supported: { y_mm: -(tw_mm / 2 + r_mm), z_mm: h_mm / 2 - tf_mm / 2 },
+        tip: { y_mm: -b_mm / 2, z_mm: h_mm / 2 - tf_mm / 2 },
       },
     },
     {
@@ -56,8 +56,8 @@ const decompose = (geometry: Geometry): RawPart[] => {
       c_mm: flange_c_mm,
       t_mm: tf_mm,
       points: {
-        supported: { y_mm: h_mm / 2 - tf_mm / 2, z_mm: tw_mm / 2 + r_mm },
-        tip: { y_mm: h_mm / 2 - tf_mm / 2, z_mm: b_mm / 2 },
+        supported: { y_mm: tw_mm / 2 + r_mm, z_mm: h_mm / 2 - tf_mm / 2 },
+        tip: { y_mm: b_mm / 2, z_mm: h_mm / 2 - tf_mm / 2 },
       },
     },
     { label: "Web", type: "internal", c_mm: web_c_mm, t_mm: tw_mm },
@@ -67,8 +67,8 @@ const decompose = (geometry: Geometry): RawPart[] => {
       c_mm: flange_c_mm,
       t_mm: tf_mm,
       points: {
-        supported: { y_mm: -h_mm / 2 + tf_mm / 2, z_mm: -(tw_mm / 2 + r_mm) },
-        tip: { y_mm: -h_mm / 2 + tf_mm / 2, z_mm: -b_mm / 2 },
+        supported: { y_mm: -(tw_mm / 2 + r_mm), z_mm: -h_mm / 2 + tf_mm / 2 },
+        tip: { y_mm: -b_mm / 2, z_mm: -h_mm / 2 + tf_mm / 2 },
       },
     },
     {
@@ -77,8 +77,8 @@ const decompose = (geometry: Geometry): RawPart[] => {
       c_mm: flange_c_mm,
       t_mm: tf_mm,
       points: {
-        supported: { y_mm: -h_mm / 2 + tf_mm / 2, z_mm: tw_mm / 2 + r_mm },
-        tip: { y_mm: -h_mm / 2 + tf_mm / 2, z_mm: b_mm / 2 },
+        supported: { y_mm: tw_mm / 2 + r_mm, z_mm: -h_mm / 2 + tf_mm / 2 },
+        tip: { y_mm: b_mm / 2, z_mm: -h_mm / 2 + tf_mm / 2 },
       },
     },
   ];
