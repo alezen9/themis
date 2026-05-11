@@ -1,6 +1,6 @@
 import { Ec3FormValues } from "../../Form/schema";
-import { classifyChsSection } from "./chs-shape/classifyChsSection";
-import { classifyISection } from "./i-shape/classifyISection";
+import { classifyChsSection } from "./classifyChsSection";
+import { classifyISection } from "./classifyISection";
 import { classifyRhsSection } from "./classifyRhsSection";
 
 type Input = Pick<
@@ -35,7 +35,12 @@ export const classifySection = (input: Input) => {
     case "I":
       return classifyISection(i_geometry, steel_grade_id, section_id, actions);
     case "RHS":
-      return classifyRhsSection(rhs_geometry, steel_grade_id, actions);
+      return classifyRhsSection(
+        rhs_geometry,
+        steel_grade_id,
+        section_id,
+        actions,
+      );
     case "CHS":
       return classifyChsSection(chs_geometry, steel_grade_id, actions);
   }

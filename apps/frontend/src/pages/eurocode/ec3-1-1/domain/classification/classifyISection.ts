@@ -1,9 +1,9 @@
-import { Ec3FormValues } from "../../../Form/schema";
-import { computeGeometryProperties } from "../../geometry/computeGeometryProperties";
-import { Actions, SectionClass, type Part, type RawPart } from "../types";
-import { maxClass } from "../utils";
-import { classifyInternalPart } from "../classifyInternalPart";
-import { classifyOutstandPart } from "../classifyOutstandPart";
+import { Ec3FormValues } from "../../Form/schema";
+import { computeGeometryProperties } from "../geometry/computeGeometryProperties";
+import { Actions, SectionClass, type Part, type RawPart } from "./types";
+import { maxClass } from "./utils";
+import { classifyInternalPart } from "./classifyInternalPart";
+import { classifyOutstandPart } from "./classifyOutstandPart";
 
 type Geometry = Ec3FormValues["i_geometry"];
 
