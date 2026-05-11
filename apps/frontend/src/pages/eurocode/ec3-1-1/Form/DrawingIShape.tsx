@@ -92,6 +92,13 @@ export const DrawingIShape = () => {
         .tick(Math.PI / 2)
         .textAt(15, -hDrawing / 2, `${formatDimension(h_mm)}mm`, "start");
 
+      dimensions
+        .moveToAbs(-bDrawing / 2 - dimensionOffset, -hDrawing / 2)
+        .tick(-Math.PI / 2)
+        .lineTo(0, tfDrawing)
+        .tick(Math.PI / 2)
+        .textAt(-15, -tfDrawing / 2, `${formatDimension(tf_mm)}mm`, "end");
+
       const filletRadiusDimensionDirX = Math.cos(Math.PI / 4);
       const filletRadiusDimensionDirY = Math.sin(Math.PI / 4);
 
@@ -106,6 +113,16 @@ export const DrawingIShape = () => {
         .lineTo(-30, -30)
         .lineTo(-15, 0)
         .textAt(-5, 0, `R ${formatDimension(r_mm)}mm`, "end");
+
+      dimensions
+        .moveToAbs(-180, -190)
+        .lineTo(20, 0)
+        .arrowFilled(0, 6)
+        .textAt(10, 0, "Y")
+        .moveToAbs(-180, -190)
+        .lineTo(0, 20)
+        .arrowFilled(Math.PI / 2, 6)
+        .textAt(0, 10, "Z");
     });
 
     return () => {

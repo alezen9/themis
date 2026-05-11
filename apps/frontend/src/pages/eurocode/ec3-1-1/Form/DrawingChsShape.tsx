@@ -87,6 +87,16 @@ export const DrawingChsShape = () => {
         )
         .lineTo(dimensionOverflow * 2, 0)
         .textAt(5, 0, `${formattedThickness}mm`, "start");
+
+      dimensions
+        .moveToAbs(-180, -190)
+        .lineTo(20, 0)
+        .arrowFilled(0, 6)
+        .textAt(10, 0, "Y")
+        .moveToAbs(-180, -190)
+        .lineTo(0, 20)
+        .arrowFilled(Math.PI / 2, 6)
+        .textAt(0, 10, "Z");
     });
 
     return () => {
