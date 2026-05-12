@@ -1,14 +1,14 @@
 import { numberFormatter } from "../../../../../utils";
-import { Metadata } from "./types";
+import type { Metadata } from "./types";
 
 export const maxClass = <T extends number>(...classes: T[]) =>
   Math.max(...classes) as T;
 
-const ALPHA = "\u03b1";
-const EPSILON = "\u03b5";
-const EPSILON2 = "\u03b5\u00b2";
-const SIGMA = "\u03c3";
-const PSI = "\u03c8";
+export const ALPHA = "\u03b1";
+export const EPSILON = "\u03b5";
+export const EPSILON2 = "\u03b5\u00b2";
+export const SIGMA = "\u03c3";
+export const PSI = "\u03c8";
 
 export const formatMetadata = (key: keyof Metadata, value: string | number) => {
   const formattedValue =

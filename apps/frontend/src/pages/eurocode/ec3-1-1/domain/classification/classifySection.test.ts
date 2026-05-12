@@ -40,7 +40,7 @@ const getPart = (parts: Part[], label: string) => {
   return part;
 };
 
-const expectNear = (actual: number | undefined, expected: number) => {
+const expectStress = (actual: number | undefined, expected: number) => {
   expect(actual).toBeDefined();
   expect(Math.abs((actual ?? 0) - expected)).toBeLessThanOrEqual(
     stressTolerance_MPa,
@@ -59,20 +59,20 @@ describe("classifySection I", () => {
     expect(sectionClass).toBe(4);
 
     const topLeftFlange = getPart(parts, "Top left flange");
-    expectNear(topLeftFlange.metadata.sigma_tip_MPa, -17.111);
+    expectStress(topLeftFlange.metadata.sigma_tip_MPa, -17.111);
 
     const topRightFlange = getPart(parts, "Top right flange");
-    expectNear(topRightFlange.metadata.sigma_tip_MPa, -17.111);
+    expectStress(topRightFlange.metadata.sigma_tip_MPa, -17.111);
 
     const web = getPart(parts, "Web");
-    expectNear(web.metadata.sigma_a_MPa, -17.111);
-    expectNear(web.metadata.sigma_b_MPa, -17.111);
+    expectStress(web.metadata.sigma_a_MPa, -17.111);
+    expectStress(web.metadata.sigma_b_MPa, -17.111);
 
     const bottomLeftFlange = getPart(parts, "Bottom left flange");
-    expectNear(bottomLeftFlange.metadata.sigma_tip_MPa, -17.111);
+    expectStress(bottomLeftFlange.metadata.sigma_tip_MPa, -17.111);
 
     const bottomRightFlange = getPart(parts, "Bottom right flange");
-    expectNear(bottomRightFlange.metadata.sigma_tip_MPa, -17.111);
+    expectStress(bottomRightFlange.metadata.sigma_tip_MPa, -17.111);
   });
 
   it("computes IPE300 major-axis bending stresses", () => {
@@ -86,20 +86,20 @@ describe("classifySection I", () => {
     expect(sectionClass).toBe(1);
 
     const topLeftFlange = getPart(parts, "Top left flange");
-    expectNear(topLeftFlange.metadata.sigma_tip_MPa, 3.888);
+    expectStress(topLeftFlange.metadata.sigma_tip_MPa, 3.888);
 
     const topRightFlange = getPart(parts, "Top right flange");
-    expectNear(topRightFlange.metadata.sigma_tip_MPa, 3.888);
+    expectStress(topRightFlange.metadata.sigma_tip_MPa, 3.888);
 
     const web = getPart(parts, "Web");
-    expectNear(web.metadata.sigma_a_MPa, 3.222);
-    expectNear(web.metadata.sigma_b_MPa, -3.222);
+    expectStress(web.metadata.sigma_a_MPa, 3.222);
+    expectStress(web.metadata.sigma_b_MPa, -3.222);
 
     const bottomLeftFlange = getPart(parts, "Bottom left flange");
-    expectNear(bottomLeftFlange.metadata.sigma_tip_MPa, -3.888);
+    expectStress(bottomLeftFlange.metadata.sigma_tip_MPa, -3.888);
 
     const bottomRightFlange = getPart(parts, "Bottom right flange");
-    expectNear(bottomRightFlange.metadata.sigma_tip_MPa, -3.888);
+    expectStress(bottomRightFlange.metadata.sigma_tip_MPa, -3.888);
   });
 
   it("computes IPE300 minor-axis bending stresses", () => {
@@ -113,12 +113,12 @@ describe("classifySection I", () => {
     expect(sectionClass).toBe(1);
 
     const topLeftFlange = getPart(parts, "Top left flange");
-    expectNear(topLeftFlange.metadata.sigma_supported_MPa, 6.516);
-    expectNear(topLeftFlange.metadata.sigma_tip_MPa, 26.914);
+    expectStress(topLeftFlange.metadata.sigma_supported_MPa, 6.516);
+    expectStress(topLeftFlange.metadata.sigma_tip_MPa, 26.914);
 
     const topRightFlange = getPart(parts, "Top right flange");
-    expectNear(topRightFlange.metadata.sigma_supported_MPa, -6.516);
-    expectNear(topRightFlange.metadata.sigma_tip_MPa, -26.914);
+    expectStress(topRightFlange.metadata.sigma_supported_MPa, -6.516);
+    expectStress(topRightFlange.metadata.sigma_tip_MPa, -26.914);
 
     const web = getPart(parts, "Web");
     expect(web.metadata.stressDistribution).toBe("neutral");
@@ -127,16 +127,16 @@ describe("classifySection I", () => {
       note: "Neutral",
       satisfied: true,
     });
-    expectNear(web.metadata.sigma_a_MPa, 0);
-    expectNear(web.metadata.sigma_b_MPa, 0);
+    expectStress(web.metadata.sigma_a_MPa, 0);
+    expectStress(web.metadata.sigma_b_MPa, 0);
 
     const bottomLeftFlange = getPart(parts, "Bottom left flange");
-    expectNear(bottomLeftFlange.metadata.sigma_supported_MPa, 6.516);
-    expectNear(bottomLeftFlange.metadata.sigma_tip_MPa, 26.914);
+    expectStress(bottomLeftFlange.metadata.sigma_supported_MPa, 6.516);
+    expectStress(bottomLeftFlange.metadata.sigma_tip_MPa, 26.914);
 
     const bottomRightFlange = getPart(parts, "Bottom right flange");
-    expectNear(bottomRightFlange.metadata.sigma_supported_MPa, -6.516);
-    expectNear(bottomRightFlange.metadata.sigma_tip_MPa, -26.914);
+    expectStress(bottomRightFlange.metadata.sigma_supported_MPa, -6.516);
+    expectStress(bottomRightFlange.metadata.sigma_tip_MPa, -26.914);
   });
 
   it("computes IPE300 combined bending stresses", () => {
@@ -150,24 +150,24 @@ describe("classifySection I", () => {
     expect(sectionClass).toBe(1);
 
     const topLeftFlange = getPart(parts, "Top left flange");
-    expectNear(topLeftFlange.metadata.sigma_supported_MPa, 41.623);
-    expectNear(topLeftFlange.metadata.sigma_tip_MPa, 123.203);
+    expectStress(topLeftFlange.metadata.sigma_supported_MPa, 41.623);
+    expectStress(topLeftFlange.metadata.sigma_tip_MPa, 123.203);
 
     const topRightFlange = getPart(parts, "Top right flange");
-    expectNear(topRightFlange.metadata.sigma_supported_MPa, -11.625);
-    expectNear(topRightFlange.metadata.sigma_tip_MPa, -92.076);
+    expectStress(topRightFlange.metadata.sigma_supported_MPa, -11.625);
+    expectStress(topRightFlange.metadata.sigma_tip_MPa, -92.076);
 
     const web = getPart(parts, "Web");
-    expectNear(web.metadata.sigma_a_MPa, 13.625);
-    expectNear(web.metadata.sigma_b_MPa, -12.169);
+    expectStress(web.metadata.sigma_a_MPa, 13.625);
+    expectStress(web.metadata.sigma_b_MPa, -12.169);
 
     const bottomLeftFlange = getPart(parts, "Bottom left flange");
-    expectNear(bottomLeftFlange.metadata.sigma_supported_MPa, 11.625);
-    expectNear(bottomLeftFlange.metadata.sigma_tip_MPa, 92.076);
+    expectStress(bottomLeftFlange.metadata.sigma_supported_MPa, 11.625);
+    expectStress(bottomLeftFlange.metadata.sigma_tip_MPa, 92.076);
 
     const bottomRightFlange = getPart(parts, "Bottom right flange");
-    expectNear(bottomRightFlange.metadata.sigma_supported_MPa, -41.623);
-    expectNear(bottomRightFlange.metadata.sigma_tip_MPa, -123.203);
+    expectStress(bottomRightFlange.metadata.sigma_supported_MPa, -41.623);
+    expectStress(bottomRightFlange.metadata.sigma_tip_MPa, -123.203);
   });
 });
 
@@ -181,20 +181,20 @@ describe("classifySection RHS", () => {
     });
 
     const topWall = getPart(parts, "Top wall");
-    expectNear(topWall.metadata.sigma_a_MPa, -1.63);
-    expectNear(topWall.metadata.sigma_b_MPa, -1.63);
+    expectStress(topWall.metadata.sigma_a_MPa, -1.63);
+    expectStress(topWall.metadata.sigma_b_MPa, -1.63);
 
     const rightWall = getPart(parts, "Right wall");
-    expectNear(rightWall.metadata.sigma_a_MPa, -1.63);
-    expectNear(rightWall.metadata.sigma_b_MPa, -2.917);
+    expectStress(rightWall.metadata.sigma_a_MPa, -1.63);
+    expectStress(rightWall.metadata.sigma_b_MPa, -2.917);
 
     const bottomWall = getPart(parts, "Bottom wall");
-    expectNear(bottomWall.metadata.sigma_a_MPa, -2.959);
-    expectNear(bottomWall.metadata.sigma_b_MPa, -2.959);
+    expectStress(bottomWall.metadata.sigma_a_MPa, -2.959);
+    expectStress(bottomWall.metadata.sigma_b_MPa, -2.959);
 
     const leftWall = getPart(parts, "Left wall");
-    expectNear(leftWall.metadata.sigma_a_MPa, -1.63);
-    expectNear(leftWall.metadata.sigma_b_MPa, -2.917);
+    expectStress(leftWall.metadata.sigma_a_MPa, -1.63);
+    expectStress(leftWall.metadata.sigma_b_MPa, -2.917);
   });
 
   it("computes RHS300x200x6.3 major-axis bending stresses", () => {
@@ -206,20 +206,20 @@ describe("classifySection RHS", () => {
     });
 
     const topWall = getPart(parts, "Top wall");
-    expectNear(topWall.metadata.sigma_a_MPa, 16.607);
-    expectNear(topWall.metadata.sigma_b_MPa, 16.607);
+    expectStress(topWall.metadata.sigma_a_MPa, 16.607);
+    expectStress(topWall.metadata.sigma_b_MPa, 16.607);
 
     const rightWall = getPart(parts, "Right wall");
-    expectNear(rightWall.metadata.sigma_a_MPa, 15.56);
-    expectNear(rightWall.metadata.sigma_b_MPa, -15.56);
+    expectStress(rightWall.metadata.sigma_a_MPa, 15.56);
+    expectStress(rightWall.metadata.sigma_b_MPa, -15.56);
 
     const bottomWall = getPart(parts, "Bottom wall");
-    expectNear(bottomWall.metadata.sigma_a_MPa, -16.607);
-    expectNear(bottomWall.metadata.sigma_b_MPa, -16.607);
+    expectStress(bottomWall.metadata.sigma_a_MPa, -16.607);
+    expectStress(bottomWall.metadata.sigma_b_MPa, -16.607);
 
     const leftWall = getPart(parts, "Left wall");
-    expectNear(leftWall.metadata.sigma_a_MPa, 15.56);
-    expectNear(leftWall.metadata.sigma_b_MPa, -15.56);
+    expectStress(leftWall.metadata.sigma_a_MPa, 15.56);
+    expectStress(leftWall.metadata.sigma_b_MPa, -15.56);
   });
 
   it("computes RHS300x200x6.3 minor-axis bending stresses", () => {
@@ -233,20 +233,20 @@ describe("classifySection RHS", () => {
     expect(sectionClass).toBe(4);
 
     const topWall = getPart(parts, "Top wall");
-    expectNear(topWall.metadata.sigma_a_MPa, 18.716);
-    expectNear(topWall.metadata.sigma_b_MPa, -18.716);
+    expectStress(topWall.metadata.sigma_a_MPa, 18.716);
+    expectStress(topWall.metadata.sigma_b_MPa, -18.716);
 
     const rightWall = getPart(parts, "Right wall");
-    expectNear(rightWall.metadata.sigma_a_MPa, -20.669);
-    expectNear(rightWall.metadata.sigma_b_MPa, -20.669);
+    expectStress(rightWall.metadata.sigma_a_MPa, -20.669);
+    expectStress(rightWall.metadata.sigma_b_MPa, -20.669);
 
     const bottomWall = getPart(parts, "Bottom wall");
-    expectNear(bottomWall.metadata.sigma_a_MPa, 18.716);
-    expectNear(bottomWall.metadata.sigma_b_MPa, -18.716);
+    expectStress(bottomWall.metadata.sigma_a_MPa, 18.716);
+    expectStress(bottomWall.metadata.sigma_b_MPa, -18.716);
 
     const leftWall = getPart(parts, "Left wall");
-    expectNear(leftWall.metadata.sigma_a_MPa, 20.669);
-    expectNear(leftWall.metadata.sigma_b_MPa, 20.669);
+    expectStress(leftWall.metadata.sigma_a_MPa, 20.669);
+    expectStress(leftWall.metadata.sigma_b_MPa, 20.669);
   });
 
   it("computes RHS300x200x6.3 combined bending stresses", () => {
@@ -258,20 +258,20 @@ describe("classifySection RHS", () => {
     });
 
     const topWall = getPart(parts, "Top wall");
-    expectNear(topWall.metadata.sigma_a_MPa, 35.323);
-    expectNear(topWall.metadata.sigma_b_MPa, -2.109);
+    expectStress(topWall.metadata.sigma_a_MPa, 35.323);
+    expectStress(topWall.metadata.sigma_b_MPa, -2.109);
 
     const rightWall = getPart(parts, "Right wall");
-    expectNear(rightWall.metadata.sigma_a_MPa, -4.456);
-    expectNear(rightWall.metadata.sigma_b_MPa, -36.23);
+    expectStress(rightWall.metadata.sigma_a_MPa, -4.456);
+    expectStress(rightWall.metadata.sigma_b_MPa, -36.23);
 
     const bottomWall = getPart(parts, "Bottom wall");
-    expectNear(bottomWall.metadata.sigma_a_MPa, 2.471);
-    expectNear(bottomWall.metadata.sigma_b_MPa, -34.996);
+    expectStress(bottomWall.metadata.sigma_a_MPa, 2.471);
+    expectStress(bottomWall.metadata.sigma_b_MPa, -34.996);
 
     const leftWall = getPart(parts, "Left wall");
-    expectNear(leftWall.metadata.sigma_a_MPa, 35.323);
-    expectNear(leftWall.metadata.sigma_b_MPa, 5.109);
+    expectStress(leftWall.metadata.sigma_a_MPa, 35.323);
+    expectStress(leftWall.metadata.sigma_b_MPa, 5.109);
   });
 });
 
@@ -291,18 +291,8 @@ describe("classifySection CHS", () => {
     expect(tube.metadata.epsilon2).toBeCloseTo(235 / 355, 12);
     expect(tube.metadata.stressDistribution).toBe("compression");
     expect(tube.trace).toEqual([
-      {
-        label: "Class 1",
-        ratio: 100 / 3,
-        limit: "50ε²",
-        satisfied: false,
-      },
-      {
-        label: "Class 2",
-        ratio: 100 / 3,
-        limit: "70ε²",
-        satisfied: true,
-      },
+      { label: "Class 1", ratio: 100 / 3, limit: "50ε²", satisfied: false },
+      { label: "Class 2", ratio: 100 / 3, limit: "70ε²", satisfied: true },
     ]);
   });
 

@@ -1,8 +1,8 @@
 import { clamp } from "lodash-es";
-import { Context, Part, RawPart, SectionClass } from "./types";
-import { computePsi } from "./computePsi";
 import { computePointStress } from "./computePointStress";
 import { steelGradesMap } from "../../data/steelGrades";
+import type { Context, Part, RawPart, SectionClass } from "./types";
+import { ALPHA, EPSILON, SIGMA } from "./utils";
 
 export const classifyOutstandPart = (
   rawPart: RawPart,
@@ -22,7 +22,7 @@ export const classifyOutstandPart = (
   const cOverT = c_mm / t_mm;
   const sigma_supported_MPa = computePointStress(outstandPoints.supported, ctx);
   const sigma_tip_MPa = computePointStress(outstandPoints.tip, ctx);
-  const stressDistribution = getPartStressDistribution(
+  const stressDistribution = getStressDistribution(
     sigma_supported_MPa,
     sigma_tip_MPa,
     ctx.N_Ed_kN ?? 0,
@@ -44,35 +44,35 @@ export const classifyOutstandPart = (
 
   switch (stressDistribution) {
     case "neutral":
-      return classifyOutstandPartNeutral(part);
+      return classifyNeutral(part);
     case "tension":
-      return classifyOutstandPartTension(part);
+      return classifyTension(part);
     case "compression":
-      return classifyOutstandPartCompression(part);
+      return classifyCompression(part);
     case "bending":
     case "compression-bending":
-      return classifyOutstandPartBendingCompression(part);
+      return classifyBendingCompression(part);
   }
 };
 
-const classifyOutstandPartNeutral = (part: Part): [SectionClass, Part] => {
+const classifyNeutral = (part: Part): [SectionClass, Part] => {
   part.trace.push({ label: "Class 1", satisfied: true, note: "Neutral" });
   return [1, part];
 };
 
-const classifyOutstandPartTension = (part: Part): [SectionClass, Part] => {
+const classifyTension = (part: Part): [SectionClass, Part] => {
   part.trace.push({ label: "Class 1", satisfied: true, note: "Tension only" });
   return [1, part];
 };
 
-const classifyOutstandPartCompression = (part: Part): [SectionClass, Part] => {
+const classifyCompression = (part: Part): [SectionClass, Part] => {
   const { cOverT, epsilon } = part.metadata;
   if (cOverT === undefined || epsilon === undefined) throw new Error();
 
   part.trace.push({
     label: "Class 1",
     ratio: cOverT,
-    limit: "9ε",
+    limit: `9${EPSILON}`,
     satisfied: cOverT <= 9 * epsilon,
   });
   if (cOverT <= 9 * epsilon) return [1, part];
@@ -80,7 +80,7 @@ const classifyOutstandPartCompression = (part: Part): [SectionClass, Part] => {
   part.trace.push({
     label: "Class 2",
     ratio: cOverT,
-    limit: "10ε",
+    limit: `10${EPSILON}`,
     satisfied: cOverT <= 10 * epsilon,
   });
   if (cOverT <= 10 * epsilon) return [2, part];
@@ -88,7 +88,7 @@ const classifyOutstandPartCompression = (part: Part): [SectionClass, Part] => {
   part.trace.push({
     label: "Class 3",
     ratio: cOverT,
-    limit: "14ε",
+    limit: `14${EPSILON}`,
     satisfied: cOverT <= 14 * epsilon,
   });
   if (cOverT <= 14 * epsilon) return [3, part];
@@ -102,9 +102,7 @@ const classifyOutstandPartCompression = (part: Part): [SectionClass, Part] => {
   return [4, part];
 };
 
-const classifyOutstandPartBendingCompression = (
-  part: Part,
-): [SectionClass, Part] => {
+const classifyBendingCompression = (part: Part): [SectionClass, Part] => {
   const { cOverT, epsilon, sigma_supported_MPa, sigma_tip_MPa } = part.metadata;
   if (
     cOverT === undefined ||
@@ -123,7 +121,9 @@ const classifyOutstandPartBendingCompression = (
   part.trace.push({
     label: "Class 1",
     ratio: cOverT,
-    limit: isTipInCompression ? "9ε / α" : "9ε / (α√α)",
+    limit: isTipInCompression
+      ? `9${EPSILON} / ${ALPHA}`
+      : `9${EPSILON} / (${ALPHA}√${ALPHA})`,
     satisfied: cOverT <= (9 * epsilon) / denominator,
   });
   if (cOverT <= (9 * epsilon) / denominator) return [1, part];
@@ -131,7 +131,9 @@ const classifyOutstandPartBendingCompression = (
   part.trace.push({
     label: "Class 2",
     ratio: cOverT,
-    limit: isTipInCompression ? "10ε / α" : "10ε / (α√α)",
+    limit: isTipInCompression
+      ? `10${EPSILON} / ${ALPHA}`
+      : `10${EPSILON} / (${ALPHA}√${ALPHA})`,
     satisfied: cOverT <= (10 * epsilon) / denominator,
   });
   if (cOverT <= (10 * epsilon) / denominator) return [2, part];
@@ -144,7 +146,7 @@ const classifyOutstandPartBendingCompression = (
   part.trace.push({
     label: "Class 3",
     ratio: cOverT,
-    limit: "21ε√kσ",
+    limit: `21${EPSILON}√(k${SIGMA})`,
     satisfied: cOverT <= 21 * epsilon * Math.sqrt(kSigma),
   });
   if (cOverT <= 21 * epsilon * Math.sqrt(kSigma)) return [3, part];
@@ -181,7 +183,16 @@ const computeKSigma = (
   return 1.7 - 5 * cappedPsi + 17.1 * cappedPsi2;
 };
 
-const getPartStressDistribution = (
+const computePsi = (sigmaTop_MPa: number, sigmaBottom_MPa: number) => {
+  const isTopStressLarger = Math.abs(sigmaTop_MPa) >= Math.abs(sigmaBottom_MPa);
+  const sigma1_MPa = isTopStressLarger ? sigmaTop_MPa : sigmaBottom_MPa;
+  const sigma2_MPa = isTopStressLarger ? sigmaBottom_MPa : sigmaTop_MPa;
+
+  if (sigma1_MPa === 0) return 0;
+  return sigma2_MPa / sigma1_MPa;
+};
+
+const getStressDistribution = (
   sigma_supported_MPa: number,
   sigma_tip_MPa: number,
   N_Ed_kN: number,

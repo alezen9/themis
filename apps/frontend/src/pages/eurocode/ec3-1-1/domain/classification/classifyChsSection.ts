@@ -1,6 +1,7 @@
 import { steelGradesMap } from "../../data/steelGrades";
-import { Ec3FormValues } from "../../Form/schema";
-import { Actions, type Part, type SectionClass } from "./types";
+import type { Ec3FormValues } from "../../Form/schema";
+import type { Actions, Part, SectionClass } from "./types";
+import { EPSILON2 } from "./utils";
 
 type Geometry = Ec3FormValues["chs_geometry"];
 
@@ -66,7 +67,7 @@ const trace1 = (input: ChsTraceInput) =>
     ...input,
     label: "Class 1",
     sectionClass: 1,
-    limit: "50ε²",
+    limit: `50${EPSILON2}`,
     satisfied: input.ratio <= 50 * input.epsilon2,
   });
 
@@ -75,7 +76,7 @@ const trace2 = (input: ChsTraceInput) =>
     ...input,
     label: "Class 2",
     sectionClass: 2,
-    limit: "70ε²",
+    limit: `70${EPSILON2}`,
     satisfied: input.ratio <= 70 * input.epsilon2,
   });
 
@@ -84,7 +85,7 @@ const trace3 = (input: ChsTraceInput) =>
     ...input,
     label: "Class 3",
     sectionClass: 3,
-    limit: "90ε²",
+    limit: `90${EPSILON2}`,
     satisfied: input.ratio <= 90 * input.epsilon2,
   });
 

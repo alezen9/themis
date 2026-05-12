@@ -1,6 +1,7 @@
 import { steelGradesMap } from "../../data/steelGrades";
 import { computePointStress } from "./computePointStress";
-import { Context, Part, RawPart, SectionClass } from "./types";
+import type { Context, Part, RawPart, SectionClass } from "./types";
+import { ALPHA, EPSILON, PSI } from "./utils";
 
 export const classifyInternalPart = (
   rawPart: RawPart,
@@ -20,7 +21,7 @@ export const classifyInternalPart = (
   const cOverT = c_mm / t_mm;
   const sigma_a_MPa = computePointStress(internalPoints.a, ctx);
   const sigma_b_MPa = computePointStress(internalPoints.b, ctx);
-  const stressDistribution = getInternalPartStressDistribution(
+  const stressDistribution = getStressDistribution(
     sigma_a_MPa,
     sigma_b_MPa,
     ctx,
@@ -42,36 +43,36 @@ export const classifyInternalPart = (
 
   switch (stressDistribution) {
     case "neutral":
-      return classifyInternalPartNeutral(part);
+      return classifyNeutral(part);
     case "tension":
-      return classifyInternalPartTension(part);
+      return classifyTension(part);
     case "compression":
-      return classifyInternalPartCompression(part);
+      return classifyCompression(part);
     case "bending":
-      return classifyInternalPartBending(part);
+      return classifyBending(part);
     case "compression-bending":
-      return classifyInternalPartCompressionBending(part, rawPart, ctx);
+      return classifyCompressionBending(part, rawPart, ctx);
   }
 };
 
-const classifyInternalPartNeutral = (part: Part): [SectionClass, Part] => {
+const classifyNeutral = (part: Part): [SectionClass, Part] => {
   part.trace.push({ label: "Class 1", satisfied: true, note: "Neutral" });
   return [1, part];
 };
 
-const classifyInternalPartTension = (part: Part): [SectionClass, Part] => {
+const classifyTension = (part: Part): [SectionClass, Part] => {
   part.trace.push({ label: "Class 1", satisfied: true, note: "Tension only" });
   return [1, part];
 };
 
-const classifyInternalPartCompression = (part: Part): [SectionClass, Part] => {
+const classifyCompression = (part: Part): [SectionClass, Part] => {
   const { cOverT, epsilon } = part.metadata;
   if (cOverT === undefined || epsilon === undefined) throw new Error();
 
   part.trace.push({
     label: "Class 1",
     ratio: cOverT,
-    limit: "33ε",
+    limit: `33${EPSILON}`,
     satisfied: cOverT <= 33 * epsilon,
   });
   if (cOverT <= 33 * epsilon) return [1, part];
@@ -79,7 +80,7 @@ const classifyInternalPartCompression = (part: Part): [SectionClass, Part] => {
   part.trace.push({
     label: "Class 2",
     ratio: cOverT,
-    limit: "38ε",
+    limit: `38${EPSILON}`,
     satisfied: cOverT <= 38 * epsilon,
   });
   if (cOverT <= 38 * epsilon) return [2, part];
@@ -87,7 +88,7 @@ const classifyInternalPartCompression = (part: Part): [SectionClass, Part] => {
   part.trace.push({
     label: "Class 3",
     ratio: cOverT,
-    limit: "42ε",
+    limit: `42${EPSILON}`,
     satisfied: cOverT <= 42 * epsilon,
   });
   if (cOverT <= 42 * epsilon) return [3, part];
@@ -101,14 +102,14 @@ const classifyInternalPartCompression = (part: Part): [SectionClass, Part] => {
   return [4, part];
 };
 
-const classifyInternalPartBending = (part: Part): [SectionClass, Part] => {
+const classifyBending = (part: Part): [SectionClass, Part] => {
   const { cOverT, epsilon } = part.metadata;
   if (cOverT === undefined || epsilon === undefined) throw new Error();
 
   part.trace.push({
     label: "Class 1",
     ratio: cOverT,
-    limit: "72ε",
+    limit: `72${EPSILON}`,
     satisfied: cOverT <= 72 * epsilon,
   });
   if (cOverT <= 72 * epsilon) return [1, part];
@@ -116,7 +117,7 @@ const classifyInternalPartBending = (part: Part): [SectionClass, Part] => {
   part.trace.push({
     label: "Class 2",
     ratio: cOverT,
-    limit: "83ε",
+    limit: `83${EPSILON}`,
     satisfied: cOverT <= 83 * epsilon,
   });
   if (cOverT <= 83 * epsilon) return [2, part];
@@ -124,7 +125,7 @@ const classifyInternalPartBending = (part: Part): [SectionClass, Part] => {
   part.trace.push({
     label: "Class 3",
     ratio: cOverT,
-    limit: "124ε",
+    limit: `124${EPSILON}`,
     satisfied: cOverT <= 124 * epsilon,
   });
   if (cOverT <= 124 * epsilon) return [3, part];
@@ -138,7 +139,7 @@ const classifyInternalPartBending = (part: Part): [SectionClass, Part] => {
   return [4, part];
 };
 
-const classifyInternalPartCompressionBending = (
+const classifyCompressionBending = (
   part: Part,
   rawPart: RawPart,
   ctx: Context,
@@ -156,14 +157,14 @@ const classifyInternalPartCompressionBending = (
   )
     throw new Error();
 
-  const alpha = computeInternalAlpha(c_mm, t_mm, fy_MPa, axialPartCount, ctx);
+  const alpha = computeAlpha(c_mm, t_mm, fy_MPa, axialPartCount, ctx);
   part.metadata.alpha = alpha;
 
   if (alpha > 0.5) {
     part.trace.push({
       label: "Class 1",
       ratio: cOverT,
-      limit: "396ε / (13α - 1)",
+      limit: `396${EPSILON} / (13${ALPHA} - 1)`,
       satisfied: cOverT <= (396 * epsilon) / (13 * alpha - 1),
     });
     if (cOverT <= (396 * epsilon) / (13 * alpha - 1)) return [1, part];
@@ -171,7 +172,7 @@ const classifyInternalPartCompressionBending = (
     part.trace.push({
       label: "Class 1",
       ratio: cOverT,
-      limit: "36ε / α",
+      limit: `36${EPSILON} / ${ALPHA}`,
       satisfied: cOverT <= (36 * epsilon) / alpha,
     });
     if (cOverT <= (36 * epsilon) / alpha) return [1, part];
@@ -181,7 +182,7 @@ const classifyInternalPartCompressionBending = (
     part.trace.push({
       label: "Class 2",
       ratio: cOverT,
-      limit: "456ε / (13α - 1)",
+      limit: `456${EPSILON} / (13${ALPHA} - 1)`,
       satisfied: cOverT <= (456 * epsilon) / (13 * alpha - 1),
     });
     if (cOverT <= (456 * epsilon) / (13 * alpha - 1)) return [2, part];
@@ -189,20 +190,20 @@ const classifyInternalPartCompressionBending = (
     part.trace.push({
       label: "Class 2",
       ratio: cOverT,
-      limit: "41.5ε / α",
+      limit: `41.5${EPSILON} / ${ALPHA}`,
       satisfied: cOverT <= (41.5 * epsilon) / alpha,
     });
     if (cOverT <= (41.5 * epsilon) / alpha) return [2, part];
   }
 
-  const psi = computeInternalPsi(sigma_a_MPa, sigma_b_MPa);
+  const psi = computePsi(sigma_a_MPa, sigma_b_MPa);
   part.metadata.psi = psi;
 
   if (psi > -1) {
     part.trace.push({
       label: "Class 3",
       ratio: cOverT,
-      limit: "42ε / (0.67 + 0.33ψ)",
+      limit: `42${EPSILON} / (0.67 + 0.33${PSI})`,
       satisfied: cOverT <= (42 * epsilon) / (0.67 + 0.33 * psi),
     });
     if (cOverT <= (42 * epsilon) / (0.67 + 0.33 * psi)) return [3, part];
@@ -210,7 +211,7 @@ const classifyInternalPartCompressionBending = (
     part.trace.push({
       label: "Class 3",
       ratio: cOverT,
-      limit: "62ε(1 - ψ)√(-ψ)",
+      limit: `62${EPSILON}(1 - ${PSI})√(-${PSI})`,
       satisfied: cOverT <= 62 * epsilon * (1 - psi) * Math.sqrt(-psi),
     });
     if (cOverT <= 62 * epsilon * (1 - psi) * Math.sqrt(-psi)) return [3, part];
@@ -225,7 +226,7 @@ const classifyInternalPartCompressionBending = (
   return [4, part];
 };
 
-const computeInternalAlpha = (
+const computeAlpha = (
   c_mm: number,
   t_mm: number,
   fy_MPa: number,
@@ -239,7 +240,7 @@ const computeInternalAlpha = (
   return Math.min(1, Math.max(0, 0.5 + axialForceRatio));
 };
 
-const computeInternalPsi = (sigma_a_MPa: number, sigma_b_MPa: number) => {
+const computePsi = (sigma_a_MPa: number, sigma_b_MPa: number) => {
   const sigma1_MPa = Math.min(sigma_a_MPa, sigma_b_MPa);
   const sigma2_MPa = sigma1_MPa === sigma_a_MPa ? sigma_b_MPa : sigma_a_MPa;
 
@@ -247,7 +248,7 @@ const computeInternalPsi = (sigma_a_MPa: number, sigma_b_MPa: number) => {
   return sigma2_MPa / sigma1_MPa;
 };
 
-const getInternalPartStressDistribution = (
+const getStressDistribution = (
   sigma_a_MPa: number,
   sigma_b_MPa: number,
   ctx: Context,
