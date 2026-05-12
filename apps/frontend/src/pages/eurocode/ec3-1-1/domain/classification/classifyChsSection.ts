@@ -1,13 +1,13 @@
 import { steelGradesMap } from "../../data/steelGrades";
 import { Ec3FormValues } from "../../Form/schema";
-import { type Part, type SectionClass } from "./types";
+import { Actions, type Part, type SectionClass } from "./types";
 
 type Geometry = Ec3FormValues["chs_geometry"];
 
 export const classifyChsSection = (
   geometry: Geometry,
-  steel_grade_id: Ec3FormValues["steel_grade_id"],
-  actions: Pick<Ec3FormValues, "N_Ed_kN">,
+  steel_grade_id: string,
+  actions: Actions,
 ): [SectionClass, Part[]] => {
   const { d_mm, t_mm } = geometry;
   const ratio = d_mm / t_mm;

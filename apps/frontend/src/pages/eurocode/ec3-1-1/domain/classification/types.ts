@@ -24,6 +24,7 @@ export type Metadata = {
   sigma_a_MPa?: number;
   sigma_b_MPa?: number;
   stressDistribution:
+    | "neutral"
     | "tension"
     | "compression"
     | "bending"
@@ -46,8 +47,8 @@ export type Trace = {
 };
 
 export type Point = {
-  y_mm: number; // vertical distance from centroid
-  z_mm: number; // horizontal distance from centroid
+  y_mm: number; // horizontal distance from centroid
+  z_mm: number; // vertical distance from centroid
 };
 
 export type RawPart = {
@@ -56,6 +57,7 @@ export type RawPart = {
   c_mm?: number;
   d_mm?: number;
   t_mm?: number;
+  axialPartCount?: 1 | 2;
   outstandPoints?: { supported: Point; tip: Point };
   internalPoints?: { a: Point; b: Point };
 };

@@ -43,6 +43,8 @@ export const classifyOutstandPart = (
   };
 
   switch (stressDistribution) {
+    case "neutral":
+      return classifyOutstandPartNeutral(part);
     case "tension":
       return classifyOutstandPartTension(part);
     case "compression":
@@ -51,6 +53,11 @@ export const classifyOutstandPart = (
     case "compression-bending":
       return classifyOutstandPartBendingCompression(part);
   }
+};
+
+const classifyOutstandPartNeutral = (part: Part): [SectionClass, Part] => {
+  part.trace.push({ label: "Class 1", satisfied: true, note: "Neutral" });
+  return [1, part];
 };
 
 const classifyOutstandPartTension = (part: Part): [SectionClass, Part] => {

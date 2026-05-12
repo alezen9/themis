@@ -65,6 +65,7 @@ const decompose = (geometry: Geometry): RawPart[] => {
       type: "internal",
       c_mm: web_c_mm,
       t_mm: tw_mm,
+      axialPartCount: 1,
       internalPoints: {
         a: { y_mm: 0, z_mm: web_c_mm / 2 },
         b: { y_mm: 0, z_mm: -web_c_mm / 2 },
