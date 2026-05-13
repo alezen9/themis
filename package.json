@@ -6,6 +6,7 @@
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
+    "test:frontend": "pnpm --dir apps/frontend test",
     "dev": "pnpm --filter frontend dev",
     "ndg:draft-to-nodes": "node scripts/ndg-draft-to-nodes.mjs",
     "ndg:nodes-to-draft": "node scripts/ndg-nodes-to-draft.mjs",

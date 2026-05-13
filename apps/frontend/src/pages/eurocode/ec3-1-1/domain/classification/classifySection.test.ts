@@ -356,7 +356,7 @@ describe("classifySection RHS", () => {
 
     const rightWall = getPart(parts, "Right wall");
     expect(getPartClass(rightWall)).toBe(4);
-    expect(rightWall.metadata.stressDistribution).toBe("compression-bending");
+    expect(rightWall.metadata.stressDistribution).toBe("compression");
     expectStress(rightWall.metadata.sigma_a_MPa, -18.716);
     expectStress(rightWall.metadata.sigma_b_MPa, -20.669);
 
@@ -391,7 +391,7 @@ describe("classifySection RHS", () => {
 
     const rightWall = getPart(parts, "Right wall");
     expect(getPartClass(rightWall)).toBe(3);
-    expect(rightWall.metadata.stressDistribution).toBe("compression-bending");
+    expect(rightWall.metadata.stressDistribution).toBe("compression");
     expectStress(rightWall.metadata.sigma_a_MPa, -2.109);
     expectStress(rightWall.metadata.sigma_b_MPa, -36.23);
 
@@ -461,7 +461,7 @@ describe("classifySection RHS", () => {
 
     const rightWall = getPart(parts, "Right wall");
     expect(getPartClass(rightWall)).toBe(4);
-    expect(rightWall.metadata.stressDistribution).toBe("compression-bending");
+    expect(rightWall.metadata.stressDistribution).toBe("compression");
     expectStress(rightWall.metadata.sigma_a_MPa, -9.909);
     expectStress(rightWall.metadata.sigma_b_MPa, -10.966);
 
