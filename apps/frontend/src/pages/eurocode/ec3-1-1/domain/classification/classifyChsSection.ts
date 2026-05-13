@@ -27,18 +27,27 @@ export const classifyChsSection = (
       fy_MPa: final_fy_Mpa,
       epsilon2,
       dOverT: ratio,
-      stressDistribution: actions.N_Ed_kN >= 0 ? "tension" : "compression",
+      stressDistribution:
+        actions.N_Ed_kN === 0
+          ? "neutral"
+          : actions.N_Ed_kN > 0
+            ? "tension"
+            : "compression",
     },
     trace: [],
   };
 
-  if (actions.N_Ed_kN >= 0) {
+  if (actions.N_Ed_kN === 0) {
+    part.trace.push({ label: "Class 1", satisfied: true, note: "Neutral" });
+    return [1, [part]];
+  }
+
+  if (actions.N_Ed_kN > 0) {
     part.trace.push({
       label: "Class 1",
       satisfied: true,
       note: "Tension only",
     });
-
     return [1, [part]];
   }
 

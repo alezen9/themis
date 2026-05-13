@@ -43,7 +43,7 @@ export type Trace = {
   ratio?: number;
   limit?: string; // 50ε²
   satisfied: boolean;
-  note?: string; // Tension only, Not supported
+  note?: string; // Tension only, Neutral, Not supported
 };
 
 export type Point = {
