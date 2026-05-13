@@ -29,7 +29,7 @@ export const classifyChsSection = (
       dOverT: ratio,
       stressDistribution:
         actions.N_Ed_kN === 0
-          ? "neutral"
+          ? "no-stress"
           : actions.N_Ed_kN > 0
             ? "tension"
             : "compression",
@@ -38,7 +38,7 @@ export const classifyChsSection = (
   };
 
   if (actions.N_Ed_kN === 0) {
-    part.trace.push({ label: "Class 1", satisfied: true, note: "Neutral" });
+    part.trace.push({ label: "Class 1", satisfied: true, note: "No stress" });
     return [1, [part]];
   }
 

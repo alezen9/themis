@@ -24,7 +24,7 @@ export type Metadata = {
   sigma_a_MPa?: number;
   sigma_b_MPa?: number;
   stressDistribution:
-    | "neutral"
+    | "no-stress"
     | "tension"
     | "compression"
     | "bending"
@@ -57,7 +57,6 @@ export type RawPart = {
   c_mm?: number;
   d_mm?: number;
   t_mm?: number;
-  axialPartCount?: 1 | 2;
   outstandPoints?: { supported: Point; tip: Point };
   internalPoints?: { a: Point; b: Point };
 };

@@ -1,5 +1,6 @@
 import { steelGradesMap } from "../../data/steelGrades";
 import { computePointStress } from "./computePointStress";
+import { getStressDistribution } from "./getStressDistribution";
 import type { Context, Part, RawPart, SectionClass } from "./types";
 import { ALPHA, EPSILON, PSI } from "./utils";
 
@@ -42,8 +43,8 @@ export const classifyInternalPart = (
   };
 
   switch (stressDistribution) {
-    case "neutral":
-      return classifyNeutral(part);
+    case "no-stress":
+      return classifyNoStress(part);
     case "tension":
       return classifyTension(part);
     case "compression":
@@ -51,12 +52,12 @@ export const classifyInternalPart = (
     case "bending":
       return classifyBending(part);
     case "compression-bending":
-      return classifyCompressionBending(part, rawPart, ctx);
+      return classifyCompressionBending(part, rawPart);
   }
 };
 
-const classifyNeutral = (part: Part): [SectionClass, Part] => {
-  part.trace.push({ label: "Class 1", satisfied: true, note: "Neutral" });
+const classifyNoStress = (part: Part): [SectionClass, Part] => {
+  part.trace.push({ label: "Class 1", satisfied: true, note: "No stress" });
   return [1, part];
 };
 
@@ -142,10 +143,9 @@ const classifyBending = (part: Part): [SectionClass, Part] => {
 const classifyCompressionBending = (
   part: Part,
   rawPart: RawPart,
-  ctx: Context,
 ): [SectionClass, Part] => {
-  const { c_mm, t_mm, axialPartCount = 1 } = rawPart;
-  const { cOverT, epsilon, fy_MPa, sigma_a_MPa, sigma_b_MPa } = part.metadata;
+  const { c_mm, t_mm } = rawPart;
+  const { cOverT, epsilon, sigma_a_MPa, sigma_b_MPa } = part.metadata;
 
   if (
     c_mm === undefined ||
@@ -157,7 +157,7 @@ const classifyCompressionBending = (
   )
     throw new Error();
 
-  const alpha = computeAlpha(c_mm, t_mm, fy_MPa, axialPartCount, ctx);
+  const alpha = computeAlpha(sigma_a_MPa, sigma_b_MPa);
   part.metadata.alpha = alpha;
 
   if (alpha > 0.5) {
@@ -226,18 +226,15 @@ const classifyCompressionBending = (
   return [4, part];
 };
 
-const computeAlpha = (
-  c_mm: number,
-  t_mm: number,
-  fy_MPa: number,
-  axialPartCount: 1 | 2,
-  ctx: Context,
-) => {
-  const { N_Ed_kN = 0 } = ctx;
-  const axialForceRatio =
-    (-N_Ed_kN * 1_000) / (2 * axialPartCount * c_mm * t_mm * fy_MPa);
+const computeAlpha = (sigma_a_MPa: number, sigma_b_MPa: number) => {
+  const minSigma = Math.min(sigma_a_MPa, sigma_b_MPa); // most compression
+  const maxSigma = Math.max(sigma_a_MPa, sigma_b_MPa); // most tension
 
-  return Math.min(1, Math.max(0, 0.5 + axialForceRatio));
+  if (minSigma >= 0) return 0; // all tension
+  if (maxSigma < 0) return 1; // all compression
+
+  // linear stress crosses zero inside plate
+  return -minSigma / (maxSigma - minSigma);
 };
 
 const computePsi = (sigma_a_MPa: number, sigma_b_MPa: number) => {
@@ -246,29 +243,4 @@ const computePsi = (sigma_a_MPa: number, sigma_b_MPa: number) => {
 
   if (sigma1_MPa === 0) return 0;
   return sigma2_MPa / sigma1_MPa;
-};
-
-const getStressDistribution = (
-  sigma_a_MPa: number,
-  sigma_b_MPa: number,
-  ctx: Context,
-): NonNullable<Part["metadata"]["stressDistribution"]> => {
-  const { N_Ed_kN = 0 } = ctx;
-  const stressTolerance_MPa = 1e-9;
-  const isNeutral =
-    Math.abs(sigma_a_MPa) <= stressTolerance_MPa &&
-    Math.abs(sigma_b_MPa) <= stressTolerance_MPa;
-  const areBothInTension =
-    sigma_a_MPa > stressTolerance_MPa && sigma_b_MPa > stressTolerance_MPa;
-  const areBothInCompression =
-    sigma_a_MPa < -stressTolerance_MPa && sigma_b_MPa < -stressTolerance_MPa;
-  const hasStressGradient =
-    Math.abs(sigma_a_MPa - sigma_b_MPa) > stressTolerance_MPa;
-
-  if (isNeutral) return "neutral";
-  if (areBothInTension) return "tension";
-  if (areBothInCompression)
-    return hasStressGradient ? "compression-bending" : "compression";
-  if (N_Ed_kN === 0) return "bending";
-  return "compression-bending";
 };

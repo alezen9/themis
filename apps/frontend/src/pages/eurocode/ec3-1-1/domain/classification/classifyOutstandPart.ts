@@ -3,6 +3,7 @@ import { computePointStress } from "./computePointStress";
 import { steelGradesMap } from "../../data/steelGrades";
 import type { Context, Part, RawPart, SectionClass } from "./types";
 import { ALPHA, EPSILON, SIGMA } from "./utils";
+import { getStressDistribution } from "./getStressDistribution";
 
 export const classifyOutstandPart = (
   rawPart: RawPart,
@@ -25,7 +26,7 @@ export const classifyOutstandPart = (
   const stressDistribution = getStressDistribution(
     sigma_supported_MPa,
     sigma_tip_MPa,
-    ctx.N_Ed_kN ?? 0,
+    ctx,
   );
 
   const part: Part = {
@@ -43,8 +44,8 @@ export const classifyOutstandPart = (
   };
 
   switch (stressDistribution) {
-    case "neutral":
-      return classifyNeutral(part);
+    case "no-stress":
+      return classifyNoStress(part);
     case "tension":
       return classifyTension(part);
     case "compression":
@@ -55,8 +56,8 @@ export const classifyOutstandPart = (
   }
 };
 
-const classifyNeutral = (part: Part): [SectionClass, Part] => {
-  part.trace.push({ label: "Class 1", satisfied: true, note: "Neutral" });
+const classifyNoStress = (part: Part): [SectionClass, Part] => {
+  part.trace.push({ label: "Class 1", satisfied: true, note: "No stress" });
   return [1, part];
 };
 
@@ -190,15 +191,4 @@ const computePsi = (sigmaTop_MPa: number, sigmaBottom_MPa: number) => {
 
   if (sigma1_MPa === 0) return 0;
   return sigma2_MPa / sigma1_MPa;
-};
-
-const getStressDistribution = (
-  sigma_supported_MPa: number,
-  sigma_tip_MPa: number,
-  N_Ed_kN: number,
-): NonNullable<Part["metadata"]["stressDistribution"]> => {
-  if (sigma_supported_MPa >= 0 && sigma_tip_MPa >= 0) return "tension";
-  if (sigma_supported_MPa < 0 && sigma_tip_MPa < 0) return "compression";
-  if (N_Ed_kN === 0) return "bending";
-  return "compression-bending";
 };
