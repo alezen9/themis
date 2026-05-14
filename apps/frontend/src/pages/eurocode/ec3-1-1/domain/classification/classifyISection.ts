@@ -46,8 +46,16 @@ const decompose = (geometry: Geometry): RawPart[] => {
       c_mm: flange_c_mm,
       t_mm: tf_mm,
       outstandPoints: {
-        supported: { y_mm: -(tw_mm / 2 + r_mm), z_mm: h_mm / 2 - tf_mm / 2 },
-        tip: { y_mm: -b_mm / 2, z_mm: h_mm / 2 - tf_mm / 2 },
+        supported: {
+          key: "sigma_supported_MPa",
+          y_mm: -(tw_mm / 2 + r_mm),
+          z_mm: h_mm / 2 - tf_mm / 2,
+        },
+        tip: {
+          key: "sigma_tip_MPa",
+          y_mm: -b_mm / 2,
+          z_mm: h_mm / 2 - tf_mm / 2,
+        },
       },
     },
     {
@@ -56,8 +64,16 @@ const decompose = (geometry: Geometry): RawPart[] => {
       c_mm: flange_c_mm,
       t_mm: tf_mm,
       outstandPoints: {
-        supported: { y_mm: tw_mm / 2 + r_mm, z_mm: h_mm / 2 - tf_mm / 2 },
-        tip: { y_mm: b_mm / 2, z_mm: h_mm / 2 - tf_mm / 2 },
+        supported: {
+          key: "sigma_supported_MPa",
+          y_mm: tw_mm / 2 + r_mm,
+          z_mm: h_mm / 2 - tf_mm / 2,
+        },
+        tip: {
+          key: "sigma_tip_MPa",
+          y_mm: b_mm / 2,
+          z_mm: h_mm / 2 - tf_mm / 2,
+        },
       },
     },
     {
@@ -65,9 +81,10 @@ const decompose = (geometry: Geometry): RawPart[] => {
       type: "internal",
       c_mm: web_c_mm,
       t_mm: tw_mm,
+      sectionWebCount: 1,
       internalPoints: {
-        a: { y_mm: 0, z_mm: web_c_mm / 2 },
-        b: { y_mm: 0, z_mm: -web_c_mm / 2 },
+        a: { key: "sigma_a_MPa", y_mm: 0, z_mm: web_c_mm / 2 },
+        b: { key: "sigma_b_MPa", y_mm: 0, z_mm: -web_c_mm / 2 },
       },
     },
     {
@@ -76,8 +93,16 @@ const decompose = (geometry: Geometry): RawPart[] => {
       c_mm: flange_c_mm,
       t_mm: tf_mm,
       outstandPoints: {
-        supported: { y_mm: -(tw_mm / 2 + r_mm), z_mm: -h_mm / 2 + tf_mm / 2 },
-        tip: { y_mm: -b_mm / 2, z_mm: -h_mm / 2 + tf_mm / 2 },
+        supported: {
+          key: "sigma_supported_MPa",
+          y_mm: -(tw_mm / 2 + r_mm),
+          z_mm: -h_mm / 2 + tf_mm / 2,
+        },
+        tip: {
+          key: "sigma_tip_MPa",
+          y_mm: -b_mm / 2,
+          z_mm: -h_mm / 2 + tf_mm / 2,
+        },
       },
     },
     {
@@ -86,8 +111,16 @@ const decompose = (geometry: Geometry): RawPart[] => {
       c_mm: flange_c_mm,
       t_mm: tf_mm,
       outstandPoints: {
-        supported: { y_mm: tw_mm / 2 + r_mm, z_mm: -h_mm / 2 + tf_mm / 2 },
-        tip: { y_mm: b_mm / 2, z_mm: -h_mm / 2 + tf_mm / 2 },
+        supported: {
+          key: "sigma_supported_MPa",
+          y_mm: tw_mm / 2 + r_mm,
+          z_mm: -h_mm / 2 + tf_mm / 2,
+        },
+        tip: {
+          key: "sigma_tip_MPa",
+          y_mm: b_mm / 2,
+          z_mm: -h_mm / 2 + tf_mm / 2,
+        },
       },
     },
   ];

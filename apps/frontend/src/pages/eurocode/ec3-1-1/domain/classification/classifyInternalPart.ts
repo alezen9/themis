@@ -1,3 +1,4 @@
+import { clamp } from "lodash-es";
 import { steelGradesMap } from "../../data/steelGrades";
 import { computePointStress } from "./computePointStress";
 import { getStressDistribution } from "./getStressDistribution";
@@ -22,19 +23,24 @@ export const classifyInternalPart = (
   const cOverT = c_mm / t_mm;
   const sigma_a_MPa = computePointStress(internalPoints.a, ctx);
   const sigma_b_MPa = computePointStress(internalPoints.b, ctx);
-  const stressDistribution = getStressDistribution(
+  const alpha = computeAlpha(
+    rawPart,
+    final_fy_Mpa,
     sigma_a_MPa,
     sigma_b_MPa,
     ctx,
   );
+  const stressDistribution = getStressDistribution(sigma_a_MPa, sigma_b_MPa);
 
   const part: Part = {
     label: rawPart.label,
     type: rawPart.type,
+    controlPoints: [internalPoints.a, internalPoints.b],
     metadata: {
       fy_MPa: final_fy_Mpa,
       epsilon,
       cOverT,
+      alpha,
       sigma_a_MPa,
       sigma_b_MPa,
       stressDistribution,
@@ -145,20 +151,18 @@ const classifyCompressionBending = (
   rawPart: RawPart,
 ): [SectionClass, Part] => {
   const { c_mm, t_mm } = rawPart;
-  const { cOverT, epsilon, sigma_a_MPa, sigma_b_MPa } = part.metadata;
+  const { cOverT, epsilon, sigma_a_MPa, sigma_b_MPa, alpha } = part.metadata;
 
   if (
     c_mm === undefined ||
     t_mm === undefined ||
     cOverT === undefined ||
     epsilon === undefined ||
+    alpha === undefined ||
     sigma_a_MPa === undefined ||
     sigma_b_MPa === undefined
   )
     throw new Error();
-
-  const alpha = computeAlpha(sigma_a_MPa, sigma_b_MPa);
-  part.metadata.alpha = alpha;
 
   if (alpha > 0.5) {
     part.trace.push({
@@ -226,15 +230,25 @@ const classifyCompressionBending = (
   return [4, part];
 };
 
-const computeAlpha = (sigma_a_MPa: number, sigma_b_MPa: number) => {
-  const minSigma = Math.min(sigma_a_MPa, sigma_b_MPa); // most compression
-  const maxSigma = Math.max(sigma_a_MPa, sigma_b_MPa); // most tension
+const computeAlpha = (
+  rawPart: RawPart,
+  fy_Mpa: number,
+  sigma_a_MPa: number,
+  sigma_b_MPa: number,
+  ctx: Context,
+) => {
+  const areBothZero = sigma_a_MPa === 0 && sigma_b_MPa === 0;
+  const areBothPositive = sigma_a_MPa >= 0 && sigma_b_MPa >= 0;
+  const areBothNegative = sigma_a_MPa < 0 && sigma_b_MPa < 0;
 
-  if (minSigma >= 0) return 0; // all tension
-  if (maxSigma < 0) return 1; // all compression
+  if (areBothNegative || areBothZero || areBothPositive) return 1;
 
-  // linear stress crosses zero inside plate
-  return -minSigma / (maxSigma - minSigma);
+  const { c_mm = 0, t_mm = 0, sectionWebCount = 1 } = rawPart;
+  const { N_Ed_kN = 0 } = ctx;
+  const N_Ed_N = N_Ed_kN * 1_000;
+  const A_mm2 = c_mm * t_mm;
+  const alpha = -N_Ed_N / (2 * sectionWebCount * A_mm2 * fy_Mpa) + 0.5;
+  return clamp(alpha, 0, 1);
 };
 
 const computePsi = (sigma_a_MPa: number, sigma_b_MPa: number) => {

@@ -1,6 +1,6 @@
-import { Context, Point } from "./types";
+import { Context, SigmaControlPoint } from "./types";
 
-export const computePointStress = (point: Point, ctx: Context) => {
+export const computePointStress = (point: SigmaControlPoint, ctx: Context) => {
   const { A_mm2, Iy_mm4, Iz_mm4, N_Ed_kN, M_y_Ed_kNm, M_z_Ed_kNm } = ctx;
 
   const sigmaN_MPa = (N_Ed_kN * 1_000) / A_mm2; // compression negative

@@ -35,6 +35,7 @@ export type Part = {
   label: string;
   type: "outstand" | "internal" | "tubular";
   metadata: Metadata;
+  controlPoints?: SigmaControlPoint[];
   trace: Trace[];
 };
 
@@ -46,7 +47,8 @@ export type Trace = {
   note?: string; // Tension only, Neutral, Not supported
 };
 
-export type Point = {
+export type SigmaControlPoint = {
+  key: "sigma_a_MPa" | "sigma_b_MPa" | "sigma_supported_MPa" | "sigma_tip_MPa";
   y_mm: number; // horizontal distance from centroid
   z_mm: number; // vertical distance from centroid
 };
@@ -57,6 +59,7 @@ export type RawPart = {
   c_mm?: number;
   d_mm?: number;
   t_mm?: number;
-  outstandPoints?: { supported: Point; tip: Point };
-  internalPoints?: { a: Point; b: Point };
+  sectionWebCount?: number;
+  outstandPoints?: { supported: SigmaControlPoint; tip: SigmaControlPoint };
+  internalPoints?: { a: SigmaControlPoint; b: SigmaControlPoint };
 };

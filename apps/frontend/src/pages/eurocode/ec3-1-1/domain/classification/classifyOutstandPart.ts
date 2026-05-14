@@ -26,12 +26,12 @@ export const classifyOutstandPart = (
   const stressDistribution = getStressDistribution(
     sigma_supported_MPa,
     sigma_tip_MPa,
-    ctx,
   );
 
   const part: Part = {
     label: rawPart.label,
     type: rawPart.type,
+    controlPoints: [outstandPoints.supported, outstandPoints.tip],
     metadata: {
       fy_MPa: final_fy_Mpa,
       epsilon,
