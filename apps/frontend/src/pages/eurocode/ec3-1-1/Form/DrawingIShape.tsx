@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Pluton2D } from "pluton-2d";
 import { Ec3FormValues } from "./schema";
 import { formatDimension } from "./utils";
@@ -14,20 +14,30 @@ const dimensionOffset = 30;
 export const DrawingIShape = () => {
   const ref = useRef<SVGSVGElement>(null);
   const scene = useRef<Pluton2D<DrawingShapeParams> | undefined>(undefined);
-  const { getValues, subscribe } = useEc311FormContext();
+  const { getValues, subscribe, trigger } = useEc311FormContext();
 
-  const updateSceneParams = useCallback<
-    Parameters<typeof subscribe>[0]["callback"]
-  >(({ values }) => {
-    if (!scene.current) return;
-    Object.assign(scene.current.params, values.i_geometry);
-  }, []);
+  useEffect(() => {
+    const unsubscribe = subscribe({
+      name: "i_geometry",
+      formState: { values: true },
+      callback: async () => {
+        if (!scene.current) return;
+        const isValid = await trigger("i_geometry");
+        if (!isValid) return;
+        Object.assign(scene.current.params, { ...getValues().i_geometry });
+      },
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [subscribe, trigger, getValues]);
 
   useEffect(() => {
     if (!ref.current) return;
 
     scene.current = new Pluton2D(ref.current, {
-      params: getValues().i_geometry,
+      params: { ...getValues().i_geometry },
     });
 
     const geometryGroup = scene.current.geometry.group();
@@ -135,18 +145,6 @@ export const DrawingIShape = () => {
       scene.current?.dispose();
     };
   }, [getValues]);
-
-  useEffect(() => {
-    const unsubscribe = subscribe({
-      name: "i_geometry",
-      formState: { values: true },
-      callback: updateSceneParams,
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [subscribe, updateSceneParams]);
 
   return <svg ref={ref} className="w-full aspect-square" />;
 };

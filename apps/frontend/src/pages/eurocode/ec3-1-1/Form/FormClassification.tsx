@@ -47,7 +47,7 @@ export const FormClassification = () => {
 };
 
 const ClassificationInfo = () => {
-  const { subscribe, watch, getValues } = useEc311FormContext();
+  const { subscribe, watch, getValues, trigger } = useEc311FormContext();
   const [[computedClass, parts], setComputedClass] = useState(() =>
     classifySection(getValues()),
   );
@@ -69,7 +69,22 @@ const ClassificationInfo = () => {
         "M_z_Ed_kNm",
       ],
       formState: { values: true },
-      callback: ({ values }) => {
+      callback: async ({ values }) => {
+        const isValid = await trigger([
+          "shape",
+          "section_id",
+          "steel_grade_id",
+          "section_class",
+          "N_Ed_kN",
+          "M_y_Ed_kNm",
+          "M_z_Ed_kNm",
+          values.shape === "I"
+            ? "i_geometry"
+            : values.shape === "RHS"
+              ? "rhs_geometry"
+              : "chs_geometry",
+        ]);
+        if (!isValid) return;
         setComputedClass(classifySection(values));
       },
     });
@@ -77,7 +92,7 @@ const ClassificationInfo = () => {
     return () => {
       unsubscribe();
     };
-  }, [subscribe]);
+  }, [subscribe, getValues, trigger]);
 
   return (
     <div className="flex flex-col gap-3 text-sand-900">

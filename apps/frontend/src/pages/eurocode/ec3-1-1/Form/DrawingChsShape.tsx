@@ -15,20 +15,20 @@ const thicknessDimensionAngle = -Math.PI / 4; // -45deg
 export const DrawingChsShape = () => {
   const ref = useRef<SVGSVGElement>(null);
   const scene = useRef<Pluton2D<DrawingShapeParams> | undefined>(undefined);
-  const { getValues, subscribe } = useEc311FormContext();
+  const { getValues, subscribe, trigger } = useEc311FormContext();
 
-  const updateSceneParams = useCallback<
-    Parameters<typeof subscribe>[0]["callback"]
-  >(({ values }) => {
+  const updateSceneParams = useCallback(async () => {
     if (!scene.current) return;
-    Object.assign(scene.current.params, values.chs_geometry);
-  }, []);
+    const isValid = await trigger("chs_geometry");
+    if (!isValid) return;
+    Object.assign(scene.current.params, { ...getValues().chs_geometry });
+  }, [trigger, getValues]);
 
   useEffect(() => {
     if (!ref.current) return;
 
     scene.current = new Pluton2D(ref.current, {
-      params: getValues().chs_geometry,
+      params: { ...getValues().chs_geometry },
     });
 
     const geometryGroup = scene.current.geometry.group();

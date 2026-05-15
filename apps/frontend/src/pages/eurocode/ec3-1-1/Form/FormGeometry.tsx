@@ -50,29 +50,44 @@ export const FormGeometry = () => {
       {isCustomSection && shape === "I" && (
         <>
           <SpacingDivider />
-          <HorizontalInput name="h_mm" label={<LatexLabel tex="h" />}>
+          <HorizontalInput
+            name="i_geometry.h_mm"
+            label={<LatexLabel tex="h" />}
+          >
             <InputNumber {...registerNumber?.("i_geometry.h_mm")} suffix="mm" />
           </HorizontalInput>
 
-          <HorizontalInput name="b_mm" label={<LatexLabel tex="b" />}>
+          <HorizontalInput
+            name="i_geometry.b_mm"
+            label={<LatexLabel tex="b" />}
+          >
             <InputNumber {...registerNumber?.("i_geometry.b_mm")} suffix="mm" />
           </HorizontalInput>
 
-          <HorizontalInput name="tw_mm" label={<LatexLabel tex="t_w" />}>
+          <HorizontalInput
+            name="i_geometry.tw_mm"
+            label={<LatexLabel tex="t_w" />}
+          >
             <InputNumber
               {...registerNumber?.("i_geometry.tw_mm")}
               suffix="mm"
             />
           </HorizontalInput>
 
-          <HorizontalInput name="tf_mm" label={<LatexLabel tex="t_f" />}>
+          <HorizontalInput
+            name="i_geometry.tf_mm"
+            label={<LatexLabel tex="t_f" />}
+          >
             <InputNumber
               {...registerNumber?.("i_geometry.tf_mm")}
               suffix="mm"
             />
           </HorizontalInput>
 
-          <HorizontalInput name="r_mm" label={<LatexLabel tex="r" />}>
+          <HorizontalInput
+            name="i_geometry.r_mm"
+            label={<LatexLabel tex="r" />}
+          >
             <InputNumber {...registerNumber?.("i_geometry.r_mm")} suffix="mm" />
           </HorizontalInput>
         </>
@@ -80,35 +95,50 @@ export const FormGeometry = () => {
       {isCustomSection && shape === "RHS" && (
         <>
           <SpacingDivider />
-          <HorizontalInput name="h_mm" label={<LatexLabel tex="h" />}>
+          <HorizontalInput
+            name="rhs_geometry.h_mm"
+            label={<LatexLabel tex="h" />}
+          >
             <InputNumber
               {...registerNumber?.("rhs_geometry.h_mm")}
               suffix="mm"
             />
           </HorizontalInput>
 
-          <HorizontalInput name="b_mm" label={<LatexLabel tex="b" />}>
+          <HorizontalInput
+            name="rhs_geometry.b_mm"
+            label={<LatexLabel tex="b" />}
+          >
             <InputNumber
               {...registerNumber?.("rhs_geometry.b_mm")}
               suffix="mm"
             />
           </HorizontalInput>
 
-          <HorizontalInput name="tw_mm" label={<LatexLabel tex="t_w" />}>
+          <HorizontalInput
+            name="rhs_geometry.tw_mm"
+            label={<LatexLabel tex="t_w" />}
+          >
             <InputNumber
               {...registerNumber?.("rhs_geometry.tw_mm")}
               suffix="mm"
             />
           </HorizontalInput>
 
-          <HorizontalInput name="ri_mm" label={<LatexLabel tex="r_i" />}>
+          <HorizontalInput
+            name="rhs_geometry.ri_mm"
+            label={<LatexLabel tex="r_i" />}
+          >
             <InputNumber
               {...registerNumber?.("rhs_geometry.ri_mm")}
               suffix="mm"
             />
           </HorizontalInput>
 
-          <HorizontalInput name="ro_mm" label={<LatexLabel tex="r_o" />}>
+          <HorizontalInput
+            name="rhs_geometry.ro_mm"
+            label={<LatexLabel tex="r_o" />}
+          >
             <InputNumber
               {...registerNumber?.("rhs_geometry.ro_mm")}
               suffix="mm"
@@ -119,14 +149,20 @@ export const FormGeometry = () => {
       {isCustomSection && shape === "CHS" && (
         <>
           <SpacingDivider />
-          <HorizontalInput name="d_mm" label={<LatexLabel tex="d" />}>
+          <HorizontalInput
+            name="chs_geometry.d_mm"
+            label={<LatexLabel tex="d" />}
+          >
             <InputNumber
               {...registerNumber?.("chs_geometry.d_mm")}
               suffix="mm"
             />
           </HorizontalInput>
 
-          <HorizontalInput name="t_mm" label={<LatexLabel tex="t" />}>
+          <HorizontalInput
+            name="chs_geometry.t_mm"
+            label={<LatexLabel tex="t" />}
+          >
             <InputNumber
               {...registerNumber?.("chs_geometry.t_mm")}
               suffix="mm"
@@ -153,7 +189,7 @@ export const FormGeometry = () => {
 };
 
 const GeometryPropertiesInfo = () => {
-  const { subscribe, getValues } = useEc311FormContext();
+  const { subscribe, getValues, trigger } = useEc311FormContext();
   const [computedProperties, setComputedProperties] = useState(() =>
     computeGeometryProperties(getValues()),
   );
@@ -168,7 +204,17 @@ const GeometryPropertiesInfo = () => {
         "section_id",
       ],
       formState: { values: true },
-      callback: ({ values }) => {
+      callback: async ({ values }) => {
+        const isValid = await trigger([
+          "shape",
+          "section_id",
+          values.shape === "I"
+            ? "i_geometry"
+            : values.shape === "RHS"
+              ? "rhs_geometry"
+              : "chs_geometry",
+        ]);
+        if (!isValid) return;
         const computed = computeGeometryProperties(values);
         setComputedProperties(computed);
       },
@@ -177,7 +223,7 @@ const GeometryPropertiesInfo = () => {
     return () => {
       unsubscribe();
     };
-  }, [subscribe]);
+  }, [subscribe, getValues, trigger]);
 
   return (
     <div className="flex flex-col gap-3 text-sand-900">

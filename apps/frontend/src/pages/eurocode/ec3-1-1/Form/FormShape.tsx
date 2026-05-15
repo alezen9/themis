@@ -14,7 +14,7 @@ import { hollowSectionsMap } from "../data/hollowSections";
 import { circularSectionsMap } from "../data/circularSections";
 
 export const FormShape = () => {
-  const { register, reset, getValues } = useEc311FormContext();
+  const { register, reset, getValues, trigger } = useEc311FormContext();
 
   const onShapeChange = useCallback<ChangeHandler>(
     async (e) => {
@@ -25,22 +25,20 @@ export const FormShape = () => {
       const i_geometry = flangedSectionsMap.get(section_id);
       const rhs_geometry = hollowSectionsMap.get(section_id);
       const chs_geometry = circularSectionsMap.get(section_id);
-      reset(
-        {
-          ...getValues(),
-          ...{
-            [name]: value,
-            section_id,
-            ...(value === "I" && { i_geometry }),
-            ...(value === "RHS" && { rhs_geometry }),
-            ...(value === "CHS" && { chs_geometry }),
-            fabrication_type: value === "I" ? "rolled" : "cold-formed",
-          },
+      reset({
+        ...getValues(),
+        ...{
+          [name]: value,
+          section_id,
+          ...(value === "I" && { i_geometry }),
+          ...(value === "RHS" && { rhs_geometry }),
+          ...(value === "CHS" && { chs_geometry }),
+          fabrication_type: value === "I" ? "rolled" : "cold-formed",
         },
-        { keepErrors: true },
-      );
+      });
+      await trigger();
     },
-    [reset, getValues],
+    [reset, getValues, trigger],
   );
 
   return (

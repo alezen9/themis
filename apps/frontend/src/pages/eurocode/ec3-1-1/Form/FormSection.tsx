@@ -35,7 +35,7 @@ const fabricationTypeOptionsMap = {
 };
 
 export const FormSection = () => {
-  const { register, registerSelect, watch, reset, getValues } =
+  const { register, registerSelect, watch, reset, getValues, trigger } =
     useEc311FormContext();
   const shape = watch("shape");
 
@@ -48,26 +48,24 @@ export const FormSection = () => {
       const rhs_geometry = hollowSectionsMap.get(value);
       const chs_geometry = circularSectionsMap.get(value);
       const isCustomSection = value === customSectionId;
-      reset(
-        {
-          ...getValues(),
-          ...{
-            [name]: value,
-            ...(!isCustomSection && shape === "I" ? { i_geometry } : {}),
-            ...(!isCustomSection && shape === "RHS" ? { rhs_geometry } : {}),
-            ...(!isCustomSection && shape === "CHS" ? { chs_geometry } : {}),
-          },
+      reset({
+        ...getValues(),
+        ...{
+          [name]: value,
+          ...(!isCustomSection && shape === "I" ? { i_geometry } : {}),
+          ...(!isCustomSection && shape === "RHS" ? { rhs_geometry } : {}),
+          ...(!isCustomSection && shape === "CHS" ? { chs_geometry } : {}),
         },
-        { keepErrors: true },
-      );
+      });
+      await trigger();
     },
-    [reset, getValues],
+    [reset, getValues, trigger],
   );
 
   return (
     <Section>
       <SectionTitle>Cross section</SectionTitle>
-      <HorizontalInput name="sectionId" label={<TextLabel>Section</TextLabel>}>
+      <HorizontalInput name="section_id" label={<TextLabel>Section</TextLabel>}>
         <InputAutocomplete
           key={shape}
           {...registerSelect?.("section_id")}
