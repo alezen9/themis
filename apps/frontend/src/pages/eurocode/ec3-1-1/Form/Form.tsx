@@ -4,6 +4,7 @@ import { FormSection } from "./FormSection";
 import { FormGeometry } from "./FormGeometry";
 import { FormMaterial } from "./FormMaterial";
 import { FormActions } from "./FormActions";
+import { FormClassification } from "./FormClassification";
 import { FormAnnex } from "./FormAnnex";
 import { FormFlexuralBuckling } from "./FormFlexuralBuckling";
 import { FormStabilityChecks } from "./FormStabilityChecks";
@@ -24,6 +25,9 @@ export const Form = () => {
       <LineDivider />
 
       <FormActions />
+      <LineDivider />
+
+      <FormClassification />
       <LineDivider />
 
       <FormFlexuralBuckling />
