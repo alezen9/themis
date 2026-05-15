@@ -2,13 +2,21 @@ import {
   forwardRef,
   type ComponentPropsWithoutRef,
   type ReactNode,
+  type WheelEvent,
 } from "react";
 import { twMerge } from "tailwind-merge";
 
 type Props = ComponentPropsWithoutRef<"input"> & { suffix?: ReactNode };
 
 export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { className, suffix, ...inputProps } = props;
+  const { className, onWheel, suffix, ...inputProps } = props;
+
+  const handleWheel = (event: WheelEvent<HTMLInputElement>) => {
+    onWheel?.(event);
+    const isCurrentlyActive = document.activeElement === event.currentTarget;
+    if (isCurrentlyActive) event.currentTarget.blur();
+  };
+
   return (
     <div
       className={twMerge(
@@ -19,6 +27,7 @@ export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
       <input
         ref={ref}
         type="number"
+        onWheel={handleWheel}
         className={twMerge(
           "w-full h-full text-center",
           suffix ? "rounded-l-sm" : "rounded-sm",
