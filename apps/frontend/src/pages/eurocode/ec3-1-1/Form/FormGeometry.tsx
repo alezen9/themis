@@ -25,6 +25,11 @@ import {
   AccordionContent,
   AccordionHeader,
 } from "@components/Accordion";
+import {
+  chsGeometrySchema,
+  iGeometrySchema,
+  rhsGeometrySchema,
+} from "./schema/geometrySchema";
 
 const mm2Unit = String.raw`\mathrm{mm}^2`;
 const mm3Unit = String.raw`\mathrm{mm}^3`;
@@ -189,7 +194,7 @@ export const FormGeometry = () => {
 };
 
 const GeometryPropertiesInfo = () => {
-  const { subscribe, getValues, trigger } = useEc311FormContext();
+  const { subscribe, getValues } = useEc311FormContext();
   const [computedProperties, setComputedProperties] = useState(() =>
     computeGeometryProperties(getValues()),
   );
@@ -204,17 +209,14 @@ const GeometryPropertiesInfo = () => {
         "section_id",
       ],
       formState: { values: true },
-      callback: async ({ values }) => {
-        const isValid = await trigger([
-          "shape",
-          "section_id",
+      callback: ({ values }) => {
+        const result =
           values.shape === "I"
-            ? "i_geometry"
+            ? iGeometrySchema.safeParse(values.i_geometry)
             : values.shape === "RHS"
-              ? "rhs_geometry"
-              : "chs_geometry",
-        ]);
-        if (!isValid) return;
+              ? rhsGeometrySchema.safeParse(values.rhs_geometry)
+              : chsGeometrySchema.safeParse(values.chs_geometry);
+        if (!result.success) return;
         const computed = computeGeometryProperties(values);
         setComputedProperties(computed);
       },
@@ -223,7 +225,7 @@ const GeometryPropertiesInfo = () => {
     return () => {
       unsubscribe();
     };
-  }, [subscribe, getValues, trigger]);
+  }, [subscribe]);
 
   return (
     <div className="flex flex-col gap-3 text-sand-900">

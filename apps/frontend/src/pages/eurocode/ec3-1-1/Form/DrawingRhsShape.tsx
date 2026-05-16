@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Pluton2D } from "pluton-2d";
-import { Ec3FormValues } from "./schema";
+import { Ec3FormValues } from "./schema/schema";
+import { rhsGeometrySchema } from "./schema/geometrySchema";
 import { formatDimension } from "./utils";
 import { useEc311FormContext } from "./useEc311FormContext";
 
@@ -18,14 +19,7 @@ const innerRadiusDimensionAngle = (-3 * Math.PI) / 4;
 export const DrawingRhsShape = () => {
   const ref = useRef<SVGSVGElement>(null);
   const scene = useRef<Pluton2D<DrawingShapeParams> | undefined>(undefined);
-  const { getValues, subscribe, trigger } = useEc311FormContext();
-
-  const updateSceneParams = useCallback(async () => {
-    if (!scene.current) return;
-    const isValid = await trigger("rhs_geometry");
-    if (!isValid) return;
-    Object.assign(scene.current.params, { ...getValues().rhs_geometry });
-  }, [trigger, getValues]);
+  const { getValues, subscribe } = useEc311FormContext();
 
   useEffect(() => {
     if (!ref.current) return;
@@ -154,13 +148,18 @@ export const DrawingRhsShape = () => {
     const unsubscribe = subscribe({
       name: "rhs_geometry",
       formState: { values: true },
-      callback: updateSceneParams,
+      callback: ({ values }) => {
+        if (!scene.current) return;
+        const result = rhsGeometrySchema.safeParse(values.rhs_geometry);
+        if (!result.success) return;
+        Object.assign(scene.current.params, { ...result.data });
+      },
     });
 
     return () => {
       unsubscribe();
     };
-  }, [subscribe, updateSceneParams]);
+  }, [subscribe]);
 
   return <svg ref={ref} className="w-full aspect-square" />;
 };

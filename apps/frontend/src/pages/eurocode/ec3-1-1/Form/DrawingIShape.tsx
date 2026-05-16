@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Pluton2D } from "pluton-2d";
-import { Ec3FormValues } from "./schema";
+import { Ec3FormValues } from "./schema/schema";
+import { iGeometrySchema } from "./schema/geometrySchema";
 import { formatDimension } from "./utils";
 import { useEc311FormContext } from "./useEc311FormContext";
 
@@ -14,24 +15,24 @@ const dimensionOffset = 30;
 export const DrawingIShape = () => {
   const ref = useRef<SVGSVGElement>(null);
   const scene = useRef<Pluton2D<DrawingShapeParams> | undefined>(undefined);
-  const { getValues, subscribe, trigger } = useEc311FormContext();
+  const { getValues, subscribe } = useEc311FormContext();
 
   useEffect(() => {
     const unsubscribe = subscribe({
       name: "i_geometry",
       formState: { values: true },
-      callback: async () => {
+      callback: ({ values }) => {
         if (!scene.current) return;
-        const isValid = await trigger("i_geometry");
-        if (!isValid) return;
-        Object.assign(scene.current.params, { ...getValues().i_geometry });
+        const result = iGeometrySchema.safeParse(values.i_geometry);
+        if (!result.success) return;
+        Object.assign(scene.current.params, { ...result.data });
       },
     });
 
     return () => {
       unsubscribe();
     };
-  }, [subscribe, trigger, getValues]);
+  }, [subscribe]);
 
   useEffect(() => {
     if (!ref.current) return;

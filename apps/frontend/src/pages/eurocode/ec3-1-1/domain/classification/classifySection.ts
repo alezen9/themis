@@ -1,4 +1,4 @@
-import { Ec3FormValues } from "../../Form/schema";
+import { Ec3FormValues } from "../../Form/schema/schema";
 import { classifyChsSection } from "./classifyChsSection";
 import { classifyISection } from "./classifyISection";
 import { classifyRhsSection } from "./classifyRhsSection";

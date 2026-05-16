@@ -46,7 +46,9 @@ export const FormAnnex = () => {
         label={<TextLabel>Buckling curves</TextLabel>}
       >
         <InputSelect
-          {...registerSelect?.("buckling_curves_LT_policy")}
+          {...registerSelect?.("buckling_curves_LT_policy", {
+            deps: ["f_method"],
+          })}
           options={bucklingCurvesLTPolicyOptions}
         />
       </HorizontalInput>

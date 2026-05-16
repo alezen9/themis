@@ -1,4 +1,4 @@
-import { Ec3FormValues } from "../../Form/schema";
+import { Ec3FormValues } from "../../Form/schema/schema";
 import { GeometricProperties } from "../geometry/computeGeometryProperties";
 
 export type SectionClass = 1 | 2 | 3 | 4;

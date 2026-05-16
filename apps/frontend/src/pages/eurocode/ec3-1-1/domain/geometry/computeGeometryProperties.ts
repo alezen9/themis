@@ -1,4 +1,4 @@
-import type { Ec3FormValues } from "../../Form/schema";
+import type { Ec3FormValues } from "../../Form/schema/schema";
 import { computeChsGeometryProperties } from "./computeChsGeometryProperties";
 import { computeIGeometryProperties } from "./computeIGeometryProperties";
 import { computeRhsGeometryProperties } from "./computeRhsGeometryProperties";

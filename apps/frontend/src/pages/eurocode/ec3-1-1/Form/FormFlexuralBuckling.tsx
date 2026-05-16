@@ -38,7 +38,9 @@ const MomentY = () => {
         label={<LatexLabel tex="M_{y} \; shape" className="text-[1.25rem]" />}
       >
         <InputSelect
-          {...registerSelect?.("M_y_Ed_shape")}
+          {...registerSelect?.("M_y_Ed_shape", {
+            deps: ["psi_y", "support_condition_y"],
+          })}
           options={momentShapeOptions}
         />
       </HorizontalInput>
@@ -85,7 +87,9 @@ const MomentZ = () => {
         label={<LatexLabel tex="M_{z} \; shape" className="text-[1.25rem]" />}
       >
         <InputSelect
-          {...registerSelect?.("M_z_Ed_shape")}
+          {...registerSelect?.("M_z_Ed_shape", {
+            deps: ["psi_z", "support_condition_z"],
+          })}
           options={momentShapeOptions}
         />
       </HorizontalInput>

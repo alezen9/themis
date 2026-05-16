@@ -1,5 +1,5 @@
 import { circularSectionsMap } from "../../data/circularSections";
-import type { Ec3FormValues } from "../../Form/schema";
+import type { Ec3FormValues } from "../../Form/schema/schema";
 
 type Geometry = Ec3FormValues["chs_geometry"];
 

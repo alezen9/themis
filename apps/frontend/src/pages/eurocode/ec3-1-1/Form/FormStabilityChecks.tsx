@@ -28,7 +28,16 @@ export const FormStabilityChecks = () => {
       <div className="mb-2 flex w-full items-center justify-between gap-4">
         <SectionTitle className="mb-0">Lateral Torsional Buckling</SectionTitle>
         <InputToggle
-          {...registerBoolean?.("include_torsional_modes")}
+          {...registerBoolean?.("include_torsional_modes", {
+            deps: [
+              "k_T",
+              "k_LT",
+              "M_y_Ed_shape_LT",
+              "psi_y_LT",
+              "support_condition_LT",
+              "load_LT",
+            ],
+          })}
           aria-label="Toggle stability checks"
           className="h-6 w-12"
         />
@@ -56,7 +65,9 @@ export const FormStabilityChecks = () => {
             }
           >
             <InputSelect
-              {...registerSelect?.("M_y_Ed_shape_LT")}
+              {...registerSelect?.("M_y_Ed_shape_LT", {
+                deps: ["psi_y_LT", "support_condition_LT", "load_LT"],
+              })}
               options={momentShapeOptions}
             />
           </HorizontalInput>

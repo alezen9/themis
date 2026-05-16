@@ -9,33 +9,57 @@ import {
 } from "./defaultValues";
 import { useEc311FormContext } from "./useEc311FormContext";
 import { ChangeHandler } from "react-hook-form";
-import { flangedSectionsMap } from "../data/flangedSections";
-import { hollowSectionsMap } from "../data/hollowSections";
-import { circularSectionsMap } from "../data/circularSections";
 
 export const FormShape = () => {
   const { register, reset, getValues, trigger } = useEc311FormContext();
 
   const onShapeChange = useCallback<ChangeHandler>(
     async (e) => {
-      const { name, value } = e.target;
-      let section_id = defaultISection.id;
-      if (value === "RHS") section_id = defaultRHSSection.id;
-      if (value === "CHS") section_id = defaultCHSSection.id;
-      const i_geometry = flangedSectionsMap.get(section_id);
-      const rhs_geometry = hollowSectionsMap.get(section_id);
-      const chs_geometry = circularSectionsMap.get(section_id);
-      reset({
-        ...getValues(),
-        ...{
-          [name]: value,
-          section_id,
-          ...(value === "I" && { i_geometry }),
-          ...(value === "RHS" && { rhs_geometry }),
-          ...(value === "CHS" && { chs_geometry }),
-          fabrication_type: value === "I" ? "rolled" : "cold-formed",
-        },
-      });
+      const { value } = e.target;
+      const values = getValues();
+
+      if (value === "I")
+        reset({
+          ...values,
+          shape: "I",
+          section_id: defaultISection.id,
+          fabrication_type: "rolled",
+          i_geometry: {
+            h_mm: defaultISection.h_mm,
+            b_mm: defaultISection.b_mm,
+            tw_mm: defaultISection.tw_mm,
+            tf_mm: defaultISection.tf_mm,
+            r_mm: defaultISection.r_mm,
+          },
+        });
+
+      if (value === "RHS")
+        reset({
+          ...values,
+          shape: "RHS",
+          section_id: defaultRHSSection.id,
+          fabrication_type: "cold-formed",
+          rhs_geometry: {
+            h_mm: defaultRHSSection.h_mm,
+            b_mm: defaultRHSSection.b_mm,
+            tw_mm: defaultRHSSection.tw_mm,
+            ri_mm: defaultRHSSection.ri_mm,
+            ro_mm: defaultRHSSection.ro_mm,
+          },
+        });
+
+      if (value === "CHS")
+        reset({
+          ...values,
+          shape: "CHS",
+          section_id: defaultCHSSection.id,
+          fabrication_type: "cold-formed",
+          chs_geometry: {
+            d_mm: defaultCHSSection.d_mm,
+            t_mm: defaultCHSSection.t_mm,
+          },
+        });
+
       await trigger();
     },
     [reset, getValues, trigger],

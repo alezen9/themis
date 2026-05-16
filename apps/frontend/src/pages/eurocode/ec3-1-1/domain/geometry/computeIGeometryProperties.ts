@@ -1,5 +1,5 @@
 import { flangedSectionsMap } from "../../data/flangedSections";
-import type { Ec3FormValues } from "../../Form/schema";
+import type { Ec3FormValues } from "../../Form/schema/schema";
 
 type Geometry = Ec3FormValues["i_geometry"];
 

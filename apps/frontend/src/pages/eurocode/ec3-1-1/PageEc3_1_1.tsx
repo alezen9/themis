@@ -1,11 +1,12 @@
-import { Header, SubHeader } from "@components/Header";
-import { Form } from "./Form/Form";
-import { FormProvider, useForm } from "react-hook-form";
-import { Ec3FormValues, schema } from "./Form/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { defaultValues } from "./Form/defaultValues";
-import { useEc311FormContext } from "./Form/useEc311FormContext";
+import { Header, SubHeader } from "@components/Header";
 import { ReactNode, useCallback, useEffect } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+
+import { defaultValues } from "./Form/defaultValues";
+import { Form } from "./Form/Form";
+import { Ec3FormValues, schema } from "./Form/schema/schema";
+import { useEc311FormContext } from "./Form/useEc311FormContext";
 
 export const PageEc3_1_1 = () => {
   const form = useForm<Ec3FormValues>({
@@ -43,7 +44,10 @@ const Observer = ({ children }: { children: ReactNode }) => {
 
   const onChange = useCallback<Parameters<typeof subscribe>[0]["callback"]>(
     ({ values }) => {
-      console.log(values);
+      const result = schema.safeParse(values);
+      if (!result.success) return;
+
+      console.log(result.data);
     },
     [],
   );

@@ -1,4 +1,4 @@
-import { Ec3FormValues } from "../../Form/schema";
+import { Ec3FormValues } from "../../Form/schema/schema";
 import { computeGeometryProperties } from "../geometry/computeGeometryProperties";
 import { classifyInternalPart } from "./classifyInternalPart";
 import { Actions, Part, RawPart, SectionClass } from "./types";

@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Pluton2D } from "pluton-2d";
-import { Ec3FormValues } from "./schema";
+import { Ec3FormValues } from "./schema/schema";
+import { chsGeometrySchema } from "./schema/geometrySchema";
 import { formatDimension } from "./utils";
 import { useEc311FormContext } from "./useEc311FormContext";
 
@@ -15,14 +16,7 @@ const thicknessDimensionAngle = -Math.PI / 4; // -45deg
 export const DrawingChsShape = () => {
   const ref = useRef<SVGSVGElement>(null);
   const scene = useRef<Pluton2D<DrawingShapeParams> | undefined>(undefined);
-  const { getValues, subscribe, trigger } = useEc311FormContext();
-
-  const updateSceneParams = useCallback(async () => {
-    if (!scene.current) return;
-    const isValid = await trigger("chs_geometry");
-    if (!isValid) return;
-    Object.assign(scene.current.params, { ...getValues().chs_geometry });
-  }, [trigger, getValues]);
+  const { getValues, subscribe } = useEc311FormContext();
 
   useEffect(() => {
     if (!ref.current) return;
@@ -114,13 +108,18 @@ export const DrawingChsShape = () => {
     const unsubscribe = subscribe({
       name: "chs_geometry",
       formState: { values: true },
-      callback: updateSceneParams,
+      callback: ({ values }) => {
+        if (!scene.current) return;
+        const result = chsGeometrySchema.safeParse(values.chs_geometry);
+        if (!result.success) return;
+        Object.assign(scene.current.params, { ...result.data });
+      },
     });
 
     return () => {
       unsubscribe();
     };
-  }, [subscribe, updateSceneParams]);
+  }, [subscribe]);
 
   return <svg ref={ref} className="w-full aspect-square" />;
 };

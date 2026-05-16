@@ -1,7 +1,7 @@
 import { italianAnnex } from "@ndg/ndg-ec3";
 import { flangedSections } from "../data/flangedSections";
 import { composeSteelGradeId, steelGrades } from "../data/steelGrades";
-import { Ec3FormValues } from "./schema";
+import { Ec3FormValues } from "./schema/schema";
 import { hollowSections } from "../data/hollowSections";
 import { circularSections } from "../data/circularSections";
 

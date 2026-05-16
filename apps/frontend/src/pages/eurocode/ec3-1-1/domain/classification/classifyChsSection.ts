@@ -1,5 +1,5 @@
 import { steelGradesMap } from "../../data/steelGrades";
-import type { Ec3FormValues } from "../../Form/schema";
+import type { Ec3FormValues } from "../../Form/schema/schema";
 import type { Actions, Part, SectionClass } from "./types";
 import { EPSILON2 } from "./utils";
 

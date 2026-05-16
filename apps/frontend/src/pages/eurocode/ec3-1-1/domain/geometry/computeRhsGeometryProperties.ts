@@ -1,5 +1,5 @@
 import { hollowSectionsMap } from "../../data/hollowSections";
-import type { Ec3FormValues } from "../../Form/schema";
+import type { Ec3FormValues } from "../../Form/schema/schema";
 
 type Geometry = Ec3FormValues["rhs_geometry"];
 

@@ -24,7 +24,20 @@ import {
   SectionTitle,
   TextLabel,
 } from "./shared";
+import { actionsSchema } from "./schema/actionsSchema";
+import {
+  chsGeometrySchema,
+  iGeometrySchema,
+  rhsGeometrySchema,
+} from "./schema/geometrySchema";
+import { materialSchema } from "./schema/materialSchema";
 import { useEc311FormContext } from "./useEc311FormContext";
+
+const classificationActionsSchema = actionsSchema.pick({
+  N_Ed_kN: true,
+  M_y_Ed_kNm: true,
+  M_z_Ed_kNm: true,
+});
 
 export const FormClassification = () => {
   const { registerSelect } = useEc311FormContext();
@@ -47,7 +60,7 @@ export const FormClassification = () => {
 };
 
 const ClassificationInfo = () => {
-  const { subscribe, watch, getValues, trigger } = useEc311FormContext();
+  const { subscribe, watch, getValues } = useEc311FormContext();
   const [[computedClass, parts], setComputedClass] = useState(() =>
     classifySection(getValues()),
   );
@@ -69,22 +82,27 @@ const ClassificationInfo = () => {
         "M_z_Ed_kNm",
       ],
       formState: { values: true },
-      callback: async ({ values }) => {
-        const isValid = await trigger([
-          "shape",
-          "section_id",
-          "steel_grade_id",
-          "section_class",
-          "N_Ed_kN",
-          "M_y_Ed_kNm",
-          "M_z_Ed_kNm",
+      callback: ({ values }) => {
+        const materialResult = materialSchema.safeParse({
+          steel_grade_id: values.steel_grade_id,
+        });
+        const actionsResult = classificationActionsSchema.safeParse({
+          N_Ed_kN: values.N_Ed_kN,
+          M_y_Ed_kNm: values.M_y_Ed_kNm,
+          M_z_Ed_kNm: values.M_z_Ed_kNm,
+        });
+        const geometryResult =
           values.shape === "I"
-            ? "i_geometry"
+            ? iGeometrySchema.safeParse(values.i_geometry)
             : values.shape === "RHS"
-              ? "rhs_geometry"
-              : "chs_geometry",
-        ]);
-        if (!isValid) return;
+              ? rhsGeometrySchema.safeParse(values.rhs_geometry)
+              : chsGeometrySchema.safeParse(values.chs_geometry);
+        if (
+          !materialResult.success ||
+          !actionsResult.success ||
+          !geometryResult.success
+        )
+          return;
         setComputedClass(classifySection(values));
       },
     });
@@ -92,7 +110,7 @@ const ClassificationInfo = () => {
     return () => {
       unsubscribe();
     };
-  }, [subscribe, getValues, trigger]);
+  }, [subscribe]);
 
   return (
     <div className="flex flex-col gap-3 text-sand-900">

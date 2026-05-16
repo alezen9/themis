@@ -1,5 +1,5 @@
 import { steelGradesMap } from "../../data/steelGrades";
-import type { Ec3FormValues } from "../../Form/schema";
+import type { Ec3FormValues } from "../../Form/schema/schema";
 
 type BucklingCurve = "a0" | "a" | "b" | "c" | "d";
 type FlexuralBucklingCurves = { y: BucklingCurve; z: BucklingCurve };
