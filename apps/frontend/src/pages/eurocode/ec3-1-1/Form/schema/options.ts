@@ -1,6 +1,6 @@
 import type { FieldPath } from "react-hook-form";
 import type { Option } from "@components/inputs/shared";
-import type { Ec3FormValues } from "./schema/schema";
+import type { Ec3FormValues } from "./schema";
 
 type Ec311InputKey = FieldPath<Ec3FormValues>;
 

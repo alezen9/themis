@@ -8,9 +8,9 @@ type Ec311FormName = Parameters<Ec311Register>[0];
 type Ec311RegisterOptions = Parameters<Ec311Register>[1];
 
 const setValueAsNumber = (value: unknown) => {
-  if (value === "" || value === null || value === undefined) return;
+  if (value === "" || value === null || value === undefined) return "";
   const valueAsNumber = Number(value);
-  if (Number.isNaN(valueAsNumber)) return;
+  if (Number.isNaN(valueAsNumber)) return "";
   return valueAsNumber;
 };
 
@@ -18,8 +18,10 @@ export const useEc311FormContext = () => {
   const { register, ...rest } = useFormContext<Ec3FormValues>();
 
   const registerNumber = useCallback(
-    (name: Ec311FormName, options?: Ec311RegisterOptions) =>
-      register(name, { ...options, setValueAs: setValueAsNumber }),
+    (name: Ec311FormName, options?: Ec311RegisterOptions) => ({
+      ...register(name, { ...options, setValueAs: setValueAsNumber }),
+      defaultValue: get(defaultValues, name),
+    }),
     [register],
   );
 

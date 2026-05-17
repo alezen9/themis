@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Header, SubHeader } from "@components/Header";
-import { ReactNode, useCallback, useEffect } from "react";
+import { debounce } from "lodash-es";
+import { ReactNode, useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { defaultValues } from "./Form/defaultValues";
@@ -8,17 +9,26 @@ import { Form } from "./Form/Form";
 import { Ec3FormValues, schema } from "./Form/schema/schema";
 import { useEc311FormContext } from "./Form/useEc311FormContext";
 
-export const PageEc3_1_1 = () => {
+type PageEc3_1_1Props = {
+  onValuesChange?: (values: Ec3FormValues) => void;
+  onValidValuesChange?: (values: Ec3FormValues) => void;
+};
+
+export const PageEc3_1_1 = (props: PageEc3_1_1Props) => {
+  const { onValuesChange, onValidValuesChange } = props;
+
   const form = useForm<Ec3FormValues>({
     defaultValues,
     mode: "onChange",
     resolver: zodResolver(schema),
-    shouldUnregister: false,
   });
 
   return (
     <FormProvider {...form}>
-      <Observer>
+      <Observer
+        onValuesChange={onValuesChange}
+        onValidValuesChange={onValidValuesChange}
+      >
         <main className="flex flex-col gap-8">
           <header>
             <Header>Steel members</Header>
@@ -39,17 +49,27 @@ export const PageEc3_1_1 = () => {
   );
 };
 
-const Observer = ({ children }: { children: ReactNode }) => {
+type ObserverProps = {
+  children: ReactNode;
+  onValuesChange?: (values: Ec3FormValues) => void;
+  onValidValuesChange?: (values: Ec3FormValues) => void;
+};
+
+const Observer = (props: ObserverProps) => {
+  const { children, onValuesChange, onValidValuesChange } = props;
   const { subscribe } = useEc311FormContext();
 
-  const onChange = useCallback<Parameters<typeof subscribe>[0]["callback"]>(
-    ({ values }) => {
-      const result = schema.safeParse(values);
-      if (!result.success) return;
+  const onChange = useMemo(
+    () =>
+      debounce<Parameters<typeof subscribe>[0]["callback"]>(({ values }) => {
+        onValuesChange?.(values);
+        const result = schema.safeParse(values);
+        if (!result.success) return;
 
-      console.log(result.data);
-    },
-    [],
+        onValidValuesChange?.(result.data);
+        console.log(result.data);
+      }, 50),
+    [onValuesChange, onValidValuesChange],
   );
 
   useEffect(() => {
@@ -60,6 +80,7 @@ const Observer = ({ children }: { children: ReactNode }) => {
 
     return () => {
       unsubscribe();
+      onChange.cancel();
     };
   }, [subscribe, onChange]);
 

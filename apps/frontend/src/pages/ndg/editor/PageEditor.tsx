@@ -5,7 +5,7 @@ import {
   type NdgEditorRef,
 } from "./NdgEditor";
 import { Header, SubHeader } from "@components/Header";
-import { ec311InputKeyOptions } from "../../eurocode/ec3-1-1/Form/ec311InputKeyOptions";
+import { ec311InputKeyOptions } from "../../eurocode/ec3-1-1/Form/schema/options";
 import { twMerge } from "tailwind-merge";
 
 const downloadTextFile = (filename: string, content: string) => {

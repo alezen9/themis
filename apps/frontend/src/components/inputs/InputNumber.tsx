@@ -9,7 +9,7 @@ import { twMerge } from "tailwind-merge";
 type Props = ComponentPropsWithoutRef<"input"> & { suffix?: ReactNode };
 
 export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { className, onWheel, suffix, ...inputProps } = props;
+  const { className, name, onWheel, suffix, ...inputProps } = props;
 
   const handleWheel = (event: WheelEvent<HTMLInputElement>) => {
     onWheel?.(event);
@@ -26,6 +26,8 @@ export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
     >
       <input
         ref={ref}
+        name={name}
+        data-testid={name ? `input-${name}` : undefined}
         type="number"
         onWheel={handleWheel}
         className={twMerge(

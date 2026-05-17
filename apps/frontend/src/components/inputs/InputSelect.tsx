@@ -54,6 +54,7 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
     >
       <Select.Trigger
         name={name}
+        data-testid={name ? `input-${name}` : undefined}
         onBlur={onBlur as OnBlur}
         className={twMerge(
           "[--bg-color:var(--bg-input-default-color)]",
@@ -107,6 +108,7 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
                 <Select.Item
                   key={option.value}
                   value={option.value}
+                  data-testid={`option-${option.value}`}
                   className={twMerge(
                     "cursor-pointer rounded-sm border border-transparent",
                     "px-3 py-2 text-sm font-light text-center",
