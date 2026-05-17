@@ -1,4 +1,10 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { circularSections } from "./data/circularSections";
 import { flangedSections } from "./data/flangedSections";
@@ -268,6 +274,39 @@ describe("[EC3-1-1] PageEc3_1_1", () => {
           t_mm: chsCatalogSection.t_mm,
         },
       }),
+    );
+  });
+
+  it("shows field errors for invalid custom geometry refinements", async () => {
+    vi.useRealTimers();
+
+    render(<PageEc3_1_1 />);
+
+    fireEvent.click(screen.getByTestId("input-section_id-trigger"));
+    fireEvent.mouseMove(screen.getByTestId("option-IPE100"));
+    fireEvent.click(screen.getByTestId("option-IPE100"));
+
+    fireEvent.click(screen.getByTestId("input-section_id-trigger"));
+    fireEvent.mouseMove(screen.getByTestId("option-custom"));
+    fireEvent.click(screen.getByTestId("option-custom"));
+
+    expect(
+      screen.getByTestId<HTMLInputElement>("input-i_geometry.b_mm").value,
+    ).toBe("55");
+    fireEvent.change(screen.getByTestId("input-i_geometry.tw_mm"), {
+      target: { value: "90.1" },
+    });
+
+    await waitFor(() => {
+      expect(
+        "error" in screen.getByTestId("field-i_geometry.b_mm").dataset,
+      ).toBe(true);
+    });
+    expect(
+      "error" in screen.getByTestId("field-i_geometry.tw_mm").dataset,
+    ).toBe(true);
+    expect("error" in screen.getByTestId("field-i_geometry.r_mm").dataset).toBe(
+      true,
     );
   });
 });

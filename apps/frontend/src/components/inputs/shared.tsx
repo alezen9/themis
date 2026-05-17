@@ -32,6 +32,8 @@ export const HorizontalInput = (props: FieldProps) => {
 
   return (
     <label
+      data-error={error ? "" : undefined}
+      data-testid={`field-${name}`}
       className={twMerge(
         "[--bg-color:var(--bg-input-default-color)]",
         error && "[--bg-color:var(--bg-input-error-color)]",
@@ -64,6 +66,8 @@ const VerticallInput = (props: FieldProps) => {
 
   return (
     <label
+      data-error={error ? "" : undefined}
+      data-testid={`field-${name}`}
       className={twMerge(
         "[--bg-color:var(--bg-input-default-color)]",
         error && "[--bg-color:var(--bg-input-error-color)]",

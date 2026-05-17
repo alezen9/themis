@@ -59,14 +59,24 @@ export const FormGeometry = () => {
             name="i_geometry.h_mm"
             label={<LatexLabel tex="h" />}
           >
-            <InputNumber {...registerNumber?.("i_geometry.h_mm")} suffix="mm" />
+            <InputNumber
+              {...registerNumber?.("i_geometry.h_mm", {
+                deps: ["i_geometry.tf_mm", "i_geometry.r_mm"],
+              })}
+              suffix="mm"
+            />
           </HorizontalInput>
 
           <HorizontalInput
             name="i_geometry.b_mm"
             label={<LatexLabel tex="b" />}
           >
-            <InputNumber {...registerNumber?.("i_geometry.b_mm")} suffix="mm" />
+            <InputNumber
+              {...registerNumber?.("i_geometry.b_mm", {
+                deps: ["i_geometry.tw_mm", "i_geometry.r_mm"],
+              })}
+              suffix="mm"
+            />
           </HorizontalInput>
 
           <HorizontalInput
@@ -74,7 +84,9 @@ export const FormGeometry = () => {
             label={<LatexLabel tex="t_w" />}
           >
             <InputNumber
-              {...registerNumber?.("i_geometry.tw_mm")}
+              {...registerNumber?.("i_geometry.tw_mm", {
+                deps: ["i_geometry.b_mm", "i_geometry.r_mm"],
+              })}
               suffix="mm"
             />
           </HorizontalInput>
@@ -84,7 +96,9 @@ export const FormGeometry = () => {
             label={<LatexLabel tex="t_f" />}
           >
             <InputNumber
-              {...registerNumber?.("i_geometry.tf_mm")}
+              {...registerNumber?.("i_geometry.tf_mm", {
+                deps: ["i_geometry.h_mm", "i_geometry.r_mm"],
+              })}
               suffix="mm"
             />
           </HorizontalInput>
@@ -93,7 +107,17 @@ export const FormGeometry = () => {
             name="i_geometry.r_mm"
             label={<LatexLabel tex="r" />}
           >
-            <InputNumber {...registerNumber?.("i_geometry.r_mm")} suffix="mm" />
+            <InputNumber
+              {...registerNumber?.("i_geometry.r_mm", {
+                deps: [
+                  "i_geometry.h_mm",
+                  "i_geometry.b_mm",
+                  "i_geometry.tw_mm",
+                  "i_geometry.tf_mm",
+                ],
+              })}
+              suffix="mm"
+            />
           </HorizontalInput>
         </>
       )}
@@ -105,7 +129,13 @@ export const FormGeometry = () => {
             label={<LatexLabel tex="h" />}
           >
             <InputNumber
-              {...registerNumber?.("rhs_geometry.h_mm")}
+              {...registerNumber?.("rhs_geometry.h_mm", {
+                deps: [
+                  "rhs_geometry.tw_mm",
+                  "rhs_geometry.ri_mm",
+                  "rhs_geometry.ro_mm",
+                ],
+              })}
               suffix="mm"
             />
           </HorizontalInput>
@@ -115,7 +145,13 @@ export const FormGeometry = () => {
             label={<LatexLabel tex="b" />}
           >
             <InputNumber
-              {...registerNumber?.("rhs_geometry.b_mm")}
+              {...registerNumber?.("rhs_geometry.b_mm", {
+                deps: [
+                  "rhs_geometry.tw_mm",
+                  "rhs_geometry.ri_mm",
+                  "rhs_geometry.ro_mm",
+                ],
+              })}
               suffix="mm"
             />
           </HorizontalInput>
@@ -125,7 +161,14 @@ export const FormGeometry = () => {
             label={<LatexLabel tex="t_w" />}
           >
             <InputNumber
-              {...registerNumber?.("rhs_geometry.tw_mm")}
+              {...registerNumber?.("rhs_geometry.tw_mm", {
+                deps: [
+                  "rhs_geometry.h_mm",
+                  "rhs_geometry.b_mm",
+                  "rhs_geometry.ri_mm",
+                  "rhs_geometry.ro_mm",
+                ],
+              })}
               suffix="mm"
             />
           </HorizontalInput>
@@ -135,7 +178,14 @@ export const FormGeometry = () => {
             label={<LatexLabel tex="r_i" />}
           >
             <InputNumber
-              {...registerNumber?.("rhs_geometry.ri_mm")}
+              {...registerNumber?.("rhs_geometry.ri_mm", {
+                deps: [
+                  "rhs_geometry.h_mm",
+                  "rhs_geometry.b_mm",
+                  "rhs_geometry.tw_mm",
+                  "rhs_geometry.ro_mm",
+                ],
+              })}
               suffix="mm"
             />
           </HorizontalInput>
@@ -145,7 +195,14 @@ export const FormGeometry = () => {
             label={<LatexLabel tex="r_o" />}
           >
             <InputNumber
-              {...registerNumber?.("rhs_geometry.ro_mm")}
+              {...registerNumber?.("rhs_geometry.ro_mm", {
+                deps: [
+                  "rhs_geometry.h_mm",
+                  "rhs_geometry.b_mm",
+                  "rhs_geometry.tw_mm",
+                  "rhs_geometry.ri_mm",
+                ],
+              })}
               suffix="mm"
             />
           </HorizontalInput>
@@ -159,7 +216,9 @@ export const FormGeometry = () => {
             label={<LatexLabel tex="d" />}
           >
             <InputNumber
-              {...registerNumber?.("chs_geometry.d_mm")}
+              {...registerNumber?.("chs_geometry.d_mm", {
+                deps: ["chs_geometry.t_mm"],
+              })}
               suffix="mm"
             />
           </HorizontalInput>
@@ -169,7 +228,9 @@ export const FormGeometry = () => {
             label={<LatexLabel tex="t" />}
           >
             <InputNumber
-              {...registerNumber?.("chs_geometry.t_mm")}
+              {...registerNumber?.("chs_geometry.t_mm", {
+                deps: ["chs_geometry.d_mm"],
+              })}
               suffix="mm"
             />
           </HorizontalInput>

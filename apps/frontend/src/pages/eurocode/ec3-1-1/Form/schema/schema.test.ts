@@ -20,13 +20,20 @@ describe("[EC3-1-1] schema", () => {
     assert(!result.success);
 
     expect(result.error.issues[0]?.path).toEqual(["h_mm"]);
-    expect(result.error.issues[1]?.path).toEqual(["b_mm"]);
-    expect(result.error.issues[2]?.path).toEqual(["r_mm"]);
+    expect(result.error.issues.map((issue) => issue.path)).toEqual(
+      expect.arrayContaining([
+        ["h_mm"],
+        ["b_mm"],
+        ["tw_mm"],
+        ["tf_mm"],
+        ["r_mm"],
+      ]),
+    );
   });
 
   it("rejects RHS geometry with impossible radii or wall thickness", () => {
     const result = rhsGeometrySchema.safeParse({
-      h_mm: 100,
+      h_mm: 20,
       b_mm: 20,
       tw_mm: 12,
       ro_mm: 18,
@@ -37,8 +44,15 @@ describe("[EC3-1-1] schema", () => {
     assert(!result.success);
 
     expect(result.error.issues[0]?.path).toEqual(["ro_mm"]);
-    expect(result.error.issues[2]?.path).toEqual(["b_mm"]);
-    expect(result.error.issues[3]?.path).toEqual(["ri_mm"]);
+    expect(result.error.issues.map((issue) => issue.path)).toEqual(
+      expect.arrayContaining([
+        ["h_mm"],
+        ["b_mm"],
+        ["tw_mm"],
+        ["ri_mm"],
+        ["ro_mm"],
+      ]),
+    );
   });
 
   it("rejects CHS geometry with wall thickness closing the section", () => {
@@ -48,5 +62,6 @@ describe("[EC3-1-1] schema", () => {
     assert(!result.success);
 
     expect(result.error.issues[0]?.path).toEqual(["d_mm"]);
+    expect(result.error.issues[1]?.path).toEqual(["t_mm"]);
   });
 });
