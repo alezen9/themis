@@ -71,6 +71,7 @@ export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
           )}
         >
           <Combobox.Input
+            data-testid={name ? `input-${name}` : undefined}
             onBlur={onBlur}
             placeholder={placeholder}
             className={twMerge(
@@ -87,6 +88,7 @@ export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
             )}
           />
           <Combobox.Trigger
+            data-testid={name ? `input-${name}-trigger` : undefined}
             className={twMerge(
               "h-full w-15 rounded-r-sm flex items-center justify-center",
               "bg-(--bg-color)",
@@ -156,6 +158,7 @@ const VirtualizedPopup = () => {
                 key={option.value}
                 index={virtualItem.index}
                 data-index={virtualItem.index}
+                data-testid={`option-${option.value}`}
                 ref={rowVirtualizer.measureElement}
                 value={option}
                 style={{ transform: `translateY(${virtualItem.start}px)` }}

@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { shapeOptions } from "./options";
 import { InputRadio } from "@components/inputs/InputRadio";
 import {
+  defaultValues,
   defaultCHSSection,
   defaultISection,
   defaultRHSSection,
@@ -24,13 +25,9 @@ export const FormShape = () => {
           shape: "I",
           section_id: defaultISection.id,
           fabrication_type: "rolled",
-          i_geometry: {
-            h_mm: defaultISection.h_mm,
-            b_mm: defaultISection.b_mm,
-            tw_mm: defaultISection.tw_mm,
-            tf_mm: defaultISection.tf_mm,
-            r_mm: defaultISection.r_mm,
-          },
+          i_geometry: defaultValues.i_geometry,
+          rhs_geometry: defaultValues.rhs_geometry,
+          chs_geometry: defaultValues.chs_geometry,
         });
 
       if (value === "RHS")
@@ -39,13 +36,9 @@ export const FormShape = () => {
           shape: "RHS",
           section_id: defaultRHSSection.id,
           fabrication_type: "cold-formed",
-          rhs_geometry: {
-            h_mm: defaultRHSSection.h_mm,
-            b_mm: defaultRHSSection.b_mm,
-            tw_mm: defaultRHSSection.tw_mm,
-            ri_mm: defaultRHSSection.ri_mm,
-            ro_mm: defaultRHSSection.ro_mm,
-          },
+          i_geometry: defaultValues.i_geometry,
+          rhs_geometry: defaultValues.rhs_geometry,
+          chs_geometry: defaultValues.chs_geometry,
         });
 
       if (value === "CHS")
@@ -54,10 +47,9 @@ export const FormShape = () => {
           shape: "CHS",
           section_id: defaultCHSSection.id,
           fabrication_type: "cold-formed",
-          chs_geometry: {
-            d_mm: defaultCHSSection.d_mm,
-            t_mm: defaultCHSSection.t_mm,
-          },
+          i_geometry: defaultValues.i_geometry,
+          rhs_geometry: defaultValues.rhs_geometry,
+          chs_geometry: defaultValues.chs_geometry,
         });
 
       await trigger();
