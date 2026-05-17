@@ -24,6 +24,7 @@ export const DrawingIShape = () => {
       callback: ({ values }) => {
         if (!scene.current) return;
         const result = iGeometrySchema.safeParse(values.i_geometry);
+        ref.current?.toggleAttribute("data-drawing-error", !result.success);
         if (!result.success) return;
         Object.assign(scene.current.params, { ...result.data });
       },

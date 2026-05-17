@@ -18,9 +18,9 @@ import {
   defaultRHSSection,
 } from "./defaultValues";
 import { useEc311FormContext } from "./useEc311FormContext";
-import { flangedSectionsMap } from "../data/flangedSections";
-import { hollowSectionsMap } from "../data/hollowSections";
-import { circularSectionsMap } from "../data/circularSections";
+import { FlangedSection, flangedSectionsMap } from "../data/flangedSections";
+import { HollowSection, hollowSectionsMap } from "../data/hollowSections";
+import { CircularSection, circularSectionsMap } from "../data/circularSections";
 
 const sectionOptionsMap = {
   I: { options: flangedSectionOptions, defaultValue: defaultISection.id },
@@ -34,6 +34,24 @@ const fabricationTypeOptionsMap = {
   CHS: { options: rhsChsFabricationTypeOptions },
 };
 
+const toIGeometry = (section?: FlangedSection) => {
+  if (!section) return;
+  const { h_mm, b_mm, tw_mm, tf_mm, r_mm } = section;
+  return { h_mm, b_mm, tw_mm, tf_mm, r_mm };
+};
+
+const toRhsGeometry = (section?: HollowSection) => {
+  if (!section) return;
+  const { h_mm, b_mm, tw_mm, ri_mm, ro_mm } = section;
+  return { h_mm, b_mm, tw_mm, ri_mm, ro_mm };
+};
+
+const toChsGeometry = (section?: CircularSection) => {
+  if (!section) return;
+  const { d_mm, t_mm } = section;
+  return { d_mm, t_mm };
+};
+
 export const FormSection = () => {
   const { register, registerSelect, watch, reset, getValues, trigger } =
     useEc311FormContext();
@@ -44,17 +62,17 @@ export const FormSection = () => {
       const { name, value } = e.target;
       const values = getValues();
       const shape = values.shape;
-      const i_geometry = flangedSectionsMap.get(value);
-      const rhs_geometry = hollowSectionsMap.get(value);
-      const chs_geometry = circularSectionsMap.get(value);
+      const i_geometry = toIGeometry(flangedSectionsMap.get(value));
+      const rhs_geometry = toRhsGeometry(hollowSectionsMap.get(value));
+      const chs_geometry = toChsGeometry(circularSectionsMap.get(value));
       const isCustomSection = value === customSectionId;
       reset({
-        ...getValues(),
+        ...values,
         ...{
           [name]: value,
-          ...(!isCustomSection && shape === "I" ? { i_geometry } : {}),
-          ...(!isCustomSection && shape === "RHS" ? { rhs_geometry } : {}),
-          ...(!isCustomSection && shape === "CHS" ? { chs_geometry } : {}),
+          ...(!isCustomSection && shape === "I" && { i_geometry }),
+          ...(!isCustomSection && shape === "RHS" && { rhs_geometry }),
+          ...(!isCustomSection && shape === "CHS" && { chs_geometry }),
         },
       });
       await trigger();

@@ -35,14 +35,11 @@ export const iGeometrySchema = z
       .max(500, MAX_VALUE_MESSAGE),
   })
   .superRefine((geometry, ctx) => {
-    if (geometry.h_mm <= 2 * (geometry.tf_mm + geometry.r_mm))
-      addIssue(ctx, "h_mm", "Height too small");
-    if (geometry.b_mm <= geometry.tw_mm + 2 * geometry.r_mm)
-      addIssue(ctx, "b_mm", "Width too small");
-    if (geometry.r_mm >= geometry.h_mm / 2 - geometry.tf_mm)
-      addIssue(ctx, "r_mm", "Radius too large");
-    if (geometry.r_mm >= (geometry.b_mm - geometry.tw_mm) / 2)
-      addIssue(ctx, "r_mm", "Radius too large");
+    const { h_mm, b_mm, tf_mm, tw_mm, r_mm } = geometry;
+    if (h_mm <= 2 * (tf_mm + r_mm)) addIssue(ctx, "h_mm", "Height too small");
+    if (b_mm <= tw_mm + 2 * r_mm) addIssue(ctx, "b_mm", "Width too small");
+    if (r_mm >= h_mm / 2 - tf_mm) addIssue(ctx, "r_mm", "Radius too large");
+    if (r_mm >= (b_mm - tw_mm) / 2) addIssue(ctx, "r_mm", "Radius too large");
   });
 
 export const rhsGeometrySchema = z
@@ -69,31 +66,20 @@ export const rhsGeometrySchema = z
       .max(500, MAX_VALUE_MESSAGE),
   })
   .superRefine((geometry, ctx) => {
-    if (geometry.ro_mm <= geometry.ri_mm)
-      addIssue(ctx, "ro_mm", "Outer radius too small");
-    if (geometry.ro_mm > geometry.ri_mm + geometry.tw_mm)
-      addIssue(ctx, "ro_mm", "Outer radius too large");
-    if (geometry.ro_mm >= geometry.h_mm / 2)
-      addIssue(ctx, "ro_mm", "Outer radius too large");
-    if (geometry.ro_mm >= geometry.b_mm / 2)
-      addIssue(ctx, "ro_mm", "Outer radius too large");
-    if (geometry.h_mm <= 2 * geometry.tw_mm)
-      addIssue(ctx, "h_mm", "Height too small");
-    if (geometry.b_mm <= 2 * geometry.tw_mm)
-      addIssue(ctx, "b_mm", "Width too small");
-    if (geometry.ri_mm >= geometry.h_mm / 2 - geometry.tw_mm)
+    const { h_mm, b_mm, tw_mm, ro_mm, ri_mm } = geometry;
+    if (ro_mm <= ri_mm) addIssue(ctx, "ro_mm", "Outer radius too small");
+    if (ro_mm > ri_mm + tw_mm) addIssue(ctx, "ro_mm", "Outer radius too large");
+    if (ro_mm >= h_mm / 2) addIssue(ctx, "ro_mm", "Outer radius too large");
+    if (ro_mm >= b_mm / 2) addIssue(ctx, "ro_mm", "Outer radius too large");
+    if (h_mm <= 2 * tw_mm) addIssue(ctx, "h_mm", "Height too small");
+    if (b_mm <= 2 * tw_mm) addIssue(ctx, "b_mm", "Width too small");
+    if (ri_mm >= h_mm / 2 - tw_mm)
       addIssue(ctx, "ri_mm", "Inner radius too large");
-    if (geometry.ri_mm >= geometry.b_mm / 2 - geometry.tw_mm)
+    if (ri_mm >= b_mm / 2 - tw_mm)
       addIssue(ctx, "ri_mm", "Inner radius too large");
-    if (
-      geometry.h_mm <= 2 * geometry.ro_mm ||
-      geometry.h_mm <= 2 * (geometry.tw_mm + geometry.ri_mm)
-    )
+    if (h_mm <= 2 * ro_mm || h_mm <= 2 * (tw_mm + ri_mm))
       addIssue(ctx, "h_mm", "Height too small");
-    if (
-      geometry.b_mm <= 2 * geometry.ro_mm ||
-      geometry.b_mm <= 2 * (geometry.tw_mm + geometry.ri_mm)
-    )
+    if (b_mm <= 2 * ro_mm || b_mm <= 2 * (tw_mm + ri_mm))
       addIssue(ctx, "b_mm", "Width too small");
   });
 
@@ -109,8 +95,8 @@ export const chsGeometrySchema = z
       .max(200, MAX_VALUE_MESSAGE),
   })
   .superRefine((geometry, ctx) => {
-    if (geometry.d_mm <= 2 * geometry.t_mm)
-      addIssue(ctx, "d_mm", "Diameter too small");
+    const { d_mm, t_mm } = geometry;
+    if (d_mm <= 2 * t_mm) addIssue(ctx, "d_mm", "Diameter too small");
   });
 
 export const geometrySchema = z.strictObject({

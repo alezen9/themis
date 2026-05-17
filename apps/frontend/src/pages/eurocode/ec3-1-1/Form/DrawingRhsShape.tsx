@@ -151,6 +151,7 @@ export const DrawingRhsShape = () => {
       callback: ({ values }) => {
         if (!scene.current) return;
         const result = rhsGeometrySchema.safeParse(values.rhs_geometry);
+        ref.current?.toggleAttribute("data-drawing-error", !result.success);
         if (!result.success) return;
         Object.assign(scene.current.params, { ...result.data });
       },

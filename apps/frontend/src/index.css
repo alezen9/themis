@@ -9,6 +9,11 @@ svg.pluton-root {
   --pluton-dim-text-color: var(--color-sand-800);
 }
 
+svg.pluton-root[data-drawing-error] {
+  --pluton-geometry-stroke: var(--color-red-700);
+  --pluton-hatch-color: var(--color-red-200);
+}
+
 .katex {
   font-size: 0.75em;
 }
