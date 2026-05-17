@@ -40,7 +40,7 @@ const getPart = (parts: Part[], label: string) => {
 
 const getPartClass = (part: Part) => part.trace.length;
 
-describe("classifySection I", () => {
+describe("[EC3-1-1] classifySection I", () => {
   it("computes IPE300 uniform compression stresses", () => {
     const [sectionClass, parts] = classifySection({
       ...iSectionBaseInput,
@@ -258,7 +258,7 @@ describe("classifySection I", () => {
   });
 });
 
-describe("classifySection RHS", () => {
+describe("[EC3-1-1] classifySection RHS", () => {
   it("computes RHS300x200x6.3 uniform compression stresses", () => {
     const [sectionClass, parts] = classifySection({
       ...rhsSectionBaseInput,
@@ -470,7 +470,7 @@ describe("classifySection RHS", () => {
   });
 });
 
-describe("classifySection CHS", () => {
+describe("[EC3-1-1] classifySection CHS", () => {
   it("classifies CHS compression using diameter-to-thickness limits", () => {
     const [sectionClass, parts] = classifySection({
       ...chsSectionBaseInput,

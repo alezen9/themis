@@ -6,7 +6,7 @@ import {
   rhsGeometrySchema,
 } from "./geometrySchema";
 
-describe("geometry schema refinements", () => {
+describe("[EC3-1-1] schema", () => {
   it("rejects I geometry with overlapping flange, web, or fillets", () => {
     const result = iGeometrySchema.safeParse({
       h_mm: 100,

@@ -46,7 +46,7 @@ const createState = (nodes: readonly Node[]): EditorState => ({
   autoLayoutVersion: 0,
 });
 
-describe("NDG editor reducer", () => {
+describe("[NDG] editorReducer", () => {
   it("adds a child node and opens it for editing", () => {
     const state = createState([checkNode]);
     const nextState = editorReducer(state, {

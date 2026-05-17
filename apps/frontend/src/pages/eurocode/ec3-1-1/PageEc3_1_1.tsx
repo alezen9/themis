@@ -67,7 +67,7 @@ const Observer = (props: ObserverProps) => {
         if (!result.success) return;
 
         onValidValuesChange?.(result.data);
-        console.log(result.data);
+        // console.log(result.data);
       }, 50),
     [onValuesChange, onValidValuesChange],
   );

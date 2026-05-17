@@ -57,9 +57,7 @@ const MomentY = () => {
           label={<TextLabel>Support y</TextLabel>}
         >
           <InputSelect
-            {...registerSelect?.("support_condition_y", {
-              shouldUnregister: true,
-            })}
+            {...registerSelect?.("support_condition_y")}
             options={supportConditionOptions}
           />
         </HorizontalInput>
@@ -108,9 +106,7 @@ const MomentZ = () => {
           label={<TextLabel>Support z</TextLabel>}
         >
           <InputSelect
-            {...registerSelect?.("support_condition_z", {
-              shouldUnregister: true,
-            })}
+            {...registerSelect?.("support_condition_z")}
             options={supportConditionOptions}
           />
         </HorizontalInput>

@@ -42,7 +42,7 @@ const createState = (nodes: readonly Node[]): EditorState => ({
   autoLayoutVersion: 0,
 });
 
-describe("NDG editor draft", () => {
+describe("[NDG] draft", () => {
   it("roundtrips editor state through the draft format", () => {
     const state = createState([checkNode, inputNode]);
     const draft = editorStateToDraft(state);

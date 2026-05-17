@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { InputNumber } from "./InputNumber";
 
-describe("InputNumber", () => {
+describe("[UI] InputNumber", () => {
   it("blurs on wheel to avoid native number stepping", () => {
     const handleWheel = vi.fn();
 

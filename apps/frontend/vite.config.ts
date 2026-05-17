@@ -19,6 +19,7 @@ export default defineConfig({
   ],
   test: {
     environment: "jsdom",
+    reporters: ["tree"],
     setupFiles: ["./src/vitest.setup.ts"],
     passWithNoTests: true,
     exclude: ["**/node_modules/**", "**/dist/**", "src/verifications/**"],

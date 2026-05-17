@@ -34,7 +34,7 @@ vi.mock("pluton-2d", () => ({
   },
 }));
 
-describe("PageEc3_1_1", () => {
+describe("[EC3-1-1] PageEc3_1_1", () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -43,7 +43,7 @@ describe("PageEc3_1_1", () => {
     vi.useRealTimers();
   });
 
-  it("debounces raw form values as the moment shape changes", async () => {
+  it("emits raw values for inactive and reactivated moment fields", async () => {
     const onValuesChange = vi.fn();
 
     render(<PageEc3_1_1 onValuesChange={onValuesChange} />);
@@ -86,7 +86,7 @@ describe("PageEc3_1_1", () => {
     expect(remountedPsiY.value).toBe("");
   });
 
-  it("debounces valid form values after schema validation", async () => {
+  it("emits valid values only when the active moment fields pass schema", async () => {
     const onValidValuesChange = vi.fn();
 
     render(<PageEc3_1_1 onValidValuesChange={onValidValuesChange} />);

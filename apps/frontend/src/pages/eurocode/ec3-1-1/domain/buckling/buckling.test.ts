@@ -7,7 +7,7 @@ const baseInput = {
   buckling_curves_LT_policy: "default-rolled-welded",
 } as const;
 
-describe("getBucklingCurves", () => {
+describe("[EC3-1-1] getBucklingCurves", () => {
   it("uses EC3 Table 6.2 rolled I-section non-S460 branches", () => {
     expect(
       getBucklingCurves({
