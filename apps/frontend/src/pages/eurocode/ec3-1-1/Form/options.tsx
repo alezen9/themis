@@ -1,3 +1,4 @@
+import { IconFlagEuropeanUnion, IconFlagItaly } from "@components/Icons";
 import { Option, OptionGroup } from "@components/inputs/shared";
 import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3";
 import {
@@ -22,8 +23,26 @@ export const extractValues = <
   };
 
 export const annexOptions = [
-  { value: eurocodeAnnex.id, label: `🇪🇺\xa0\xa0\xa0${eurocodeAnnex.name}` },
-  { value: italianAnnex.id, label: `🇮🇹\xa0\xa0\xa0${italianAnnex.name}` },
+  {
+    value: eurocodeAnnex.id,
+    label: eurocodeAnnex.name,
+    item: (
+      <span className="inline-grid min-w-28 grid-cols-[1rem_1fr] items-center gap-4 text-left">
+        <IconFlagEuropeanUnion className="size-5 rounded-full border border-sand-300" />
+        <span>{eurocodeAnnex.name}</span>
+      </span>
+    ),
+  },
+  {
+    value: italianAnnex.id,
+    label: italianAnnex.name,
+    item: (
+      <span className="inline-grid min-w-28 grid-cols-[1rem_1fr] items-center gap-6 text-left">
+        <IconFlagItaly className="size-5 rounded-full border border-sand-300" />
+        <span>{italianAnnex.name}</span>
+      </span>
+    ),
+  },
 ] as const satisfies Option[];
 export const annexValues = extractValues(annexOptions);
 
