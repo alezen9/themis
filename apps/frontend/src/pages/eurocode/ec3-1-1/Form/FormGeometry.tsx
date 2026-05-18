@@ -239,11 +239,8 @@ export const FormGeometry = () => {
 
       <Accordion>
         <AccordionHeader iconPosition="left" className="px-0">
-          <span className="text-xs text-sand-800 group-data-panel-open/trigger:hidden">
-            Show derived geometric properties
-          </span>
-          <span className="hidden text-xs text-sand-800 group-data-panel-open/trigger:inline">
-            Hide derived geometric properties
+          <span className="text-xs text-sand-800">
+            Derived geometric properties
           </span>
         </AccordionHeader>
         <AccordionContent className="px-0">

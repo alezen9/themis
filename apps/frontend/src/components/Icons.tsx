@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentPropsWithoutRef, useId } from "react";
 
 export const IconCube = (props: ComponentPropsWithoutRef<"svg">) => {
   return (
@@ -209,6 +209,58 @@ export const IconDelete = (props: ComponentPropsWithoutRef<"svg">) => {
     >
       <path d="M12 2.75c-.9785 0-1.8129.62503-2.12213 1.49993-.13804.39054-.56653.59524-.95707.4572s-.59523-.56653-.45719-.95706C8.97804 2.29459 10.3661 1.25 12 1.25c1.634 0 3.022 1.04459 3.5365 2.50007.138.39053-.0667.81902-.4572.95706-.3906.13804-.8191-.06666-.9571-.4572C13.813 3.37503 12.9785 2.75 12 2.75ZM2.75 6c0-.41421.33579-.75.75-.75h17.0001c.4142 0 .75.33579.75.75s-.3358.75-.75.75H3.5c-.41421 0-.75-.33579-.75-.75Zm3.16508 2.45011c-.02755-.4133-.38493-.726-.79822-.69845-.4133.02755-.72601.38493-.69845.79823l.46345 6.95171c.08549 1.2828.15455 2.3189.31652 3.132.1684.8453.45482 1.5514 1.04642 2.1048.59159.5535 1.31514.7923 2.16979.9041.82204.1075 1.86051.1075 3.14611.1075h.8788c1.2856 0 2.324 0 3.1461-.1075.8546-.1118 1.5782-.3506 2.1698-.9041.5916-.5534.878-1.2595 1.0464-2.1048.1619-.8131.231-1.8492.3165-3.132l.4635-6.95171c.0275-.4133-.2852-.77068-.6985-.79823-.4133-.02755-.7707.28515-.7982.69845l-.46 6.89909c-.0898 1.3479-.1539 2.2857-.2944 2.9913-.1364.6845-.3267 1.0468-.6001 1.3026-.2734.2557-.6476.4216-1.3396.5121-.7134.0933-1.6534.0948-3.0042.0948h-.7734c-1.3508 0-2.29085-.0015-3.00425-.0948-.692-.0905-1.06616-.2564-1.33958-.5121-.27341-.2558-.46374-.6181-.60009-1.3026-.14057-.7056-.2046-1.6434-.29445-2.9913l-.45995-6.89909Z" />
       <path d="M9.42546 10.2537c.41216-.0412.77964.2595.82094.6717l.5 5c.0412.4121-.2595.7797-.6717.8209-.41214.0412-.77968-.2595-.82089-.6717l-.5-5c-.04122-.4121.25949-.7797.67165-.8209Zm5.82094.8209c.0412-.4121-.2595-.7797-.6717-.8209-.4121-.0412-.7797.2595-.8209.6717l-.5 5c-.0412.4121.2595.7797.6717.8209.4121.0412.7796-.2595.8209-.6717l.5-5Z" />
+    </svg>
+  );
+};
+
+const europeanUnionStarPath =
+  "M0-25.284 5.947-8.186 24.047-7.814 9.619 3.125 14.862 20.358 0 10.111-14.862 20.358-9.619 3.125-24.047-7.814-5.947-8.186Z";
+
+export const IconFlagEuropeanUnion = (
+  props: ComponentPropsWithoutRef<"svg">,
+) => {
+  const starId = useId();
+
+  return (
+    <svg
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      {...props}
+    >
+      <path d="M0 0h512v512H0V0Z" fill="#039" />
+      <defs>
+        <path id={starId} d={europeanUnionStarPath} />
+      </defs>
+      <g fill="#FC0">
+        <use href={`#${starId}`} transform="translate(256 106.696)" />
+        <use href={`#${starId}`} transform="translate(329.991 128.166)" />
+        <use href={`#${starId}`} transform="translate(386.234 184.409)" />
+        <use href={`#${starId}`} transform="translate(407.704 258.4)" />
+        <use href={`#${starId}`} transform="translate(386.206 336.477)" />
+        <use href={`#${starId}`} transform="translate(331.331 387.368)" />
+        <use href={`#${starId}`} transform="translate(256 410.104)" />
+        <use href={`#${starId}`} transform="translate(180.669 387.368)" />
+        <use href={`#${starId}`} transform="translate(125.794 336.477)" />
+        <use href={`#${starId}`} transform="translate(104.296 258.4)" />
+        <use href={`#${starId}`} transform="translate(125.766 184.409)" />
+        <use href={`#${starId}`} transform="translate(182.009 128.166)" />
+      </g>
+    </svg>
+  );
+};
+
+export const IconFlagItaly = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      {...props}
+    >
+      <path d="M0 0h512v512H0V0Z" fill="#fff" />
+      <path d="M0 0h170.7v512H0V0Z" fill="#009246" />
+      <path d="M341.3 0H512v512H341.3V0Z" fill="#CE2B37" />
     </svg>
   );
 };

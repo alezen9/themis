@@ -1,3 +1,4 @@
+import { Accordion, AccordionContent } from "@components/Accordion";
 import { InputNumber } from "@components/inputs/InputNumber";
 import { InputSelect } from "@components/inputs/InputSelect";
 import { InputToggle } from "@components/inputs/InputToggle";
@@ -25,26 +26,28 @@ export const FormStabilityChecks = () => {
 
   return (
     <Section>
-      <div className="mb-2 flex w-full items-center justify-between gap-4">
-        <SectionTitle className="mb-0">Lateral Torsional Buckling</SectionTitle>
-        <InputToggle
-          {...registerBoolean?.("include_torsional_modes", {
-            deps: [
-              "k_T",
-              "k_LT",
-              "M_y_Ed_shape_LT",
-              "psi_y_LT",
-              "support_condition_LT",
-              "load_LT",
-            ],
-          })}
-          aria-label="Toggle stability checks"
-          className="h-6 w-12"
-        />
-      </div>
+      <Accordion open={includeTorsionalModes}>
+        <div className="mb-2 flex w-full items-center justify-between gap-4">
+          <SectionTitle className="mb-0">
+            Lateral Torsional Buckling
+          </SectionTitle>
+          <InputToggle
+            {...registerBoolean?.("include_torsional_modes", {
+              deps: [
+                "k_T",
+                "k_LT",
+                "M_y_Ed_shape_LT",
+                "psi_y_LT",
+                "support_condition_LT",
+                "load_LT",
+              ],
+            })}
+            aria-label="Toggle stability checks"
+            className="h-6 w-12"
+          />
+        </div>
 
-      {includeTorsionalModes && (
-        <>
+        <AccordionContent className="px-0 text-base">
           <HorizontalInput name="k_T" label={<LatexLabel tex="k_T" />}>
             <InputNumber {...registerNumber?.("k_T")} />
           </HorizontalInput>
@@ -103,8 +106,8 @@ export const FormStabilityChecks = () => {
               </HorizontalInput>
             </>
           )}
-        </>
-      )}
+        </AccordionContent>
+      </Accordion>
     </Section>
   );
 };

@@ -146,15 +146,10 @@ const ClassificationInfo = () => {
 
       <Accordion>
         <AccordionHeader iconPosition="left" className="p-0">
-          <span className="text-xs text-sand-800 group-data-panel-open/trigger:hidden">
-            Show classification details
-          </span>
-          <span className="hidden text-xs text-sand-800 group-data-panel-open/trigger:inline">
-            Hide classification details
-          </span>
+          <span className="text-xs text-sand-800">Classification details</span>
         </AccordionHeader>
-        <AccordionContent className="px-0 mt-2">
-          <div className="flex flex-col gap-4">
+        <AccordionContent className="px-0">
+          <div className="flex flex-col gap-4 pt-2">
             {parts.map((part) => (
               <PartInfoTable key={part.label} part={part} />
             ))}
