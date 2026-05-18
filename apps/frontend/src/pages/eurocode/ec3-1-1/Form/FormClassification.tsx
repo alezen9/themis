@@ -144,7 +144,7 @@ const ClassificationInfo = () => {
         </TableBody>
       </InfoTable>
 
-      <Accordion>
+      <Accordion duration="500ms">
         <AccordionHeader iconPosition="left" className="p-0">
           <span className="text-xs text-sand-800">Classification details</span>
         </AccordionHeader>
