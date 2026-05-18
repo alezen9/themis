@@ -11,7 +11,7 @@ import { FormStabilityChecks } from "./FormStabilityChecks";
 
 export const Form = () => {
   return (
-    <div className="w-104 flex flex-col gap-8 h-full border-r border-slate-300 pr-4">
+    <div className="w-104 flex flex-col gap-8 h-full pr-4">
       <FormShape />
       <LineDivider />
 

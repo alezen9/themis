@@ -8,9 +8,9 @@ export const AppSidebar = () => {
     <aside
       className={twMerge(
         "fixed left-0 top-0 z-auto",
-        "flex h-dvh w-84 flex-col",
-        "bg-white px-4 py-9 text-slate-950",
-        "before:absolute before:content-[' '] before:top-9 before:right-0 before:w-px before:h-[calc(100%-4rem)] before:bg-slate-300",
+        "flex h-dvh w-70 flex-col",
+        "bg-sand-100/25 px-2 py-9 text-slate-950",
+        // "before:absolute before:content-[' '] before:top-9 before:right-0 before:w-px before:h-[calc(100%-4rem)] before:bg-slate-300",
       )}
     >
       <Logo />
@@ -19,7 +19,7 @@ export const AppSidebar = () => {
         <Section>
           <SectionHeader>
             <IconCloud className="w-5" />
-            <SectionHeaderLabel> Eurocode 1 · Actions</SectionHeaderLabel>
+            <SectionHeaderLabel>Actions</SectionHeaderLabel>
             <Tag>EC1</Tag>
           </SectionHeader>
           <SubSection>
@@ -37,7 +37,7 @@ export const AppSidebar = () => {
         <Section>
           <SectionHeader>
             <IconCube className="w-5" />
-            <SectionHeaderLabel>Eurocode 2 · Concrete</SectionHeaderLabel>
+            <SectionHeaderLabel>Concrete</SectionHeaderLabel>
             <Tag>EC2</Tag>
           </SectionHeader>
           <SubSection>
@@ -51,7 +51,7 @@ export const AppSidebar = () => {
         <Section>
           <SectionHeader>
             <IconIBeam className="w-5" />
-            <SectionHeaderLabel> Eurocode 3 · Steel</SectionHeaderLabel>
+            <SectionHeaderLabel>Steel</SectionHeaderLabel>
             <Tag>EC3</Tag>
           </SectionHeader>
           <SubSection>
@@ -105,7 +105,7 @@ const Tag = (props: { children: ReactNode }) => {
         "rounded px-2 py-px",
         "font-light text-[10px] text-nowrap",
         "bg-sand-100 text-slate-600",
-        "group-data-item-active:bg-sand-900/50",
+        "group-data-item-active:bg-sand-300/35",
         "group-data-item-active:text-white",
         "transition-colors",
       )}
@@ -115,24 +115,24 @@ const Tag = (props: { children: ReactNode }) => {
   );
 };
 
-const SectionHighlighter = () => {
-  return (
-    <span
-      className={twMerge(
-        "h-(--section-height) translate-y-(--section-top)",
-        "bg-linear-to-b from-sand-100/50 from-75% to-transparent",
-        "absolute top-0 -left-1 w-[calc(100%+0.5rem)] rounded-md transition-transform",
-      )}
-    />
-  );
-};
+// const SectionHighlighter = () => {
+//   return (
+//     <span
+//       className={twMerge(
+//         "h-(--section-height) translate-y-(--section-top)",
+//         "bg-linear-to-b from-sand-200/20 from-75% to-transparent",
+//         "absolute top-0 -left-1 w-[calc(100%+0.5rem)] rounded-md transition-transform",
+//       )}
+//     />
+//   );
+// };
 
 const ItemHighlighter = () => {
   return (
     <span
       className={twMerge(
         "h-(--item-height) translate-y-(--item-top)",
-        "bg-sand-900/85",
+        "bg-sand-900/75",
         "absolute top-0 right-1 w-[calc(100%-2rem)] rounded-md transition-transform",
       )}
     />
@@ -238,7 +238,7 @@ const Nav = (props: { children: ReactNode }) => {
       aria-label="Application navigation"
       className={twMerge("mt-14 flex flex-col", "relative")}
     >
-      <SectionHighlighter />
+      {/* <SectionHighlighter /> */}
       <ItemHighlighter />
       {children}
     </nav>
