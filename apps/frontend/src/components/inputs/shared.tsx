@@ -9,6 +9,8 @@ export type Option<T = unknown> = {
   ctx?: T;
 };
 
+export type OptionGroup<T = unknown> = { label: string; options: Option<T>[] };
+
 const NON_BLOCKING_SPACE = "\u00a0";
 
 type FieldProps = {

@@ -3,6 +3,7 @@ import { Section, SectionTitle, TextLabel } from "./shared";
 import {
   circularSectionOptions,
   flangedSectionOptions,
+  getDefaultSteelGradeId,
   hollowSectionOptions,
   iFabricationTypeOptions,
   rhsChsFabricationTypeOptions,
@@ -73,12 +74,33 @@ export const FormSection = () => {
         ...values,
         ...{
           [name]: value,
+          ...(!isEmptySectionId && {
+            steel_grade_id: getDefaultSteelGradeId(
+              shape,
+              values.fabrication_type,
+            ),
+          }),
           ...(shouldUpdateGeometry && {
             ...(shape === "I" && { i_geometry }),
             ...(shape === "RHS" && { rhs_geometry }),
             ...(shape === "CHS" && { chs_geometry }),
           }),
         },
+      });
+      await trigger();
+    },
+    [reset, getValues, trigger],
+  );
+
+  const onFabricationTypeChange = useCallback<ChangeHandler>(
+    async (e) => {
+      const { name, value } = e.target;
+      const values = getValues();
+
+      reset({
+        ...values,
+        [name]: value,
+        steel_grade_id: getDefaultSteelGradeId(values.shape, value),
       });
       await trigger();
     },
@@ -107,6 +129,7 @@ export const FormSection = () => {
               <InputRadio
                 key={`${shape}-${option.value}`}
                 {...register?.("fabrication_type")}
+                onChange={onFabricationTypeChange}
                 value={option.value}
                 label={option.label}
               />

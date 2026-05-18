@@ -1,4 +1,4 @@
-import { Option } from "@components/inputs/shared";
+import { Option, OptionGroup } from "@components/inputs/shared";
 import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3";
 import {
   composeSteelGradeId,
@@ -42,7 +42,7 @@ export const iFabricationTypeValues = extractValues(iFabricationTypeOptions);
 
 export const rhsChsFabricationTypeOptions = [
   { value: "cold-formed", label: "Cold formed" },
-  { value: "hot-formed", label: "Hot formed" },
+  { value: "hot-formed", label: "Hot finished" },
 ] as const;
 export const rhsChsFabricationTypeValues = extractValues(
   rhsChsFabricationTypeOptions,
@@ -105,13 +105,52 @@ export const sectionClassOptions = [
 ] as const satisfies Option[];
 export const sectionClassValues = extractValues(sectionClassOptions);
 
-export const steelGradeOptions = steelGrades.map<Option<SteelGrade>>(
-  (grade) => {
-    const label = composeSteelGradeLabel(grade);
-    const value = composeSteelGradeId(grade);
-    return { label, value };
-  },
-);
+const iSectionSteelGradeStandards = [
+  "EN10025-2",
+  "EN10025-3",
+  "EN10025-4",
+  "EN10025-5",
+  "EN10025-6",
+];
+
+const getSteelGradeStandards = (shape: string, fabricationType: string) => {
+  if (shape === "I") return iSectionSteelGradeStandards;
+  if (fabricationType === "hot-formed") return ["EN10210-1"];
+  return ["EN10219-1"];
+};
+
+export const getSteelGradeOptions = (
+  shape: string,
+  fabricationType: string,
+) => {
+  const standards = getSteelGradeStandards(shape, fabricationType);
+
+  return standards
+    .map<OptionGroup<SteelGrade>>((standard) => ({
+      label: standard,
+      options: steelGrades
+        .filter((grade) => grade.standard === standard)
+        .map((grade) => {
+          const label = composeSteelGradeLabel(grade);
+          const value = composeSteelGradeId(grade);
+          return { label, value, ctx: grade };
+        }),
+    }))
+    .filter((group) => group.options.length > 0);
+};
+
+export const getDefaultSteelGradeId = (
+  shape: string,
+  fabricationType: string,
+) => {
+  const options = getSteelGradeOptions(shape, fabricationType).flatMap(
+    (group) => group.options,
+  );
+  return String(
+    (options.find((option) => option.label.startsWith("S235")) ?? options[0])
+      ?.value ?? "",
+  );
+};
 
 export const customSectionId = "custom";
 const customOption: Option = { label: "Custom", value: customSectionId };

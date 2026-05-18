@@ -11,9 +11,20 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { IconMagnifier } from "@components/Icons";
-import { Option } from "./shared";
+import { Option, OptionGroup } from "./shared";
 
-type Props = ComponentPropsWithoutRef<"input"> & { options: Option[] };
+type GroupVirtualRow = { groupLabel: string; key: string; type: "group" };
+type OptionVirtualRow = {
+  key: string | number;
+  option: Option;
+  optionIndex: number;
+  type: "option";
+};
+type VirtualRow = GroupVirtualRow | OptionVirtualRow;
+
+type Props = ComponentPropsWithoutRef<"input"> & {
+  options: Option[] | OptionGroup[];
+};
 
 type OnValueChange = ComponentProps<
   typeof Combobox.Root<Option>
@@ -35,9 +46,16 @@ export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
       value,
     } = props;
 
-    const optionsMap = useMemo(
-      () => new Map<typeof value, Option>(options.map((o) => [o.value, o])),
+    const flatOptions = useMemo(
+      () =>
+        options.flatMap((option) =>
+          "options" in option ? option.options : option,
+        ),
       [options],
+    );
+    const optionsMap = useMemo(
+      () => new Map<typeof value, Option>(flatOptions.map((o) => [o.value, o])),
+      [flatOptions],
     );
 
     const onValueChange = useCallback<NonNullable<OnValueChange>>(
@@ -50,7 +68,7 @@ export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
 
     return (
       <Combobox.Root<Option>
-        items={options}
+        items={flatOptions}
         defaultValue={optionsMap.get(defaultValue)}
         value={optionsMap.get(value)}
         autoHighlight
@@ -122,7 +140,7 @@ export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
         </Combobox.InputGroup>
         <Combobox.Portal>
           <Combobox.Positioner className="z-50 outline-none">
-            <VirtualizedPopup />
+            <VirtualizedPopup options={options} />
           </Combobox.Positioner>
         </Combobox.Portal>
       </Combobox.Root>
@@ -132,16 +150,21 @@ export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
 
 InputAutocomplete.displayName = "InputAutocomplete";
 
-const VirtualizedPopup = () => {
+const VirtualizedPopup = (props: { options: Option[] | OptionGroup[] }) => {
+  const { options } = props;
   const popupRef = useRef<HTMLDivElement | null>(null);
 
   const filteredOptions = Combobox.useFilteredItems<Option>();
+  const popupRows = useMemo(
+    () => getVirtualRows(options, filteredOptions),
+    [filteredOptions, options],
+  );
 
   // TanStack Virtual is currently flagged by React Compiler as an incompatible library.
   // This component is intentionally isolated, and the virtualizer instance is used locally only.
   // eslint-disable-next-line react-hooks/incompatible-library
   const rowVirtualizer = useVirtualizer({
-    count: filteredOptions.length,
+    count: popupRows.length,
     getScrollElement: () => popupRef.current,
     estimateSize: () => 44,
     gap: 4,
@@ -169,14 +192,33 @@ const VirtualizedPopup = () => {
           style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
         >
           {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-            const option = filteredOptions[virtualItem.index];
-            if (!option) return null;
+            const row = popupRows[virtualItem.index];
+            if (!row) return null;
+
+            if (row.type === "group") {
+              return (
+                <div
+                  key={row.key}
+                  ref={rowVirtualizer.measureElement}
+                  style={{ transform: `translateY(${virtualItem.start}px)` }}
+                  className={twMerge(
+                    "absolute top-0 left-0 w-full",
+                    "px-3 pt-2 pb-1 text-center text-[0.65rem]",
+                    "font-semibold uppercase tracking-widest text-gray-500",
+                  )}
+                >
+                  {row.groupLabel}
+                </div>
+              );
+            }
+
+            const option = row.option;
 
             return (
               <Combobox.Item
                 key={option.value}
-                index={virtualItem.index}
-                data-index={virtualItem.index}
+                index={row.optionIndex}
+                data-index={row.optionIndex}
                 data-testid={`option-${option.value}`}
                 ref={rowVirtualizer.measureElement}
                 value={option}
@@ -200,4 +242,52 @@ const VirtualizedPopup = () => {
       )}
     </Combobox.Popup>
   );
+};
+
+const getVirtualRows = (
+  options: Option[] | OptionGroup[],
+  filteredOptions: Option[],
+) => {
+  const groupedOptions = options.filter(
+    (option): option is OptionGroup => "options" in option,
+  );
+
+  if (!groupedOptions.length) {
+    return filteredOptions.map<VirtualRow>((option, optionIndex) => ({
+      key: option.value,
+      option,
+      optionIndex,
+      type: "option",
+    }));
+  }
+
+  const rows: VirtualRow[] = [];
+  const filteredOptionIndexes = new Map(
+    filteredOptions.map((option, optionIndex) => [option.value, optionIndex]),
+  );
+
+  groupedOptions.forEach((group) => {
+    const groupOptions = group.options.filter((option) =>
+      filteredOptionIndexes.has(option.value),
+    );
+
+    if (!groupOptions.length) return;
+
+    rows.push({
+      key: `group-${group.label}`,
+      groupLabel: group.label,
+      type: "group",
+    });
+
+    groupOptions.forEach((option) => {
+      rows.push({
+        key: option.value,
+        option,
+        optionIndex: filteredOptionIndexes.get(option.value) ?? 0,
+        type: "option",
+      });
+    });
+  });
+
+  return rows;
 };

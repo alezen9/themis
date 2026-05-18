@@ -1,6 +1,6 @@
 import { Section, SectionTitle } from "./shared";
 import { useCallback } from "react";
-import { shapeOptions } from "./options";
+import { getDefaultSteelGradeId, shapeOptions } from "./options";
 import { InputRadio } from "@components/inputs/InputRadio";
 import {
   defaultValues,
@@ -25,6 +25,7 @@ export const FormShape = () => {
           shape: "I",
           section_id: defaultISection.id,
           fabrication_type: "rolled",
+          steel_grade_id: getDefaultSteelGradeId("I", "rolled"),
           i_geometry: defaultValues.i_geometry,
           rhs_geometry: defaultValues.rhs_geometry,
           chs_geometry: defaultValues.chs_geometry,
@@ -36,6 +37,7 @@ export const FormShape = () => {
           shape: "RHS",
           section_id: defaultRHSSection.id,
           fabrication_type: "cold-formed",
+          steel_grade_id: getDefaultSteelGradeId("RHS", "cold-formed"),
           i_geometry: defaultValues.i_geometry,
           rhs_geometry: defaultValues.rhs_geometry,
           chs_geometry: defaultValues.chs_geometry,
@@ -47,6 +49,7 @@ export const FormShape = () => {
           shape: "CHS",
           section_id: defaultCHSSection.id,
           fabrication_type: "cold-formed",
+          steel_grade_id: getDefaultSteelGradeId("CHS", "cold-formed"),
           i_geometry: defaultValues.i_geometry,
           rhs_geometry: defaultValues.rhs_geometry,
           chs_geometry: defaultValues.chs_geometry,

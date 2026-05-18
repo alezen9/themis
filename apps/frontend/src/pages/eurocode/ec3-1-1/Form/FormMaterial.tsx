@@ -10,14 +10,17 @@ import {
 } from "./shared";
 import { HorizontalInput } from "@components/inputs/shared";
 import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
-import { steelGradeOptions } from "./options";
+import { getSteelGradeOptions } from "./options";
 import { steelGradesMap } from "../data/steelGrades";
 import { Latex } from "@components/Latex";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
 import { useEc311FormContext } from "./useEc311FormContext";
 
 export const FormMaterial = () => {
-  const { registerSelect } = useEc311FormContext();
+  const { registerSelect, watch } = useEc311FormContext();
+  const shape = watch("shape");
+  const fabricationType = watch("fabrication_type");
+
   return (
     <Section>
       <SectionTitle>Material</SectionTitle>
@@ -27,7 +30,7 @@ export const FormMaterial = () => {
       >
         <InputAutocomplete
           {...registerSelect?.("steel_grade_id")}
-          options={steelGradeOptions}
+          options={getSteelGradeOptions(shape, fabricationType)}
         />
       </HorizontalInput>
       <AdditionalInfoRow />
