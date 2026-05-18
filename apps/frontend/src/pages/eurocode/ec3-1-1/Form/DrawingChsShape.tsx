@@ -19,6 +19,26 @@ export const DrawingChsShape = () => {
   const { getValues, subscribe } = useEc311FormContext();
 
   useEffect(() => {
+    const unsubscribe = subscribe({
+      name: ["chs_geometry", "section_id"],
+      formState: { values: true },
+      callback: ({ values }) => {
+        if (!scene.current) return;
+        const result = chsGeometrySchema.safeParse(values.chs_geometry);
+        const hasSection = !!values.section_id;
+        const hasError = !hasSection || !result.success;
+        ref.current?.toggleAttribute("data-drawing-error", hasError);
+        if (!result.success) return;
+        Object.assign(scene.current.params, { ...result.data });
+      },
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [subscribe]);
+
+  useEffect(() => {
     if (!ref.current) return;
 
     scene.current = new Pluton2D(ref.current, {
@@ -103,24 +123,6 @@ export const DrawingChsShape = () => {
       scene.current?.dispose();
     };
   }, [getValues]);
-
-  useEffect(() => {
-    const unsubscribe = subscribe({
-      name: "chs_geometry",
-      formState: { values: true },
-      callback: ({ values }) => {
-        if (!scene.current) return;
-        const result = chsGeometrySchema.safeParse(values.chs_geometry);
-        ref.current?.toggleAttribute("data-drawing-error", !result.success);
-        if (!result.success) return;
-        Object.assign(scene.current.params, { ...result.data });
-      },
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [subscribe]);
 
   return <svg ref={ref} className="w-full aspect-square" />;
 };

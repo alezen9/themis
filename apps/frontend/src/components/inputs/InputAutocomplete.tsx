@@ -42,7 +42,7 @@ export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
 
     const onValueChange = useCallback<NonNullable<OnValueChange>>(
       (option) => {
-        const changeEvent = { target: { name, value: option?.value } };
+        const changeEvent = { target: { name, value: option?.value ?? "" } };
         onChange?.(changeEvent as ChangeEvent<HTMLInputElement>);
       },
       [onChange, name],
@@ -66,27 +66,46 @@ export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
       >
         <Combobox.InputGroup
           className={twMerge(
-            "flex max-w-100 w-full grow gap-1 items-center h-9",
+            "group/input relative flex max-w-100 w-full grow gap-1 items-center h-9",
             "has-[data-disabled]:opacity-30 has-[data-disabled]:pointer-events-none",
           )}
         >
-          <Combobox.Input
-            data-testid={name ? `input-${name}` : undefined}
-            onBlur={onBlur}
-            placeholder={placeholder}
-            className={twMerge(
-              "flex h-full w-full min-w-0 flex-1 items-center text-center rounded-l-sm",
-              "bg-(--bg-color)",
-              "text-gray-600",
-              "px-3 py-2",
-              "font-light leading-0",
-              "data-placeholder:text-gray-400",
-              "focus:outline-none",
-              "transition-colors",
-              "text-sm",
-              className,
+          <Combobox.Value>
+            {(option: Option | null) => (
+              <>
+                {option?.item && (
+                  <span
+                    className={twMerge(
+                      "pointer-events-none absolute inset-y-0 left-0 right-16",
+                      "flex min-w-0 items-center justify-center overflow-hidden rounded-l-sm",
+                      "bg-(--bg-color) px-3 py-2 text-sm font-light text-gray-600",
+                      "group-focus-within/input:hidden",
+                    )}
+                  >
+                    {option.item}
+                  </span>
+                )}
+                <Combobox.Input
+                  data-testid={name ? `input-${name}` : undefined}
+                  onBlur={onBlur}
+                  placeholder={placeholder}
+                  className={twMerge(
+                    "flex h-full w-full min-w-0 flex-1 items-center text-center rounded-l-sm",
+                    "bg-(--bg-color)",
+                    "text-gray-600",
+                    "px-3 py-2",
+                    "font-light leading-0",
+                    "data-placeholder:text-gray-400",
+                    "focus:outline-none",
+                    "transition-colors",
+                    "text-sm",
+                    className,
+                    option?.item && "text-transparent focus:text-gray-600",
+                  )}
+                />
+              </>
             )}
-          />
+          </Combobox.Value>
           <Combobox.Trigger
             data-testid={name ? `input-${name}-trigger` : undefined}
             className={twMerge(

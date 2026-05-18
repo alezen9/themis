@@ -19,12 +19,14 @@ export const DrawingIShape = () => {
 
   useEffect(() => {
     const unsubscribe = subscribe({
-      name: "i_geometry",
+      name: ["i_geometry", "section_id"],
       formState: { values: true },
       callback: ({ values }) => {
         if (!scene.current) return;
         const result = iGeometrySchema.safeParse(values.i_geometry);
-        ref.current?.toggleAttribute("data-drawing-error", !result.success);
+        const hasSection = !!values.section_id;
+        const hasError = !hasSection || !result.success;
+        ref.current?.toggleAttribute("data-drawing-error", hasError);
         if (!result.success) return;
         Object.assign(scene.current.params, { ...result.data });
       },

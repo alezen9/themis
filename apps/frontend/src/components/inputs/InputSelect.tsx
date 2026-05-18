@@ -13,7 +13,7 @@ import { Option } from "./shared";
 type Props = ComponentPropsWithoutRef<"input"> & { options: Option[] };
 
 type OnValueChange = ComponentProps<
-  typeof Select.Root<Option["value"]>
+  typeof Select.Root<Option>
 >["onValueChange"];
 type OnBlur = ComponentProps<typeof Select.Trigger>["onBlur"];
 
@@ -33,18 +33,18 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
   } = props;
 
   const onValueChange = useCallback<NonNullable<OnValueChange>>(
-    (value) => {
-      const changeEvent = { target: { name, value } };
+    (option) => {
+      const changeEvent = { target: { name, value: option?.value ?? "" } };
       onChange?.(changeEvent as ChangeEvent<HTMLInputElement>);
     },
     [onChange, name],
   );
 
   return (
-    <Select.Root<Option["value"]>
+    <Select.Root<Option>
       items={options}
-      defaultValue={defaultValue as Option["value"]}
-      value={value as Option["value"]}
+      defaultValue={options.find((option) => option.value === defaultValue)}
+      value={options.find((option) => option.value === value)}
       required={required}
       disabled={disabled}
       readOnly={readOnly}
@@ -77,7 +77,11 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
             "text-sm",
             className,
           )}
-        />
+        >
+          {(option: Option | null) =>
+            option ? (option.item ?? option.label) : placeholder
+          }
+        </Select.Value>
         <Select.Icon
           className={twMerge(
             "h-full w-15 rounded-r-sm flex items-center justify-center",
@@ -107,7 +111,7 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
               {options.map((option) => (
                 <Select.Item
                   key={option.value}
-                  value={option.value}
+                  value={option}
                   data-testid={`option-${option.value}`}
                   className={twMerge(
                     "cursor-pointer rounded-sm border border-transparent",

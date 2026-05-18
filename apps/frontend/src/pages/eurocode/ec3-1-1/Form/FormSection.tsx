@@ -62,17 +62,22 @@ export const FormSection = () => {
       const { name, value } = e.target;
       const values = getValues();
       const shape = values.shape;
+      const isEmptySectionId = value === "";
+      const isCustomSectionId = value === customSectionId;
+      const shouldUpdateGeometry = !isEmptySectionId && !isCustomSectionId;
+
       const i_geometry = toIGeometry(flangedSectionsMap.get(value));
       const rhs_geometry = toRhsGeometry(hollowSectionsMap.get(value));
       const chs_geometry = toChsGeometry(circularSectionsMap.get(value));
-      const isCustomSection = value === customSectionId;
       reset({
         ...values,
         ...{
           [name]: value,
-          ...(!isCustomSection && shape === "I" && { i_geometry }),
-          ...(!isCustomSection && shape === "RHS" && { rhs_geometry }),
-          ...(!isCustomSection && shape === "CHS" && { chs_geometry }),
+          ...(shouldUpdateGeometry && {
+            ...(shape === "I" && { i_geometry }),
+            ...(shape === "RHS" && { rhs_geometry }),
+            ...(shape === "CHS" && { chs_geometry }),
+          }),
         },
       });
       await trigger();
