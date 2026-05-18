@@ -12,7 +12,7 @@ import {
 import { LatexLabel, Section, SectionTitle, TextLabel } from "./shared";
 import { useEc311FormContext } from "./useEc311FormContext";
 
-export const FormStabilityChecks = () => {
+export const FormLateralTorsionalBuckling = () => {
   const { registerBoolean, registerNumber, registerSelect, watch } =
     useEc311FormContext();
   const includeTorsionalModes = watch("include_torsional_modes");
@@ -48,64 +48,66 @@ export const FormStabilityChecks = () => {
         </div>
 
         <AccordionContent className="px-0 text-base">
-          <HorizontalInput name="k_T" label={<LatexLabel tex="k_T" />}>
-            <InputNumber {...registerNumber?.("k_T")} />
-          </HorizontalInput>
-
-          <SpacingDivider />
-
-          <HorizontalInput name="k_LT" label={<LatexLabel tex="k_{LT}" />}>
-            <InputNumber {...registerNumber?.("k_LT")} />
-          </HorizontalInput>
-
-          <HorizontalInput
-            name="M_y_Ed_shape_LT"
-            label={
-              <LatexLabel
-                tex="M_{y} \; shape \; (LT)"
-                className="text-[1.25rem]"
-              />
-            }
-          >
-            <InputSelect
-              {...registerSelect?.("M_y_Ed_shape_LT", {
-                deps: ["psi_y_LT", "support_condition_LT", "load_LT"],
-              })}
-              options={momentShapeOptions}
-            />
-          </HorizontalInput>
-
-          {showPsi && (
-            <HorizontalInput
-              name="psi_y_LT"
-              label={<LatexLabel tex="\psi_{y,LT}" />}
-            >
-              <InputNumber {...registerNumber?.("psi_y_LT")} />
+          <div className="flex flex-col gap-2">
+            <HorizontalInput name="k_T" label={<LatexLabel tex="k_T" />}>
+              <InputNumber {...registerNumber?.("k_T")} />
             </HorizontalInput>
-          )}
 
-          {showSupportAndLoad && (
-            <>
-              <HorizontalInput
-                name="support_condition_LT"
-                label={<TextLabel>LT support</TextLabel>}
-              >
-                <InputSelect
-                  {...registerSelect?.("support_condition_LT")}
-                  options={supportConditionOptions}
+            <SpacingDivider />
+
+            <HorizontalInput name="k_LT" label={<LatexLabel tex="k_{LT}" />}>
+              <InputNumber {...registerNumber?.("k_LT")} />
+            </HorizontalInput>
+
+            <HorizontalInput
+              name="M_y_Ed_shape_LT"
+              label={
+                <LatexLabel
+                  tex="M_{y} \; shape \; (LT)"
+                  className="text-[1.25rem]"
                 />
-              </HorizontalInput>
+              }
+            >
+              <InputSelect
+                {...registerSelect?.("M_y_Ed_shape_LT", {
+                  deps: ["psi_y_LT", "support_condition_LT", "load_LT"],
+                })}
+                options={momentShapeOptions}
+              />
+            </HorizontalInput>
+
+            {showPsi && (
               <HorizontalInput
-                name="load_LT"
-                label={<TextLabel>Load application</TextLabel>}
+                name="psi_y_LT"
+                label={<LatexLabel tex="\psi_{y,LT}" />}
               >
-                <InputSelect
-                  {...registerSelect?.("load_LT")}
-                  options={loadApplicationLTOptions}
-                />
+                <InputNumber {...registerNumber?.("psi_y_LT")} />
               </HorizontalInput>
-            </>
-          )}
+            )}
+
+            {showSupportAndLoad && (
+              <>
+                <HorizontalInput
+                  name="support_condition_LT"
+                  label={<TextLabel>LT support</TextLabel>}
+                >
+                  <InputSelect
+                    {...registerSelect?.("support_condition_LT")}
+                    options={supportConditionOptions}
+                  />
+                </HorizontalInput>
+                <HorizontalInput
+                  name="load_LT"
+                  label={<TextLabel>Load application</TextLabel>}
+                >
+                  <InputSelect
+                    {...registerSelect?.("load_LT")}
+                    options={loadApplicationLTOptions}
+                  />
+                </HorizontalInput>
+              </>
+            )}
+          </div>
         </AccordionContent>
       </Accordion>
     </Section>

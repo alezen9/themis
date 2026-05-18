@@ -7,7 +7,7 @@ import { FormActions } from "./FormActions";
 import { FormClassification } from "./FormClassification";
 import { FormAnnex } from "./FormAnnex";
 import { FormFlexuralBuckling } from "./FormFlexuralBuckling";
-import { FormStabilityChecks } from "./FormStabilityChecks";
+import { FormLateralTorsionalBuckling } from "./FormLateralTorsionalBuckling";
 
 export const Form = () => {
   return (
@@ -33,7 +33,7 @@ export const Form = () => {
       <FormFlexuralBuckling />
       <LineDivider />
 
-      <FormStabilityChecks />
+      <FormLateralTorsionalBuckling />
       <LineDivider />
 
       <FormAnnex />
