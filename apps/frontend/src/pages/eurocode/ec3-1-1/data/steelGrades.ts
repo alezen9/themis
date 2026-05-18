@@ -12,7 +12,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S235",
     standard: "EN10025-2",
-    standardDescription: "Hot rolled products - Non-alloy structural steels",
+    standardDescription: "Hot rolled non alloy structural steels",
     fy_MPa: 235,
     fy_above_40_MPa: 215,
     fu_MPa: 360,
@@ -21,7 +21,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S275",
     standard: "EN10025-2",
-    standardDescription: "Hot rolled products - Non-alloy structural steels",
+    standardDescription: "Hot rolled non alloy structural steels",
     fy_MPa: 275,
     fy_above_40_MPa: 255,
     fu_MPa: 430,
@@ -30,7 +30,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S355",
     standard: "EN10025-2",
-    standardDescription: "Hot rolled products - Non-alloy structural steels",
+    standardDescription: "Hot rolled non alloy structural steels",
     fy_MPa: 355,
     fy_above_40_MPa: 335,
     fu_MPa: 490,
@@ -39,8 +39,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S275 N / NL",
     standard: "EN10025-3",
-    standardDescription:
-      "Hot rolled products - Normalized/normalized rolled weldable fine grain structural steels",
+    standardDescription: "Hot rolled normalized fine grain steels",
     fy_MPa: 275,
     fy_above_40_MPa: 255,
     fu_MPa: 390,
@@ -49,8 +48,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S355 N / NL",
     standard: "EN10025-3",
-    standardDescription:
-      "Hot rolled products - Normalized/normalized rolled weldable fine grain structural steels",
+    standardDescription: "Hot rolled normalized fine grain steels",
     fy_MPa: 355,
     fy_above_40_MPa: 335,
     fu_MPa: 490,
@@ -59,8 +57,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S420 N / NL",
     standard: "EN10025-3",
-    standardDescription:
-      "Hot rolled products - Normalized/normalized rolled weldable fine grain structural steels",
+    standardDescription: "Hot rolled normalized fine grain steels",
     fy_MPa: 420,
     fy_above_40_MPa: 390,
     fu_MPa: 520,
@@ -69,8 +66,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S460 N / NL",
     standard: "EN10025-3",
-    standardDescription:
-      "Hot rolled products - Normalized/normalized rolled weldable fine grain structural steels",
+    standardDescription: "Hot rolled normalized fine grain steels",
     fy_MPa: 460,
     fy_above_40_MPa: 430,
     fu_MPa: 540,
@@ -80,8 +76,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S275 M / ML",
     standard: "EN10025-4",
-    standardDescription:
-      "Hot rolled products - Thermomechanical rolled weldable fine grain structural steels",
+    standardDescription: "Hot rolled thermomechanical fine grain steels",
     fy_MPa: 275,
     fy_above_40_MPa: 255,
     fu_MPa: 370,
@@ -90,8 +85,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S355 M / ML",
     standard: "EN10025-4",
-    standardDescription:
-      "Hot rolled products - Thermomechanical rolled weldable fine grain structural steels",
+    standardDescription: "Hot rolled thermomechanical fine grain steels",
     fy_MPa: 355,
     fy_above_40_MPa: 335,
     fu_MPa: 470,
@@ -100,8 +94,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S420 M / ML",
     standard: "EN10025-4",
-    standardDescription:
-      "Hot rolled products - Thermomechanical rolled weldable fine grain structural steels",
+    standardDescription: "Hot rolled thermomechanical fine grain steels",
     fy_MPa: 420,
     fy_above_40_MPa: 390,
     fu_MPa: 520,
@@ -110,8 +103,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S460 M / ML",
     standard: "EN10025-4",
-    standardDescription:
-      "Hot rolled products - Thermomechanical rolled weldable fine grain structural steels",
+    standardDescription: "Hot rolled thermomechanical fine grain steels",
     fy_MPa: 460,
     fy_above_40_MPa: 430,
     fu_MPa: 540,
@@ -121,8 +113,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S235W",
     standard: "EN10025-5",
-    standardDescription:
-      "Hot rolled products - Structural steels with improved atmospheric corrosion resistance",
+    standardDescription: "Hot rolled weather resistant structural steels",
     fy_MPa: 235,
     fy_above_40_MPa: 215,
     fu_MPa: 360,
@@ -131,8 +122,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S355W",
     standard: "EN10025-5",
-    standardDescription:
-      "Hot rolled products - Structural steels with improved atmospheric corrosion resistance",
+    standardDescription: "Hot rolled weather resistant structural steels",
     fy_MPa: 355,
     fy_above_40_MPa: 335,
     fu_MPa: 490,
@@ -143,7 +133,7 @@ export const steelGrades: SteelGrade[] = [
     id: "S460 Q / QL / QL1",
     standard: "EN10025-6",
     standardDescription:
-      "Hot rolled products - High yield strength structural steels in the quenched and tempered condition",
+      "Hot rolled quenched and tempered high strength steels",
     fy_MPa: 460,
     fy_above_40_MPa: 440,
     fu_MPa: 570,
@@ -153,8 +143,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S235H",
     standard: "EN10210-1",
-    standardDescription:
-      "Hot finished structural hollow sections - Non-alloy and fine grain steels",
+    standardDescription: "Hot finished hollow sections in structural steels",
     fy_MPa: 235,
     fy_above_40_MPa: 215,
     fu_MPa: 360,
@@ -163,8 +152,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S275H",
     standard: "EN10210-1",
-    standardDescription:
-      "Hot finished structural hollow sections - Non-alloy and fine grain steels",
+    standardDescription: "Hot finished hollow sections in structural steels",
     fy_MPa: 275,
     fy_above_40_MPa: 255,
     fu_MPa: 430,
@@ -173,8 +161,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S355H",
     standard: "EN10210-1",
-    standardDescription:
-      "Hot finished structural hollow sections - Non-alloy and fine grain steels",
+    standardDescription: "Hot finished hollow sections in structural steels",
     fy_MPa: 355,
     fy_above_40_MPa: 335,
     fu_MPa: 510,
@@ -183,8 +170,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S275 NH / NLH",
     standard: "EN10210-1",
-    standardDescription:
-      "Hot finished structural hollow sections - Non-alloy and fine grain steels",
+    standardDescription: "Hot finished hollow sections in structural steels",
     fy_MPa: 275,
     fy_above_40_MPa: 255,
     fu_MPa: 390,
@@ -193,8 +179,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S355 NH / NLH",
     standard: "EN10210-1",
-    standardDescription:
-      "Hot finished structural hollow sections - Non-alloy and fine grain steels",
+    standardDescription: "Hot finished hollow sections in structural steels",
     fy_MPa: 355,
     fy_above_40_MPa: 335,
     fu_MPa: 490,
@@ -203,8 +188,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S420 NH / NLH",
     standard: "EN10210-1",
-    standardDescription:
-      "Hot finished structural hollow sections - Non-alloy and fine grain steels",
+    standardDescription: "Hot finished hollow sections in structural steels",
     fy_MPa: 420,
     fy_above_40_MPa: 390,
     fu_MPa: 540,
@@ -213,8 +197,7 @@ export const steelGrades: SteelGrade[] = [
   {
     id: "S460 NH / NLH",
     standard: "EN10210-1",
-    standardDescription:
-      "Hot finished structural hollow sections - Non-alloy and fine grain steels",
+    standardDescription: "Hot finished hollow sections in structural steels",
     fy_MPa: 460,
     fy_above_40_MPa: 430,
     fu_MPa: 560,
@@ -225,7 +208,7 @@ export const steelGrades: SteelGrade[] = [
     id: "S235H",
     standard: "EN10219-1",
     standardDescription:
-      "Cold formed welded structural hollow sections - Non-alloy and fine grain steels",
+      "Cold formed welded hollow sections in structural steels",
     fy_MPa: 235,
     fu_MPa: 360,
   },
@@ -233,7 +216,7 @@ export const steelGrades: SteelGrade[] = [
     id: "S275H",
     standard: "EN10219-1",
     standardDescription:
-      "Cold formed welded structural hollow sections - Non-alloy and fine grain steels",
+      "Cold formed welded hollow sections in structural steels",
     fy_MPa: 275,
     fu_MPa: 430,
   },
@@ -241,7 +224,7 @@ export const steelGrades: SteelGrade[] = [
     id: "S355H",
     standard: "EN10219-1",
     standardDescription:
-      "Cold formed welded structural hollow sections - Non-alloy and fine grain steels",
+      "Cold formed welded hollow sections in structural steels",
     fy_MPa: 355,
     fu_MPa: 510,
   },
@@ -249,7 +232,7 @@ export const steelGrades: SteelGrade[] = [
     id: "S275 NH / NLH",
     standard: "EN10219-1",
     standardDescription:
-      "Cold formed welded structural hollow sections - Non-alloy and fine grain steels",
+      "Cold formed welded hollow sections in structural steels",
     fy_MPa: 275,
     fu_MPa: 370,
   },
@@ -257,7 +240,7 @@ export const steelGrades: SteelGrade[] = [
     id: "S355 NH / NLH / MH / MLH",
     standard: "EN10219-1",
     standardDescription:
-      "Cold formed welded structural hollow sections - Non-alloy and fine grain steels",
+      "Cold formed welded hollow sections in structural steels",
     fy_MPa: 355,
     fu_MPa: 470,
   },
@@ -265,7 +248,7 @@ export const steelGrades: SteelGrade[] = [
     id: "S460 NH / NLH",
     standard: "EN10219-1",
     standardDescription:
-      "Cold formed welded structural hollow sections - Non-alloy and fine grain steels",
+      "Cold formed welded hollow sections in structural steels",
     fy_MPa: 460,
     fu_MPa: 540,
   },
@@ -273,7 +256,7 @@ export const steelGrades: SteelGrade[] = [
     id: "S275 MH / MLH",
     standard: "EN10219-1",
     standardDescription:
-      "Cold formed welded structural hollow sections - Non-alloy and fine grain steels",
+      "Cold formed welded hollow sections in structural steels",
     fy_MPa: 275,
     fu_MPa: 360,
   },
@@ -281,7 +264,7 @@ export const steelGrades: SteelGrade[] = [
     id: "S420 MH / MLH",
     standard: "EN10219-1",
     standardDescription:
-      "Cold formed welded structural hollow sections - Non-alloy and fine grain steels",
+      "Cold formed welded hollow sections in structural steels",
     fy_MPa: 420,
     fu_MPa: 500,
   },
@@ -289,7 +272,7 @@ export const steelGrades: SteelGrade[] = [
     id: "S460 MH / MLH",
     standard: "EN10219-1",
     standardDescription:
-      "Cold formed welded structural hollow sections - Non-alloy and fine grain steels",
+      "Cold formed welded hollow sections in structural steels",
     fy_MPa: 460,
     fu_MPa: 530,
   },

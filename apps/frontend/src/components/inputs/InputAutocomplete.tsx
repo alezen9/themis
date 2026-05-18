@@ -152,13 +152,12 @@ InputAutocomplete.displayName = "InputAutocomplete";
 
 const VirtualizedPopup = (props: { options: Option[] | OptionGroup[] }) => {
   const { options } = props;
-  const popupRef = useRef<HTMLDivElement | null>(null);
-
   const filteredOptions = Combobox.useFilteredItems<Option>();
   const popupRows = useMemo(
     () => getVirtualRows(options, filteredOptions),
     [filteredOptions, options],
   );
+  const popupRef = useRef<HTMLDivElement | null>(null);
 
   // TanStack Virtual is currently flagged by React Compiler as an incompatible library.
   // This component is intentionally isolated, and the virtualizer instance is used locally only.
@@ -170,6 +169,7 @@ const VirtualizedPopup = (props: { options: Option[] | OptionGroup[] }) => {
     gap: 4,
     overscan: 3,
   });
+  const virtualItems = rowVirtualizer.getVirtualItems();
 
   return (
     <Combobox.Popup
@@ -188,10 +188,10 @@ const VirtualizedPopup = (props: { options: Option[] | OptionGroup[] }) => {
       )}
       {!!filteredOptions.length && (
         <Combobox.List
-          className="relative w-full flex flex-col gap-1"
+          className="relative w-full"
           style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
         >
-          {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+          {virtualItems.map((virtualItem) => {
             const row = popupRows[virtualItem.index];
             if (!row) return null;
 
@@ -199,29 +199,32 @@ const VirtualizedPopup = (props: { options: Option[] | OptionGroup[] }) => {
               return (
                 <div
                   key={row.key}
+                  data-index={virtualItem.index}
                   ref={rowVirtualizer.measureElement}
                   style={{ transform: `translateY(${virtualItem.start}px)` }}
                   className={twMerge(
                     "absolute top-0 left-0 w-full",
-                    "px-3 pt-2 pb-1 text-center text-[0.65rem]",
-                    "font-semibold uppercase tracking-widest text-gray-500",
+                    "px-3 py-2 text-center text-xs",
+                    "font-semibold uppercase tracking-wide text-sand-900 opacity-50",
+                    "before:absolute before:top-1/2 before:left-0 before:z-1",
+                    "before:h-px before:w-full before:bg-sand-700/25 before:content-['']",
                   )}
                 >
-                  {row.groupLabel}
+                  <span className="relative z-2 bg-(--bg-input-default-color) px-4">
+                    {row.groupLabel}
+                  </span>
                 </div>
               );
             }
 
-            const option = row.option;
-
             return (
               <Combobox.Item
-                key={option.value}
+                key={row.option.value}
                 index={row.optionIndex}
-                data-index={row.optionIndex}
-                data-testid={`option-${option.value}`}
+                data-index={virtualItem.index}
+                data-testid={`option-${row.option.value}`}
                 ref={rowVirtualizer.measureElement}
-                value={option}
+                value={row.option}
                 style={{ transform: `translateY(${virtualItem.start}px)` }}
                 className={twMerge(
                   "absolute top-0 left-0 w-full",
@@ -234,7 +237,7 @@ const VirtualizedPopup = (props: { options: Option[] | OptionGroup[] }) => {
                   "text-sm",
                 )}
               >
-                {option.item ?? option.label}
+                {row.option.item ?? row.option.label}
               </Combobox.Item>
             );
           })}

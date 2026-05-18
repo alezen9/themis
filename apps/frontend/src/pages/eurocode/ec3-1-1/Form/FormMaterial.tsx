@@ -13,7 +13,12 @@ import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
 import { getSteelGradeOptions } from "./options";
 import { steelGradesMap } from "../data/steelGrades";
 import { Latex } from "@components/Latex";
-import { TableBody, TableHeader, TableRow } from "@components/Table";
+import {
+  TableBody,
+  TableDataCell,
+  TableHeader,
+  TableRow,
+} from "@components/Table";
 import { useEc311FormContext } from "./useEc311FormContext";
 
 export const FormMaterial = () => {
@@ -58,6 +63,11 @@ const AdditionalInfoRow = () => {
             <InfoTableValueCell align="left">
               {grade?.standard ?? "-"}
             </InfoTableValueCell>
+          </TableRow>
+          <TableRow>
+            <TableDataCell align="left">
+              {grade?.standardDescription ?? "-"}
+            </TableDataCell>
           </TableRow>
         </TableBody>
       </InfoTable>
