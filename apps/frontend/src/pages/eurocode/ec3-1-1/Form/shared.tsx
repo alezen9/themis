@@ -14,7 +14,12 @@ export const TextLabel = (props: ComponentProps<"span">) => (
 
 export const Section = (props: ComponentPropsWithRef<"section">) => {
   return (
-    <section className={twMerge("w-full flex flex-col gap-2")} {...props} />
+    <section
+      className={twMerge(
+        "w-full flex flex-col gap-2 shadow-envy-100/25 shadow-lg rounded-sm p-4",
+      )}
+      {...props}
+    />
   );
 };
 
