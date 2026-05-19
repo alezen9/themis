@@ -68,43 +68,52 @@ type ObserverProps = {
 
 const Observer = (props: ObserverProps) => {
   const { children, onValuesChange, onValidValuesChange } = props;
-  const { subscribe } = useEc311FormContext();
+  const { subscribe, getValues } = useEc311FormContext();
   const setGeometry = useEc311DerivedStore((state) => state.setGeometry);
   const setClassification = useEc311DerivedStore(
     (state) => state.setClassification,
   );
 
-  const onChange = useMemo(
-    () =>
-      debounce<Parameters<typeof subscribe>[0]["callback"]>(({ values }) => {
-        onValuesChange?.(values);
+  const runPipeline = useMemo(
+    () => (values: Ec311ObservedValues) => {
+      onValuesChange?.(values);
 
-        const geometryResult = gateDerivedGeometry(values);
-        if (!geometryResult.success) return;
+      const geometryResult = gateDerivedGeometry(values);
+      if (!geometryResult.success) return;
 
-        const geometry = computeGeometryProperties(values);
-        setGeometry(geometry);
+      const geometry = computeGeometryProperties(values);
+      setGeometry(geometry);
 
-        const classificationResult = gateClassification(values);
-        if (!classificationResult.success) return;
+      const classificationResult = gateClassification(values);
+      if (!classificationResult.success) return;
 
-        const classification = classifySection(values);
-        setClassification(classification);
+      const classification = classifySection(values);
+      setClassification(classification);
 
-        const verifyResult = gateVerify(values);
-        if (!verifyResult.success) return;
+      const verifyResult = gateVerify(values);
+      if (!verifyResult.success) return;
 
-        onValidValuesChange?.(verifyResult.data);
-        console.log({
-          values: verifyResult.data,
-          derivedGeoemtry: geometryResult.data,
-          classification: classificationResult.data,
-        });
-      }, 50),
+      onValidValuesChange?.(verifyResult.data);
+      console.log({
+        values: verifyResult.data,
+        derivedGeometry: geometryResult.data,
+        classification: classificationResult.data,
+      });
+    },
     [onValuesChange, onValidValuesChange, setGeometry, setClassification],
   );
 
+  const onChange = useMemo(
+    () =>
+      debounce<Parameters<typeof subscribe>[0]["callback"]>(({ values }) => {
+        runPipeline(values);
+      }, 50),
+    [runPipeline],
+  );
+
   useEffect(() => {
+    runPipeline(getValues());
+
     const unsubscribe = subscribe({
       formState: { values: true },
       callback: onChange,
@@ -114,7 +123,7 @@ const Observer = (props: ObserverProps) => {
       unsubscribe();
       onChange.cancel();
     };
-  }, [subscribe, onChange]);
+  }, [subscribe, getValues, onChange, runPipeline]);
 
   return children;
 };

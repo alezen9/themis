@@ -7,12 +7,11 @@ import { InputSelect } from "@components/inputs/InputSelect";
 import { HorizontalInput } from "@components/inputs/shared";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
 import { orderBy, toPairs } from "lodash-es";
-import { useEffect, useState } from "react";
 
 import { numberFormatter } from "../../../../utils";
-import { classifySection } from "../domain/classification/classifySection";
 import type { Part } from "../domain/classification/types";
 import { formatMetadata } from "../domain/classification/utils";
+import { useEc311DerivedStore } from "../useEc311DerivedStore";
 import { sectionClassOptions } from "./options";
 import {
   InfoTable,
@@ -24,20 +23,7 @@ import {
   SectionTitle,
   TextLabel,
 } from "./shared";
-import { actionsSchema } from "./schema/actionsSchema";
-import {
-  chsGeometrySchema,
-  iGeometrySchema,
-  rhsGeometrySchema,
-} from "./schema/geometrySchema";
-import { materialSchema } from "./schema/materialSchema";
 import { useEc311FormContext } from "./useEc311FormContext";
-
-const classificationActionsSchema = actionsSchema.pick({
-  N_Ed_kN: true,
-  M_y_Ed_kNm: true,
-  M_z_Ed_kNm: true,
-});
 
 export const FormClassification = () => {
   const { registerSelect } = useEc311FormContext();
@@ -60,57 +46,12 @@ export const FormClassification = () => {
 };
 
 const ClassificationInfo = () => {
-  const { subscribe, watch, getValues } = useEc311FormContext();
-  const [[computedClass, parts], setComputedClass] = useState(() =>
-    classifySection(getValues()),
+  const { watch } = useEc311FormContext();
+  const [computedClass, parts] = useEc311DerivedStore(
+    (state) => state.classification,
   );
   const providedClass = watch("section_class");
   const isAutoMode = providedClass === "auto";
-
-  useEffect(() => {
-    const unsubscribe = subscribe({
-      name: [
-        "shape",
-        "section_id",
-        "steel_grade_id",
-        "section_class",
-        "i_geometry",
-        "rhs_geometry",
-        "chs_geometry",
-        "N_Ed_kN",
-        "M_y_Ed_kNm",
-        "M_z_Ed_kNm",
-      ],
-      formState: { values: true },
-      callback: ({ values }) => {
-        const materialResult = materialSchema.safeParse({
-          steel_grade_id: values.steel_grade_id,
-        });
-        const actionsResult = classificationActionsSchema.safeParse({
-          N_Ed_kN: values.N_Ed_kN,
-          M_y_Ed_kNm: values.M_y_Ed_kNm,
-          M_z_Ed_kNm: values.M_z_Ed_kNm,
-        });
-        const geometryResult =
-          values.shape === "I"
-            ? iGeometrySchema.safeParse(values.i_geometry)
-            : values.shape === "RHS"
-              ? rhsGeometrySchema.safeParse(values.rhs_geometry)
-              : chsGeometrySchema.safeParse(values.chs_geometry);
-        if (
-          !materialResult.success ||
-          !actionsResult.success ||
-          !geometryResult.success
-        )
-          return;
-        setComputedClass(classifySection(values));
-      },
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [subscribe]);
 
   return (
     <div className="flex flex-col gap-3 text-sand-900">

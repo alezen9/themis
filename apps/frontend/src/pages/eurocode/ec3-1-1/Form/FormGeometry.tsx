@@ -11,13 +11,11 @@ import {
   SectionTitle,
 } from "./shared";
 import { InputNumber } from "@components/inputs/InputNumber";
-import { useEffect, useState } from "react";
 import { DrawingIShape } from "./DrawingIShape";
 import { DrawingRhsShape } from "./DrawingRhsShape";
 import { DrawingChsShape } from "./DrawingChsShape";
 import { customSectionId } from "./options";
 import { Latex } from "@components/Latex";
-import { computeGeometryProperties } from "../domain/geometry/computeGeometryProperties";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
 import { useEc311FormContext } from "./useEc311FormContext";
 import {
@@ -25,11 +23,7 @@ import {
   AccordionContent,
   AccordionHeader,
 } from "@components/Accordion";
-import {
-  chsGeometrySchema,
-  iGeometrySchema,
-  rhsGeometrySchema,
-} from "./schema/geometrySchema";
+import { useEc311DerivedStore } from "../useEc311DerivedStore";
 
 const mm2Unit = String.raw`\mathrm{mm}^2`;
 const mm3Unit = String.raw`\mathrm{mm}^3`;
@@ -252,38 +246,9 @@ export const FormGeometry = () => {
 };
 
 const GeometryPropertiesInfo = () => {
-  const { subscribe, getValues } = useEc311FormContext();
-  const [computedProperties, setComputedProperties] = useState(() =>
-    computeGeometryProperties(getValues()),
+  const computedProperties = useEc311DerivedStore(
+    (state) => state.geometry,
   );
-
-  useEffect(() => {
-    const unsubscribe = subscribe({
-      name: [
-        "i_geometry",
-        "rhs_geometry",
-        "chs_geometry",
-        "shape",
-        "section_id",
-      ],
-      formState: { values: true },
-      callback: ({ values }) => {
-        const result =
-          values.shape === "I"
-            ? iGeometrySchema.safeParse(values.i_geometry)
-            : values.shape === "RHS"
-              ? rhsGeometrySchema.safeParse(values.rhs_geometry)
-              : chsGeometrySchema.safeParse(values.chs_geometry);
-        if (!result.success) return;
-        const computed = computeGeometryProperties(values);
-        setComputedProperties(computed);
-      },
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [subscribe]);
 
   return (
     <div className="flex flex-col gap-3 text-sand-900">

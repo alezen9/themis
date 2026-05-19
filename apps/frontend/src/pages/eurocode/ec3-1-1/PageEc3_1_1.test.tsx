@@ -99,6 +99,7 @@ describe("[EC3-1-1] PageEc3_1_1", () => {
     const onValidValuesChange = vi.fn();
 
     render(<PageEc3_1_1 onValidValuesChange={onValidValuesChange} />);
+    onValidValuesChange.mockClear();
 
     const psiY = screen.getByTestId<HTMLInputElement>("input-psi_y");
     const momentYShape = screen.getByTestId("input-M_y_Ed_shape");
