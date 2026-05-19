@@ -1,15 +1,17 @@
 import { Section, SectionTitle } from "./shared";
 import { useCallback } from "react";
-import { getDefaultSteelGradeId, shapeOptions } from "./options";
+import { shapeOptions } from "./options";
 import { InputRadio } from "@components/inputs/InputRadio";
 import {
   defaultValues,
   defaultCHSSection,
   defaultISection,
   defaultRHSSection,
+  getDefaultSteelGrade,
 } from "./defaultValues";
 import { useEc311FormContext } from "./useEc311FormContext";
 import { ChangeHandler } from "react-hook-form";
+import { composeSteelGradeId } from "../data/steelGrades";
 
 export const FormShape = () => {
   const { register, reset, getValues, trigger } = useEc311FormContext();
@@ -25,7 +27,9 @@ export const FormShape = () => {
           shape: "I",
           section_id: defaultISection.id,
           fabrication_type: "rolled",
-          steel_grade_id: getDefaultSteelGradeId("I", "rolled"),
+          steel_grade_id: composeSteelGradeId(
+            getDefaultSteelGrade("I", "rolled"),
+          ),
           i_geometry: defaultValues.i_geometry,
           rhs_geometry: defaultValues.rhs_geometry,
           chs_geometry: defaultValues.chs_geometry,
@@ -37,7 +41,9 @@ export const FormShape = () => {
           shape: "RHS",
           section_id: defaultRHSSection.id,
           fabrication_type: "cold-formed",
-          steel_grade_id: getDefaultSteelGradeId("RHS", "cold-formed"),
+          steel_grade_id: composeSteelGradeId(
+            getDefaultSteelGrade("RHS", "cold-formed"),
+          ),
           i_geometry: defaultValues.i_geometry,
           rhs_geometry: defaultValues.rhs_geometry,
           chs_geometry: defaultValues.chs_geometry,
@@ -49,7 +55,9 @@ export const FormShape = () => {
           shape: "CHS",
           section_id: defaultCHSSection.id,
           fabrication_type: "cold-formed",
-          steel_grade_id: getDefaultSteelGradeId("CHS", "cold-formed"),
+          steel_grade_id: composeSteelGradeId(
+            getDefaultSteelGrade("CHS", "cold-formed"),
+          ),
           i_geometry: defaultValues.i_geometry,
           rhs_geometry: defaultValues.rhs_geometry,
           chs_geometry: defaultValues.chs_geometry,

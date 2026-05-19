@@ -1,6 +1,10 @@
 import { italianAnnex } from "@ndg/ndg-ec3";
 import { flangedSections } from "../data/flangedSections";
-import { composeSteelGradeId, steelGrades } from "../data/steelGrades";
+import {
+  composeSteelGradeId,
+  SteelGrade,
+  steelGrades,
+} from "../data/steelGrades";
 import { Ec3FormValues } from "./schema/schema";
 import { hollowSections } from "../data/hollowSections";
 import { circularSections } from "../data/circularSections";
@@ -15,10 +19,42 @@ export const defaultCHSSection =
   circularSections.find(({ id }) => id === "CHS323.9x6.3") ??
   circularSections[0];
 
-const defaultSteelGrade =
-  steelGrades.find(
-    ({ id, standard }) => id === "S235" && standard === "EN10025-2",
-  ) ?? steelGrades[0];
+const steelGradeGroups = steelGrades.reduce(
+  (acc, grade) => {
+    if (/^EN10025-[2-6]$/.test(grade.standard)) acc.i.push(grade);
+    if (grade.standard === "EN10219-1") acc.rhsAndChs.cold.push(grade);
+    if (grade.standard === "EN10210-1") acc.rhsAndChs.hot.push(grade);
+    return acc;
+  },
+  {
+    i: [] as SteelGrade[],
+    rhsAndChs: { hot: [] as SteelGrade[], cold: [] as SteelGrade[] },
+  },
+);
+
+export const getDefaultSteelGrade = (
+  shape: Ec3FormValues["shape"],
+  fabrication_type: Ec3FormValues["fabrication_type"],
+) => {
+  if (shape === "I") {
+    const firstS235 = steelGradeGroups.i.find(({ id }) =>
+      id.startsWith("S235"),
+    );
+    return firstS235 ?? steelGradeGroups.i[0];
+  }
+  if (fabrication_type === "hot-formed") {
+    const firstS235Hot = steelGradeGroups.rhsAndChs.hot.find(({ id }) =>
+      id.startsWith("S235"),
+    );
+    return firstS235Hot ?? steelGradeGroups.rhsAndChs.hot[0];
+  }
+  const firstS235Cold = steelGradeGroups.rhsAndChs.cold.find(({ id }) =>
+    id.startsWith("S235"),
+  );
+  return firstS235Cold ?? steelGradeGroups.rhsAndChs.cold[0];
+};
+
+const defaultSteelGrade = getDefaultSteelGrade("I", "rolled");
 
 export const defaultValues = {
   // SHAPE

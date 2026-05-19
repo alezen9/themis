@@ -158,19 +158,6 @@ export const getSteelGradeOptions = (
     .filter((group) => group.options.length > 0);
 };
 
-export const getDefaultSteelGradeId = (
-  shape: string,
-  fabricationType: string,
-) => {
-  const options = getSteelGradeOptions(shape, fabricationType).flatMap(
-    (group) => group.options,
-  );
-  return String(
-    (options.find((option) => option.label.startsWith("S235")) ?? options[0])
-      ?.value ?? "",
-  );
-};
-
 export const customSectionId = "custom";
 const customOption: Option = { label: "Custom", value: customSectionId };
 

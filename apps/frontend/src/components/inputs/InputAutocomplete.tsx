@@ -26,9 +26,19 @@ type Props = ComponentPropsWithoutRef<"input"> & {
   options: Option[] | OptionGroup[];
 };
 
+const optionRowHeight = 44;
+const groupRowHeight = 36;
+const rowGap = 4;
+
 type OnValueChange = ComponentProps<
   typeof Combobox.Root<Option>
 >["onValueChange"];
+type IsItemEqualToValue = NonNullable<
+  ComponentProps<typeof Combobox.Root<Option>>["isItemEqualToValue"]
+>;
+
+const isOptionEqualToValue: IsItemEqualToValue = (option, value) =>
+  option.value === value.value;
 
 export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
   (props, ref) => {
@@ -81,6 +91,7 @@ export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
         name={name}
         inputRef={ref}
         onValueChange={onValueChange}
+        isItemEqualToValue={isOptionEqualToValue}
       >
         <Combobox.InputGroup
           className={twMerge(
@@ -165,8 +176,8 @@ const VirtualizedPopup = (props: { options: Option[] | OptionGroup[] }) => {
   const rowVirtualizer = useVirtualizer({
     count: popupRows.length,
     getScrollElement: () => popupRef.current,
-    estimateSize: () => 44,
-    gap: 4,
+    estimateSize: (index) => getRowHeight(popupRows[index]),
+    gap: rowGap,
     overscan: 3,
   });
   const virtualItems = rowVirtualizer.getVirtualItems();
@@ -200,11 +211,14 @@ const VirtualizedPopup = (props: { options: Option[] | OptionGroup[] }) => {
                 <div
                   key={row.key}
                   data-index={virtualItem.index}
-                  ref={rowVirtualizer.measureElement}
-                  style={{ transform: `translateY(${virtualItem.start}px)` }}
+                  style={{
+                    height: `${groupRowHeight}px`,
+                    transform: `translateY(${virtualItem.start}px)`,
+                  }}
                   className={twMerge(
                     "absolute top-0 left-0 w-full",
-                    "px-3 py-2 text-center text-xs",
+                    "px-3 text-center text-xs",
+                    "flex items-center justify-center",
                     "font-semibold uppercase tracking-wide text-sand-900 opacity-50",
                     "before:absolute before:top-1/2 before:left-0 before:z-1",
                     "before:h-px before:w-full before:bg-sand-700/25 before:content-['']",
@@ -294,3 +308,6 @@ const getVirtualRows = (
 
   return rows;
 };
+
+const getRowHeight = (row?: VirtualRow) =>
+  row?.type === "group" ? groupRowHeight : optionRowHeight;

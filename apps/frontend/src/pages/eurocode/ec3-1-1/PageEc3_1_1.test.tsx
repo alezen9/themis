@@ -164,6 +164,77 @@ describe("[EC3-1-1] PageEc3_1_1", () => {
     );
   });
 
+  it("emits valid values with reset steel grade after shape and fabrication changes", async () => {
+    const onValidValuesChange = vi.fn();
+
+    render(<PageEc3_1_1 onValidValuesChange={onValidValuesChange} />);
+
+    fireEvent.click(screen.getByRole("radio", { name: "RHS" }));
+
+    act(() => {
+      vi.advanceTimersByTime(60);
+    });
+    expect(onValidValuesChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        shape: "RHS",
+        fabrication_type: "cold-formed",
+        steel_grade_id: "EN10219-1:S235H",
+      }),
+    );
+
+    fireEvent.click(screen.getByRole("radio", { name: "Hot finished" }));
+
+    act(() => {
+      vi.advanceTimersByTime(60);
+    });
+    expect(onValidValuesChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        shape: "RHS",
+        fabrication_type: "hot-formed",
+        steel_grade_id: "EN10210-1:S235H",
+      }),
+    );
+    fireEvent.click(screen.getByTestId("input-steel_grade_id-trigger"));
+    expect(
+      screen
+        .getByTestId("option-EN10210-1:S235H")
+        .hasAttribute("data-highlighted"),
+    ).toBe(true);
+  });
+
+  it("emits valid values with reset steel grade after returning to I shape", async () => {
+    const onValidValuesChange = vi.fn();
+
+    render(<PageEc3_1_1 onValidValuesChange={onValidValuesChange} />);
+
+    fireEvent.click(screen.getByRole("radio", { name: "RHS" }));
+    fireEvent.click(screen.getByRole("radio", { name: "I" }));
+
+    act(() => {
+      vi.advanceTimersByTime(60);
+    });
+    expect(onValidValuesChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        shape: "I",
+        fabrication_type: "rolled",
+        steel_grade_id: "EN10025-2:S235",
+      }),
+    );
+
+    fireEvent.click(screen.getByRole("radio", { name: "Welded" }));
+
+    act(() => {
+      vi.advanceTimersByTime(60);
+    });
+    expect(onValidValuesChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        shape: "I",
+        fabrication_type: "welded",
+        steel_grade_id: "EN10025-2:S235",
+      }),
+    );
+  });
+
   it("overwrites custom I geometry when selecting a catalog section", async () => {
     const iCatalogSection = flangedSections[0];
     const onValuesChange = vi.fn();

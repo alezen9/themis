@@ -3,7 +3,6 @@ import { Section, SectionTitle, TextLabel } from "./shared";
 import {
   circularSectionOptions,
   flangedSectionOptions,
-  getDefaultSteelGradeId,
   hollowSectionOptions,
   iFabricationTypeOptions,
   rhsChsFabricationTypeOptions,
@@ -17,11 +16,13 @@ import {
   defaultCHSSection,
   defaultISection,
   defaultRHSSection,
+  getDefaultSteelGrade,
 } from "./defaultValues";
 import { useEc311FormContext } from "./useEc311FormContext";
 import { FlangedSection, flangedSectionsMap } from "../data/flangedSections";
 import { HollowSection, hollowSectionsMap } from "../data/hollowSections";
 import { CircularSection, circularSectionsMap } from "../data/circularSections";
+import { composeSteelGradeId } from "../data/steelGrades";
 
 const sectionOptionsMap = {
   I: { options: flangedSectionOptions, defaultValue: defaultISection.id },
@@ -75,9 +76,8 @@ export const FormSection = () => {
         ...{
           [name]: value,
           ...(!isEmptySectionId && {
-            steel_grade_id: getDefaultSteelGradeId(
-              shape,
-              values.fabrication_type,
+            steel_grade_id: composeSteelGradeId(
+              getDefaultSteelGrade(shape, values.fabrication_type),
             ),
           }),
           ...(shouldUpdateGeometry && {
@@ -100,7 +100,9 @@ export const FormSection = () => {
       reset({
         ...values,
         [name]: value,
-        steel_grade_id: getDefaultSteelGradeId(values.shape, value),
+        steel_grade_id: composeSteelGradeId(
+          getDefaultSteelGrade(values.shape, value),
+        ),
       });
       await trigger();
     },
