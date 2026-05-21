@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Pluton2D } from "pluton-2d";
 import { Ec3FormValues } from "./schema/schema";
 import { iGeometrySchema } from "./schema/geometrySchema";
-import { formatDimension } from "./utils";
+import { formatNumber } from "@formatters/number";
 import { useEc311FormContext } from "./useEc311FormContext";
 
 type DrawingShapeParams = Ec3FormValues["i_geometry"];
@@ -90,28 +90,38 @@ export const DrawingIShape = () => {
         .moveToAbs(twDrawing / 2, webThicknessDimensionPositionY)
         .tick(Math.PI)
         .lineTo(dimensionOverflow * 2, 0)
-        .textAt(5, 0, `${formatDimension(tw_mm)}mm`, "start");
+        .textAt(5, 0, `${formatNumber(tw_mm, "dimension")}mm`, "start");
 
       dimensions
         .moveToAbs(-bDrawing / 2, -hDrawing / 2 - dimensionOffset)
         .tick(0)
         .lineTo(bDrawing, 0)
         .tick(0)
-        .textAt(-bDrawing / 2, -15, `${formatDimension(b_mm)}mm`);
+        .textAt(-bDrawing / 2, -15, `${formatNumber(b_mm, "dimension")}mm`);
 
       dimensions
         .moveToAbs(bDrawing / 2 + dimensionOffset, -hDrawing / 2)
         .tick(-Math.PI / 2)
         .lineTo(0, hDrawing)
         .tick(Math.PI / 2)
-        .textAt(15, -hDrawing / 2, `${formatDimension(h_mm)}mm`, "start");
+        .textAt(
+          15,
+          -hDrawing / 2,
+          `${formatNumber(h_mm, "dimension")}mm`,
+          "start",
+        );
 
       dimensions
         .moveToAbs(-bDrawing / 2 - dimensionOffset, -hDrawing / 2)
         .tick(-Math.PI / 2)
         .lineTo(0, tfDrawing)
         .tick(Math.PI / 2)
-        .textAt(-15, -tfDrawing / 2, `${formatDimension(tf_mm)}mm`, "end");
+        .textAt(
+          -15,
+          -tfDrawing / 2,
+          `${formatNumber(tf_mm, "dimension")}mm`,
+          "end",
+        );
 
       const filletRadiusDimensionDirX = Math.cos(Math.PI / 4);
       const filletRadiusDimensionDirY = Math.sin(Math.PI / 4);
@@ -126,7 +136,7 @@ export const DrawingIShape = () => {
         .arrowFilled(Math.PI / 4)
         .lineTo(-30, -30)
         .lineTo(-15, 0)
-        .textAt(-5, 0, `R ${formatDimension(r_mm)}mm`, "end");
+        .textAt(-5, 0, `R ${formatNumber(r_mm, "dimension")}mm`, "end");
 
       // dimensions
       //   .moveToAbs(-180, -190)

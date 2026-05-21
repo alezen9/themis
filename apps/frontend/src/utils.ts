@@ -15,6 +15,4 @@ export const multipleRefs =
     });
   };
 
-export const numberFormatter = new Intl.NumberFormat("en-US", {
-  maximumFractionDigits: 2,
-});
+export type Prettify<T> = { [K in keyof T]: T[K] } & {};

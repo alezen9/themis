@@ -23,6 +23,7 @@ import {
   AccordionContent,
   AccordionHeader,
 } from "@components/Accordion";
+import { formatNumber } from "@formatters/number";
 import { useEc311DerivedStore } from "../useEc311DerivedStore";
 
 const mm2Unit = String.raw`\mathrm{mm}^2`;
@@ -246,9 +247,7 @@ export const FormGeometry = () => {
 };
 
 const GeometryPropertiesInfo = () => {
-  const computedProperties = useEc311DerivedStore(
-    (state) => state.geometry,
-  );
+  const computedProperties = useEc311DerivedStore((state) => state.geometry);
 
   return (
     <div className="flex flex-col gap-3 text-sand-900">
@@ -264,7 +263,7 @@ const GeometryPropertiesInfo = () => {
               <Latex tex="A" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.A_mm2)}
+              {formatNumber(computedProperties.A_mm2)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm2Unit} />
@@ -285,7 +284,7 @@ const GeometryPropertiesInfo = () => {
               <Latex tex="I_y" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Iy_mm4)}
+              {formatNumber(computedProperties.Iy_mm4)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm4Unit} />
@@ -296,7 +295,7 @@ const GeometryPropertiesInfo = () => {
               <Latex tex="I_z" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Iz_mm4)}
+              {formatNumber(computedProperties.Iz_mm4)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm4Unit} />
@@ -307,7 +306,7 @@ const GeometryPropertiesInfo = () => {
               <Latex tex="I_t" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.It_mm4)}
+              {formatNumber(computedProperties.It_mm4)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm4Unit} />
@@ -318,7 +317,7 @@ const GeometryPropertiesInfo = () => {
               <Latex tex="I_w" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Iw_mm6)}
+              {formatNumber(computedProperties.Iw_mm6)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm6Unit} />
@@ -339,7 +338,7 @@ const GeometryPropertiesInfo = () => {
               <Latex tex="W_{el,y}" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Wel_y_mm3)}
+              {formatNumber(computedProperties.Wel_y_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm3Unit} />
@@ -350,7 +349,7 @@ const GeometryPropertiesInfo = () => {
               <Latex tex="W_{el,z}" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Wel_z_mm3)}
+              {formatNumber(computedProperties.Wel_z_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm3Unit} />
@@ -361,7 +360,7 @@ const GeometryPropertiesInfo = () => {
               <Latex tex="W_{pl,y}" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Wpl_y_mm3)}
+              {formatNumber(computedProperties.Wpl_y_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm3Unit} />
@@ -372,7 +371,7 @@ const GeometryPropertiesInfo = () => {
               <Latex tex="W_{pl,z}" />
             </InfoTableLabelCell>
             <InfoTableValueCell>
-              {propertyFormatter.format(computedProperties.Wpl_z_mm3)}
+              {formatNumber(computedProperties.Wpl_z_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
               <Latex tex={mm3Unit} />
@@ -383,7 +382,3 @@ const GeometryPropertiesInfo = () => {
     </div>
   );
 };
-
-const propertyFormatter = new Intl.NumberFormat("en-US", {
-  maximumFractionDigits: 0,
-});

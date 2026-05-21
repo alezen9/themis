@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Pluton2D } from "pluton-2d";
 import { Ec3FormValues } from "./schema/schema";
 import { chsGeometrySchema } from "./schema/geometrySchema";
-import { formatDimension } from "./utils";
+import { formatNumber } from "@formatters/number";
 import { useEc311FormContext } from "./useEc311FormContext";
 
 type DrawingShapeParams = Ec3FormValues["chs_geometry"];
@@ -71,7 +71,7 @@ export const DrawingChsShape = () => {
       const dimensions = dimensionsGroup.dimension();
 
       // outer diameter dimension
-      const formattedDiameter = formatDimension(d_mm);
+      const formattedDiameter = formatNumber(d_mm, "dimension");
       dimensions
         .moveToAbs(-roDrawing, roDrawing + dimensionOffset)
         .tick(0)
@@ -82,7 +82,7 @@ export const DrawingChsShape = () => {
       // wall thickness dimension
       const thicknessDirX = Math.cos(thicknessDimensionAngle);
       const thicknessDirY = Math.sin(thicknessDimensionAngle);
-      const formattedThickness = formatDimension(t_mm);
+      const formattedThickness = formatNumber(t_mm, "dimension");
       dimensions
         .moveToAbs(
           (riDrawing - dimensionOverflow) * thicknessDirX,

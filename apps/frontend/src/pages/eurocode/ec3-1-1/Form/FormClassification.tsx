@@ -6,9 +6,9 @@ import {
 import { InputSelect } from "@components/inputs/InputSelect";
 import { HorizontalInput } from "@components/inputs/shared";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
+import { formatNumber } from "@formatters/number";
 import { orderBy, toPairs } from "lodash-es";
 
-import { numberFormatter } from "../../../../utils";
 import type { Part } from "../domain/classification/types";
 import { formatMetadata } from "../domain/classification/utils";
 import { useEc311DerivedStore } from "../useEc311DerivedStore";
@@ -131,9 +131,7 @@ const PartInfoTable = (props: PartInfoTableProps) => {
         {part.trace.map((row) => {
           const { label, ratio, limit, note, satisfied } = row;
           const formattedRatio =
-            typeof ratio === "number"
-              ? numberFormatter.format(ratio)
-              : undefined;
+            typeof ratio === "number" ? formatNumber(ratio) : undefined;
 
           return (
             <TableRow key={label}>

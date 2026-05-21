@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Pluton2D } from "pluton-2d";
 import { Ec3FormValues } from "./schema/schema";
 import { rhsGeometrySchema } from "./schema/geometrySchema";
-import { formatDimension } from "./utils";
+import { formatNumber } from "@formatters/number";
 import { useEc311FormContext } from "./useEc311FormContext";
 
 type DrawingShapeParams = Ec3FormValues["rhs_geometry"];
@@ -100,7 +100,7 @@ export const DrawingRhsShape = () => {
         .textAt(
           -bDrawing / 2,
           dimensionTextOffsetY,
-          `${formatDimension(b_mm)}mm`,
+          `${formatNumber(b_mm, "dimension")}mm`,
         );
 
       dimensions
@@ -108,11 +108,16 @@ export const DrawingRhsShape = () => {
         .tick(-Math.PI / 2)
         .lineTo(0, hDrawing)
         .tick(Math.PI / 2)
-        .textAt(10, -hDrawing / 2, `${formatDimension(h_mm)}mm`, "start");
+        .textAt(
+          10,
+          -hDrawing / 2,
+          `${formatNumber(h_mm, "dimension")}mm`,
+          "start",
+        );
 
       dimensions
         .moveToAbs(-bDrawing / 2 - dimensionOverflow * 2, 15)
-        .textAt(-5, 0, `${formatDimension(tw_mm)}mm`, "end")
+        .textAt(-5, 0, `${formatNumber(tw_mm, "dimension")}mm`, "end")
         .lineTo(dimensionOverflow * 2, 0)
         .tick(0)
         .moveTo(twDrawing, 0)
@@ -127,7 +132,7 @@ export const DrawingRhsShape = () => {
         .arrowFilled(outerRadiusDimensionAngle)
         .lineTo(-radiusCalloutOffset, -radiusCalloutOffset)
         .lineTo(-radiusCalloutOffset / 2, 0)
-        .textAt(-5, 0, `R ${formatDimension(ro_mm)}mm`, "end");
+        .textAt(-5, 0, `R ${formatNumber(ro_mm, "dimension")}mm`, "end");
 
       const innerRadiusDirX = Math.cos(innerRadiusDimensionAngle);
       const innerRadiusDirY = Math.sin(innerRadiusDimensionAngle);
@@ -140,7 +145,7 @@ export const DrawingRhsShape = () => {
         .arrowFilled(innerRadiusDimensionAngle)
         .lineTo(radiusCalloutOffset, radiusCalloutOffset)
         .lineTo(radiusCalloutOffset / 2, 0)
-        .textAt(5, 0, `R ${formatDimension(ri_mm)}mm`, "start");
+        .textAt(5, 0, `R ${formatNumber(ri_mm, "dimension")}mm`, "start");
 
       // dimensions
       //   .moveToAbs(-180, -190)

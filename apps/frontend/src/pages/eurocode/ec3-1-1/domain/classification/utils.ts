@@ -1,4 +1,4 @@
-import { numberFormatter } from "../../../../../utils";
+import { formatNumber } from "@formatters/number";
 import type { Metadata } from "./types";
 
 export const maxClass = <T extends number>(...classes: T[]) =>
@@ -12,7 +12,7 @@ export const PSI = "\u03c8";
 
 export const formatMetadata = (key: keyof Metadata, value: string | number) => {
   const formattedValue =
-    typeof value === "number" ? numberFormatter.format(value) : value;
+    typeof value === "number" ? formatNumber(value) : value;
 
   if (key === "alpha") return `${ALPHA} = ${formattedValue}`;
   if (key === "cOverT") return `c / t = ${formattedValue}`;

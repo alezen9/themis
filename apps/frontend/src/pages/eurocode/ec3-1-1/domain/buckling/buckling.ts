@@ -1,16 +1,19 @@
+import { Prettify } from "../../../../../utils";
 import { steelGradesMap } from "../../data/steelGrades";
 import type { Ec3FormValues } from "../../Form/schema/schema";
 
 type BucklingCurve = "a0" | "a" | "b" | "c" | "d";
 type FlexuralBucklingCurves = { y: BucklingCurve; z: BucklingCurve };
 
-type Input = Pick<
-  Ec3FormValues,
-  | "shape"
-  | "fabrication_type"
-  | "steel_grade_id"
-  | "i_geometry"
-  | "buckling_curves_LT_policy"
+type Input = Prettify<
+  Pick<
+    Ec3FormValues,
+    | "shape"
+    | "fabrication_type"
+    | "steel_grade_id"
+    | "i_geometry"
+    | "buckling_curves_LT_policy"
+  >
 >;
 
 type ISectionBucklingInput = {
