@@ -19,6 +19,8 @@ import { materialSchema } from "./Form/schema/materialSchema";
 import { shapeAndCrossSectionSchema } from "./Form/schema/shapeAndCrossSectionSchema";
 import { useEc311FormContext } from "./Form/useEc311FormContext";
 import { useEc311DerivedStore } from "./useEc311DerivedStore";
+import { twMerge } from "tailwind-merge";
+import { Verifications } from "./Verifications/Verifications";
 
 type PageEc3_1_1Props = {
   onValuesChange?: (values: Ec3FormValues) => void;
@@ -48,10 +50,18 @@ export const PageEc3_1_1 = (props: PageEc3_1_1Props) => {
             </SubHeader>
           </header>
 
-          <div className="flex items-start gap-10">
-            <Form />
-            <div className="min-w-0 flex-1 justify-center w-full flex">
-              <span className="text-3xl text-sand-800">Verifications here</span>
+          <div
+            className={twMerge(
+              "flex items-start gap-10",
+              "[--form-width:--spacing(106)]",
+              "[--verifications-width:calc(100%-var(--sidebar-width)-var(--form-width)-var(--spacing)*10)]",
+            )}
+          >
+            <div className="w-(--form-width)">
+              <Form />
+            </div>
+            <div className="fixed bottom-0 right-0 w-(--verifications-width) h-dvh">
+              <Verifications />
             </div>
           </div>
         </main>

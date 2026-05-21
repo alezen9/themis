@@ -10,7 +10,7 @@ import { FormLateralTorsionalBuckling } from "./FormLateralTorsionalBuckling";
 
 export const Form = () => {
   return (
-    <div className="w-106 flex flex-col gap-4 h-full">
+    <aside className="flex h-full w-full flex-col gap-4">
       <FormShape />
       <FormSection />
       <FormGeometry />
@@ -20,6 +20,6 @@ export const Form = () => {
       <FormFlexuralBuckling />
       <FormLateralTorsionalBuckling />
       <FormAnnex />
-    </div>
+    </aside>
   );
 };
