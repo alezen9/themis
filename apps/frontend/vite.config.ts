@@ -5,7 +5,11 @@ import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
 export default defineConfig({
   base: "/themis/",
-  resolve: { conditions: ["development"], tsconfigPaths: true },
+  resolve: {
+    alias: { tslib: "tslib/tslib.es6.js" },
+    conditions: ["development"],
+    tsconfigPaths: true,
+  },
   build: { chunkSizeWarningLimit: 1536 },
   plugins: [
     tanstackRouter({
