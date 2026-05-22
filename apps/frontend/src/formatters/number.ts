@@ -1,22 +1,28 @@
 const NUMBER_LOCALE = "it-CH";
 
-const standardNumberFormatter = new Intl.NumberFormat(NUMBER_LOCALE, {
+class StableNumberFormat extends Intl.NumberFormat {
+  override format(value: number | bigint): string {
+    return super.format(value).replaceAll("’", "'");
+  }
+}
+
+const standardNumberFormatter = new StableNumberFormat(NUMBER_LOCALE, {
   useGrouping: "always",
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 });
 
-const engineeringNumberFormatter = new Intl.NumberFormat(NUMBER_LOCALE, {
+const engineeringNumberFormatter = new StableNumberFormat(NUMBER_LOCALE, {
   notation: "engineering",
   maximumFractionDigits: 2,
 });
 
-const dimensionIntegerFormatter = new Intl.NumberFormat(NUMBER_LOCALE, {
+const dimensionIntegerFormatter = new StableNumberFormat(NUMBER_LOCALE, {
   useGrouping: "always",
   maximumFractionDigits: 0,
 });
 
-const dimensionNumberFormatter = new Intl.NumberFormat(NUMBER_LOCALE, {
+const dimensionNumberFormatter = new StableNumberFormat(NUMBER_LOCALE, {
   useGrouping: "always",
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
