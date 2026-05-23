@@ -10,8 +10,7 @@ export const AppSidebar = () => {
         "fixed left-0 top-0 z-auto",
         "flex h-dvh flex-col",
         "w-(--sidebar-width)",
-        "bg-sand-100/25 px-2 py-9 text-slate-950",
-        // "before:absolute before:content-[' '] before:top-9 before:right-0 before:w-px before:h-[calc(100%-4rem)] before:bg-slate-300",
+        "bg-sand-100/25 px-4 py-8 text-slate-950",
       )}
     >
       <Logo />
@@ -89,7 +88,7 @@ export const AppSidebar = () => {
 
 const Logo = () => {
   return (
-    <div className="flex flex-col pl-3 leading-none text-envy-600">
+    <div className="flex flex-col leading-none text-envy-600">
       <span className="font-fredoka text-4xl ">Böbius</span>
       <span className="mt-2 text-[1.15rem] font-extralight tracking-[0.32em] ">
         Engineering
@@ -134,7 +133,7 @@ const ItemHighlighter = () => {
       className={twMerge(
         "h-(--item-height) translate-y-(--item-top)",
         "bg-sand-900/75",
-        "absolute top-0 right-1 w-[calc(100%-2rem)] rounded-md transition-transform",
+        "absolute top-0 -right-2 w-[calc(100%-0.5rem)] rounded-md transition-transform",
       )}
     />
   );
@@ -143,9 +142,7 @@ const ItemHighlighter = () => {
 const Section = (props: { children: ReactNode }) => {
   const { children } = props;
   return (
-    <section className="flex flex-col px-4 py-3 rounded-md z-10">
-      {children}
-    </section>
+    <section className="flex flex-col py-3 rounded-md z-10">{children}</section>
   );
 };
 
@@ -237,7 +234,7 @@ const Nav = (props: { children: ReactNode }) => {
     <nav
       ref={ref}
       aria-label="Application navigation"
-      className={twMerge("mt-14 flex flex-col", "relative")}
+      className={twMerge("mt-8 flex flex-col", "relative")}
     >
       {/* <SectionHighlighter /> */}
       <ItemHighlighter />

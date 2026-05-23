@@ -20,7 +20,7 @@ import { shapeAndCrossSectionSchema } from "./Form/schema/shapeAndCrossSectionSc
 import { useEc311FormContext } from "./Form/useEc311FormContext";
 import { useEc311DerivedStore } from "./useEc311DerivedStore";
 import { twMerge } from "tailwind-merge";
-import { VerificationSummary } from "./Verifications/VerificationSummary";
+import { Verifications } from "./Verifications/Verifications";
 
 type PageEc3_1_1Props = {
   onValuesChange?: (values: Ec3FormValues) => void;
@@ -42,32 +42,25 @@ export const PageEc3_1_1 = (props: PageEc3_1_1Props) => {
         onValuesChange={onValuesChange}
         onValidValuesChange={onValidValuesChange}
       >
-        <main className="flex flex-col gap-8">
-          <header className="flex items-center justify-between">
-            <div>
-              <Header>Steel members</Header>
-              <SubHeader>
-                EC3-1-1 · Member checks according to EN 1993-1-1
-              </SubHeader>
-            </div>
-            <div>
-              <span className=" fixed right-4 top-14 text-3xl leading-0 font-fredoka font-light text-red-600 bg-red-100 rounded-md p-6 grid place-content-center">
-                2.50
-              </span>
-            </div>
+        <main
+          className={twMerge(
+            "flex flex-col gap-8",
+            "[--header-height:--spacing(17)]",
+          )}
+        >
+          <header className="w-auto h-(--header-height)">
+            <Header>Steel members</Header>
+            <SubHeader>
+              EC3-1-1 · Member checks according to EN 1993-1-1
+            </SubHeader>
           </header>
 
-          <div
-            className={twMerge(
-              "[--form-width:--spacing(106)]",
-              "[--verifications-width:calc(100%-var(--sidebar-width)-var(--form-width)-var(--spacing)*25)]",
-            )}
-          >
-            <div className="w-(--form-width)">
+          <div className="flex items-start">
+            <div className="min-w-106">
               <Form />
             </div>
-            <div className="fixed bottom-0 right-0 w-(--verifications-width) h-dvh">
-              <VerificationSummary />
+            <div className="sticky top-[calc(var(--header-height)+var(--spacing)*12)] max-h-[calc(100dvh-var(--header-height)-var(--spacing)*27)] w-full h-full overflow-hidden">
+              <Verifications />
             </div>
           </div>
         </main>

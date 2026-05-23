@@ -27,6 +27,7 @@ svg.pluton-root[data-drawing-error] {
   body,
   #root {
     height: 100%;
+    overscroll-behavior: none;
   }
 
   input[type="number"]::-webkit-inner-spin-button,
