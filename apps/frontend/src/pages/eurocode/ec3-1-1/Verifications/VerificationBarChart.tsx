@@ -1,8 +1,9 @@
 import { Slider } from "@base-ui/react/slider";
+import type { VerificationRow as Verification } from "@ndg/ndg-ec3";
 import { type CSSProperties, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { fakeVerifications, type Verification } from "./fake-verifications";
+import { useEc311DerivedStore } from "../useEc311DerivedStore";
 
 const defaultThreshold = 1;
 const minThreshold = 0.5;
@@ -24,8 +25,11 @@ const formatRatio = (ratio: number | null) => {
   return ratio.toFixed(2);
 };
 
+const getVerificationRatio = (verification: Verification) =>
+  verification.payload.data?.ratio ?? null;
+
 const getVerificationStatus = (
-  ratio: Verification["ratio"],
+  ratio: number | null,
   threshold: number,
 ): VerificationStatus => {
   if (ratio === null) return "na";
@@ -44,9 +48,10 @@ const getFibonacciTicks = (maxRatio: number, extraTicks: number) => {
 };
 
 const getMaxVerificationRatio = (verifications: readonly Verification[]) => {
-  const ratios = verifications.flatMap((verification) =>
-    verification.ratio === null ? [] : [verification.ratio],
-  );
+  const ratios = verifications.flatMap((verification) => {
+    const ratio = getVerificationRatio(verification);
+    return ratio === null ? [] : [ratio];
+  });
 
   if (ratios.length === 0) return 0;
   return Math.max(...ratios);
@@ -81,9 +86,11 @@ const createScale = (verifications: readonly Verification[]): Scale => {
 };
 
 export const VerificationBarChart = () => {
-  const verifications = fakeVerifications;
+  const verifications = useEc311DerivedStore((state) => state.verifications);
   const [threshold, setThreshold] = useState(defaultThreshold);
   const scale = createScale(verifications);
+
+  if (verifications.length === 0) return null;
 
   return (
     <div
@@ -123,7 +130,7 @@ export const VerificationBarChart = () => {
       </div>
       {verifications.map((verification, index) => (
         <VerificationRow
-          key={verification.id}
+          key={verification.checkId}
           rowIndex={index}
           scale={scale}
           threshold={threshold}
@@ -265,11 +272,12 @@ const VerificationRow = (props: VerificationRowProps) => {
 
 const VerificationBar = (props: VerificationThresholdItemProps) => {
   const { scale, threshold, verification } = props;
-  const status = getVerificationStatus(verification.ratio, threshold);
+  const ratio = getVerificationRatio(verification);
+  const status = getVerificationStatus(ratio, threshold);
 
   return (
     <div className="relative h-5">
-      {verification.ratio !== null && (
+      {ratio !== null && (
         <div className="absolute inset-0 overflow-x-hidden overflow-y-visible">
           <div
             className={twMerge(
@@ -282,7 +290,7 @@ const VerificationBar = (props: VerificationThresholdItemProps) => {
             data-status={status}
             style={
               {
-                "--bar-translate": scale.getBarTranslate(verification.ratio),
+                "--bar-translate": scale.getBarTranslate(ratio),
                 transform: "translateX(var(--bar-translate))",
               } as ChartStyle
             }
@@ -295,8 +303,9 @@ const VerificationBar = (props: VerificationThresholdItemProps) => {
 
 const VerificationLabel = (props: VerificationThresholdItemProps) => {
   const { threshold, verification } = props;
-  const status = getVerificationStatus(verification.ratio, threshold);
-  const formattedRatio = formatRatio(verification.ratio);
+  const ratio = getVerificationRatio(verification);
+  const status = getVerificationStatus(ratio, threshold);
+  const formattedRatio = formatRatio(ratio);
 
   return (
     <div
@@ -317,7 +326,7 @@ const VerificationLabel = (props: VerificationThresholdItemProps) => {
       </span>
       <span className="text-center text-current/45">|</span>
       <span className="whitespace-nowrap text-left text-xs">
-        {verification.label}
+        {verification.name}
       </span>
     </div>
   );

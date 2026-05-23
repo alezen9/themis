@@ -75,8 +75,11 @@ type EvaluationState = {
   activeNode: Node | undefined;
 };
 
-export const evaluate = <TNodes extends readonly Node[]>(
-  definition: VerificationDefinition<TNodes>,
+export const evaluate = <
+  TNodes extends readonly Node[],
+  TInputs extends EvaluationContext["inputs"] = EvaluationContext["inputs"],
+>(
+  definition: VerificationDefinition<TNodes, TInputs>,
   context: EvaluationContext,
 ): EvaluationResult<TNodes> => {
   const validated = validateVerification(definition);

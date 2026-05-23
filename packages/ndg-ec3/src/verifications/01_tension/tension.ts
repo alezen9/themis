@@ -1,7 +1,7 @@
 import type { VerificationDefinition } from "@ndg/ndg-core";
 import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
-import { evaluate } from "./ulsBendingZShear-evaluate";
-import { nodes, type Nodes } from "./ulsBendingZShear-nodes";
+import { evaluate } from "./tension-evaluate";
+import { nodes, type Nodes } from "./tension-nodes";
 
 type Verification = VerificationDefinition<Nodes, Ec3EvaluatorInputs>;
 

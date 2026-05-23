@@ -2,6 +2,7 @@ import { VerificationSchema, type Node } from "./schema";
 
 export type NationalAnnex = {
   id: string;
+  name?: string;
   coefficients: Record<string, number | string>;
 };
 

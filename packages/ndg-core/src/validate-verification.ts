@@ -15,8 +15,14 @@ export type ValidatedVerification = {
   nodeByKey: Map<string, Node>;
 };
 
-export const validateVerification = <TNodes extends readonly Node[]>(
-  definition: VerificationDefinition<TNodes>,
+export const validateVerification = <
+  TNodes extends readonly Node[],
+  TInputs extends Record<string, number | string> = Record<
+    string,
+    number | string
+  >,
+>(
+  definition: VerificationDefinition<TNodes, TInputs>,
 ): ValidatedVerification => {
   const nodes = definition.nodes as readonly Node[];
   const evaluators = definition.evaluate as unknown as Record<
