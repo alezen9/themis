@@ -20,27 +20,15 @@ type RhsGeometry = {
 
 type ChsGeometry = { d_mm: number; t_mm: number };
 
-type SupportCondition =
-  | "pinned-pinned"
-  | "fixed-pinned"
-  | "pinned-fixed"
-  | "fixed-fixed";
-
-type MomentShape = "uniform" | "linear" | "parabolic" | "triangular";
-
 type InactiveValue = unknown;
 
-export type Ec3SectionClass = 1 | 2 | 3 | 4;
-export type Ec3Shape = "I" | "RHS" | "CHS";
-export type Ec3BucklingCurve = "a0" | "a" | "b" | "c" | "d";
-
-export type Ec3VerifyInputs = {
-  shape: Ec3Shape;
+type Ec3VerifyInputs = {
+  shape: "I" | "RHS" | "CHS";
   steel_grade_id: string;
   fy_MPa: number;
   section_id: string;
   fabrication_type: "rolled" | "welded" | "cold-formed" | "hot-formed";
-  section_class: Ec3SectionClass;
+  section_class: 1 | 2 | 3 | 4;
   L_m: number;
   i_geometry: Geometry;
   rhs_geometry: RhsGeometry;
@@ -51,19 +39,39 @@ export type Ec3VerifyInputs = {
   M_y_Ed_kNm: number;
   M_z_Ed_kNm: number;
   k_y: number;
-  M_y_Ed_shape: MomentShape;
+  M_y_Ed_shape: "uniform" | "linear" | "parabolic" | "triangular";
   psi_y?: number | InactiveValue;
-  support_condition_y?: SupportCondition | InactiveValue;
+  support_condition_y?:
+    | "pinned-pinned"
+    | "fixed-pinned"
+    | "pinned-fixed"
+    | "fixed-fixed"
+    | InactiveValue;
   k_z: number;
-  M_z_Ed_shape: MomentShape;
+  M_z_Ed_shape: "uniform" | "linear" | "parabolic" | "triangular";
   psi_z?: number | InactiveValue;
-  support_condition_z?: SupportCondition | InactiveValue;
+  support_condition_z?:
+    | "pinned-pinned"
+    | "fixed-pinned"
+    | "pinned-fixed"
+    | "fixed-fixed"
+    | InactiveValue;
   include_torsional_modes: boolean;
   k_T?: number | InactiveValue;
   k_LT?: number | InactiveValue;
-  M_y_Ed_shape_LT?: MomentShape | InactiveValue;
+  M_y_Ed_shape_LT?:
+    | "uniform"
+    | "linear"
+    | "parabolic"
+    | "triangular"
+    | InactiveValue;
   psi_y_LT?: number | InactiveValue;
-  support_condition_LT?: SupportCondition | InactiveValue;
+  support_condition_LT?:
+    | "pinned-pinned"
+    | "fixed-pinned"
+    | "pinned-fixed"
+    | "fixed-fixed"
+    | InactiveValue;
   load_LT?: "top-flange" | "centroid" | "bottom-flange" | InactiveValue;
   annex_id: string;
   gamma_M0: number;
@@ -75,7 +83,7 @@ export type Ec3VerifyInputs = {
   buckling_curves_LT_policy: "default-rolled-welded" | "general";
 };
 
-export type Ec3DerivedGeometricProperties = {
+type Ec3DerivedGeometricProperties = {
   A_mm2: number;
   Iy_mm4: number;
   Iz_mm4: number;
@@ -171,3 +179,23 @@ export const createEc3RuntimeInputs = (
 
   return runtimeInputs as Ec3EvaluatorInputs;
 };
+
+export const createEc3Annex = (
+  payload: Ec3VerifyPayload,
+): EvaluationContext["annex"] => ({
+  id: payload.annex_id,
+  name: payload.annex_id,
+  coefficients: {
+    gamma_M0: payload.gamma_M0,
+    gamma_M1: payload.gamma_M1,
+    lambda_LT_0: payload.lambda_LT_0,
+    beta_LT: payload.beta_LT,
+    f_method:
+      typeof payload.f_method === "number" ||
+      typeof payload.f_method === "string"
+        ? payload.f_method
+        : "default-equation",
+    interaction_factor_method: payload.interaction_factor_method,
+    buckling_curves_LT_policy: payload.buckling_curves_LT_policy,
+  },
+});
