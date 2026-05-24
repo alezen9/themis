@@ -41,7 +41,7 @@
           }
         }
       ],
-      "type": "derived",
+      "type": "formula",
       "key": "M_y_V_Rd_Nmm",
       "valueType": { "type": "number" },
       "meta": { "sectionRef": "6.2.8", "formulaRef": "(6.30)" },
@@ -76,7 +76,7 @@
         { "nodeId": "fy_MPa" },
         { "nodeId": "gamma_M0" }
       ],
-      "type": "derived",
+      "type": "formula",
       "key": "M_y_V_Rd_rhs_chs_Nmm",
       "valueType": { "type": "number" },
       "meta": { "sectionRef": "6.2.8", "paragraphRef": "(3)" },
@@ -102,7 +102,7 @@
           "when": { "eq": ["section_class", { "value": 3 }] }
         }
       ],
-      "type": "derived",
+      "type": "formula",
       "key": "W_y_res_mm3",
       "valueType": { "type": "number" },
       "unit": "\\mathrm{mm^{3}}"
@@ -135,7 +135,7 @@
         { "nodeId": "rho_z_1", "when": { "lte": ["u_z", { "value": 0.5 }] } },
         { "nodeId": "rho_z_2", "when": { "gt": ["u_z", { "value": 0.5 }] } }
       ],
-      "type": "derived",
+      "type": "formula",
       "key": "rho_z",
       "valueType": { "type": "number" }
     },
@@ -144,7 +144,7 @@
       "name": "Shear reduction factor for low-shear branch",
       "symbol": "\\rho_{z,1}",
       "children": [],
-      "type": "derived",
+      "type": "formula",
       "key": "rho_z_1",
       "valueType": { "type": "number" },
       "expression": "0"
@@ -154,7 +154,7 @@
       "name": "Shear reduction factor for high-shear branch",
       "symbol": "\\rho_{z,2}",
       "children": [{ "nodeId": "u_z" }],
-      "type": "derived",
+      "type": "formula",
       "key": "rho_z_2",
       "valueType": { "type": "number" },
       "expression": "\\left(2u_z - 1\\right)^2"
@@ -190,7 +190,7 @@
       "name": "Shear utilization about z-z",
       "symbol": "u_z",
       "children": [{ "nodeId": "V_z_Ed" }, { "nodeId": "V_pl_z_Rd_N" }],
-      "type": "derived",
+      "type": "formula",
       "key": "u_z",
       "valueType": { "type": "number" },
       "expression": "\\left|V_{z,Ed}\\right| / V_{pl,z,Rd}"
@@ -220,7 +220,7 @@
       "name": "Web area",
       "symbol": "A_w_mm2",
       "children": [{ "nodeId": "hw_mm" }, { "nodeId": "tw_mm" }],
-      "type": "derived",
+      "type": "formula",
       "key": "A_w_mm2",
       "valueType": { "type": "number" },
       "expression": "h_w \\cdot t_w",

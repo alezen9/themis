@@ -30,10 +30,7 @@ const inputNode = {
 
 const createState = (nodes: readonly Node[]): EditorState => ({
   nodesById: new Map(nodes.map((node) => [node.id, node])),
-  layoutById: {
-    check: { x: 10, y: 20 },
-    input: { x: 30, y: 40 },
-  },
+  layoutById: { check: { x: 10, y: 20 }, input: { x: 30, y: 40 } },
   edgeLayoutById: {},
   measuredById: {},
   editingNodeId: null,
@@ -75,9 +72,7 @@ describe("[NDG] draft", () => {
       draftToEditorState({
         format: ndgEditorDraftFormat,
         version: ndgEditorDraftVersion,
-        nodesById: {
-          check: { ...checkNode, id: "other-id" },
-        },
+        nodesById: { check: { ...checkNode, id: "other-id" } },
         layoutById: {},
       }).error,
     ).toBe('Draft node key "check" must match node.id');

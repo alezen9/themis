@@ -35,23 +35,18 @@ type Props = {
 const nodeTypesWithReferences = new Set<NodeDraft["nodeType"]>([
   "check",
   "formula",
-  "derived",
   "table",
   "coefficient",
 ]);
 
 const nodeTypesWithUnit = new Set<NodeDraft["nodeType"]>([
   "formula",
-  "derived",
   "table",
   "coefficient",
   "user-input",
 ]);
 
-const nodeTypesWithExpression = new Set<NodeDraft["nodeType"]>([
-  "formula",
-  "derived",
-]);
+const nodeTypesWithExpression = new Set<NodeDraft["nodeType"]>(["formula"]);
 
 type NodeDraftRegister = ReturnType<typeof useForm<NodeDraft>>["register"];
 type NodeDraftFormName = Parameters<NodeDraftRegister>[0];

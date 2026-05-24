@@ -40,7 +40,7 @@ export const nodes = defineNodes([
   },
   {
     id: "W_y_res_mm3",
-    type: "derived",
+    type: "formula",
     key: "W_y_res_mm3",
     valueType: { type: "number" },
     name: "Class-dependent resistance modulus about y-y",

@@ -53,7 +53,7 @@ export const ChildSchema = z.strictObject({
 const BaseNodeSchema = z.strictObject({
   id: z.string(),
   name: z.string(),
-  symbol: z.string().optional(), // LaTeX: "N_{cr}", "\\bar{\\lambda}", "A"
+  symbol: z.string().optional(), // LaTeX: "N_{cr}", "\bar{\lambda}", "A"
   description: z.string().optional(),
   children: z.array(ChildSchema).readonly(),
 });
@@ -86,27 +86,14 @@ export const CheckNodeSchema = BaseNodeSchema.extend({
 });
 
 /**
- * Numbered Eurocode equation. formulaRef is required.
+ * Computed value, with optional normative equation reference.
  */
 export const FormulaNodeSchema = BaseNodeSchema.extend({
   type: z.literal("formula"),
   key: z.string(),
-  valueType: NumericValueType,
-  meta: NodeMetaSchema.extend({ formulaRef: z.string() }),
-  expression: z.string(), // LaTeX: "\\frac{A \\cdot f_y}{\\gamma_{M0}}"
-  unit: z.string().optional(),
-});
-
-/**
- * Computed value not tied to a numbered equation (e.g. derived from geometry,
- * selected from logic, or a categorical result).
- */
-export const DerivedNodeSchema = BaseNodeSchema.extend({
-  type: z.literal("derived"),
-  key: z.string(),
   valueType: ValueTypeSchema,
   meta: NodeMetaSchema.optional(),
-  expression: z.string().optional(), // LaTeX, optional
+  expression: z.string().optional(), // LaTeX: "\frac{A \cdot f_y}{\gamma_{M0}}"
   unit: z.string().optional(),
 });
 
@@ -158,7 +145,6 @@ export const ConstantNodeSchema = BaseNodeSchema.extend({
 export const NodeSchema = z.discriminatedUnion("type", [
   CheckNodeSchema,
   FormulaNodeSchema,
-  DerivedNodeSchema,
   TableNodeSchema,
   CoefficientNodeSchema,
   UserInputNodeSchema,
@@ -170,29 +156,23 @@ export const NDGSchema = z.array(NodeSchema);
 export type NodeMeta = z.infer<typeof NodeMetaSchema>;
 export type Child = z.infer<typeof ChildSchema>;
 export type CheckNode = z.infer<typeof CheckNodeSchema>;
-export type FormulaNode = z.infer<typeof FormulaNodeSchema>;
-export type DerivedNode = z.infer<typeof DerivedNodeSchema>;
-export type TableNode = z.infer<typeof TableNodeSchema>;
-export type CoefficientNode = z.infer<typeof CoefficientNodeSchema>;
-export type UserInputNode = z.infer<typeof UserInputNodeSchema>;
-export type ConstantNode = z.infer<typeof ConstantNodeSchema>;
 export type Node = z.infer<typeof NodeSchema>;
-export type NDG = z.infer<typeof NDGSchema>;
-export type NodeId = string;
 export type NodeType = Node["type"];
 
 export type Condition = z.infer<typeof ConditionSchema>;
 export type ConditionOperand = z.infer<typeof ConditionOperandSchema>;
 export type ConditionTuple = z.infer<typeof ConditionTupleSchema>;
-export type ComputedNode = CheckNode | FormulaNode | DerivedNode | TableNode;
+type ComputedNode = CheckNode | z.infer<typeof FormulaNodeSchema>;
 
 export const isComputedNode = (node: Node): node is ComputedNode => {
-  return ["formula", "derived", "table", "check"].includes(node.type);
+  return node.type === "formula" || node.type === "check";
 };
 
-export const isAutoSelectorNode = (node: Node): node is DerivedNode => {
+export const isSelectorNode = (
+  node: Node,
+): node is z.infer<typeof FormulaNodeSchema> => {
   return (
-    node.type === "derived" &&
+    node.type === "formula" &&
     node.expression === undefined &&
     node.children.length > 0
   );

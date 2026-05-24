@@ -1,4 +1,8 @@
-import { type Condition, type ConditionOperand } from "./schema";
+import {
+  type Condition,
+  type ConditionOperand,
+  type ConditionTuple,
+} from "./schema";
 
 type Context = Record<string, string | number>; // constants + inputs + computed values
 
@@ -69,4 +73,31 @@ export const evaluateCondition = (
     default:
       throw new Error(`Unknown condition: ${JSON.stringify(condition)}`);
   }
+};
+
+export const collectConditionKeys = (condition: Condition): string[] => {
+  if ("eq" in condition) {
+    return getConditionTupleKeys(condition.eq);
+  }
+  if ("lt" in condition) {
+    return getConditionTupleKeys(condition.lt);
+  }
+  if ("lte" in condition) {
+    return getConditionTupleKeys(condition.lte);
+  }
+  if ("gt" in condition) {
+    return getConditionTupleKeys(condition.gt);
+  }
+  if ("gte" in condition) {
+    return getConditionTupleKeys(condition.gte);
+  }
+  if ("and" in condition) {
+    return condition.and.flatMap((item) => collectConditionKeys(item));
+  }
+  return condition.or.flatMap((item) => collectConditionKeys(item));
+};
+
+const getConditionTupleKeys = (condition: ConditionTuple) => {
+  const [left, right] = condition;
+  return "key" in right ? [left, right.key] : [left];
 };

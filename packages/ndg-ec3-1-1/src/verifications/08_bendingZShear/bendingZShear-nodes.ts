@@ -24,7 +24,7 @@ export const nodes = defineNodes([
   },
   {
     id: "M_z_V_Rd_Nmm",
-    type: "derived",
+    type: "formula",
     key: "M_z_V_Rd_Nmm",
     valueType: { type: "number" },
     name: "Reduced bending resistance about z-z under shear",
@@ -46,7 +46,7 @@ export const nodes = defineNodes([
   },
   {
     id: "M_z_V_Rd_i_Nmm",
-    type: "derived",
+    type: "formula",
     key: "M_z_V_Rd_i_Nmm",
     valueType: { type: "number" },
     name: "I-section reduced bending resistance about z-z under shear",
@@ -65,7 +65,7 @@ export const nodes = defineNodes([
   },
   {
     id: "M_z_V_Rd_rhs_chs_Nmm",
-    type: "derived",
+    type: "formula",
     key: "M_z_V_Rd_rhs_chs_Nmm",
     valueType: { type: "number" },
     name: "RHS/CHS reduced bending resistance about z-z under shear",
@@ -83,7 +83,7 @@ export const nodes = defineNodes([
   },
   {
     id: "W_z_res_mm3",
-    type: "derived",
+    type: "formula",
     key: "W_z_res_mm3",
     valueType: { type: "number" },
     name: "Class-dependent resistance modulus about z-z",
@@ -104,7 +104,7 @@ export const nodes = defineNodes([
   },
   {
     id: "W_z_web_mm3",
-    type: "derived",
+    type: "formula",
     key: "W_z_web_mm3",
     valueType: { type: "number" },
     name: "Web contribution to plastic modulus about z-z",
@@ -165,7 +165,7 @@ export const nodes = defineNodes([
   },
   {
     id: "rho_y",
-    type: "derived",
+    type: "formula",
     key: "rho_y",
     valueType: { type: "number" },
     name: "Shear reduction factor",
@@ -177,7 +177,7 @@ export const nodes = defineNodes([
   },
   {
     id: "rho_y_1",
-    type: "derived",
+    type: "formula",
     key: "rho_y_1",
     valueType: { type: "number" },
     name: "Shear reduction factor for low-shear branch",
@@ -187,7 +187,7 @@ export const nodes = defineNodes([
   },
   {
     id: "rho_y_2",
-    type: "derived",
+    type: "formula",
     key: "rho_y_2",
     valueType: { type: "number" },
     name: "Shear reduction factor for high-shear branch",
@@ -223,7 +223,7 @@ export const nodes = defineNodes([
   },
   {
     id: "u_y",
-    type: "derived",
+    type: "formula",
     key: "u_y",
     valueType: { type: "number" },
     name: "Shear utilization about y-y",

@@ -89,10 +89,7 @@ const pruneEdgeLayoutByMovedNodeIds = (
   return nextEdgeLayoutById;
 };
 
-export const editorReducer = (
-  state: EditorState,
-  action: NdgEditorAction,
-) => {
+export const editorReducer = (state: EditorState, action: NdgEditorAction) => {
   switch (action.type) {
     case "addChild":
       return { ...addChildNode(state, action.parentId), edgeLayoutById: {} };

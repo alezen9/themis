@@ -1,7 +1,7 @@
-import type { NDGDefinition } from "./engine";
+import type { NDGDefinition } from "./types";
 import {
-  isAutoSelectorNode,
   isComputedNode,
+  isSelectorNode,
   type CheckNode,
   type Node,
 } from "./schema";
@@ -64,7 +64,7 @@ export const validateNDG = <
     }
 
     const hasEvaluator = !!evaluators[node.key];
-    const needsEvaluator = isComputedNode(node) && !isAutoSelectorNode(node);
+    const needsEvaluator = isComputedNode(node) && !isSelectorNode(node);
     if (needsEvaluator && !hasEvaluator) {
       throw new Error(
         `Missing evaluator for ${node.type} node: "${node.key}" (id: ${node.id})`,

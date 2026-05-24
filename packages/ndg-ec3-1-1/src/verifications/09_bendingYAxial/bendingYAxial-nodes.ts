@@ -28,7 +28,7 @@ export const nodes = defineNodes([
   },
   {
     id: "utilization_class12",
-    type: "derived",
+    type: "formula",
     key: "utilization_class12",
     valueType: { type: "number" },
     name: "Class 1/2 utilization ratio about y-y",
@@ -66,7 +66,7 @@ export const nodes = defineNodes([
   },
   {
     id: "k_y",
-    type: "derived",
+    type: "formula",
     key: "k_y",
     valueType: { type: "number" },
     name: "Axial reduction factor for y-y branch",
@@ -86,7 +86,7 @@ export const nodes = defineNodes([
   },
   {
     id: "k_y_i",
-    type: "derived",
+    type: "formula",
     key: "k_y_i",
     valueType: { type: "number" },
     name: "I-section axial reduction factor for y-y",
@@ -98,7 +98,7 @@ export const nodes = defineNodes([
   },
   {
     id: "k_y_rhs_chs",
-    type: "derived",
+    type: "formula",
     key: "k_y_rhs_chs",
     valueType: { type: "number" },
     name: "RHS/CHS axial reduction factor for y-y",
@@ -109,7 +109,7 @@ export const nodes = defineNodes([
   },
   {
     id: "a_w",
-    type: "derived",
+    type: "formula",
     key: "a_w",
     valueType: { type: "number" },
     name: "Limited area ratio for y-y branch",
@@ -122,7 +122,7 @@ export const nodes = defineNodes([
   },
   {
     id: "a_w_i",
-    type: "derived",
+    type: "formula",
     key: "a_w_i",
     valueType: { type: "number" },
     name: "I-section area ratio for y-y branch",
@@ -132,7 +132,7 @@ export const nodes = defineNodes([
   },
   {
     id: "a_w_rhs",
-    type: "derived",
+    type: "formula",
     key: "a_w_rhs",
     valueType: { type: "number" },
     name: "RHS section area ratio for y-y branch",
@@ -142,7 +142,7 @@ export const nodes = defineNodes([
   },
   {
     id: "a_w_chs",
-    type: "derived",
+    type: "formula",
     key: "a_w_chs",
     valueType: { type: "number" },
     name: "CHS section area ratio for y-y branch",
@@ -152,7 +152,7 @@ export const nodes = defineNodes([
   },
   {
     id: "n",
-    type: "derived",
+    type: "formula",
     key: "n",
     valueType: { type: "number" },
     name: "Axial force ratio",
@@ -188,7 +188,7 @@ export const nodes = defineNodes([
   },
   {
     id: "utilization_class3",
-    type: "derived",
+    type: "formula",
     key: "utilization_class3",
     valueType: { type: "number" },
     name: "Class 3 stress utilization ratio",
@@ -198,7 +198,7 @@ export const nodes = defineNodes([
   },
   {
     id: "sigma_x_class3_MPa",
-    type: "derived",
+    type: "formula",
     key: "sigma_x_class3_MPa",
     valueType: { type: "number" },
     name: "Maximum longitudinal stress for class 3",
@@ -209,7 +209,7 @@ export const nodes = defineNodes([
   },
   {
     id: "sigma_N_MPa",
-    type: "derived",
+    type: "formula",
     key: "sigma_N_MPa",
     valueType: { type: "number" },
     name: "Axial stress contribution",
@@ -220,7 +220,7 @@ export const nodes = defineNodes([
   },
   {
     id: "sigma_M_y_MPa",
-    type: "derived",
+    type: "formula",
     key: "sigma_M_y_MPa",
     valueType: { type: "number" },
     name: "y-y bending stress contribution",

@@ -22,7 +22,6 @@ const nodeTypeLabels: Record<NodeType, string> = {
   check: "Check",
   coefficient: "Coefficient",
   constant: "Constant",
-  derived: "Derived",
   formula: "Formula",
   table: "Table",
   "user-input": "User input",
@@ -40,7 +39,6 @@ const getNodeFormulaText = (node: EditorNode) => {
     case "check":
       return node.verificationExpression;
     case "formula":
-    case "derived":
       return node.expression;
     default:
       return undefined;

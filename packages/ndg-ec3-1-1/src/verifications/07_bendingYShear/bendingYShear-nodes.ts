@@ -24,7 +24,7 @@ export const nodes = defineNodes([
   },
   {
     id: "M_y_V_Rd_Nmm",
-    type: "derived",
+    type: "formula",
     key: "M_y_V_Rd_Nmm",
     valueType: { type: "number" },
     name: "Reduced bending resistance about y-y under shear",
@@ -66,7 +66,7 @@ export const nodes = defineNodes([
   },
   {
     id: "M_y_V_Rd_rhs_chs_Nmm",
-    type: "derived",
+    type: "formula",
     key: "M_y_V_Rd_rhs_chs_Nmm",
     valueType: { type: "number" },
     name: "RHS/CHS reduced bending resistance about y-y under shear",
@@ -84,7 +84,7 @@ export const nodes = defineNodes([
   },
   {
     id: "W_y_res_mm3",
-    type: "derived",
+    type: "formula",
     key: "W_y_res_mm3",
     valueType: { type: "number" },
     name: "Class-dependent resistance modulus about y-y",
@@ -125,7 +125,7 @@ export const nodes = defineNodes([
   },
   {
     id: "rho_z",
-    type: "derived",
+    type: "formula",
     key: "rho_z",
     valueType: { type: "number" },
     name: "Shear reduction factor",
@@ -137,7 +137,7 @@ export const nodes = defineNodes([
   },
   {
     id: "rho_z_1",
-    type: "derived",
+    type: "formula",
     key: "rho_z_1",
     valueType: { type: "number" },
     name: "Shear reduction factor for low-shear branch",
@@ -147,7 +147,7 @@ export const nodes = defineNodes([
   },
   {
     id: "rho_z_2",
-    type: "derived",
+    type: "formula",
     key: "rho_z_2",
     valueType: { type: "number" },
     name: "Shear reduction factor for high-shear branch",
@@ -183,7 +183,7 @@ export const nodes = defineNodes([
   },
   {
     id: "u_z",
-    type: "derived",
+    type: "formula",
     key: "u_z",
     valueType: { type: "number" },
     name: "Shear utilization about z-z",
@@ -213,7 +213,7 @@ export const nodes = defineNodes([
   },
   {
     id: "A_w_mm2",
-    type: "derived",
+    type: "formula",
     key: "A_w_mm2",
     valueType: { type: "number" },
     name: "Web area",

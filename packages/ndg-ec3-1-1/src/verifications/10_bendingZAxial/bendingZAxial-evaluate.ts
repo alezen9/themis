@@ -59,7 +59,7 @@ export const evaluate = defineEvaluators(nodes, {
     return (A_mm2 * fy_MPa) / gamma_M0;
   },
 
-  abs_N_Ed_N: ({ N_Ed_N }) => {
+  n: ({ N_Ed_N, N_pl_Rd_N }) => {
     if (!Number.isFinite(N_Ed_N)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -68,10 +68,6 @@ export const evaluate = defineEvaluators(nodes, {
       });
     }
 
-    return Math.abs(N_Ed_N);
-  },
-
-  n: ({ abs_N_Ed_N, N_pl_Rd_N }) => {
     if (!Number.isFinite(N_pl_Rd_N) || N_pl_Rd_N <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -81,7 +77,7 @@ export const evaluate = defineEvaluators(nodes, {
       });
     }
 
-    return abs_N_Ed_N / N_pl_Rd_N;
+    return Math.abs(N_Ed_N) / N_pl_Rd_N;
   },
 
   a_f_i: ({ A_mm2, b_mm, tf_mm }) => {
@@ -204,7 +200,7 @@ export const evaluate = defineEvaluators(nodes, {
     return reducedResistance;
   },
 
-  abs_M_z_Ed_Nmm: ({ M_z_Ed_Nmm }) => {
+  utilization_class12: ({ M_z_Ed_Nmm, M_N_z_Rd_Nmm }) => {
     if (!Number.isFinite(M_z_Ed_Nmm)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -213,10 +209,6 @@ export const evaluate = defineEvaluators(nodes, {
       });
     }
 
-    return Math.abs(M_z_Ed_Nmm);
-  },
-
-  utilization_class12: ({ abs_M_z_Ed_Nmm, M_N_z_Rd_Nmm }) => {
     if (!Number.isFinite(M_N_z_Rd_Nmm) || M_N_z_Rd_Nmm <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -226,10 +218,18 @@ export const evaluate = defineEvaluators(nodes, {
       });
     }
 
-    return abs_M_z_Ed_Nmm / M_N_z_Rd_Nmm;
+    return Math.abs(M_z_Ed_Nmm) / M_N_z_Rd_Nmm;
   },
 
-  sigma_N_MPa: ({ abs_N_Ed_N, A_mm2 }) => {
+  sigma_N_MPa: ({ N_Ed_N, A_mm2 }) => {
+    if (!Number.isFinite(N_Ed_N)) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-z-axial: N_Ed_N must be finite",
+        details: { N_Ed_N, sectionRef: "6.2.9.2" },
+      });
+    }
+
     if (!Number.isFinite(A_mm2) || A_mm2 <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -238,10 +238,18 @@ export const evaluate = defineEvaluators(nodes, {
       });
     }
 
-    return abs_N_Ed_N / A_mm2;
+    return Math.abs(N_Ed_N) / A_mm2;
   },
 
-  sigma_M_z_MPa: ({ abs_M_z_Ed_Nmm, Wel_z_mm3 }) => {
+  sigma_M_z_MPa: ({ M_z_Ed_Nmm, Wel_z_mm3 }) => {
+    if (!Number.isFinite(M_z_Ed_Nmm)) {
+      throw new Ec3VerificationError({
+        type: "invalid-input-domain",
+        message: "bending-z-axial: M_z_Ed_Nmm must be finite",
+        details: { M_z_Ed_Nmm, sectionRef: "6.2.9.2" },
+      });
+    }
+
     if (!Number.isFinite(Wel_z_mm3) || Wel_z_mm3 <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -250,7 +258,7 @@ export const evaluate = defineEvaluators(nodes, {
       });
     }
 
-    return abs_M_z_Ed_Nmm / Wel_z_mm3;
+    return Math.abs(M_z_Ed_Nmm) / Wel_z_mm3;
   },
 
   sigma_x_class3_MPa: ({ sigma_N_MPa, sigma_M_z_MPa }) => {

@@ -18,10 +18,6 @@ const nodeTypeThemes = {
     textClass: "text-slate-600",
     formulaClass: "border-slate-200 bg-slate-50",
   },
-  derived: {
-    textClass: "text-envy-700",
-    formulaClass: "border-envy-100 bg-envy-50/60",
-  },
   formula: {
     textClass: "text-sand-800",
     formulaClass: "border-sand-200 bg-sand-50",

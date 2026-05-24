@@ -24,7 +24,7 @@ Class 3 uses stress criterion.
 ```text
 bending_z_axial_check
 |- utilization_class12 (class 1/2)
-|  |- abs_M_z_Ed_Nmm
+|  |- M_z_Ed_Nmm
 |  `- M_N_z_Rd_Nmm
 |     |- M_pl_z_Rd_Nmm
 |     `- k_z

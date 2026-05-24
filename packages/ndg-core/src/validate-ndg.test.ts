@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { NDGDefinition } from "./engine";
+import type { NDGDefinition } from "./types";
 import { validateNDG } from "./validate-ndg";
 
 describe("validateNDG", () => {
@@ -205,7 +205,7 @@ describe("validateNDG", () => {
         children: [],
       },
       {
-        type: "derived",
+        type: "formula",
         key: "d",
         valueType: { type: "number" },
         id: "missing-evaluator-d",
@@ -226,14 +226,14 @@ describe("validateNDG", () => {
 
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
-      // @ts-expect-error -- intentional missing evaluator for derived node
+      // @ts-expect-error -- intentional missing evaluator for formula node
       evaluate: { check: ({ d }) => Number(d) },
     };
 
     expect(() => validateNDG(definition)).toThrow(/Missing evaluator/);
   });
 
-  it("allows selector-derived nodes without evaluators", () => {
+  it("allows selector formula nodes without evaluators", () => {
     const nodes = [
       {
         type: "user-input",
@@ -252,7 +252,7 @@ describe("validateNDG", () => {
         children: [],
       },
       {
-        type: "derived",
+        type: "formula",
         key: "selected",
         valueType: { type: "number" },
         id: "selector-selected",
@@ -281,7 +281,7 @@ describe("validateNDG", () => {
   it("rejects cycles reachable from the root check", () => {
     const nodes = [
       {
-        type: "derived",
+        type: "formula",
         key: "a",
         valueType: { type: "number" },
         id: "cycle-a",
@@ -290,7 +290,7 @@ describe("validateNDG", () => {
         children: [{ nodeId: "cycle-b" }],
       },
       {
-        type: "derived",
+        type: "formula",
         key: "b",
         valueType: { type: "number" },
         id: "cycle-b",

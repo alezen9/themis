@@ -15,11 +15,7 @@ import {
   Panel,
   ReactFlow,
 } from "@xyflow/react";
-import {
-  Dialog,
-  DialogHeader,
-  DialogTitle,
-} from "@components/Dialog";
+import { Dialog, DialogHeader, DialogTitle } from "@components/Dialog";
 import "@xyflow/react/dist/style.css";
 import {
   flowEdgeType,
@@ -32,10 +28,7 @@ import { ConditionEdge } from "./components/ConditionEdge";
 import { NodeCard } from "./components/NodeCard";
 import { Form } from "./Form";
 import { runElkAutoLayout } from "./config/elkLayout";
-import {
-  createInitialState,
-  getMeasuredNodeSizesById,
-} from "./config/graph";
+import { createInitialState, getMeasuredNodeSizesById } from "./config/graph";
 import {
   draftToEditorState,
   editorStateToDraft,
@@ -45,10 +38,7 @@ import { getUnreachableNodeIds } from "./config/graphQueries";
 import { editorReducer } from "./config/editorReducer";
 import type { Option } from "@components/inputs/shared";
 
-type NdgEditorProps = {
-  className?: string;
-  inputKeyOptions?: Option[];
-};
+type NdgEditorProps = { className?: string; inputKeyOptions?: Option[] };
 
 export type { NdgEditorDraftV1 } from "./config/draft";
 

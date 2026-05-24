@@ -30,7 +30,6 @@ const nodeTypeLabels: Record<NodeType, string> = {
   check: "Check",
   coefficient: "Coefficient",
   constant: "Constant",
-  derived: "Derived",
   formula: "Formula",
   table: "Table",
   "user-input": "User input",
@@ -40,13 +39,11 @@ const numericOnlyNodeTypes: readonly NodeType[] = [
   "check",
   "coefficient",
   "constant",
-  "formula",
 ];
 
 export const nodeTypeOptions = [
   { label: "Check", value: "check" },
   { label: "Formula", value: "formula" },
-  { label: "Derived", value: "derived" },
   { label: "Table", value: "table" },
   { label: "Coefficient", value: "coefficient" },
   { label: "User input", value: "user-input" },
@@ -149,28 +146,12 @@ const buildCoefficientMeta = (draft: NodeDraft): NodeMeta => ({
   verificationRef: getOptionalText(draft.verificationRef),
 });
 
-const buildFormulaMeta = (draft: NodeDraft) => ({
-  formulaRef: trimText(draft.formulaRef),
-  paragraphRef: getOptionalText(draft.paragraphRef),
-  sectionRef: getOptionalText(draft.sectionRef),
-  subParagraphRef: getOptionalText(draft.subParagraphRef),
-  tableRef: getOptionalText(draft.tableRef),
-  verificationRef: getOptionalText(draft.verificationRef),
-});
-
 const getDraftCompletenessError = (draft: NodeDraft) => {
   if (
     draft.nodeType === "check" &&
     !normalizeInlineExpression(draft.verificationExpression)
   ) {
     return "Check nodes require a verification formula";
-  }
-
-  if (
-    (draft.nodeType === "formula" || draft.nodeType === "derived") &&
-    !normalizeInlineExpression(draft.expression)
-  ) {
-    return "Formula and derived nodes require a formula";
   }
 
   if (draft.nodeType === "table" && !trimText(draft.source)) {
@@ -280,8 +261,6 @@ export const createNodeDraft = (node: EditorNode): NodeDraft => {
         verificationExpression: node.verificationExpression,
       };
     case "formula":
-      return { ...commonDraft, expression: node.expression };
-    case "derived":
       return { ...commonDraft, expression: node.expression ?? "" };
     case "table":
       return { ...commonDraft, source: node.source };
@@ -330,26 +309,6 @@ export const buildNodeFromDraft = ({
       };
     }
     case "formula": {
-      const numberValueType = buildNumberValueType(draft.allowedValues);
-      if (numberValueType.error) {
-        return { error: numberValueType.error, node: null };
-      }
-
-      const unit = getOptionalText(draft.unit);
-
-      return {
-        error: null,
-        node: {
-          ...baseNode,
-          type: "formula",
-          valueType: numberValueType.valueType,
-          meta: buildFormulaMeta(draft),
-          expression: normalizeInlineExpression(draft.expression),
-          ...(unit ? { unit } : {}),
-        },
-      };
-    }
-    case "derived": {
       const valueType =
         draft.valueType === "number"
           ? buildNumberValueType(draft.allowedValues)
@@ -368,7 +327,7 @@ export const buildNodeFromDraft = ({
         error: null,
         node: {
           ...baseNode,
-          type: "derived",
+          type: "formula",
           valueType: valueType.valueType,
           meta: buildOptionalMeta(draft),
           ...(expression ? { expression } : {}),
