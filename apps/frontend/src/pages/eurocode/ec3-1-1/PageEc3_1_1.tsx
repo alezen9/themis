@@ -55,7 +55,7 @@ export const PageEc3_1_1 = (props: PageEc3_1_1Props) => {
             "[--header-height:--spacing(17)]",
           )}
         >
-          <header className="w-auto h_mm-(--header-height)">
+          <header className="w-auto h-(--header-height)">
             <Header>Steel members</Header>
             <SubHeader>
               EC3-1-1 · Member checks according to EN 1993-1-1
