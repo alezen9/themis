@@ -252,10 +252,10 @@ const formatSchemaIssue = (issue) => {
   return `${pathLabel}: ${issue.message}`;
 };
 
-const loadVerificationSchema = async () => {
+const loadNDGSchema = async () => {
   try {
     const module = await import("../packages/ndg-core/dist/index.js");
-    return module.VerificationSchema;
+    return module.NDGSchema;
   } catch {
     fail(
       'Could not load "@ndg/ndg-core" runtime schema. Run "pnpm --filter @ndg/ndg-core build" first',
@@ -425,7 +425,7 @@ const buildLayoutById = (nodes) => {
 
 const main = async () => {
   const { inPath, outPath } = parseArgs();
-  const VerificationSchema = await loadVerificationSchema();
+  const NDGSchema = await loadNDGSchema();
   const absoluteInPath = path.resolve(inPath);
   const absoluteOutPath = path.resolve(outPath);
 
@@ -448,7 +448,7 @@ const main = async () => {
     fail("defineNodes argument must resolve to an array literal");
   }
 
-  const validatedNodes = VerificationSchema.safeParse(parsedNodesValue);
+  const validatedNodes = NDGSchema.safeParse(parsedNodesValue);
   if (!validatedNodes.success) {
     fail(
       `Input nodes are invalid: ${formatSchemaIssue(validatedNodes.error.issues[0])}`,

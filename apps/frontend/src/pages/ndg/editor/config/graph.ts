@@ -1,5 +1,5 @@
 import {
-  VerificationSchema,
+  NDGSchema,
   type Child,
   type Condition,
   type Node,
@@ -340,7 +340,7 @@ const findCycleNodeId = (nodesById: Map<string, Node>) => {
 };
 
 export const validateNodes = (nodes: readonly Node[]): ValidateNodesResult => {
-  const parsedNodes = VerificationSchema.safeParse([...nodes]);
+  const parsedNodes = NDGSchema.safeParse([...nodes]);
   if (!parsedNodes.success) {
     return {
       error: "Graph is not a valid NDG verification",

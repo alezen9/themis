@@ -165,7 +165,7 @@ export const NodeSchema = z.discriminatedUnion("type", [
   ConstantNodeSchema,
 ]);
 
-export const VerificationSchema = z.array(NodeSchema);
+export const NDGSchema = z.array(NodeSchema);
 
 export type NodeMeta = z.infer<typeof NodeMetaSchema>;
 export type Child = z.infer<typeof ChildSchema>;
@@ -177,7 +177,7 @@ export type CoefficientNode = z.infer<typeof CoefficientNodeSchema>;
 export type UserInputNode = z.infer<typeof UserInputNodeSchema>;
 export type ConstantNode = z.infer<typeof ConstantNodeSchema>;
 export type Node = z.infer<typeof NodeSchema>;
-export type Verification = z.infer<typeof VerificationSchema>;
+export type NDG = z.infer<typeof NDGSchema>;
 export type NodeId = string;
 export type NodeType = Node["type"];
 

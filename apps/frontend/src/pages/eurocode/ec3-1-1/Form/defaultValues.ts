@@ -1,4 +1,4 @@
-import { italianAnnex } from "@ndg/ndg-ec3";
+import { italianAnnex } from "@ndg/ndg-ec3-1-1";
 import { flangedSections } from "../data/flangedSections";
 import {
   composeSteelGradeId,

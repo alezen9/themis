@@ -1,0 +1,282 @@
+{
+  "format": "ndg-editor-draft",
+  "version": 1,
+  "nodesById": {
+    "bending_y_shear_check": {
+      "id": "bending_y_shear_check",
+      "name": "Bending and shear resistance check about y-y",
+      "children": [{ "nodeId": "M_y_Ed" }, { "nodeId": "M_y_V_Rd_Nmm" }],
+      "type": "check",
+      "key": "bending_y_shear_check",
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.2.8", "verificationRef": "(6.29)" },
+      "verificationExpression": "\\frac{\\left|M_{y,Ed}\\right|}{M_{y,V,Rd}} \\leq 1.0"
+    },
+    "M_y_Ed": {
+      "id": "M_y_Ed",
+      "name": "Design bending moment about y-y",
+      "symbol": "M_{y,Ed}",
+      "children": [],
+      "type": "user-input",
+      "key": "M_y_Ed",
+      "valueType": { "type": "number" },
+      "unit": "\\mathrm{N\\cdot mm}"
+    },
+    "M_y_V_Rd_Nmm": {
+      "id": "M_y_V_Rd_Nmm",
+      "name": "Reduced bending resistance about y-y under shear",
+      "symbol": "M_{y,V,Rd}",
+      "children": [
+        {
+          "nodeId": "M_y_V_Rd_i_Nmm",
+          "when": { "eq": ["section_shape", { "value": "I" }] }
+        },
+        {
+          "nodeId": "M_y_V_Rd_rhs_chs_Nmm",
+          "when": {
+            "or": [
+              { "eq": ["section_shape", { "value": "RHS" }] },
+              { "eq": ["section_shape", { "value": "CHS" }] }
+            ]
+          }
+        }
+      ],
+      "type": "derived",
+      "key": "M_y_V_Rd_Nmm",
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.2.8", "formulaRef": "(6.30)" },
+      "unit": "\\mathrm{N\\cdot mm}"
+    },
+    "M_y_V_Rd_i_Nmm": {
+      "id": "M_y_V_Rd_i_Nmm",
+      "name": "I-section reduced bending resistance about y-y under shear",
+      "symbol": "M_{y,V,Rd,i}",
+      "children": [
+        { "nodeId": "W_y_res_mm3" },
+        { "nodeId": "rho_z" },
+        { "nodeId": "A_w_mm2" },
+        { "nodeId": "tw_mm" },
+        { "nodeId": "fy_MPa" },
+        { "nodeId": "gamma_M0" }
+      ],
+      "type": "formula",
+      "key": "M_y_V_Rd_i_Nmm",
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.2.8", "formulaRef": "(6.30)" },
+      "expression": "\\frac{\\left(W_{y,res} - \\rho \\dfrac{A_w_mm2^2}{4t_w}\\right) \\cdot f_y}{\\gamma_{M0}} \\leq M_{c,y,Rd}",
+      "unit": "\\mathrm{N\\cdot mm}"
+    },
+    "M_y_V_Rd_rhs_chs_Nmm": {
+      "id": "M_y_V_Rd_rhs_chs_Nmm",
+      "name": "RHS/CHS reduced bending resistance about y-y under shear",
+      "symbol": "M_{y,V,Rd,RHS/CHS}",
+      "children": [
+        { "nodeId": "W_y_res_mm3" },
+        { "nodeId": "rho_z" },
+        { "nodeId": "fy_MPa" },
+        { "nodeId": "gamma_M0" }
+      ],
+      "type": "derived",
+      "key": "M_y_V_Rd_rhs_chs_Nmm",
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.2.8", "paragraphRef": "(3)" },
+      "expression": "\\frac{\\left(W_{y,res}(1-\\rho)\\right) \\cdot f_y}{\\gamma_{M0}} \\leq M_{c,y,Rd}",
+      "unit": "\\mathrm{N\\cdot mm}"
+    },
+    "W_y_res_mm3": {
+      "id": "W_y_res_mm3",
+      "name": "Class-dependent resistance modulus about y-y",
+      "symbol": "W_{y,res}",
+      "children": [
+        {
+          "nodeId": "Wpl_y_mm3",
+          "when": {
+            "or": [
+              { "eq": ["section_class", { "value": 1 }] },
+              { "eq": ["section_class", { "value": 2 }] }
+            ]
+          }
+        },
+        {
+          "nodeId": "Wel_y_mm3",
+          "when": { "eq": ["section_class", { "value": 3 }] }
+        }
+      ],
+      "type": "derived",
+      "key": "W_y_res_mm3",
+      "valueType": { "type": "number" },
+      "unit": "\\mathrm{mm^{3}}"
+    },
+    "Wpl_y_mm3": {
+      "id": "Wpl_y_mm3",
+      "name": "Plastic section modulus about y-y",
+      "symbol": "W_{pl,y}",
+      "children": [],
+      "type": "user-input",
+      "key": "Wpl_y_mm3",
+      "valueType": { "type": "number" },
+      "unit": "\\mathrm{mm^{3}}"
+    },
+    "Wel_y_mm3": {
+      "id": "Wel_y_mm3",
+      "name": "Elastic section modulus about y-y",
+      "symbol": "W_{el,y}",
+      "children": [],
+      "type": "user-input",
+      "key": "Wel_y_mm3",
+      "valueType": { "type": "number" },
+      "unit": "\\mathrm{mm^{3}}"
+    },
+    "rho_z": {
+      "id": "rho_z",
+      "name": "Shear reduction factor",
+      "symbol": "\\rho",
+      "children": [
+        { "nodeId": "rho_z_1", "when": { "lte": ["u_z", { "value": 0.5 }] } },
+        { "nodeId": "rho_z_2", "when": { "gt": ["u_z", { "value": 0.5 }] } }
+      ],
+      "type": "derived",
+      "key": "rho_z",
+      "valueType": { "type": "number" }
+    },
+    "rho_z_1": {
+      "id": "rho_z_1",
+      "name": "Shear reduction factor for low-shear branch",
+      "symbol": "\\rho_{z,1}",
+      "children": [],
+      "type": "derived",
+      "key": "rho_z_1",
+      "valueType": { "type": "number" },
+      "expression": "0"
+    },
+    "rho_z_2": {
+      "id": "rho_z_2",
+      "name": "Shear reduction factor for high-shear branch",
+      "symbol": "\\rho_{z,2}",
+      "children": [{ "nodeId": "u_z" }],
+      "type": "derived",
+      "key": "rho_z_2",
+      "valueType": { "type": "number" },
+      "expression": "\\left(2u_z - 1\\right)^2"
+    },
+    "V_z_Ed": {
+      "id": "V_z_Ed",
+      "name": "Design shear force about z-z",
+      "symbol": "V_{z,Ed}",
+      "children": [],
+      "type": "user-input",
+      "key": "V_z_Ed",
+      "valueType": { "type": "number" },
+      "unit": "\\mathrm{N}"
+    },
+    "V_pl_z_Rd_N": {
+      "id": "V_pl_z_Rd_N",
+      "name": "Plastic shear resistance about z-z",
+      "symbol": "V_{pl,z,Rd}",
+      "children": [
+        { "nodeId": "Av_z_mm2" },
+        { "nodeId": "fy_MPa" },
+        { "nodeId": "gamma_M0" }
+      ],
+      "type": "formula",
+      "key": "V_pl_z_Rd_N",
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.2.6", "formulaRef": "(6.18)" },
+      "expression": "\\dfrac{A_{v,z} \\cdot f_y}{\\sqrt{3}\\,\\gamma_{M0}}",
+      "unit": "\\mathrm{N}"
+    },
+    "u_z": {
+      "id": "u_z",
+      "name": "Shear utilization about z-z",
+      "symbol": "u_z",
+      "children": [{ "nodeId": "V_z_Ed" }, { "nodeId": "V_pl_z_Rd_N" }],
+      "type": "derived",
+      "key": "u_z",
+      "valueType": { "type": "number" },
+      "expression": "\\left|V_{z,Ed}\\right| / V_{pl,z,Rd}"
+    },
+    "Av_z_mm2": {
+      "id": "Av_z_mm2",
+      "name": "Shear area about z-z",
+      "symbol": "A_{v,z}",
+      "children": [],
+      "type": "user-input",
+      "key": "Av_z_mm2",
+      "valueType": { "type": "number" },
+      "unit": "\\mathrm{mm^{2}}"
+    },
+    "hw_mm": {
+      "id": "hw_mm",
+      "name": "Web depth",
+      "symbol": "h_w",
+      "children": [],
+      "type": "user-input",
+      "key": "hw_mm",
+      "valueType": { "type": "number" },
+      "unit": "\\mathrm{mm}"
+    },
+    "A_w_mm2": {
+      "id": "A_w_mm2",
+      "name": "Web area",
+      "symbol": "A_w_mm2",
+      "children": [{ "nodeId": "hw_mm" }, { "nodeId": "tw_mm" }],
+      "type": "derived",
+      "key": "A_w_mm2",
+      "valueType": { "type": "number" },
+      "expression": "h_w \\cdot t_w",
+      "unit": "\\mathrm{mm^{2}}"
+    },
+    "tw_mm": {
+      "id": "tw_mm",
+      "name": "Web thickness",
+      "symbol": "t_w",
+      "children": [],
+      "type": "user-input",
+      "key": "tw_mm",
+      "valueType": { "type": "number" },
+      "unit": "\\mathrm{mm}"
+    },
+    "fy_MPa": {
+      "id": "fy_MPa",
+      "name": "Yield strength",
+      "symbol": "f_y",
+      "children": [],
+      "type": "user-input",
+      "key": "fy_MPa",
+      "valueType": { "type": "number" },
+      "unit": "\\mathrm{MPa}"
+    },
+    "gamma_M0": {
+      "id": "gamma_M0",
+      "name": "Partial safety factor",
+      "symbol": "\\gamma_{M0}",
+      "children": [],
+      "type": "coefficient",
+      "key": "gamma_M0",
+      "valueType": { "type": "number" },
+      "meta": { "sectionRef": "6.1" }
+    }
+  },
+  "layoutById": {
+    "bending_y_shear_check": { "x": 0, "y": 0 },
+    "M_y_Ed": { "x": 0, "y": 220 },
+    "M_y_V_Rd_Nmm": { "x": 320, "y": 220 },
+    "M_y_V_Rd_i_Nmm": { "x": 0, "y": 440 },
+    "M_y_V_Rd_rhs_chs_Nmm": { "x": 320, "y": 440 },
+    "W_y_res_mm3": { "x": 0, "y": 660 },
+    "rho_z": { "x": 320, "y": 660 },
+    "A_w_mm2": { "x": 640, "y": 660 },
+    "fy_MPa": { "x": 960, "y": 660 },
+    "gamma_M0": { "x": 1280, "y": 660 },
+    "tw_mm": { "x": 0, "y": 880 },
+    "Wpl_y_mm3": { "x": 320, "y": 880 },
+    "Wel_y_mm3": { "x": 640, "y": 880 },
+    "rho_z_1": { "x": 960, "y": 880 },
+    "rho_z_2": { "x": 1280, "y": 880 },
+    "hw_mm": { "x": 1600, "y": 880 },
+    "u_z": { "x": 0, "y": 1100 },
+    "V_z_Ed": { "x": 0, "y": 1320 },
+    "V_pl_z_Rd_N": { "x": 320, "y": 1320 },
+    "Av_z_mm2": { "x": 0, "y": 1540 }
+  }
+}

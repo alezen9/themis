@@ -1,5 +1,5 @@
 import { Slider } from "@base-ui/react/slider";
-import type { VerificationRow as Verification } from "@ndg/ndg-ec3";
+import type { VerificationRow as Verification } from "@ndg/ndg-ec3-1-1";
 import { type CSSProperties } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -124,7 +124,7 @@ export const VerificationBarChart = () => {
       </div>
       {verifications.map((verification, index) => (
         <VerificationRow
-          key={verification.checkId}
+          key={verification.id}
           rowIndex={index}
           scale={scale}
           verification={verification}

@@ -1,6 +1,6 @@
 import { IconFlagEuropeanUnion, IconFlagItaly } from "@components/Icons";
 import { Option, OptionGroup } from "@components/inputs/shared";
-import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3";
+import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3-1-1";
 import {
   composeSteelGradeId,
   composeSteelGradeLabel,

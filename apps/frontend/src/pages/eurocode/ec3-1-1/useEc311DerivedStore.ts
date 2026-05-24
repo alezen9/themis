@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { VerificationRow } from "@ndg/ndg-ec3";
+import type { VerificationRow } from "@ndg/ndg-ec3-1-1";
 
 import { classifySection } from "./domain/classification/classifySection";
 import { computeGeometryProperties } from "./domain/geometry/computeGeometryProperties";
@@ -8,13 +8,13 @@ import { defaultValues } from "./Form/defaultValues";
 type Ec311DerivedState = {
   geometry: ReturnType<typeof computeGeometryProperties>;
   classification: ReturnType<typeof classifySection>;
-  verifications: VerificationRow[];
+  verifications: readonly VerificationRow[];
   threshold: number;
   setGeometry: (geometry: ReturnType<typeof computeGeometryProperties>) => void;
   setClassification: (
     classification: ReturnType<typeof classifySection>,
   ) => void;
-  setVerifications: (verifications: VerificationRow[]) => void;
+  setVerifications: (verifications: readonly VerificationRow[]) => void;
   setThreshold: (threshold: number) => void;
 };
 

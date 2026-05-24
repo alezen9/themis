@@ -62,10 +62,10 @@ const formatSchemaIssue = (issue) => {
   return `${pathLabel}: ${issue.message}`;
 };
 
-const loadVerificationSchema = async () => {
+const loadNDGSchema = async () => {
   try {
     const module = await import("../packages/ndg-core/dist/index.js");
-    return module.VerificationSchema;
+    return module.NDGSchema;
   } catch {
     fail(
       'Could not load "@ndg/ndg-core" runtime schema. Run "pnpm --filter @ndg/ndg-core build" first',
@@ -282,7 +282,7 @@ const buildLayoutById = (nodes) => {
 
 const main = async () => {
   const { inPath, outPath } = parseArgs();
-  const VerificationSchema = await loadVerificationSchema();
+  const NDGSchema = await loadNDGSchema();
   const absoluteInPath = path.resolve(inPath);
   const absoluteOutPath = path.resolve(outPath);
 
@@ -328,7 +328,7 @@ const main = async () => {
     nodes.push(nodeValue);
   }
 
-  const validatedNodes = VerificationSchema.safeParse(nodes);
+  const validatedNodes = NDGSchema.safeParse(nodes);
   if (!validatedNodes.success) {
     fail(
       `Draft nodes are invalid: ${formatSchemaIssue(validatedNodes.error.issues[0])}`,

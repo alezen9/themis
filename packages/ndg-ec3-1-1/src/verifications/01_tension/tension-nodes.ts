@@ -1,0 +1,72 @@
+import { defineNodes } from "@ndg/ndg-core";
+
+export const nodes = defineNodes([
+  {
+    id: "ratio",
+    type: "check",
+    key: "ratio",
+    valueType: { type: "number" },
+    name: "Tension resistance check",
+    verificationExpression: "\frac{N_{Ed}}{N_{pl,Rd}} \leq 1.0",
+    meta: { sectionRef: "6.2.3", verificationRef: "(6.5)" },
+    children: [{ nodeId: "N_Ed_N" }, { nodeId: "N_pl_Rd_N" }],
+  },
+  {
+    id: "N_Ed_N",
+    type: "user-input",
+    key: "N_Ed_N",
+    valueType: { type: "number" },
+    name: "Design tensile force",
+    symbol: "N_{Ed}",
+    unit: "N",
+    children: [],
+  },
+  {
+    id: "N_pl_Rd_N",
+    type: "formula",
+    key: "N_pl_Rd_N",
+    valueType: { type: "number" },
+    name: "Design plastic resistance to normal forces",
+    symbol: "N_{pl,Rd}",
+    expression: "\frac{A_mm2 \cdot f_y}{\gamma_{M0}}",
+    unit: "N",
+    meta: { sectionRef: "6.2.3", formulaRef: "(6.6)" },
+    children: [
+      { nodeId: "A_mm2" },
+      { nodeId: "fy_MPa" },
+      { nodeId: "gamma_M0" },
+    ],
+  },
+  {
+    id: "A_mm2",
+    type: "user-input",
+    key: "A_mm2",
+    valueType: { type: "number" },
+    name: "Cross-sectional area",
+    symbol: "A_mm2",
+    unit: "mm^{2}",
+    children: [],
+  },
+  {
+    id: "fy_MPa",
+    type: "user-input",
+    key: "fy_MPa",
+    valueType: { type: "number" },
+    name: "Yield strength",
+    symbol: "f_y",
+    unit: "MPa",
+    children: [],
+  },
+  {
+    id: "gamma_M0",
+    type: "coefficient",
+    key: "gamma_M0",
+    valueType: { type: "number" },
+    name: "Partial safety factor",
+    symbol: "\gamma_{M0}",
+    meta: { sectionRef: "6.1" },
+    children: [],
+  },
+]);
+
+export type Nodes = typeof nodes;

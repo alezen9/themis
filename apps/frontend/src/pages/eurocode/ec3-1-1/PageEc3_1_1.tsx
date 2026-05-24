@@ -21,7 +21,7 @@ import { useEc311FormContext } from "./Form/useEc311FormContext";
 import { useEc311DerivedStore } from "./useEc311DerivedStore";
 import { twMerge } from "tailwind-merge";
 import { Verifications } from "./Verifications/Verifications";
-import verify, { type Ec3VerifyPayload } from "@ndg/ndg-ec3";
+import verify, { type Ec311Inputs } from "@ndg/ndg-ec3-1-1";
 import { steelGradesMap } from "./data/steelGrades";
 
 type PageEc3_1_1Props = {
@@ -50,7 +50,7 @@ export const PageEc3_1_1 = (props: PageEc3_1_1Props) => {
             "[--header-height:--spacing(17)]",
           )}
         >
-          <header className="w-auto h-(--header-height)">
+          <header className="w-auto h_mm-(--header-height)">
             <Header>Steel members</Header>
             <SubHeader>
               EC3-1-1 · Member checks according to EN 1993-1-1
@@ -61,7 +61,7 @@ export const PageEc3_1_1 = (props: PageEc3_1_1Props) => {
             <div className="min-w-106">
               <Form />
             </div>
-            <div className="sticky top-[calc(var(--header-height)+var(--spacing)*12)] max-h-[calc(100dvh-var(--header-height)-var(--spacing)*27)] w-full h-full overflow-hidden">
+            <div className="sticky top-[calc(var(--header-height)+var(--spacing)*12)] max-h_mm-[calc(100dvh-var(--header-height)-var(--spacing)*27)] w-full h_mm-full overflow-hidden">
               <Verifications />
             </div>
           </div>
@@ -108,12 +108,12 @@ const Observer = (props: ObserverProps) => {
       if (!verifyResult.success) return;
 
       onValidValuesChange?.(verifyResult.data);
-      const verifyPayload = createEc3VerifyPayload({
+      const verifyInputs = createEc311Inputs({
         values: verifyResult.data,
         geometry,
         classification,
       });
-      const verifications = verify(verifyPayload);
+      const verifications = verify(verifyInputs);
       setVerifications(verifications);
       console.log(verifications);
     },
@@ -164,15 +164,13 @@ type ActiveGeometrySchema =
   | typeof rhsGeometrySchema
   | typeof chsGeometrySchema;
 
-type CreateEc3VerifyPayloadInput = {
+type CreateEc311InputsInput = {
   values: Ec3FormValues;
   geometry: ReturnType<typeof computeGeometryProperties>;
   classification: ReturnType<typeof classifySection>;
 };
 
-const createEc3VerifyPayload = (
-  input: CreateEc3VerifyPayloadInput,
-): Ec3VerifyPayload => {
+const createEc311Inputs = (input: CreateEc311InputsInput): Ec311Inputs => {
   const { values, geometry, classification } = input;
   const steelGrade = steelGradesMap.get(values.steel_grade_id);
   if (!steelGrade)
@@ -188,7 +186,55 @@ const createEc3VerifyPayload = (
   let section_class = classification[0];
   if (values.section_class !== "auto") section_class = values.section_class;
 
-  return { ...values, ...geometry, fy_MPa, section_class };
+  let h_mm = values.i_geometry.h_mm;
+  let b_mm = values.i_geometry.b_mm;
+  let tw_mm = values.i_geometry.tw_mm;
+  let tf_mm = values.i_geometry.tf_mm;
+  let t_mm = values.i_geometry.tw_mm;
+  let hw_mm = values.i_geometry.h_mm - 2 * values.i_geometry.tf_mm;
+
+  if (values.shape === "RHS") {
+    h_mm = values.rhs_geometry.h_mm;
+    b_mm = values.rhs_geometry.b_mm;
+    tw_mm = values.rhs_geometry.tw_mm;
+    tf_mm = values.rhs_geometry.tw_mm;
+    t_mm = values.rhs_geometry.tw_mm;
+    hw_mm = values.rhs_geometry.h_mm;
+  }
+
+  if (values.shape === "CHS") {
+    h_mm = values.chs_geometry.d_mm;
+    b_mm = values.chs_geometry.d_mm;
+    tw_mm = values.chs_geometry.t_mm;
+    tf_mm = values.chs_geometry.t_mm;
+    t_mm = values.chs_geometry.t_mm;
+    hw_mm = values.chs_geometry.d_mm;
+  }
+
+  return {
+    shape: values.shape,
+    section_class,
+    N_Ed_N: values.N_Ed_kN * 1_000,
+    V_y_Ed_N: values.V_y_Ed_kN * 1_000,
+    V_z_Ed_N: values.V_z_Ed_kN * 1_000,
+    M_y_Ed_Nmm: values.M_y_Ed_kNm * 1_000_000,
+    M_z_Ed_Nmm: values.M_z_Ed_kNm * 1_000_000,
+    A_mm2: geometry.A_mm2,
+    Wpl_y_mm3: geometry.Wpl_y_mm3,
+    Wpl_z_mm3: geometry.Wpl_z_mm3,
+    Wel_y_mm3: geometry.Wel_y_mm3,
+    Wel_z_mm3: geometry.Wel_z_mm3,
+    Av_y_mm2: geometry.Av_y_mm2,
+    Av_z_mm2: geometry.Av_z_mm2,
+    h_mm,
+    hw_mm,
+    b_mm,
+    tw_mm,
+    tf_mm,
+    t_mm,
+    fy_MPa,
+    gamma_M0: values.gamma_M0,
+  };
 };
 
 const gateDerivedGeometry = (values: Ec311ObservedValues) => {

@@ -47,9 +47,9 @@ importers:
       '@ndg/ndg-core':
         specifier: workspace:*
         version: link:../../packages/ndg-core
-      '@ndg/ndg-ec3':
+      '@ndg/ndg-ec3-1-1':
         specifier: workspace:*
-        version: link:../../packages/ndg-ec3
+        version: link:../../packages/ndg-ec3-1-1
       '@tanstack/react-query':
         specifier: ^5.95.2
         version: 5.95.2(react@19.2.4)
@@ -161,7 +161,7 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2(jsdom@29.0.1)(vite@8.0.3(esbuild@0.27.4)(jiti@2.6.1)(tsx@4.21.0))
 
-  packages/ndg-ec3:
+  packages/ndg-ec3-1-1:
     dependencies:
       '@ndg/ndg-core':
         specifier: workspace:*

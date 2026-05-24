@@ -1,0 +1,24 @@
+export type Ec311Inputs = {
+  shape: "I" | "RHS" | "CHS";
+  section_class: 1 | 2 | 3 | 4;
+  N_Ed_N: number;
+  V_y_Ed_N: number;
+  V_z_Ed_N: number;
+  M_y_Ed_Nmm: number;
+  M_z_Ed_Nmm: number;
+  A_mm2: number;
+  Wpl_y_mm3: number;
+  Wpl_z_mm3: number;
+  Wel_y_mm3: number;
+  Wel_z_mm3: number;
+  Av_y_mm2: number;
+  Av_z_mm2: number;
+  h_mm: number;
+  hw_mm: number;
+  b_mm: number;
+  tw_mm: number;
+  tf_mm: number;
+  t_mm: number;
+  fy_MPa: number;
+  gamma_M0: number;
+};
