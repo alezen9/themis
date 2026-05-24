@@ -2,9 +2,9 @@ import { defineNodes } from "@ndg/ndg-core";
 
 export const nodes = defineNodes([
   {
-    id: "shear_z_check",
+    id: "ratio",
     type: "check",
-    key: "shear_z_check",
+    key: "ratio",
     valueType: { type: "number" },
     name: "Shear resistance check about z-z",
     verificationExpression:
@@ -32,12 +32,16 @@ export const nodes = defineNodes([
     expression: "\\frac{A_{v,z} \\cdot f_y}{\\sqrt{3}\\,\\gamma_{M0}}",
     unit: "\\mathrm{N}",
     meta: { sectionRef: "6.2.6", formulaRef: "(6.18)" },
-    children: [{ nodeId: "Av_z" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
+    children: [
+      { nodeId: "Av_z_mm2" },
+      { nodeId: "fy_MPa" },
+      { nodeId: "gamma_M0" },
+    ],
   },
   {
-    id: "Av_z",
+    id: "Av_z_mm2",
     type: "user-input",
-    key: "Av_z",
+    key: "Av_z_mm2",
     valueType: { type: "number" },
     name: "Shear area about z-z",
     symbol: "A_{v,z}",
@@ -45,9 +49,9 @@ export const nodes = defineNodes([
     children: [],
   },
   {
-    id: "fy",
+    id: "fy_MPa",
     type: "user-input",
-    key: "fy",
+    key: "fy_MPa",
     valueType: { type: "number" },
     name: "Yield strength",
     symbol: "f_y",

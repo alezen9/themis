@@ -2,9 +2,9 @@ import { defineNodes } from "@ndg/ndg-core";
 
 export const nodes = defineNodes([
   {
-    id: "bending_y_shear_check",
+    id: "ratio",
     type: "check",
-    key: "bending_y_shear_check",
+    key: "ratio",
     valueType: { type: "number" },
     name: "Bending and shear resistance check about y-y",
     verificationExpression:
@@ -32,13 +32,13 @@ export const nodes = defineNodes([
     unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.8", formulaRef: "(6.30)" },
     children: [
-      { nodeId: "M_y_V_Rd_i", when: { eq: ["section_shape", { value: "I" }] } },
+      { nodeId: "M_y_V_Rd_i", when: { eq: ["shape", { value: "I" }] } },
       {
         nodeId: "M_y_V_Rd_rhs_chs",
         when: {
           or: [
-            { eq: ["section_shape", { value: "RHS" }] },
-            { eq: ["section_shape", { value: "CHS" }] },
+            { eq: ["shape", { value: "RHS" }] },
+            { eq: ["shape", { value: "CHS" }] },
           ],
         },
       },
@@ -59,8 +59,8 @@ export const nodes = defineNodes([
       { nodeId: "W_y_res" },
       { nodeId: "rho_z" },
       { nodeId: "A_w" },
-      { nodeId: "tw" },
-      { nodeId: "fy" },
+      { nodeId: "tw_mm" },
+      { nodeId: "fy_MPa" },
       { nodeId: "gamma_M0" },
     ],
   },
@@ -78,7 +78,7 @@ export const nodes = defineNodes([
     children: [
       { nodeId: "W_y_res" },
       { nodeId: "rho_z" },
-      { nodeId: "fy" },
+      { nodeId: "fy_MPa" },
       { nodeId: "gamma_M0" },
     ],
   },
@@ -92,7 +92,7 @@ export const nodes = defineNodes([
     unit: "\\mathrm{mm^{3}}",
     children: [
       {
-        nodeId: "Wpl_y",
+        nodeId: "Wpl_y_mm3",
         when: {
           or: [
             { eq: ["section_class", { value: 1 }] },
@@ -100,13 +100,13 @@ export const nodes = defineNodes([
           ],
         },
       },
-      { nodeId: "Wel_y", when: { eq: ["section_class", { value: 3 }] } },
+      { nodeId: "Wel_y_mm3", when: { eq: ["section_class", { value: 3 }] } },
     ],
   },
   {
-    id: "Wpl_y",
+    id: "Wpl_y_mm3",
     type: "user-input",
-    key: "Wpl_y",
+    key: "Wpl_y_mm3",
     valueType: { type: "number" },
     name: "Plastic section modulus about y-y",
     symbol: "W_{pl,y}",
@@ -114,9 +114,9 @@ export const nodes = defineNodes([
     children: [],
   },
   {
-    id: "Wel_y",
+    id: "Wel_y_mm3",
     type: "user-input",
-    key: "Wel_y",
+    key: "Wel_y_mm3",
     valueType: { type: "number" },
     name: "Elastic section modulus about y-y",
     symbol: "W_{el,y}",
@@ -175,7 +175,11 @@ export const nodes = defineNodes([
     expression: "\\dfrac{A_{v,z} \\cdot f_y}{\\sqrt{3}\\,\\gamma_{M0}}",
     unit: "\\mathrm{N}",
     meta: { sectionRef: "6.2.6", formulaRef: "(6.18)" },
-    children: [{ nodeId: "Av_z" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
+    children: [
+      { nodeId: "Av_z_mm2" },
+      { nodeId: "fy_MPa" },
+      { nodeId: "gamma_M0" },
+    ],
   },
   {
     id: "u_z",
@@ -188,9 +192,9 @@ export const nodes = defineNodes([
     children: [{ nodeId: "V_z_Ed" }, { nodeId: "V_pl_z_Rd" }],
   },
   {
-    id: "Av_z",
+    id: "Av_z_mm2",
     type: "user-input",
-    key: "Av_z",
+    key: "Av_z_mm2",
     valueType: { type: "number" },
     name: "Shear area about z-z",
     symbol: "A_{v,z}",
@@ -216,12 +220,12 @@ export const nodes = defineNodes([
     symbol: "A_w",
     expression: "h_w \\cdot t_w",
     unit: "\\mathrm{mm^{2}}",
-    children: [{ nodeId: "hw" }, { nodeId: "tw" }],
+    children: [{ nodeId: "hw" }, { nodeId: "tw_mm" }],
   },
   {
-    id: "tw",
+    id: "tw_mm",
     type: "user-input",
-    key: "tw",
+    key: "tw_mm",
     valueType: { type: "number" },
     name: "Web thickness",
     symbol: "t_w",
@@ -229,9 +233,9 @@ export const nodes = defineNodes([
     children: [],
   },
   {
-    id: "fy",
+    id: "fy_MPa",
     type: "user-input",
-    key: "fy",
+    key: "fy_MPa",
     valueType: { type: "number" },
     name: "Yield strength",
     symbol: "f_y",

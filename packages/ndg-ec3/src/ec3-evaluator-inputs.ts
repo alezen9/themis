@@ -92,6 +92,14 @@ export type Ec3DerivedGeometricProperties = {
 
 export type Ec3VerifyPayload = Ec3VerifyInputs & Ec3DerivedGeometricProperties;
 
+type Ec3BaseUnitInputs = {
+  N_Ed: number;
+  V_y_Ed: number;
+  V_z_Ed: number;
+  M_y_Ed: number;
+  M_z_Ed: number;
+};
+
 export type Ec3EvaluatorInputs = Record<string, RuntimeValue> &
   Partial<
     Pick<
@@ -118,7 +126,8 @@ export type Ec3EvaluatorInputs = Record<string, RuntimeValue> &
       | "buckling_curves_LT_policy"
     >
   > &
-  Partial<Omit<Ec3DerivedGeometricProperties, "centroid">>;
+  Partial<Omit<Ec3DerivedGeometricProperties, "centroid">> &
+  Partial<Ec3BaseUnitInputs>;
 
 const addRuntimeValues = (
   target: Record<string, RuntimeValue>,
@@ -137,6 +146,28 @@ export const createEc3RuntimeInputs = (
   const runtimeInputs: Record<string, RuntimeValue> = {};
 
   addRuntimeValues(runtimeInputs, payload);
+  runtimeInputs.N_Ed = payload.N_Ed_kN * 1_000;
+  runtimeInputs.V_y_Ed = payload.V_y_Ed_kN * 1_000;
+  runtimeInputs.V_z_Ed = payload.V_z_Ed_kN * 1_000;
+  runtimeInputs.M_y_Ed = payload.M_y_Ed_kNm * 1_000_000;
+  runtimeInputs.M_z_Ed = payload.M_z_Ed_kNm * 1_000_000;
+
+  if (payload.shape === "I") {
+    runtimeInputs.h_mm = payload.i_geometry.h_mm;
+    runtimeInputs.b_mm = payload.i_geometry.b_mm;
+    runtimeInputs.tw_mm = payload.i_geometry.tw_mm;
+    runtimeInputs.tf_mm = payload.i_geometry.tf_mm;
+    runtimeInputs.t_mm = payload.i_geometry.tw_mm;
+  }
+  if (payload.shape === "RHS") {
+    runtimeInputs.h_mm = payload.rhs_geometry.h_mm;
+    runtimeInputs.b_mm = payload.rhs_geometry.b_mm;
+    runtimeInputs.tw_mm = payload.rhs_geometry.tw_mm;
+    runtimeInputs.t_mm = payload.rhs_geometry.tw_mm;
+  }
+  if (payload.shape === "CHS") {
+    runtimeInputs.t_mm = payload.chs_geometry.t_mm;
+  }
 
   return runtimeInputs as Ec3EvaluatorInputs;
 };

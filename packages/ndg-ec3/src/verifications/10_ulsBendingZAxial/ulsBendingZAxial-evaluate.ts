@@ -4,20 +4,20 @@ import type { Nodes } from "./ulsBendingZAxial-nodes";
 import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
 
 export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
-  M_pl_z_Rd: ({ Wpl_z, fy, gamma_M0 }) => {
-    if (!Number.isFinite(Wpl_z) || Wpl_z <= 0) {
+  M_pl_z_Rd: ({ Wpl_z_mm3, fy_MPa, gamma_M0 }) => {
+    if (!Number.isFinite(Wpl_z_mm3) || Wpl_z_mm3 <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: Wpl_z must be > 0",
-        details: { Wpl_z, sectionRef: "6.2.5" },
+        message: "bending-z-axial: Wpl_z_mm3 must be > 0",
+        details: { Wpl_z_mm3, sectionRef: "6.2.5" },
       });
     }
 
-    if (!Number.isFinite(fy) || fy <= 0) {
+    if (!Number.isFinite(fy_MPa) || fy_MPa <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: fy must be > 0",
-        details: { fy, sectionRef: "6.2.5" },
+        message: "bending-z-axial: fy_MPa must be > 0",
+        details: { fy_MPa, sectionRef: "6.2.5" },
       });
     }
 
@@ -29,23 +29,23 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (Wpl_z * fy) / gamma_M0;
+    return (Wpl_z_mm3 * fy_MPa) / gamma_M0;
   },
 
-  N_pl_Rd: ({ A, fy, gamma_M0 }) => {
-    if (!Number.isFinite(A) || A <= 0) {
+  N_pl_Rd: ({ A_mm2, fy_MPa, gamma_M0 }) => {
+    if (!Number.isFinite(A_mm2) || A_mm2 <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: A must be > 0",
-        details: { A, sectionRef: "6.2.4" },
+        message: "bending-z-axial: A_mm2 must be > 0",
+        details: { A_mm2, sectionRef: "6.2.4" },
       });
     }
 
-    if (!Number.isFinite(fy) || fy <= 0) {
+    if (!Number.isFinite(fy_MPa) || fy_MPa <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: fy must be > 0",
-        details: { fy, sectionRef: "6.2.4" },
+        message: "bending-z-axial: fy_MPa must be > 0",
+        details: { fy_MPa, sectionRef: "6.2.4" },
       });
     }
 
@@ -57,7 +57,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (A * fy) / gamma_M0;
+    return (A_mm2 * fy_MPa) / gamma_M0;
   },
 
   abs_N_Ed: ({ N_Ed }) => {
@@ -85,60 +85,60 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return abs_N_Ed / N_pl_Rd;
   },
 
-  a_f_i: ({ A, b, tf }) => {
-    if (!Number.isFinite(A) || A <= 0) {
+  a_f_i: ({ A_mm2, b_mm, tf_mm }) => {
+    if (!Number.isFinite(A_mm2) || A_mm2 <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: A must be > 0",
-        details: { A, sectionRef: "6.2.9.1" },
+        message: "bending-z-axial: A_mm2 must be > 0",
+        details: { A_mm2, sectionRef: "6.2.9.1" },
       });
     }
 
-    if (!Number.isFinite(b) || b <= 0) {
+    if (!Number.isFinite(b_mm) || b_mm <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: b must be > 0",
-        details: { b, sectionRef: "6.2.9.1" },
+        message: "bending-z-axial: b_mm must be > 0",
+        details: { b_mm, sectionRef: "6.2.9.1" },
       });
     }
 
-    if (!Number.isFinite(tf) || tf <= 0) {
+    if (!Number.isFinite(tf_mm) || tf_mm <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: tf must be > 0",
-        details: { tf, sectionRef: "6.2.9.1" },
+        message: "bending-z-axial: tf_mm must be > 0",
+        details: { tf_mm, sectionRef: "6.2.9.1" },
       });
     }
 
-    return Math.min((A - 2 * b * tf) / A, 0.5);
+    return Math.min((A_mm2 - 2 * b_mm * tf_mm) / A_mm2, 0.5);
   },
 
-  a_f_rhs: ({ A, h, t }) => {
-    if (!Number.isFinite(A) || A <= 0) {
+  a_f_rhs: ({ A_mm2, h_mm, t_mm }) => {
+    if (!Number.isFinite(A_mm2) || A_mm2 <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: A must be > 0",
-        details: { A, sectionRef: "6.2.9.1" },
+        message: "bending-z-axial: A_mm2 must be > 0",
+        details: { A_mm2, sectionRef: "6.2.9.1" },
       });
     }
 
-    if (!Number.isFinite(h) || h <= 0) {
+    if (!Number.isFinite(h_mm) || h_mm <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: h must be > 0",
-        details: { h, sectionRef: "6.2.9.1" },
+        message: "bending-z-axial: h_mm must be > 0",
+        details: { h_mm, sectionRef: "6.2.9.1" },
       });
     }
 
-    if (!Number.isFinite(t) || t <= 0) {
+    if (!Number.isFinite(t_mm) || t_mm <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: t must be > 0",
-        details: { t, sectionRef: "6.2.9.1" },
+        message: "bending-z-axial: t_mm must be > 0",
+        details: { t_mm, sectionRef: "6.2.9.1" },
       });
     }
 
-    return Math.min((A - 2 * h * t) / A, 0.5);
+    return Math.min((A_mm2 - 2 * h_mm * t_mm) / A_mm2, 0.5);
   },
 
   a_f_chs: () => {
@@ -230,40 +230,40 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return abs_M_z_Ed / M_N_z_Rd;
   },
 
-  sigma_N: ({ abs_N_Ed, A }) => {
-    if (!Number.isFinite(A) || A <= 0) {
+  sigma_N: ({ abs_N_Ed, A_mm2 }) => {
+    if (!Number.isFinite(A_mm2) || A_mm2 <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: A must be > 0",
-        details: { A, sectionRef: "6.2.9.2" },
+        message: "bending-z-axial: A_mm2 must be > 0",
+        details: { A_mm2, sectionRef: "6.2.9.2" },
       });
     }
 
-    return abs_N_Ed / A;
+    return abs_N_Ed / A_mm2;
   },
 
-  sigma_M_z: ({ abs_M_z_Ed, Wel_z }) => {
-    if (!Number.isFinite(Wel_z) || Wel_z <= 0) {
+  sigma_M_z: ({ abs_M_z_Ed, Wel_z_mm3 }) => {
+    if (!Number.isFinite(Wel_z_mm3) || Wel_z_mm3 <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: Wel_z must be > 0",
-        details: { Wel_z, sectionRef: "6.2.9.2" },
+        message: "bending-z-axial: Wel_z_mm3 must be > 0",
+        details: { Wel_z_mm3, sectionRef: "6.2.9.2" },
       });
     }
 
-    return abs_M_z_Ed / Wel_z;
+    return abs_M_z_Ed / Wel_z_mm3;
   },
 
   sigma_x_class3: ({ sigma_N, sigma_M_z }) => {
     return sigma_N + sigma_M_z;
   },
 
-  sigma_limit: ({ fy, gamma_M0 }) => {
-    if (!Number.isFinite(fy) || fy <= 0) {
+  sigma_limit: ({ fy_MPa, gamma_M0 }) => {
+    if (!Number.isFinite(fy_MPa) || fy_MPa <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z-axial: fy must be > 0",
-        details: { fy, sectionRef: "6.2.9.2" },
+        message: "bending-z-axial: fy_MPa must be > 0",
+        details: { fy_MPa, sectionRef: "6.2.9.2" },
       });
     }
 
@@ -275,7 +275,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return fy / gamma_M0;
+    return fy_MPa / gamma_M0;
   },
 
   utilization_class3: ({ sigma_x_class3, sigma_limit }) => {
@@ -291,11 +291,7 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return sigma_x_class3 / sigma_limit;
   },
 
-  bending_z_axial_check: ({
-    section_class,
-    utilization_class12,
-    utilization_class3,
-  }) => {
+  ratio: ({ section_class, utilization_class12, utilization_class3 }) => {
     if (!Number.isFinite(section_class) || !Number.isInteger(section_class)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",

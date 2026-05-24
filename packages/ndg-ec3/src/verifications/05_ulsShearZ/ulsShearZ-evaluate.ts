@@ -4,20 +4,20 @@ import type { Nodes } from "./ulsShearZ-nodes";
 import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
 
 export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
-  V_pl_z_Rd: ({ Av_z, fy, gamma_M0 }) => {
-    if (!Number.isFinite(Av_z) || Av_z <= 0) {
+  V_pl_z_Rd: ({ Av_z_mm2, fy_MPa, gamma_M0 }) => {
+    if (!Number.isFinite(Av_z_mm2) || Av_z_mm2 <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "shear-z: Av_z must be > 0",
-        details: { Av_z, sectionRef: "6.2.6" },
+        message: "shear-z: Av_z_mm2 must be > 0",
+        details: { Av_z_mm2, sectionRef: "6.2.6" },
       });
     }
 
-    if (!Number.isFinite(fy) || fy <= 0) {
+    if (!Number.isFinite(fy_MPa) || fy_MPa <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "shear-z: fy must be > 0",
-        details: { fy, sectionRef: "6.2.6" },
+        message: "shear-z: fy_MPa must be > 0",
+        details: { fy_MPa, sectionRef: "6.2.6" },
       });
     }
 
@@ -29,10 +29,10 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (Av_z * fy) / (Math.sqrt(3) * gamma_M0);
+    return (Av_z_mm2 * fy_MPa) / (Math.sqrt(3) * gamma_M0);
   },
 
-  shear_z_check: ({ V_z_Ed, V_pl_z_Rd }) => {
+  ratio: ({ V_z_Ed, V_pl_z_Rd }) => {
     if (!Number.isFinite(V_z_Ed)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",

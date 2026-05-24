@@ -1,11 +1,10 @@
 import { Slider } from "@base-ui/react/slider";
 import type { VerificationRow as Verification } from "@ndg/ndg-ec3";
-import { type CSSProperties, useState } from "react";
+import { type CSSProperties } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useEc311DerivedStore } from "../useEc311DerivedStore";
 
-const defaultThreshold = 1;
 const minThreshold = 0.5;
 const maxThreshold = 1;
 const thresholdStep = 0.01;
@@ -87,7 +86,6 @@ const createScale = (verifications: readonly Verification[]): Scale => {
 
 export const VerificationBarChart = () => {
   const verifications = useEc311DerivedStore((state) => state.verifications);
-  const [threshold, setThreshold] = useState(defaultThreshold);
   const scale = createScale(verifications);
 
   if (verifications.length === 0) return null;
@@ -113,7 +111,7 @@ export const VerificationBarChart = () => {
           gridRow: `1 / span ${verifications.length}`,
         }}
       >
-        <ChartGuides scale={scale} threshold={threshold} />
+        <ChartGuides scale={scale} />
       </div>
       <div
         className="pointer-events-none absolute inset-0"
@@ -122,18 +120,13 @@ export const VerificationBarChart = () => {
           gridRow: `1 / span ${verifications.length}`,
         }}
       >
-        <ThresholdSlider
-          onThresholdChange={setThreshold}
-          scale={scale}
-          threshold={threshold}
-        />
+        <ThresholdSlider scale={scale} />
       </div>
       {verifications.map((verification, index) => (
         <VerificationRow
           key={verification.checkId}
           rowIndex={index}
           scale={scale}
-          threshold={threshold}
           verification={verification}
         />
       ))}
@@ -141,10 +134,11 @@ export const VerificationBarChart = () => {
   );
 };
 
-type ChartGuidesProps = { scale: Scale; threshold: number };
+type ChartGuidesProps = { scale: Scale };
 
 const ChartGuides = (props: ChartGuidesProps) => {
-  const { scale, threshold } = props;
+  const { scale } = props;
+  const threshold = useEc311DerivedStore((state) => state.threshold);
 
   return (
     <div className="pointer-events-none absolute inset-0">
@@ -191,14 +185,12 @@ const ChartGuides = (props: ChartGuidesProps) => {
   );
 };
 
-type ThresholdSliderProps = {
-  onThresholdChange: (threshold: number) => void;
-  scale: Scale;
-  threshold: number;
-};
+type ThresholdSliderProps = { scale: Scale };
 
 const ThresholdSlider = (props: ThresholdSliderProps) => {
-  const { onThresholdChange, scale, threshold } = props;
+  const { scale } = props;
+  const setThreshold = useEc311DerivedStore((state) => state.setThreshold);
+  const threshold = useEc311DerivedStore((state) => state.threshold);
   const sliderValue = minThreshold + maxThreshold - threshold;
 
   return (
@@ -209,7 +201,7 @@ const ThresholdSlider = (props: ThresholdSliderProps) => {
       max={maxThreshold}
       min={minThreshold}
       onValueChange={(value) =>
-        onThresholdChange(minThreshold + maxThreshold - value)
+        setThreshold(minThreshold + maxThreshold - value)
       }
       step={thresholdStep}
       style={{
@@ -239,16 +231,14 @@ const ThresholdSlider = (props: ThresholdSliderProps) => {
 
 type VerificationItemProps = { scale: Scale; verification: Verification };
 
-type VerificationThresholdItemProps = VerificationItemProps & {
-  threshold: number;
-};
+type VerificationThresholdItemProps = VerificationItemProps;
 
 type VerificationRowProps = VerificationThresholdItemProps & {
   rowIndex: number;
 };
 
 const VerificationRow = (props: VerificationRowProps) => {
-  const { rowIndex, scale, threshold, verification } = props;
+  const { rowIndex, scale, verification } = props;
   const gridRow = rowIndex + 1;
 
   return (
@@ -256,22 +246,15 @@ const VerificationRow = (props: VerificationRowProps) => {
       className="verification-row col-span-full grid grid-cols-subgrid gap-x-0.5"
       style={{ gridRow }}
     >
-      <VerificationBar
-        scale={scale}
-        threshold={threshold}
-        verification={verification}
-      />
-      <VerificationLabel
-        scale={scale}
-        threshold={threshold}
-        verification={verification}
-      />
+      <VerificationBar scale={scale} verification={verification} />
+      <VerificationLabel scale={scale} verification={verification} />
     </div>
   );
 };
 
 const VerificationBar = (props: VerificationThresholdItemProps) => {
-  const { scale, threshold, verification } = props;
+  const { scale, verification } = props;
+  const threshold = useEc311DerivedStore((state) => state.threshold);
   const ratio = getVerificationRatio(verification);
   const status = getVerificationStatus(ratio, threshold);
 
@@ -302,7 +285,8 @@ const VerificationBar = (props: VerificationThresholdItemProps) => {
 };
 
 const VerificationLabel = (props: VerificationThresholdItemProps) => {
-  const { threshold, verification } = props;
+  const { verification } = props;
+  const threshold = useEc311DerivedStore((state) => state.threshold);
   const ratio = getVerificationRatio(verification);
   const status = getVerificationStatus(ratio, threshold);
   const formattedRatio = formatRatio(ratio);

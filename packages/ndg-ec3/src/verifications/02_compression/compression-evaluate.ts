@@ -4,7 +4,7 @@ import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
 import { Ec3VerificationError } from "../../errors";
 
 export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
-  N_c_Rd_kN: ({ A_mm2, fy_MPa, gamma_M0 }) => {
+  N_c_Rd: ({ A_mm2, fy_MPa, gamma_M0 }) => {
     if (!Number.isFinite(A_mm2) || A_mm2 <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -32,32 +32,32 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
     return (A_mm2 * fy_MPa) / gamma_M0;
   },
 
-  ratio: ({ N_Ed_kN, N_c_Rd_kN }) => {
-    if (!Number.isFinite(N_Ed_kN)) {
+  ratio: ({ N_Ed, N_c_Rd }) => {
+    if (!Number.isFinite(N_Ed)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "compression: N_Ed_kN must be finite",
-        details: { N_Ed_kN, sectionRef: "6.2.4" },
+        message: "compression: N_Ed must be finite",
+        details: { N_Ed, sectionRef: "6.2.4" },
       });
     }
 
-    if (N_Ed_kN >= 0) {
+    if (N_Ed >= 0) {
       throw new Ec3VerificationError({
         type: "not-applicable-load-case",
-        message: "compression: load case not applicable for sign of N_Ed_kN",
-        details: { N_Ed_kN, sectionRef: "6.2.4" },
+        message: "compression: load case not applicable for sign of N_Ed",
+        details: { N_Ed, sectionRef: "6.2.4" },
       });
     }
 
-    if (!Number.isFinite(N_c_Rd_kN) || N_c_Rd_kN <= 0) {
+    if (!Number.isFinite(N_c_Rd) || N_c_Rd <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
         message:
-          "compression: denominator N_c_Rd_kN must be > 0 (division by zero)",
-        details: { N_c_Rd_kN, sectionRef: "6.2.4" },
+          "compression: denominator N_c_Rd must be > 0 (division by zero)",
+        details: { N_c_Rd, sectionRef: "6.2.4" },
       });
     }
 
-    return Math.abs(N_Ed_kN) / N_c_Rd_kN;
+    return Math.abs(N_Ed) / N_c_Rd;
   },
 });

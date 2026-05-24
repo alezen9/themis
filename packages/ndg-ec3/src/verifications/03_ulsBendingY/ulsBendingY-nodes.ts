@@ -2,9 +2,9 @@ import { defineNodes } from "@ndg/ndg-core";
 
 export const nodes = defineNodes([
   {
-    id: "bending_y_check",
+    id: "ratio",
     type: "check",
-    key: "bending_y_check",
+    key: "ratio",
     valueType: { type: "number" },
     name: "Bending resistance check about y-y",
     verificationExpression:
@@ -32,7 +32,11 @@ export const nodes = defineNodes([
     expression: "\\frac{W_{y,res} \\cdot f_y}{\\gamma_{M0}}",
     unit: "\\mathrm{N\\cdot mm}",
     meta: { sectionRef: "6.2.5", formulaRef: "(6.13)" },
-    children: [{ nodeId: "W_y_res" }, { nodeId: "fy" }, { nodeId: "gamma_M0" }],
+    children: [
+      { nodeId: "W_y_res" },
+      { nodeId: "fy_MPa" },
+      { nodeId: "gamma_M0" },
+    ],
   },
   {
     id: "W_y_res",
@@ -44,7 +48,7 @@ export const nodes = defineNodes([
     unit: "\\mathrm{mm^{3}}",
     children: [
       {
-        nodeId: "Wpl_y",
+        nodeId: "Wpl_y_mm3",
         when: {
           or: [
             { eq: ["section_class", { value: 1 }] },
@@ -52,13 +56,13 @@ export const nodes = defineNodes([
           ],
         },
       },
-      { nodeId: "Wel_y", when: { eq: ["section_class", { value: 3 }] } },
+      { nodeId: "Wel_y_mm3", when: { eq: ["section_class", { value: 3 }] } },
     ],
   },
   {
-    id: "Wpl_y",
+    id: "Wpl_y_mm3",
     type: "user-input",
-    key: "Wpl_y",
+    key: "Wpl_y_mm3",
     valueType: { type: "number" },
     name: "Plastic section modulus about y-y",
     symbol: "W_{pl,y}",
@@ -66,9 +70,9 @@ export const nodes = defineNodes([
     children: [],
   },
   {
-    id: "Wel_y",
+    id: "Wel_y_mm3",
     type: "user-input",
-    key: "Wel_y",
+    key: "Wel_y_mm3",
     valueType: { type: "number" },
     name: "Elastic section modulus about y-y",
     symbol: "W_{el,y}",
@@ -76,9 +80,9 @@ export const nodes = defineNodes([
     children: [],
   },
   {
-    id: "fy",
+    id: "fy_MPa",
     type: "user-input",
-    key: "fy",
+    key: "fy_MPa",
     valueType: { type: "number" },
     name: "Yield strength",
     symbol: "f_y",

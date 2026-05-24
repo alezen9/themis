@@ -113,7 +113,9 @@ const Observer = (props: ObserverProps) => {
         geometry,
         classification,
       });
-      setVerifications(verify(verifyPayload));
+      const verifications = verify(verifyPayload);
+      setVerifications(verifications);
+      console.log(verifications);
     },
     [
       onValuesChange,

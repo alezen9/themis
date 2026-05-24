@@ -12,14 +12,14 @@ import type {
 } from "@ndg/ndg-core";
 import v01_tension from "./verifications/01_tension/tension";
 import v02_compression from "./verifications/02_compression/compression";
-// import v03_ulsBendingY from "./verifications/03_ulsBendingY/ulsBendingY";
-// import v04_ulsBendingZ from "./verifications/04_ulsBendingZ/ulsBendingZ";
-// import v05_ulsShearZ from "./verifications/05_ulsShearZ/ulsShearZ";
-// import v06_ulsShearY from "./verifications/06_ulsShearY/ulsShearY";
-// import v07_ulsBendingYShear from "./verifications/07_ulsBendingYShear/ulsBendingYShear";
-// import v08_ulsBendingZShear from "./verifications/08_ulsBendingZShear/ulsBendingZShear";
-// import v09_ulsBendingYAxial from "./verifications/09_ulsBendingYAxial/ulsBendingYAxial";
-// import v10_ulsBendingZAxial from "./verifications/10_ulsBendingZAxial/ulsBendingZAxial";
+import v03_ulsBendingY from "./verifications/03_ulsBendingY/ulsBendingY";
+import v04_ulsBendingZ from "./verifications/04_ulsBendingZ/ulsBendingZ";
+import v05_ulsShearZ from "./verifications/05_ulsShearZ/ulsShearZ";
+import v06_ulsShearY from "./verifications/06_ulsShearY/ulsShearY";
+import v07_ulsBendingYShear from "./verifications/07_ulsBendingYShear/ulsBendingYShear";
+import v08_ulsBendingZShear from "./verifications/08_ulsBendingZShear/ulsBendingZShear";
+import v09_ulsBendingYAxial from "./verifications/09_ulsBendingYAxial/ulsBendingYAxial";
+import v10_ulsBendingZAxial from "./verifications/10_ulsBendingZAxial/ulsBendingZAxial";
 // import v11_ulsBiaxialAxial from "./verifications/11_ulsBiaxialAxial/ulsBiaxialAxial";
 // import v12_ulsBendingYAxialShear from "./verifications/12_ulsBendingYAxialShear/ulsBendingYAxialShear";
 // import v13_ulsBendingZAxialShear from "./verifications/13_ulsBendingZAxialShear/ulsBendingZAxialShear";
@@ -59,14 +59,14 @@ export { getImperfectionFactor } from "./tables/buckling";
 const verificationRegistry = [
   { checkId: 1, verification: v01_tension },
   { checkId: 2, verification: v02_compression },
-  // { checkId: 3, verification: toRegistryDefinition(v03_ulsBendingY) },
-  // { checkId: 4, verification: toRegistryDefinition(v04_ulsBendingZ) },
-  // { checkId: 5, verification: toRegistryDefinition(v05_ulsShearZ) },
-  // { checkId: 6, verification: toRegistryDefinition(v06_ulsShearY) },
-  // { checkId: 7, verification: toRegistryDefinition(v07_ulsBendingYShear) },
-  // { checkId: 8, verification: toRegistryDefinition(v08_ulsBendingZShear) },
-  // { checkId: 9, verification: toRegistryDefinition(v09_ulsBendingYAxial) },
-  // { checkId: 10, verification: toRegistryDefinition(v10_ulsBendingZAxial) },
+  { checkId: 3, verification: v03_ulsBendingY },
+  { checkId: 4, verification: v04_ulsBendingZ },
+  { checkId: 5, verification: v05_ulsShearZ },
+  { checkId: 6, verification: v06_ulsShearY },
+  { checkId: 7, verification: v07_ulsBendingYShear },
+  { checkId: 8, verification: v08_ulsBendingZShear },
+  { checkId: 9, verification: v09_ulsBendingYAxial },
+  { checkId: 10, verification: v10_ulsBendingZAxial },
   // { checkId: 11, verification: toRegistryDefinition(v11_ulsBiaxialAxial) },
   // {
   //   checkId: 12,

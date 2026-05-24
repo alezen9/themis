@@ -4,7 +4,7 @@ import type { Nodes } from "./ulsBendingZ-nodes";
 import type { Ec3EvaluatorInputs } from "../../ec3-evaluator-inputs";
 
 export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
-  M_c_z_Rd: ({ W_z_res, fy, gamma_M0 }) => {
+  M_c_z_Rd: ({ W_z_res, fy_MPa, gamma_M0 }) => {
     if (!Number.isFinite(W_z_res) || W_z_res <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
@@ -13,11 +13,11 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    if (!Number.isFinite(fy) || fy <= 0) {
+    if (!Number.isFinite(fy_MPa) || fy_MPa <= 0) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
-        message: "bending-z: fy must be > 0",
-        details: { fy, sectionRef: "6.2.5" },
+        message: "bending-z: fy_MPa must be > 0",
+        details: { fy_MPa, sectionRef: "6.2.5" },
       });
     }
 
@@ -29,10 +29,10 @@ export const evaluate = defineEvaluators<Nodes, Ec3EvaluatorInputs>({
       });
     }
 
-    return (W_z_res * fy) / gamma_M0;
+    return (W_z_res * fy_MPa) / gamma_M0;
   },
 
-  bending_z_check: ({ M_z_Ed, M_c_z_Rd }) => {
+  ratio: ({ M_z_Ed, M_c_z_Rd }) => {
     if (!Number.isFinite(M_z_Ed)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",
