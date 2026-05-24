@@ -8,7 +8,11 @@ import { classifySection } from "./domain/classification/classifySection";
 import { computeGeometryProperties } from "./domain/geometry/computeGeometryProperties";
 import { defaultValues } from "./Form/defaultValues";
 import { Form } from "./Form/Form";
-import { Ec3FormValues, schema } from "./Form/schema/schema";
+import {
+  Ec3FormValues,
+  Ec3ValidFormValues,
+  schema,
+} from "./Form/schema/schema";
 import { actionsSchema } from "./Form/schema/actionsSchema";
 import {
   chsGeometrySchema,
@@ -23,16 +27,17 @@ import { twMerge } from "tailwind-merge";
 import { Verifications } from "./Verifications/Verifications";
 import verify, { type Ec311Inputs } from "@ndg/ndg-ec3-1-1";
 import { steelGradesMap } from "./data/steelGrades";
+import { getBucklingCurves } from "./domain/buckling/buckling";
 
 type PageEc3_1_1Props = {
   onValuesChange?: (values: Ec3FormValues) => void;
-  onValidValuesChange?: (values: Ec3FormValues) => void;
+  onValidValuesChange?: (values: Ec3ValidFormValues) => void;
 };
 
 export const PageEc3_1_1 = (props: PageEc3_1_1Props) => {
   const { onValuesChange, onValidValuesChange } = props;
 
-  const form = useForm<Ec3FormValues>({
+  const form = useForm<Ec3FormValues, unknown, Ec3ValidFormValues>({
     defaultValues,
     mode: "onChange",
     resolver: zodResolver(schema),
@@ -61,7 +66,7 @@ export const PageEc3_1_1 = (props: PageEc3_1_1Props) => {
             <div className="min-w-106">
               <Form />
             </div>
-            <div className="sticky top-[calc(var(--header-height)+var(--spacing)*12)] max-h_mm-[calc(100dvh-var(--header-height)-var(--spacing)*27)] w-full h_mm-full overflow-hidden">
+            <div className="sticky top-[calc(var(--header-height)+var(--spacing)*12)] max-h-[calc(100dvh-var(--header-height)-var(--spacing)*27)] w-full h-full overflow-hidden">
               <Verifications />
             </div>
           </div>
@@ -74,7 +79,7 @@ export const PageEc3_1_1 = (props: PageEc3_1_1Props) => {
 type ObserverProps = {
   children: ReactNode;
   onValuesChange?: (values: Ec3FormValues) => void;
-  onValidValuesChange?: (values: Ec3FormValues) => void;
+  onValidValuesChange?: (values: Ec3ValidFormValues) => void;
 };
 
 const Observer = (props: ObserverProps) => {
@@ -108,11 +113,12 @@ const Observer = (props: ObserverProps) => {
       if (!verifyResult.success) return;
 
       onValidValuesChange?.(verifyResult.data);
-      const verifyInputs = createEc311Inputs({
-        values: verifyResult.data,
+      const verifyInputs = createVerifyInputs(
+        verifyResult.data,
         geometry,
         classification,
-      });
+      );
+      if (!verifyInputs) return;
       const verifications = verify(verifyInputs);
       setVerifications(verifications);
       console.log(verifications);
@@ -164,77 +170,89 @@ type ActiveGeometrySchema =
   | typeof rhsGeometrySchema
   | typeof chsGeometrySchema;
 
-type CreateEc311InputsInput = {
-  values: Ec3FormValues;
-  geometry: ReturnType<typeof computeGeometryProperties>;
-  classification: ReturnType<typeof classifySection>;
-};
+const createVerifyInputs = (
+  inputs: Ec3ValidFormValues,
+  geometry: ReturnType<typeof computeGeometryProperties>,
+  classification: ReturnType<typeof classifySection>,
+): Ec311Inputs | undefined => {
+  let section_class = classification[0];
+  if (inputs.section_class !== "auto") section_class = inputs.section_class;
+  if (section_class === 4) return; // class 4 not supported yet
 
-const createEc311Inputs = (input: CreateEc311InputsInput): Ec311Inputs => {
-  const { values, geometry, classification } = input;
-  const steelGrade = steelGradesMap.get(values.steel_grade_id);
+  const steelGrade = steelGradesMap.get(inputs.steel_grade_id);
   if (!steelGrade)
-    throw new Error(`Unknown steel grade: ${values.steel_grade_id}`);
+    throw new Error(`Unknown steel grade: ${inputs.steel_grade_id}`);
 
-  let thickness_mm = Math.max(values.i_geometry.tf_mm, values.i_geometry.tw_mm);
-  if (values.shape === "RHS") thickness_mm = values.rhs_geometry.tw_mm;
-  if (values.shape === "CHS") thickness_mm = values.chs_geometry.t_mm;
+  let thickness_mm = Math.max(inputs.i_geometry.tf_mm, inputs.i_geometry.tw_mm);
+  if (inputs.shape === "RHS") thickness_mm = inputs.rhs_geometry.tw_mm;
+  if (inputs.shape === "CHS") thickness_mm = inputs.chs_geometry.t_mm;
 
   let fy_MPa = steelGrade.fy_above_40_MPa ?? steelGrade.fy_MPa;
   if (thickness_mm <= 40) fy_MPa = steelGrade.fy_MPa;
 
-  let section_class = classification[0];
-  if (values.section_class !== "auto") section_class = values.section_class;
+  let fu_MPa = steelGrade.fu_above_40_MPa ?? steelGrade.fu_MPa;
+  if (thickness_mm <= 40) fu_MPa = steelGrade.fu_MPa;
 
-  let h_mm = values.i_geometry.h_mm;
-  let b_mm = values.i_geometry.b_mm;
-  let tw_mm = values.i_geometry.tw_mm;
-  let tf_mm = values.i_geometry.tf_mm;
-  let t_mm = values.i_geometry.tw_mm;
-  let hw_mm = values.i_geometry.h_mm - 2 * values.i_geometry.tf_mm;
-
-  if (values.shape === "RHS") {
-    h_mm = values.rhs_geometry.h_mm;
-    b_mm = values.rhs_geometry.b_mm;
-    tw_mm = values.rhs_geometry.tw_mm;
-    tf_mm = values.rhs_geometry.tw_mm;
-    t_mm = values.rhs_geometry.tw_mm;
-    hw_mm = values.rhs_geometry.h_mm;
-  }
-
-  if (values.shape === "CHS") {
-    h_mm = values.chs_geometry.d_mm;
-    b_mm = values.chs_geometry.d_mm;
-    tw_mm = values.chs_geometry.t_mm;
-    tf_mm = values.chs_geometry.t_mm;
-    t_mm = values.chs_geometry.t_mm;
-    hw_mm = values.chs_geometry.d_mm;
-  }
+  const bucklingCurves = getBucklingCurves(inputs);
 
   return {
-    shape: values.shape,
+    N_Ed_N: inputs.N_Ed_kN * 1_000,
+    V_y_Ed_N: inputs.V_y_Ed_kN * 1_000,
+    V_z_Ed_N: inputs.V_z_Ed_kN * 1_000,
+    M_y_Ed_Nmm: inputs.M_y_Ed_kNm * 1_000_000,
+    M_z_Ed_Nmm: inputs.M_z_Ed_kNm * 1_000_000,
+    L_mm: inputs.L_m * 1_000,
+    shape: inputs.shape,
+    fabrication_type: inputs.fabrication_type,
+    i_geometry: inputs.i_geometry,
+    rhs_geometry: inputs.rhs_geometry,
+    chs_geometry: inputs.chs_geometry,
+    gamma_M0: inputs.gamma_M0,
+    gamma_M1: inputs.gamma_M1,
+    lambda_LT_0: inputs.lambda_LT_0,
+    beta_LT: inputs.beta_LT,
+    interaction_factor_method: inputs.interaction_factor_method,
+    buckling_curves_LT_policy: inputs.buckling_curves_LT_policy,
+    include_torsional_modes: inputs.include_torsional_modes,
+    k_y: inputs.k_y,
+    k_z: inputs.k_z,
+
+    f_method: inputs.f_method,
+    M_y_Ed_shape: inputs.M_y_Ed_shape,
+    psi_y: inputs.psi_y,
+    support_condition_y: inputs.support_condition_y,
+    M_z_Ed_shape: inputs.M_z_Ed_shape,
+    psi_z: inputs.psi_z,
+    support_condition_z: inputs.support_condition_z,
+    k_T: inputs.k_T,
+    k_LT: inputs.k_LT,
+    M_y_Ed_shape_LT: inputs.M_y_Ed_shape_LT,
+    psi_y_LT: inputs.psi_y_LT,
+    support_condition_LT: inputs.support_condition_LT,
+    load_LT: inputs.load_LT,
+
     section_class,
-    N_Ed_N: values.N_Ed_kN * 1_000,
-    V_y_Ed_N: values.V_y_Ed_kN * 1_000,
-    V_z_Ed_N: values.V_z_Ed_kN * 1_000,
-    M_y_Ed_Nmm: values.M_y_Ed_kNm * 1_000_000,
-    M_z_Ed_Nmm: values.M_z_Ed_kNm * 1_000_000,
+    fy_MPa,
+    fu_MPa,
+
     A_mm2: geometry.A_mm2,
+    Iy_mm4: geometry.Iy_mm4,
+    Iz_mm4: geometry.Iz_mm4,
     Wpl_y_mm3: geometry.Wpl_y_mm3,
     Wpl_z_mm3: geometry.Wpl_z_mm3,
     Wel_y_mm3: geometry.Wel_y_mm3,
     Wel_z_mm3: geometry.Wel_z_mm3,
     Av_y_mm2: geometry.Av_y_mm2,
     Av_z_mm2: geometry.Av_z_mm2,
-    h_mm,
-    hw_mm,
-    b_mm,
-    tw_mm,
-    tf_mm,
-    t_mm,
-    fy_MPa,
-    gamma_M0: values.gamma_M0,
-  };
+    It_mm4: geometry.It_mm4,
+    Iw_mm6: geometry.Iw_mm6,
+    centroid_y_mm: geometry.centroid.y_mm,
+    centroid_z_mm: geometry.centroid.z_mm,
+
+    buckling_curve_y: bucklingCurves.y,
+    buckling_curve_z: bucklingCurves.z,
+    buckling_curve_LT: bucklingCurves.lt,
+  } satisfies Ec311Inputs;
 };
 
 const gateDerivedGeometry = (values: Ec311ObservedValues) => {

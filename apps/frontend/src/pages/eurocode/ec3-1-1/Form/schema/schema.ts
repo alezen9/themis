@@ -18,4 +18,5 @@ export const schema = shapeAndCrossSectionSchema
   .and(lateralTorsionalBucklingSchema)
   .and(nationalAnnexSchema);
 
-export type Ec3FormValues = z.infer<typeof schema>;
+export type Ec3FormValues = z.input<typeof schema>;
+export type Ec3ValidFormValues = z.output<typeof schema>;

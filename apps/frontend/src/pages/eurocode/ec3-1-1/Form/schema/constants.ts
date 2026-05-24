@@ -8,4 +8,7 @@ export const MIN_MINUS_ONE_MESSAGE = "Value has to be greater than -1";
 export const MAX_ONE_MESSAGE = "Value has to be smaller than 1";
 export const MAX_VALUE_MESSAGE = "Value too large, safety cap";
 
-export const inactiveFieldSchema = z.unknown().optional();
+export const inactiveFieldSchema = z
+  .unknown()
+  .optional()
+  .transform(() => undefined);
