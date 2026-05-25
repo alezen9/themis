@@ -14,10 +14,17 @@ export const VerificationsHeader = () => {
   const isSatisfied = maxRatio < threshold;
 
   return (
-    <div className="h-full w-full flex justify-end px-2">
+    <div
+      className={twMerge(
+        "h-full w-full flex justify-end items-center px-2 rounded-sm",
+        "max-h-32",
+        isSatisfied && "bg-envy-100/75",
+        !isSatisfied && "bg-red-100/75",
+      )}
+    >
       <span
         className={twMerge(
-          "text-8xl text-shadow-lg tabular-nums font-light text-shadow-sand-800/10",
+          "text-8xl tabular-nums font-light",
           isSatisfied && "text-envy-400",
           !isSatisfied && "text-red-400",
         )}
