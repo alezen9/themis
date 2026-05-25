@@ -1,19 +1,28 @@
 import type { Edge, Node } from "@xyflow/react";
-import type { EditorDocument, EditorEdge, EditorNode } from "../document/types";
+import type {
+  EditorDocument,
+  EditorEdge,
+  EditorNode,
+  EditorNodeData,
+} from "../document/types";
 
-export const toFlowNode = (node: EditorNode): Node => ({
+export type EditorFlowNode = Node<EditorNodeData, EditorNodeData["type"]>;
+
+export const toFlowNode = (node: EditorNode): EditorFlowNode => ({
   id: node.id,
+  type: node.data.type,
   position: node.position,
-  data: { label: `${node.data.name} (${node.data.type})` },
+  data: node.data,
 });
 
 export const toFlowEdge = (edge: EditorEdge): Edge => ({
   id: edge.id,
   source: edge.source,
   target: edge.target,
+  type: "smoothstep",
 });
 
-export const toFlowNodes = (document: EditorDocument): Node[] =>
+export const toFlowNodes = (document: EditorDocument): EditorFlowNode[] =>
   document.nodes.map(toFlowNode);
 
 export const toFlowEdges = (document: EditorDocument): Edge[] =>

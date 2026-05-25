@@ -30,6 +30,8 @@ export const exampleDocument: EditorDocument = {
         key: "N_Ed_N",
         valueType: { type: "number" },
         name: "Design force",
+        symbol: "N_{Ed}",
+        unit: "N",
       },
     },
     {
@@ -39,6 +41,7 @@ export const exampleDocument: EditorDocument = {
         type: "formula",
         key: "N_pl_Rd_N",
         valueType: { type: "number" },
+        symbol: "N_{pl,Rd}",
         name: "Plastic resistance",
         expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
       },
@@ -51,6 +54,8 @@ export const exampleDocument: EditorDocument = {
         key: "A_mm2",
         valueType: { type: "number" },
         name: "Area",
+        symbol: "A",
+        unit: "mm^{2}",
       },
     },
     {
@@ -61,6 +66,8 @@ export const exampleDocument: EditorDocument = {
         key: "fy_MPa",
         valueType: { type: "number" },
         name: "Yield strength",
+        symbol: "f_y",
+        unit: "MPa",
       },
     },
     {
@@ -69,6 +76,7 @@ export const exampleDocument: EditorDocument = {
       data: {
         type: "coefficient",
         key: "gamma_M0",
+        symbol: "\\gamma_M0",
         valueType: { type: "number" },
         name: "Safety factor",
         meta: { sectionRef: "6.1" },

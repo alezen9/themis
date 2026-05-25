@@ -9,6 +9,7 @@ import "@xyflow/react/dist/style.css";
 
 import type { EditorDocument } from "./document/types";
 import { toFlowEdges, toFlowNodes } from "./flow/convert";
+import { nodeTypes } from "./flow/nodeTypes";
 
 type Props = { document: EditorDocument };
 
@@ -21,6 +22,7 @@ export const NdgEditor = (props: Props) => {
       className="ndg-editor-flow"
       defaultNodes={toFlowNodes(document)}
       defaultEdges={toFlowEdges(document)}
+      nodeTypes={nodeTypes}
       maxZoom={8}
       minZoom={0.05}
       panOnDrag={[1, 2]}
