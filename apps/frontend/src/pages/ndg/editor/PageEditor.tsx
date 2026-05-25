@@ -1,4 +1,6 @@
 import { Header, SubHeader } from "@components/Header";
+import { NdgEditor } from "./NdgEditor";
+import { exampleDocument } from "./document/exampleDocument";
 
 export const PageEditor = () => {
   return (
@@ -10,8 +12,10 @@ export const PageEditor = () => {
 
       <section
         aria-label="NDG editor workspace"
-        className="min-h-0 flex-1 rounded-sm border border-dashed border-sand-300 bg-sand-50/40"
-      />
+        className="min-h-0 flex-1 overflow-hidden rounded-sm border border-sand-200 bg-white"
+      >
+        <NdgEditor document={exampleDocument} />
+      </section>
     </main>
   );
 };

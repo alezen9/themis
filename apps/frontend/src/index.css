@@ -22,6 +22,44 @@ svg.pluton-root[data-drawing-error] {
   font-size: 0.75em;
 }
 
+.ndg-editor-flow,
+.ndg-editor-flow .react-flow__pane,
+.ndg-editor-flow .react-flow__pane.draggable,
+.ndg-editor-flow .react-flow__pane.selection,
+.ndg-editor-flow .react-flow__nodesselection-rect {
+  cursor: default;
+}
+
+.ndg-editor-flow .react-flow__node.selectable,
+.ndg-editor-flow .react-flow__node.draggable,
+.ndg-editor-flow .react-flow__edge.selectable {
+  cursor: pointer;
+}
+
+.ndg-editor-flow .react-flow__node.draggable.dragging,
+.ndg-editor-flow .react-flow__pane.dragging {
+  cursor: grabbing;
+}
+
+.ndg-editor-flow .react-flow__controls {
+  overflow: hidden;
+  border: 1px solid var(--color-sand-200);
+  border-radius: 4px;
+}
+
+.ndg-editor-flow .react-flow__controls-button {
+  width: 30px;
+  height: 30px;
+  border-bottom-color: var(--color-sand-200);
+  background: white;
+  color: var(--color-sand-800);
+}
+
+.ndg-editor-flow .react-flow__controls-button:hover {
+  background: var(--color-sand-50);
+  color: var(--color-sand-500);
+}
+
 @layer base {
   html,
   body,
