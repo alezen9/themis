@@ -1,55 +1,25 @@
-import { useCallback, useEffect } from "react";
-import { type Connection, useReactFlow } from "@xyflow/react";
+import { useEffect } from "react";
+import { useReactFlow } from "@xyflow/react";
 
-import { createEdgeId } from "../document/ids";
 import type { EditorEdge, EditorNode } from "../document/types";
-import { useNdgEditorControllerContext } from "./NdgEditorControllerContext";
+import {
+  addNodeFactory,
+  exportDocumentFactory,
+  onConnectNodesFactory,
+} from "./actions";
+import { useNdgEditorStore } from "./useNdgEditorStore";
 
 export const NdgEditorController = () => {
   const reactFlow = useReactFlow<EditorNode, EditorEdge>();
-  const { commandsRef, documentRef } = useNdgEditorControllerContext();
-
-  const connectNodes = useCallback(
-    (connection: Connection) => {
-      const { source, target } = connection;
-
-      if (!source || !target) {
-        return;
-      }
-
-      const edgeId = createEdgeId(source, target);
-
-      if (reactFlow.getEdge(edgeId)) {
-        return;
-      }
-
-      const edge: EditorEdge = {
-        id: edgeId,
-        source,
-        target,
-      };
-
-      reactFlow.addEdges(edge);
-
-      if (documentRef.current.edges.some((item) => item.id === edgeId)) {
-        return;
-      }
-
-      documentRef.current = {
-        ...documentRef.current,
-        edges: [...documentRef.current.edges, edge],
-      };
-    },
-    [documentRef, reactFlow],
-  );
+  const setActions = useNdgEditorStore((state) => state.setActions);
 
   useEffect(() => {
-    commandsRef.current = { connectNodes };
-
-    return () => {
-      commandsRef.current = null;
-    };
-  }, [commandsRef, connectNodes]);
+    setActions({
+      addNode: addNodeFactory(reactFlow),
+      exportDocument: exportDocumentFactory(reactFlow),
+      onConnectNodes: onConnectNodesFactory(reactFlow),
+    });
+  }, [reactFlow, setActions]);
 
   return null;
 };

@@ -1,5 +1,5 @@
 import { createEdgeId } from "./ids";
-import type { EditorDocument } from "./types";
+import { EDITOR_DOCUMENT_VERSION, type EditorDocument } from "./types";
 
 const ratioId = "02480d3f-b178-48dd-a39b-b85309a61b3d";
 const designForceId = "a77f73f6-5d19-4d12-9ff2-35260f63f393";
@@ -9,7 +9,7 @@ const yieldStrengthId = "a6233bbd-8ad1-46b2-a325-fcd0164c8aaf";
 const safetyFactorId = "7ff50833-8392-4e44-a6a7-c0fd8d5cd1c8";
 
 export const initialDocument: EditorDocument = {
-  version: 1,
+  version: EDITOR_DOCUMENT_VERSION,
   nodes: [
     {
       id: ratioId,

@@ -8,6 +8,8 @@ import type {
   NodeProps,
 } from "@xyflow/react";
 
+export const EDITOR_DOCUMENT_VERSION = 1;
+
 type EditorNodeData<Type extends NdgNode["type"]> = Omit<
   Extract<NdgNode, { type: Type }>,
   "id" | "children" | "type"
@@ -48,7 +50,7 @@ type EditorEdgeData = {
 export type EditorEdge = FlowEdge<EditorEdgeData>;
 
 export type EditorDocument = {
-  version: 1;
+  version: typeof EDITOR_DOCUMENT_VERSION;
   nodes: EditorNode[];
   edges: EditorEdge[];
 };

@@ -7,9 +7,10 @@ import {
   SelectionMode,
 } from "@xyflow/react";
 
-import { useNdgEditorCommands } from "./controller/NdgEditorControllerContext";
+import { useNdgEditorStore } from "./controller/useNdgEditorStore";
 import type { EditorEdge, EditorNode } from "./document/types";
 import { nodeTypes } from "./flow/nodeTypes";
+import { onBeforeDeleteElements } from "./graph/rules";
 
 type Props = {
   initialEdges: EditorEdge[];
@@ -18,7 +19,7 @@ type Props = {
 
 export const NdgEditorCanvas = (props: Props) => {
   const { initialEdges, initialNodes } = props;
-  const { connectNodes } = useNdgEditorCommands();
+  const onConnectNodes = useNdgEditorStore((state) => state.onConnectNodes);
 
   return (
     <ReactFlow
@@ -33,7 +34,8 @@ export const NdgEditorCanvas = (props: Props) => {
       nodeTypes={nodeTypes}
       maxZoom={8}
       minZoom={0.05}
-      onConnect={connectNodes}
+      onConnect={onConnectNodes}
+      onBeforeDelete={onBeforeDeleteElements}
       panOnDrag={[1, 2]}
       panOnScroll
       panOnScrollSpeed={1.2}
