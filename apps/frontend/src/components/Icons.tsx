@@ -264,3 +264,20 @@ export const IconFlagItaly = (props: ComponentPropsWithoutRef<"svg">) => {
     </svg>
   );
 };
+
+export const IconPlus = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      stroke="currentColor"
+      {...props}
+    >
+      <path d="M4 12h16m-8-8v16" />
+    </svg>
+  );
+};

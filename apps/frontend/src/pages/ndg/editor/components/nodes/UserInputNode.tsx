@@ -1,13 +1,11 @@
 import { Latex } from "@components/Latex";
-import { Handle, Position, type NodeProps } from "@xyflow/react";
 
-import type { EditorFlowNode } from "../../flow/convert";
-import { NodeBody, NodeCard, NodeHeader } from "./shared";
+import type { EditorNodeProps } from "../../document/types";
+import { NodeBody, NodeCard, NodeHeader, NodeTargetHandle } from "./shared";
 
-export const UserInputNode = (props: NodeProps<EditorFlowNode>) => {
-  const { data } = props;
-
-  if (data.type !== "user-input") return null;
+export const UserInputNode = (props: EditorNodeProps) => {
+  const { data, type } = props;
+  if (type !== "user-input") return null;
 
   return (
     <NodeCard>
@@ -20,7 +18,7 @@ export const UserInputNode = (props: NodeProps<EditorFlowNode>) => {
         </NodeBody>
       )}
 
-      <Handle type="target" position={Position.Top} />
+      <NodeTargetHandle />
     </NodeCard>
   );
 };

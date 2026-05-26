@@ -1,29 +1,29 @@
 import { Latex } from "@components/Latex";
-import { Handle, Position, type NodeProps } from "@xyflow/react";
 
-import type { EditorFlowNode } from "../../flow/convert";
-import { NodeBody, NodeCard, NodeHeader } from "./shared";
+import type { EditorNodeProps } from "../../document/types";
+import { NodeAddChildHandle, NodeBody, NodeCard, NodeHeader } from "./shared";
 
-export const CheckNode = (props: NodeProps<EditorFlowNode>) => {
-  const { data } = props;
-
-  if (data.type !== "check") return null;
+export const CheckNode = (props: EditorNodeProps) => {
+  const { data, type } = props;
+  if (type !== "check") return null;
 
   return (
     <NodeCard>
       <NodeHeader label={data.key} type="check" />
 
-      <NodeBody className="overflow-x-auto text-sm">
-        <div className="flex w-max min-w-full justify-center">
-          <Latex
-            displayMode
-            tex={data.verificationExpression}
-            className="min-w-max"
-          />
-        </div>
-      </NodeBody>
+      {data.verificationExpression && (
+        <NodeBody className="overflow-x-auto text-sm">
+          <div className="flex w-max min-w-full justify-center">
+            <Latex
+              displayMode
+              tex={data.verificationExpression}
+              className="min-w-max"
+            />
+          </div>
+        </NodeBody>
+      )}
 
-      <Handle type="source" position={Position.Bottom} />
+      <NodeAddChildHandle />
     </NodeCard>
   );
 };

@@ -8,14 +8,14 @@ const areaId = "13e0cff4-8097-463b-8ff5-5364e9089fe9";
 const yieldStrengthId = "a6233bbd-8ad1-46b2-a325-fcd0164c8aaf";
 const safetyFactorId = "7ff50833-8392-4e44-a6a7-c0fd8d5cd1c8";
 
-export const exampleDocument: EditorDocument = {
+export const initialDocument: EditorDocument = {
   version: 1,
   nodes: [
     {
       id: ratioId,
       position: { x: 0, y: 0 },
+      type: "check",
       data: {
-        type: "check",
         key: "ratio",
         valueType: { type: "number" },
         name: "Tension check",
@@ -25,8 +25,8 @@ export const exampleDocument: EditorDocument = {
     {
       id: designForceId,
       position: { x: -220, y: 170 },
+      type: "user-input",
       data: {
-        type: "user-input",
         key: "N_Ed_N",
         valueType: { type: "number" },
         name: "Design force",
@@ -37,8 +37,8 @@ export const exampleDocument: EditorDocument = {
     {
       id: plasticResistanceId,
       position: { x: 220, y: 170 },
+      type: "formula",
       data: {
-        type: "formula",
         key: "N_pl_Rd_N",
         valueType: { type: "number" },
         symbol: "N_{pl,Rd}",
@@ -49,8 +49,8 @@ export const exampleDocument: EditorDocument = {
     {
       id: areaId,
       position: { x: 0, y: 340 },
+      type: "user-input",
       data: {
-        type: "user-input",
         key: "A_mm2",
         valueType: { type: "number" },
         name: "Area",
@@ -61,8 +61,8 @@ export const exampleDocument: EditorDocument = {
     {
       id: yieldStrengthId,
       position: { x: 220, y: 340 },
+      type: "user-input",
       data: {
-        type: "user-input",
         key: "fy_MPa",
         valueType: { type: "number" },
         name: "Yield strength",
@@ -73,8 +73,8 @@ export const exampleDocument: EditorDocument = {
     {
       id: safetyFactorId,
       position: { x: 440, y: 340 },
+      type: "coefficient",
       data: {
-        type: "coefficient",
         key: "gamma_M0",
         symbol: "\\gamma_M0",
         valueType: { type: "number" },

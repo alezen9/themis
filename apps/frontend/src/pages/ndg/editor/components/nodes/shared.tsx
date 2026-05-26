@@ -1,3 +1,5 @@
+import { IconPlus } from "@components/Icons";
+import { Handle, Position } from "@xyflow/react";
 import type { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -48,6 +50,33 @@ export const NodeBody = (props: NodeBodyProps) => {
       )}
     >
       {children}
+    </div>
+  );
+};
+
+export const NodeTargetHandle = () => {
+  return (
+    <Handle
+      type="target"
+      position={Position.Top}
+      className={twMerge(
+        "h-3 w-10 rounded-full border border-sand-300 bg-white",
+        "opacity-80 transition-colors",
+        "hover:border-sand-600 hover:bg-sand-100",
+      )}
+    />
+  );
+};
+
+export const NodeAddChildHandle = () => {
+  return (
+    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 size-4 bg-envy-500 ring-1 ring-white text-white rounded-full grid place-content-center">
+      <IconPlus className="size-3" />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className={twMerge("translate-y-1")}
+      />
     </div>
   );
 };

@@ -7,11 +7,11 @@ import { FormulaNode } from "../components/nodes/FormulaNode";
 import { TableNode } from "../components/nodes/TableNode";
 import { UserInputNode } from "../components/nodes/UserInputNode";
 
-export const nodeTypes = {
+export const nodeTypes: NodeTypes = {
   check: CheckNode,
   coefficient: CoefficientNode,
   constant: ConstantNode,
   formula: FormulaNode,
   table: TableNode,
   "user-input": UserInputNode,
-} satisfies NodeTypes;
+};

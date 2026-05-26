@@ -1,0 +1,60 @@
+import {
+  Background,
+  BackgroundVariant,
+  Controls,
+  MarkerType,
+  ReactFlow,
+  SelectionMode,
+} from "@xyflow/react";
+
+import { useNdgEditorCommands } from "./controller/NdgEditorControllerContext";
+import type { EditorEdge, EditorNode } from "./document/types";
+import { nodeTypes } from "./flow/nodeTypes";
+
+type Props = {
+  initialEdges: EditorEdge[];
+  initialNodes: EditorNode[];
+};
+
+export const NdgEditorCanvas = (props: Props) => {
+  const { initialEdges, initialNodes } = props;
+  const { connectNodes } = useNdgEditorCommands();
+
+  return (
+    <ReactFlow
+      fitView
+      className="ndg-editor-flow"
+      defaultNodes={initialNodes}
+      defaultEdges={initialEdges}
+      defaultEdgeOptions={{
+        markerEnd: { type: MarkerType.ArrowClosed },
+        type: "smoothstep",
+      }}
+      nodeTypes={nodeTypes}
+      maxZoom={8}
+      minZoom={0.05}
+      onConnect={connectNodes}
+      panOnDrag={[1, 2]}
+      panOnScroll
+      panOnScrollSpeed={1.2}
+      panActivationKeyCode="Space"
+      proOptions={{ hideAttribution: true }}
+      selectionMode={SelectionMode.Partial}
+      selectionOnDrag
+    >
+      <Background
+        color="rgba(110, 85, 62, 0.035)"
+        gap={24}
+        id="fine-grid"
+        variant={BackgroundVariant.Lines}
+      />
+      <Background
+        color="rgba(110, 85, 62, 0.035)"
+        gap={120}
+        id="coarse-grid"
+        variant={BackgroundVariant.Lines}
+      />
+      <Controls showZoom={false} />
+    </ReactFlow>
+  );
+};

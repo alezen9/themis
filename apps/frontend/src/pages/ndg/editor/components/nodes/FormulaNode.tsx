@@ -1,13 +1,17 @@
 import { Latex } from "@components/Latex";
-import { Handle, Position, type NodeProps } from "@xyflow/react";
 
-import type { EditorFlowNode } from "../../flow/convert";
-import { NodeBody, NodeCard, NodeHeader } from "./shared";
+import type { EditorNodeProps } from "../../document/types";
+import {
+  NodeAddChildHandle,
+  NodeBody,
+  NodeCard,
+  NodeHeader,
+  NodeTargetHandle,
+} from "./shared";
 
-export const FormulaNode = (props: NodeProps<EditorFlowNode>) => {
-  const { data } = props;
-
-  if (data.type !== "formula") return null;
+export const FormulaNode = (props: EditorNodeProps) => {
+  const { data, type } = props;
+  if (type !== "formula") return null;
 
   return (
     <NodeCard>
@@ -25,8 +29,8 @@ export const FormulaNode = (props: NodeProps<EditorFlowNode>) => {
         </NodeBody>
       )}
 
-      <Handle type="source" position={Position.Bottom} />
-      <Handle type="target" position={Position.Top} />
+      <NodeAddChildHandle />
+      <NodeTargetHandle />
     </NodeCard>
   );
 };

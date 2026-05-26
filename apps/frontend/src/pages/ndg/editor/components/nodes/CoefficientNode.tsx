@@ -1,13 +1,11 @@
 import { Latex } from "@components/Latex";
-import { Handle, Position, type NodeProps } from "@xyflow/react";
 
-import type { EditorFlowNode } from "../../flow/convert";
-import { NodeBody, NodeCard, NodeHeader } from "./shared";
+import type { EditorNodeProps } from "../../document/types";
+import { NodeBody, NodeCard, NodeHeader, NodeTargetHandle } from "./shared";
 
-export const CoefficientNode = (props: NodeProps<EditorFlowNode>) => {
-  const { data } = props;
-
-  if (data.type !== "coefficient") return null;
+export const CoefficientNode = (props: EditorNodeProps) => {
+  const { data, type } = props;
+  if (type !== "coefficient") return null;
 
   return (
     <NodeCard>
@@ -19,7 +17,7 @@ export const CoefficientNode = (props: NodeProps<EditorFlowNode>) => {
         </NodeBody>
       )}
 
-      <Handle type="target" position={Position.Top} />
+      <NodeTargetHandle />
     </NodeCard>
   );
 };

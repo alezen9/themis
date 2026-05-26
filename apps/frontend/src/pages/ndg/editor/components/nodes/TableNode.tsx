@@ -1,23 +1,28 @@
-import { Handle, Position, type NodeProps } from "@xyflow/react";
+import type { EditorNodeProps } from "../../document/types";
+import {
+  NodeAddChildHandle,
+  NodeBody,
+  NodeCard,
+  NodeHeader,
+  NodeTargetHandle,
+} from "./shared";
 
-import type { EditorFlowNode } from "../../flow/convert";
-import { NodeBody, NodeCard, NodeHeader } from "./shared";
-
-export const TableNode = (props: NodeProps<EditorFlowNode>) => {
-  const { data } = props;
-
-  if (data.type !== "table") return null;
+export const TableNode = (props: EditorNodeProps) => {
+  const { type, data } = props;
+  if (type !== "table") return null;
 
   return (
     <NodeCard>
       <NodeHeader label={data.key} type="table" />
 
-      <NodeBody className="truncate px-2 py-1 text-[10px] text-slate-500">
-        {data.source}
-      </NodeBody>
+      {data.source && (
+        <NodeBody className="truncate px-2 py-1 text-[10px] text-slate-500">
+          {data.source}
+        </NodeBody>
+      )}
 
-      <Handle type="source" position={Position.Bottom} />
-      <Handle type="target" position={Position.Top} />
+      <NodeAddChildHandle />
+      <NodeTargetHandle />
     </NodeCard>
   );
 };
