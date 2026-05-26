@@ -1,11 +1,6 @@
+import { Handle, Position } from "@xyflow/react";
 import type { EditorNodeProps } from "../../document/types";
-import {
-  NodeAddChildHandle,
-  NodeBody,
-  NodeCard,
-  NodeHeader,
-  NodeTargetHandle,
-} from "./shared";
+import { NodeAddChildHandle, NodeBody, NodeCard, NodeHeader } from "./shared";
 
 export const TableNode = (props: EditorNodeProps) => {
   const { type, data } = props;
@@ -13,16 +8,14 @@ export const TableNode = (props: EditorNodeProps) => {
 
   return (
     <NodeCard>
+      <Handle type="target" position={Position.Top} />
       <NodeHeader label={data.key} type="table" />
-
       {data.source && (
         <NodeBody className="truncate px-2 py-1 text-[10px] text-slate-500">
           {data.source}
         </NodeBody>
       )}
-
       <NodeAddChildHandle sourceNodeId={props.id} />
-      <NodeTargetHandle />
     </NodeCard>
   );
 };

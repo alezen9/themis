@@ -1,5 +1,4 @@
 import { Latex } from "@components/Latex";
-
 import type { EditorNodeProps } from "../../document/types";
 import { NodeAddChildHandle, NodeBody, NodeCard, NodeHeader } from "./shared";
 
@@ -10,7 +9,6 @@ export const CheckNode = (props: EditorNodeProps) => {
   return (
     <NodeCard>
       <NodeHeader label={data.key} type="check" />
-
       {data.verificationExpression && (
         <NodeBody className="overflow-x-auto text-sm">
           <div className="flex w-max min-w-full justify-center">
@@ -22,7 +20,6 @@ export const CheckNode = (props: EditorNodeProps) => {
           </div>
         </NodeBody>
       )}
-
       <NodeAddChildHandle sourceNodeId={props.id} />
     </NodeCard>
   );

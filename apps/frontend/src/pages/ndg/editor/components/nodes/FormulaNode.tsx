@@ -1,13 +1,7 @@
 import { Latex } from "@components/Latex";
-
 import type { EditorNodeProps } from "../../document/types";
-import {
-  NodeAddChildHandle,
-  NodeBody,
-  NodeCard,
-  NodeHeader,
-  NodeTargetHandle,
-} from "./shared";
+import { NodeAddChildHandle, NodeBody, NodeCard, NodeHeader } from "./shared";
+import { Handle, Position } from "@xyflow/react";
 
 export const FormulaNode = (props: EditorNodeProps) => {
   const { data, type } = props;
@@ -15,8 +9,8 @@ export const FormulaNode = (props: EditorNodeProps) => {
 
   return (
     <NodeCard>
+      <Handle type="target" position={Position.Top} />
       <NodeHeader label={data.key} type="formula" />
-
       {data.expression && (
         <NodeBody className="overflow-x-auto text-sm">
           <div className="flex w-max min-w-full justify-center">
@@ -28,9 +22,7 @@ export const FormulaNode = (props: EditorNodeProps) => {
           </div>
         </NodeBody>
       )}
-
       <NodeAddChildHandle sourceNodeId={props.id} />
-      <NodeTargetHandle />
     </NodeCard>
   );
 };

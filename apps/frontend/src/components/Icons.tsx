@@ -281,3 +281,20 @@ export const IconPlus = (props: ComponentPropsWithoutRef<"svg">) => {
     </svg>
   );
 };
+
+export const IconPencil = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      stroke="currentColor"
+      {...props}
+    >
+      <path d="M20.1497 7.93997 8.27971 19.81c-1.06 1.07-4.23 1.5599-5 .8499s-.21002-3.8799.84998-4.9499L15.9997 3.84c.5481-.52199 1.2786-.80903 2.0354-.79981.7568.00923 1.48.31399 2.0152.84919.5352.53519.84 1.25843.8492 2.01525.0093.75683-.2778 1.48726-.7998 2.03534zM21 21h-9" />
+    </svg>
+  );
+};

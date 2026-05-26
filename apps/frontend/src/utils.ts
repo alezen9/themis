@@ -16,3 +16,13 @@ export const multipleRefs =
   };
 
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
+
+export const downloadAs = (blob: Blob, name: string) => {
+  const url = URL.createObjectURL(blob);
+  const link = window.document.createElement("a");
+
+  link.href = url;
+  link.download = name;
+  link.click();
+  URL.revokeObjectURL(url);
+};

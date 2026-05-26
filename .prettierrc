@@ -1,1 +1,1 @@
-{ "objectWrap": "collapse" }
+{ "objectWrap": "collapse", "arrowParens": "avoid" }

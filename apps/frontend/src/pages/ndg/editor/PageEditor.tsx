@@ -1,23 +1,20 @@
 import { Header, SubHeader } from "@components/Header";
 import { NdgEditor } from "./NdgEditor";
 import { useNdgEditorStore } from "./controller/useNdgEditorStore";
+import { downloadAs } from "@utils";
+import { Button } from "@components/Button";
 
 export const PageEditor = () => {
-  const exportDocument = useNdgEditorStore((state) => state.exportDocument);
+  const exportDocument = useNdgEditorStore(state => state.exportDocument);
 
   const onExportDocument = () => {
     const document = exportDocument();
     const blob = new Blob([JSON.stringify(document, null, 2)], {
       type: "application/json",
     });
-    const url = URL.createObjectURL(blob);
-    const link = window.document.createElement("a");
     const date = new Date().toISOString().slice(0, 10);
-
-    link.href = url;
-    link.download = `ndg-${date}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
+    const name = `ndg-${date}.json`;
+    downloadAs(blob, name);
   };
 
   return (
@@ -27,13 +24,7 @@ export const PageEditor = () => {
           <Header>Normative Directed Graph Editor</Header>
           <SubHeader>Draft and inspect verification graphs</SubHeader>
         </div>
-        <button
-          type="button"
-          className="h-9 rounded-sm bg-sand-900 px-4 text-sm text-white"
-          onClick={onExportDocument}
-        >
-          Export JSON
-        </button>
+        <Button onClick={onExportDocument}>Export JSON</Button>
       </header>
 
       <section
