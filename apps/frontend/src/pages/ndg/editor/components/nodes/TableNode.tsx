@@ -21,7 +21,7 @@ export const TableNode = (props: EditorNodeProps) => {
         </NodeBody>
       )}
 
-      <NodeAddChildHandle />
+      <NodeAddChildHandle sourceNodeId={props.id} />
       <NodeTargetHandle />
     </NodeCard>
   );

@@ -6,6 +6,7 @@ import {
   addNodeFactory,
   exportDocumentFactory,
   onConnectNodesFactory,
+  updateNodeFactory,
 } from "./actions";
 import { useNdgEditorStore } from "./useNdgEditorStore";
 
@@ -18,6 +19,7 @@ export const NdgEditorController = () => {
       addNode: addNodeFactory(reactFlow),
       exportDocument: exportDocumentFactory(reactFlow),
       onConnectNodes: onConnectNodesFactory(reactFlow),
+      updateNode: updateNodeFactory(reactFlow),
     });
   }, [reactFlow, setActions]);
 

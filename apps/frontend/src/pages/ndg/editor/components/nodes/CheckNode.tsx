@@ -23,7 +23,7 @@ export const CheckNode = (props: EditorNodeProps) => {
         </NodeBody>
       )}
 
-      <NodeAddChildHandle />
+      <NodeAddChildHandle sourceNodeId={props.id} />
     </NodeCard>
   );
 };

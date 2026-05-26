@@ -74,13 +74,13 @@ export const runNDGSuite = (
     try {
       return {
         id,
-        name: check.name,
+        name: check.name ?? check.key,
         payload: { data: runNDG(definition, context) },
       };
     } catch (error) {
       return {
         id,
-        name: check.name,
+        name: check.name ?? check.key,
         payload: {
           error: error instanceof Error ? error : new Error(String(error)),
         },

@@ -13,7 +13,7 @@ const exportEmptyDocument = (): EditorDocument => ({
   edges: [],
 });
 
-type NdgEditorModal =
+export type NdgEditorModal =
   | { mode: "create-node"; sourceNodeId?: string }
   | { mode: "edit-node"; nodeId: string }
   | { mode: "edit-edge"; edgeId: string };
@@ -33,6 +33,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set) => ({
   closeModal: () => set({ modal: undefined }),
   exportDocument: exportEmptyDocument,
   onConnectNodes: noop,
+  updateNode: noop,
   openCreateNodeModal: (sourceNodeId) =>
     set({ modal: { mode: "create-node", sourceNodeId } }),
   openEditEdgeModal: (edgeId) => set({ modal: { mode: "edit-edge", edgeId } }),

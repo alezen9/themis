@@ -52,7 +52,7 @@ export const ChildSchema = z.strictObject({
 
 const BaseNodeSchema = z.strictObject({
   id: z.string(),
-  name: z.string(),
+  name: z.string().optional(),
   symbol: z.string().optional(), // LaTeX: "N_{cr}", "\bar{\lambda}", "A"
   description: z.string().optional(),
   children: z.array(ChildSchema).readonly(),

@@ -5,6 +5,7 @@ import {
   MarkerType,
   ReactFlow,
   SelectionMode,
+  useReactFlow,
 } from "@xyflow/react";
 
 import { useNdgEditorStore } from "./controller/useNdgEditorStore";
@@ -12,14 +13,15 @@ import type { EditorEdge, EditorNode } from "./document/types";
 import { nodeTypes } from "./flow/nodeTypes";
 import { onBeforeDeleteElements } from "./graph/rules";
 
-type Props = {
-  initialEdges: EditorEdge[];
-  initialNodes: EditorNode[];
-};
+type Props = { initialEdges: EditorEdge[]; initialNodes: EditorNode[] };
 
 export const NdgEditorCanvas = (props: Props) => {
   const { initialEdges, initialNodes } = props;
+  const reactFlow = useReactFlow<EditorNode, EditorEdge>();
   const onConnectNodes = useNdgEditorStore((state) => state.onConnectNodes);
+  const openEditNodeModal = useNdgEditorStore(
+    (state) => state.openEditNodeModal,
+  );
 
   return (
     <ReactFlow
@@ -36,6 +38,16 @@ export const NdgEditorCanvas = (props: Props) => {
       minZoom={0.05}
       onConnect={onConnectNodes}
       onBeforeDelete={onBeforeDeleteElements}
+      onNodeDoubleClick={(_, node) => {
+        const selectedNodes = reactFlow
+          .getNodes()
+          .filter((node) => node.selected);
+
+        if (selectedNodes.length !== 1) return;
+        if (selectedNodes[0]?.id !== node.id) return;
+
+        openEditNodeModal(node.id);
+      }}
       panOnDrag={[1, 2]}
       panOnScroll
       panOnScrollSpeed={1.2}

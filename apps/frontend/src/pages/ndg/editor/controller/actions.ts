@@ -12,18 +12,34 @@ import { canConnectNodes } from "../graph/rules";
 type ReactFlow = ReactFlowInstance<EditorNode, EditorEdge>;
 
 export type AddNodeInput = {
-  [Type in EditorNode["type"]]: {
-    data: Extract<EditorNode, { type: Type }>["data"];
-    position: XYPosition;
-    sourceNodeId?: string;
-    type: Type;
-  };
-}[EditorNode["type"]];
+  expression: string;
+  formulaRef: string;
+  key: string;
+  paragraphRef: string;
+  position: XYPosition;
+  sectionRef: string;
+  source: string;
+  sourceNodeId?: string;
+  subParagraphRef: string;
+  symbol: string;
+  tableRef: string;
+  type: EditorNode["type"];
+  unit: string;
+  valueType: "number" | "string";
+  verificationExpression: string;
+  verificationRef: string;
+};
+
+export type UpdateNodeInput = Omit<
+  AddNodeInput,
+  "position" | "sourceNodeId"
+> & { id: string };
 
 export type NdgEditorActions = {
   addNode: (input: AddNodeInput) => void;
   exportDocument: () => EditorDocument;
   onConnectNodes: (connection: Connection) => void;
+  updateNode: (input: UpdateNodeInput) => void;
 };
 
 export const addNodeFactory = (reactFlow: ReactFlow) => {
@@ -57,39 +73,26 @@ export const addNodeFactory = (reactFlow: ReactFlow) => {
 };
 
 const toEditorNode = (id: string, input: AddNodeInput): EditorNode => {
+  const { position } = input;
+
   switch (input.type) {
     case "check":
-      return { id, data: input.data, position: input.position, type: "check" };
+      return { id, data: toCheckData(input), position, type: "check" };
     case "coefficient":
       return {
         id,
-        data: input.data,
-        position: input.position,
+        data: toCoefficientData(input),
+        position,
         type: "coefficient",
       };
     case "constant":
-      return {
-        id,
-        data: input.data,
-        position: input.position,
-        type: "constant",
-      };
+      return { id, data: toConstantData(input), position, type: "constant" };
     case "formula":
-      return {
-        id,
-        data: input.data,
-        position: input.position,
-        type: "formula",
-      };
+      return { id, data: toFormulaData(input), position, type: "formula" };
     case "table":
-      return { id, data: input.data, position: input.position, type: "table" };
+      return { id, data: toTableData(input), position, type: "table" };
     case "user-input":
-      return {
-        id,
-        data: input.data,
-        position: input.position,
-        type: "user-input",
-      };
+      return { id, data: toUserInputData(input), position, type: "user-input" };
   }
 };
 
@@ -117,3 +120,101 @@ export const onConnectNodesFactory =
 
     reactFlow.addEdges({ id: edgeId, source, target });
   };
+
+export const updateNodeFactory =
+  (reactFlow: ReactFlow) => (input: UpdateNodeInput) => {
+    const { id, type } = input;
+
+    switch (type) {
+      case "check":
+        reactFlow.updateNode(id, { data: toCheckData(input), type });
+        return;
+      case "coefficient":
+        reactFlow.updateNode(id, { data: toCoefficientData(input), type });
+        return;
+      case "constant":
+        reactFlow.updateNode(id, { data: toConstantData(input), type });
+        return;
+      case "formula":
+        reactFlow.updateNode(id, { data: toFormulaData(input), type });
+        return;
+      case "table":
+        reactFlow.updateNode(id, { data: toTableData(input), type });
+        return;
+      case "user-input":
+        reactFlow.updateNode(id, { data: toUserInputData(input), type });
+        return;
+    }
+  };
+
+const toCheckData = (input: AddNodeInput | UpdateNodeInput) => ({
+  key: input.key,
+  meta: toMeta(input),
+  symbol: optional(input.symbol),
+  valueType: { type: "number" } as const,
+  verificationExpression: input.verificationExpression,
+});
+
+const toCoefficientData = (input: AddNodeInput | UpdateNodeInput) => ({
+  key: input.key,
+  meta: toMeta(input) ?? {},
+  symbol: optional(input.symbol),
+  unit: optional(input.unit),
+  valueType: { type: "number" } as const,
+});
+
+const toConstantData = (input: AddNodeInput | UpdateNodeInput) => ({
+  key: input.key,
+  symbol: input.symbol,
+  valueType: { type: "number" } as const,
+});
+
+const toFormulaData = (input: AddNodeInput | UpdateNodeInput) => ({
+  expression: optional(input.expression),
+  key: input.key,
+  meta: toMeta(input),
+  symbol: optional(input.symbol),
+  unit: optional(input.unit),
+  valueType: toValueType(input.valueType),
+});
+
+const toTableData = (input: AddNodeInput | UpdateNodeInput) => ({
+  key: input.key,
+  meta: toMeta(input),
+  source: input.source,
+  symbol: optional(input.symbol),
+  unit: optional(input.unit),
+  valueType: toValueType(input.valueType),
+});
+
+const toUserInputData = (input: AddNodeInput | UpdateNodeInput) => ({
+  key: input.key,
+  symbol: optional(input.symbol),
+  unit: optional(input.unit),
+  valueType: toValueType(input.valueType),
+});
+
+const toValueType = (valueType: AddNodeInput["valueType"]) => {
+  if (valueType === "number") return { type: "number" } as const;
+  return { type: "string" } as const;
+};
+
+const toMeta = (input: AddNodeInput | UpdateNodeInput) => {
+  const meta = {
+    ...(input.formulaRef && { formulaRef: input.formulaRef }),
+    ...(input.paragraphRef && { paragraphRef: input.paragraphRef }),
+    ...(input.sectionRef && { sectionRef: input.sectionRef }),
+    ...(input.subParagraphRef && { subParagraphRef: input.subParagraphRef }),
+    ...(input.tableRef && { tableRef: input.tableRef }),
+    ...(input.verificationRef && { verificationRef: input.verificationRef }),
+  };
+
+  if (Object.keys(meta).length === 0) return;
+  return meta;
+};
+
+const optional = (value: string) => {
+  const trimmedValue = value.trim();
+  if (!trimmedValue) return;
+  return trimmedValue;
+};

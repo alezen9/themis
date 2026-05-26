@@ -43,7 +43,7 @@ export const HorizontalInput = (props: FieldProps) => {
         "grid grid-cols-[1fr_2fr] grid-rows-[auto_auto] items-center gap-y-1",
       )}
     >
-      <span className="text-sm font-thin text-gray-700">{label}</span>
+      <span className="text-sm font-thin text-sand-900">{label}</span>
       {children}
       <span className="h-0">{NON_BLOCKING_SPACE}</span>
       <span

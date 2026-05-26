@@ -3,6 +3,8 @@ import { Handle, Position } from "@xyflow/react";
 import type { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
+import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
+
 type NodeCardProps = { children: ReactNode };
 
 export const NodeCard = (props: NodeCardProps) => {
@@ -68,15 +70,29 @@ export const NodeTargetHandle = () => {
   );
 };
 
-export const NodeAddChildHandle = () => {
+type NodeAddChildHandleProps = { sourceNodeId: string };
+
+export const NodeAddChildHandle = (props: NodeAddChildHandleProps) => {
+  const { sourceNodeId } = props;
+  const openCreateNodeModal = useNdgEditorStore(
+    (state) => state.openCreateNodeModal,
+  );
+
   return (
-    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 size-4 bg-envy-500 ring-1 ring-white text-white rounded-full grid place-content-center">
+    <button
+      type="button"
+      className="nodrag absolute -bottom-2 left-1/2 grid size-4 -translate-x-1/2 cursor-pointer place-content-center rounded-full bg-envy-500 text-white ring-1 ring-white"
+      onClick={(event) => {
+        event.stopPropagation();
+        openCreateNodeModal(sourceNodeId);
+      }}
+    >
       <IconPlus className="size-3" />
       <Handle
         type="source"
         position={Position.Bottom}
         className={twMerge("translate-y-1")}
       />
-    </div>
+    </button>
   );
 };
