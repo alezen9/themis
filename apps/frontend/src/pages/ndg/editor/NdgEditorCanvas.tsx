@@ -3,24 +3,27 @@ import {
   BackgroundVariant,
   Controls,
   MarkerType,
+  NodeMouseHandler,
   ReactFlow,
   SelectionMode,
-  useReactFlow,
 } from "@xyflow/react";
 
 import { useNdgEditorStore } from "./controller/useNdgEditorStore";
 import type { EditorEdge, EditorNode } from "./document/types";
 import { nodeTypes } from "./flow/nodeTypes";
 import { onBeforeDeleteElements } from "./graph/rules";
+import { useCallback } from "react";
 
 type Props = { initialEdges: EditorEdge[]; initialNodes: EditorNode[] };
 
 export const NdgEditorCanvas = (props: Props) => {
   const { initialEdges, initialNodes } = props;
-  const reactFlow = useReactFlow<EditorNode, EditorEdge>();
-  const onConnectNodes = useNdgEditorStore((state) => state.onConnectNodes);
-  const openEditNodeModal = useNdgEditorStore(
-    (state) => state.openEditNodeModal,
+  const onConnectNodes = useNdgEditorStore(state => state.onConnectNodes);
+  const openEditNodeModal = useNdgEditorStore(state => state.openEditNodeModal);
+
+  const onNodeDoubleClick = useCallback<NodeMouseHandler<EditorNode>>(
+    (_, node) => openEditNodeModal(node.id),
+    [openEditNodeModal],
   );
 
   return (
@@ -30,7 +33,7 @@ export const NdgEditorCanvas = (props: Props) => {
       defaultNodes={initialNodes}
       defaultEdges={initialEdges}
       defaultEdgeOptions={{
-        markerEnd: { type: MarkerType.ArrowClosed },
+        markerEnd: { type: MarkerType.Arrow },
         type: "smoothstep",
       }}
       nodeTypes={nodeTypes}
@@ -38,16 +41,7 @@ export const NdgEditorCanvas = (props: Props) => {
       minZoom={0.05}
       onConnect={onConnectNodes}
       onBeforeDelete={onBeforeDeleteElements}
-      onNodeDoubleClick={(_, node) => {
-        const selectedNodes = reactFlow
-          .getNodes()
-          .filter((node) => node.selected);
-
-        if (selectedNodes.length !== 1) return;
-        if (selectedNodes[0]?.id !== node.id) return;
-
-        openEditNodeModal(node.id);
-      }}
+      onNodeDoubleClick={onNodeDoubleClick}
       panOnDrag={[1, 2]}
       panOnScroll
       panOnScrollSpeed={1.2}

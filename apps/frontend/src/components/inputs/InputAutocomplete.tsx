@@ -58,18 +58,18 @@ export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
 
     const flatOptions = useMemo(
       () =>
-        options.flatMap((option) =>
+        options.flatMap(option =>
           "options" in option ? option.options : option,
         ),
       [options],
     );
     const optionsMap = useMemo(
-      () => new Map<typeof value, Option>(flatOptions.map((o) => [o.value, o])),
+      () => new Map<typeof value, Option>(flatOptions.map(o => [o.value, o])),
       [flatOptions],
     );
 
     const onValueChange = useCallback<NonNullable<OnValueChange>>(
-      (option) => {
+      option => {
         const changeEvent = { target: { name, value: option?.value ?? "" } };
         onChange?.(changeEvent as ChangeEvent<HTMLInputElement>);
       },
@@ -95,7 +95,7 @@ export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
       >
         <Combobox.InputGroup
           className={twMerge(
-            "group/input relative flex max-w-100 w-full grow gap-1 items-center h-9",
+            "group/input relative flex w-full grow gap-1 items-center h-9",
             "has-[data-disabled]:opacity-30 has-[data-disabled]:pointer-events-none",
           )}
         >
@@ -176,7 +176,7 @@ const VirtualizedPopup = (props: { options: Option[] | OptionGroup[] }) => {
   const rowVirtualizer = useVirtualizer({
     count: popupRows.length,
     getScrollElement: () => popupRef.current,
-    estimateSize: (index) => getRowHeight(popupRows[index]),
+    estimateSize: index => getRowHeight(popupRows[index]),
     gap: rowGap,
     overscan: 3,
   });
@@ -202,7 +202,7 @@ const VirtualizedPopup = (props: { options: Option[] | OptionGroup[] }) => {
           className="relative w-full"
           style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
         >
-          {virtualItems.map((virtualItem) => {
+          {virtualItems.map(virtualItem => {
             const row = popupRows[virtualItem.index];
             if (!row) return null;
 
@@ -283,8 +283,8 @@ const getVirtualRows = (
     filteredOptions.map((option, optionIndex) => [option.value, optionIndex]),
   );
 
-  groupedOptions.forEach((group) => {
-    const groupOptions = group.options.filter((option) =>
+  groupedOptions.forEach(group => {
+    const groupOptions = group.options.filter(option =>
       filteredOptionIndexes.has(option.value),
     );
 
@@ -296,7 +296,7 @@ const getVirtualRows = (
       type: "group",
     });
 
-    groupOptions.forEach((option) => {
+    groupOptions.forEach(option => {
       rows.push({
         key: option.value,
         option,

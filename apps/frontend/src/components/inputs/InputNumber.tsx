@@ -20,7 +20,7 @@ export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
   return (
     <div
       className={twMerge(
-        "flex items-center gap-1 max-w-100 w-full h-9",
+        "flex items-center gap-1 w-full h-9",
         "has-[input:disabled]:opacity-30 has-[input:disabled]:pointer-events-none",
       )}
     >

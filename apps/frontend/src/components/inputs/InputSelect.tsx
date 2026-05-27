@@ -33,7 +33,7 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
   } = props;
 
   const onValueChange = useCallback<NonNullable<OnValueChange>>(
-    (option) => {
+    option => {
       const changeEvent = { target: { name, value: option?.value ?? "" } };
       onChange?.(changeEvent as ChangeEvent<HTMLInputElement>);
     },
@@ -43,8 +43,8 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
   return (
     <Select.Root<Option>
       items={options}
-      defaultValue={options.find((option) => option.value === defaultValue)}
-      value={options.find((option) => option.value === value)}
+      defaultValue={options.find(option => option.value === defaultValue)}
+      value={options.find(option => option.value === value)}
       required={required}
       disabled={disabled}
       readOnly={readOnly}
@@ -58,7 +58,7 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
         onBlur={onBlur as OnBlur}
         className={twMerge(
           "[--bg-color:var(--bg-input-default-color)]",
-          "flex max-w-100 w-full grow gap-1 items-center h-9",
+          "flex w-full grow gap-1 items-center h-9",
           "data-disabled:opacity-30  data-disabled:pointer-events-none",
           "focus-within:[--bg-color:var(--bg-input-focus-color)]",
           "focus:outline-none",
@@ -108,7 +108,7 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
             )}
           >
             <Select.List className="w-full flex flex-col gap-1">
-              {options.map((option) => (
+              {options.map(option => (
                 <Select.Item
                   key={option.value}
                   value={option}

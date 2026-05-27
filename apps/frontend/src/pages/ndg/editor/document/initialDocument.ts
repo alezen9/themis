@@ -76,7 +76,7 @@ export const initialDocument: EditorDocument = {
       type: "coefficient",
       data: {
         key: "gamma_M0",
-        symbol: "\\gamma_M0",
+        symbol: "\\gamma_{M0}",
         valueType: { type: "number" },
         name: "Safety factor",
         meta: { sectionRef: "6.1" },

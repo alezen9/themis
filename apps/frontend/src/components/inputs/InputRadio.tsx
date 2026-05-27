@@ -12,7 +12,7 @@ export const InputRadio = forwardRef<HTMLInputElement, Props>((props, ref) => {
   return (
     <label
       className={twMerge(
-        "flex items-center gap-2.5 max-w-100 w-full h-9 rounded-sm text-sm",
+        "flex items-center gap-2.5 w-full h-9 rounded-sm text-sm",
         "has-[input:disabled]:opacity-30 has-[input:disabled]:pointer-events-none",
         "px-3 py-2",
         "font-light leading-0",

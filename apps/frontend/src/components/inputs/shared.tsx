@@ -18,6 +18,7 @@ type FieldProps = {
   name: string;
   label: ReactNode;
   orientation?: "vertical" | "horizontal";
+  description?: ReactNode;
 };
 
 export const FormField = (props: FieldProps) => {
@@ -43,7 +44,7 @@ export const HorizontalInput = (props: FieldProps) => {
         "grid grid-cols-[1fr_2fr] grid-rows-[auto_auto] items-center gap-y-1",
       )}
     >
-      <span className="text-sm font-thin text-sand-900">{label}</span>
+      <span className="text-sm font-light text-sand-900">{label}</span>
       {children}
       <span className="h-0">{NON_BLOCKING_SPACE}</span>
       <span
@@ -62,7 +63,7 @@ export const HorizontalInput = (props: FieldProps) => {
 };
 
 const VerticallInput = (props: FieldProps) => {
-  const { children, label, name } = props;
+  const { children, label, name, description } = props;
   const { errors } = useFormState({ name });
   const error = get(errors, name)?.message;
 
@@ -77,10 +78,11 @@ const VerticallInput = (props: FieldProps) => {
         "flex flex-col gap-1.5",
       )}
     >
-      <span className="text-sm font-thin text-gray-700">{label}</span>
-
+      <span className="text-sm font-light text-sand-900">{label}</span>
+      {description && (
+        <span className="text-xs text-gray-400 font-light">{description}</span>
+      )}
       {children}
-
       <span
         className={twMerge(
           "text-xs font-light text-red-500",

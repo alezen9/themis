@@ -73,26 +73,20 @@ export const addNodeFactory = (reactFlow: ReactFlow) => {
 };
 
 const toEditorNode = (id: string, input: AddNodeInput): EditorNode => {
-  const { position } = input;
-
-  switch (input.type) {
+  const { position, type } = input;
+  switch (type) {
     case "check":
-      return { id, data: toCheckData(input), position, type: "check" };
+      return { id, data: toCheckData(input), position, type };
     case "coefficient":
-      return {
-        id,
-        data: toCoefficientData(input),
-        position,
-        type: "coefficient",
-      };
+      return { id, data: toCoefficientData(input), position, type };
     case "constant":
-      return { id, data: toConstantData(input), position, type: "constant" };
+      return { id, data: toConstantData(input), position, type };
     case "formula":
-      return { id, data: toFormulaData(input), position, type: "formula" };
+      return { id, data: toFormulaData(input), position, type };
     case "table":
-      return { id, data: toTableData(input), position, type: "table" };
+      return { id, data: toTableData(input), position, type };
     case "user-input":
-      return { id, data: toUserInputData(input), position, type: "user-input" };
+      return { id, data: toUserInputData(input), position, type };
   }
 };
 

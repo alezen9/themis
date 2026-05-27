@@ -10,10 +10,12 @@ import { twMerge } from "tailwind-merge";
 type DialogProps = ComponentProps<typeof BaseDialog.Root> & {
   className?: string;
   children: ReactNode;
+  header: ReactNode;
+  footer?: ReactNode;
 };
 
 export const Dialog = (props: DialogProps) => {
-  const { children, className, ...rootProps } = props;
+  const { children, className, header, footer, ...rootProps } = props;
 
   return (
     <BaseDialog.Root {...rootProps}>
@@ -22,14 +24,18 @@ export const Dialog = (props: DialogProps) => {
         <BaseDialog.Viewport className="fixed inset-0 py-6 overflow-y-auto grid place-items-center">
           <BaseDialog.Popup
             className={twMerge(
-              "w-full max-w-3xl",
+              "w-full max-w-3xl max-h-full min-h-0 flex flex-col",
               "rounded-sm border border-sand-200 bg-white",
               "shadow-xl shadow-sand-600/20",
               "focus:outline-none",
               className,
             )}
           >
-            {children}
+            {header}
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+              {children}
+            </div>
+            {footer}
           </BaseDialog.Popup>
         </BaseDialog.Viewport>
       </BaseDialog.Portal>
@@ -37,19 +43,39 @@ export const Dialog = (props: DialogProps) => {
   );
 };
 
-type DialogHeaderProps = ComponentPropsWithoutRef<"header">;
+export const DialogHeader = forwardRef<
+  HTMLElement,
+  ComponentPropsWithoutRef<"header">
+>((props, ref) => {
+  const { className, ...rest } = props;
 
-export const DialogHeader = forwardRef<HTMLElement, DialogHeaderProps>(
-  (props, ref) => {
-    const { className, ...rest } = props;
-
-    return (
-      <header ref={ref} className={twMerge("px-6 pt-6", className)} {...rest} />
-    );
-  },
-);
+  return (
+    <header
+      ref={ref}
+      className={twMerge("shrink-0 p-4 border-b border-sand-400", className)}
+      {...rest}
+    />
+  );
+});
 
 DialogHeader.displayName = "DialogHeader";
+
+export const DialogFooter = forwardRef<
+  HTMLElement,
+  ComponentPropsWithoutRef<"footer">
+>((props, ref) => {
+  const { className, ...rest } = props;
+
+  return (
+    <footer
+      ref={ref}
+      className={twMerge("shrink-0 p-4 border-t border-sand-400", className)}
+      {...rest}
+    />
+  );
+});
+
+DialogFooter.displayName = "DialogFooter";
 
 type DialogTitleProps = Omit<
   ComponentProps<typeof BaseDialog.Title>,
@@ -64,7 +90,7 @@ export const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitleProps>(
       <BaseDialog.Title
         ref={ref}
         className={twMerge(
-          "text-[20px] leading-[1.1] font-semibold text-slate-950",
+          "text-[20px] leading-[1.1] font-semibold text-sand-900",
           className,
         )}
         {...rest}
@@ -75,27 +101,19 @@ export const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitleProps>(
 
 DialogTitle.displayName = "DialogTitle";
 
-type DialogDescriptionProps = Omit<
-  ComponentProps<typeof BaseDialog.Description>,
-  "className"
-> & { className?: string };
-
-export const DialogDescription = forwardRef<
-  HTMLParagraphElement,
-  DialogDescriptionProps
+export const DialogContent = forwardRef<
+  HTMLElement,
+  ComponentPropsWithoutRef<"div">
 >((props, ref) => {
   const { className, ...rest } = props;
 
   return (
-    <BaseDialog.Description
+    <header
       ref={ref}
-      className={twMerge(
-        "mt-1.5 text-[13px] font-light text-slate-500",
-        className,
-      )}
+      className={twMerge("shrink-0 p-4 flex flex-col", className)}
       {...rest}
     />
   );
 });
 
-DialogDescription.displayName = "DialogDescription";
+DialogContent.displayName = "DialogContent";

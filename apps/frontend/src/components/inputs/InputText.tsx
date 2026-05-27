@@ -10,7 +10,7 @@ export const InputText = forwardRef<HTMLInputElement, Props>((props, ref) => {
     <input
       ref={ref}
       className={twMerge(
-        "h-9 w-full max-w-100",
+        "h-9 w-full",
         "rounded-sm",
         "bg-(--bg-input-default-color)",
         "px-3 py-2",
