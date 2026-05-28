@@ -7,7 +7,21 @@ import prettier from "eslint-config-prettier";
 
 export default tseslint.config(
   { ignores: ["**/dist/**", "**/routeTree.gen.ts"] },
-  { files: ["**/*.{ts,tsx}"], extends: [...tseslint.configs.recommended] },
+  {
+    files: ["**/*.{ts,tsx}"],
+    extends: [...tseslint.configs.recommended],
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
   {
     files: ["apps/frontend/**/*.{ts,tsx}"],
     plugins: {

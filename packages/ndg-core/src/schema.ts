@@ -117,7 +117,7 @@ export const CoefficientNodeSchema = BaseNodeSchema.extend({
   type: z.literal("coefficient"),
   key: z.string(),
   valueType: NumericValueType,
-  meta: NodeMetaSchema,
+  meta: NodeMetaSchema.optional(),
   unit: z.string().optional(),
 });
 

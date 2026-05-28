@@ -5,30 +5,35 @@ import { InputText } from "@components/inputs/InputText";
 
 import { Section, SectionTitle } from "./shared";
 
+const TYPES_WITH_META = ["check", "formula", "coefficient", "table"];
+
 export const FormMetadata = () => {
-  const { register } = useFormContext();
+  const { register, watch } = useFormContext();
+  const type = watch("type");
+
+  if (!TYPES_WITH_META.includes(type)) return null;
 
   return (
     <Section>
       <SectionTitle>Metadata</SectionTitle>
       <div className="grid grid-cols-3 grid-rows-2 gap-4">
-        <FormField name="verification" label="Verification">
-          <InputText {...register("verification")} />
+        <FormField name="meta.verificationRef" label="Verification">
+          <InputText {...register("meta.verificationRef")} />
         </FormField>
-        <FormField name="section" label="Section">
-          <InputText {...register("section")} />
+        <FormField name="meta.sectionRef" label="Section">
+          <InputText {...register("meta.sectionRef")} />
         </FormField>
-        <FormField name="paragraph" label="Paragraph">
-          <InputText {...register("paragraph")} />
+        <FormField name="meta.paragraphRef" label="Paragraph">
+          <InputText {...register("meta.paragraphRef")} />
         </FormField>
-        <FormField name="subparagraph" label="Subparagraph">
-          <InputText {...register("subparagraph")} />
+        <FormField name="meta.subParagraphRef" label="Subparagraph">
+          <InputText {...register("meta.subParagraphRef")} />
         </FormField>
-        <FormField name="formula" label="Formula">
-          <InputText {...register("formula")} />
+        <FormField name="meta.formulaRef" label="Formula">
+          <InputText {...register("meta.formulaRef")} />
         </FormField>
-        <FormField name="table" label="Table">
-          <InputText {...register("table")} />
+        <FormField name="meta.tableRef" label="Table">
+          <InputText {...register("meta.tableRef")} />
         </FormField>
       </div>
     </Section>

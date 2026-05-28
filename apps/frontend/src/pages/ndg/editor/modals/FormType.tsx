@@ -1,11 +1,13 @@
 import { InputRadio } from "@components/inputs/InputRadio";
+import { useFormContext } from "react-hook-form";
 
 import { Section, SectionTitle } from "./shared";
 import { typeOptions } from "./options";
-import { useCreateEditNodeFormContext } from "./useCreateEditNodeFormContext";
 
-export const FormType = () => {
-  const { register } = useCreateEditNodeFormContext();
+type FormTypeProps = { locked?: boolean };
+
+export const FormType = ({ locked }: FormTypeProps) => {
+  const { register } = useFormContext();
 
   return (
     <Section>
@@ -17,6 +19,7 @@ export const FormType = () => {
             {...register("type")}
             value={option.value}
             label={option.label}
+            disabled={locked}
           />
         ))}
       </div>

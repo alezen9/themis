@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { createEdgeId } from "../document/ids";
 import type { EditorEdge, EditorNode } from "../document/types";
-import type { AddNodeInput } from "./actions";
 import { useNdgEditorStore } from "./useNdgEditorStore";
 
 const nodeA: EditorNode = {
@@ -30,23 +29,6 @@ const edgeAtoB: EditorEdge = {
   id: createEdgeId("a", "b"),
   source: "a",
   target: "b",
-};
-
-const baseAddNodeInput: Omit<AddNodeInput, "type" | "sourceNodeId"> = {
-  key: "x",
-  expression: "",
-  formulaRef: "",
-  paragraphRef: "",
-  position: { x: 0, y: 0 },
-  sectionRef: "",
-  source: "",
-  subParagraphRef: "",
-  symbol: "",
-  tableRef: "",
-  unit: "",
-  valueType: "number",
-  verificationExpression: "",
-  verificationRef: "",
 };
 
 beforeEach(() => {
@@ -123,8 +105,9 @@ describe("onEdgesChange — remove", () => {
 describe("addNode", () => {
   it("adds the node and a connecting edge when sourceNodeId is provided", () => {
     useNdgEditorStore.getState().addNode({
-      ...baseAddNodeInput,
       type: "user-input",
+      key: "x",
+      valueType: { type: "number" },
       sourceNodeId: "a",
     });
 
@@ -138,8 +121,9 @@ describe("addNode", () => {
 
   it("adds only the node when no sourceNodeId is provided", () => {
     useNdgEditorStore.getState().addNode({
-      ...baseAddNodeInput,
       type: "user-input",
+      key: "x",
+      valueType: { type: "number" },
     });
 
     const { nodes, edges } = useNdgEditorStore.getState();

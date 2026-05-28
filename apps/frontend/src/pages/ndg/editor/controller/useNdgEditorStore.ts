@@ -79,15 +79,16 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
 
   addNode: input =>
     set(state => {
-      const node = toEditorNode(createNodeId(), input);
+      const { sourceNodeId = "" } = input;
+      const node = toEditorNode(createNodeId(), { x: 0, y: 200 }, input);
       const nodes = [...state.nodes, node];
       const _nodeById = new Map(state._nodeById);
       _nodeById.set(node.id, node);
 
-      if (!input.sourceNodeId) return { nodes, _nodeById };
+      if (!sourceNodeId) return { nodes, _nodeById };
 
       const connection: Connection = {
-        source: input.sourceNodeId,
+        source: sourceNodeId,
         target: node.id,
         sourceHandle: null,
         targetHandle: null,
@@ -96,16 +97,16 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       if (!canConnectNodes(_nodeById, state._adjacency, connection))
         return { nodes, _nodeById };
 
-      const edgeId = createEdgeId(input.sourceNodeId, node.id);
+      const edgeId = createEdgeId(sourceNodeId, node.id);
       const newEdge: EditorEdge = {
         id: edgeId,
-        source: input.sourceNodeId,
+        source: sourceNodeId,
         target: node.id,
       };
       const edges = [...state.edges, newEdge];
       const _edgeById = new Map(state._edgeById);
       _edgeById.set(edgeId, newEdge);
-      addToAdjacency(state._adjacency, input.sourceNodeId, node.id);
+      addToAdjacency(state._adjacency, sourceNodeId, node.id);
 
       return { nodes, _nodeById, edges, _edgeById };
     }),
@@ -151,7 +152,11 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
           }
         } else if (change.type === "add") {
           state._edgeById.set(change.item.id, change.item);
-          addToAdjacency(state._adjacency, change.item.source, change.item.target);
+          addToAdjacency(
+            state._adjacency,
+            change.item.source,
+            change.item.target,
+          );
         }
       }
       return { edges };
@@ -174,5 +179,4 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
     const { nodes, edges } = get();
     return { version: EDITOR_DOCUMENT_VERSION, nodes, edges };
   },
-
 }));

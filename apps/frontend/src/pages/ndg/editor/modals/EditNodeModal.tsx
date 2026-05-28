@@ -1,15 +1,18 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@components/Dialog";
-import { useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-
 import { Button } from "@components/Button";
+
 import { useNdgEditorStore } from "../controller/useNdgEditorStore";
 import { useNdgEditorModalStore } from "./useNdgEditorModalStore";
+import { nodeFormSchema, type NodeFormValues } from "./schema";
 import { FormDefinition } from "./FormDefinition";
 import { FormIdentity } from "./FormIdentity";
 import { FormMetadata } from "./FormMetadata";
@@ -18,15 +21,34 @@ import { FormType } from "./FormType";
 export const EditNodeModal = () => {
   const modal = useNdgEditorModalStore(s => s.modal);
   const closeModal = useNdgEditorModalStore(s => s.closeModal);
+  const updateNode = useNdgEditorStore(s => s.updateNode);
   const open = modal?.mode === "edit-node";
 
-  const form = useForm();
+  const form = useForm<NodeFormValues>({
+    resolver: zodResolver(nodeFormSchema),
+  });
+
+  const type = form.watch("type");
 
   useEffect(() => {
     if (!open || modal?.mode !== "edit-node") return;
     const node = useNdgEditorStore.getState()._nodeById.get(modal.nodeId);
-    form.reset(node ? { type: node.type, ...node.data } : {});
+    if (!node) return;
+    form.reset({ type: node.type, ...node.data } as NodeFormValues);
   }, [open, modal, form]);
+
+  useEffect(() => {
+    form.clearErrors();
+  }, [type, form]);
+
+  const handleSubmit = form.handleSubmit(values => {
+    if (modal?.mode !== "edit-node") return;
+    updateNode({ ...values, id: modal.nodeId });
+    closeModal();
+  });
+
+  const isCheckNode = modal?.mode === "edit-node"
+    && useNdgEditorStore.getState()._nodeById.get(modal.nodeId)?.type === "check";
 
   return (
     <Dialog
@@ -35,17 +57,19 @@ export const EditNodeModal = () => {
       header={
         <DialogHeader className="flex items-center justify-between">
           <DialogTitle>Edit node</DialogTitle>
-          <Button type="submit">Save</Button>
+          <Button type="submit" form="edit-node-form">Save</Button>
         </DialogHeader>
       }
     >
       <DialogContent className="gap-8">
-        <FormProvider {...form}>
-          <FormType />
-          <FormIdentity />
-          <FormDefinition />
-          <FormMetadata />
-        </FormProvider>
+        <form id="edit-node-form" onSubmit={handleSubmit}>
+          <FormProvider {...form}>
+            <FormType locked={isCheckNode} />
+            <FormIdentity />
+            <FormDefinition />
+            <FormMetadata />
+          </FormProvider>
+        </form>
       </DialogContent>
     </Dialog>
   );

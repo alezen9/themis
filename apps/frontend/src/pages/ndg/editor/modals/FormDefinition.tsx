@@ -9,36 +9,50 @@ import { Latex } from "@components/Latex";
 import { Section, SectionTitle } from "./shared";
 
 export const FormDefinition = () => {
-  const { register } = useFormContext();
+  const { register, watch } = useFormContext();
+  const type = watch("type");
 
   return (
     <Section>
       <SectionTitle>Definition</SectionTitle>
       <div className="grid grid-cols-4 grid-rows-1 gap-4">
-        <div className="col-span-4">
-          <FormFieldLatex
-            name="verificationExpression"
-            label="Verification"
-            description="LaTeX condition rendered in the check node"
-          >
-            <InputText {...register("verificationExpression")} />
-          </FormFieldLatex>
-        </div>
-        <div className="col-span-2">
-          <FormFieldLatex
-            name="expression"
-            label="Expression"
-            description="LaTeX formula shown as symbol = expression"
-          >
-            <InputText {...register("expression")} />
-          </FormFieldLatex>
-        </div>
+        {type === "check" && (
+          <div className="col-span-4">
+            <FormFieldLatex
+              name="verificationExpression"
+              label="Verification"
+              description="LaTeX condition rendered in the check node"
+            >
+              <InputText {...register("verificationExpression")} />
+            </FormFieldLatex>
+          </div>
+        )}
+        {type === "formula" && (
+          <div className="col-span-2">
+            <FormFieldLatex
+              name="expression"
+              label="Expression"
+              description="LaTeX formula shown as symbol = expression"
+            >
+              <InputText {...register("expression")} />
+            </FormFieldLatex>
+          </div>
+        )}
+        {type === "table" && (
+          <div className="col-span-2">
+            <FormField name="source" label="Source" description="Normative table reference e.g. EC3-1-1 Table 6.2">
+              <InputText {...register("source")} />
+            </FormField>
+          </div>
+        )}
         <FormFieldLatex name="symbol" label="Symbol" description="Expression symbol">
           <InputText {...register("symbol")} />
         </FormFieldLatex>
-        <FormFieldLatex name="unit" label="Unit" description="Display unit">
-          <InputText {...register("unit")} />
-        </FormFieldLatex>
+        {type !== "check" && type !== "constant" && (
+          <FormField name="unit" label="Unit" description="Display unit">
+            <InputText {...register("unit")} />
+          </FormField>
+        )}
       </div>
     </Section>
   );
