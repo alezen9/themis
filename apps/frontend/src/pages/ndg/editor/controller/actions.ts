@@ -1,4 +1,8 @@
-import type { Connection, ReactFlowInstance, XYPosition } from "@xyflow/react";
+import {
+  type Connection,
+  type ReactFlowInstance,
+  type XYPosition,
+} from "@xyflow/react";
 
 import { createEdgeId, createNodeId } from "../document/ids";
 import {
@@ -46,9 +50,7 @@ export const addNodeFactory = (reactFlow: ReactFlow) => {
   return (input: AddNodeInput) => {
     const { sourceNodeId } = input;
     const nodes = reactFlow.getNodes();
-
     const node = toEditorNode(createNodeId(), input);
-
     reactFlow.addNodes(node);
 
     if (!sourceNodeId) return;
@@ -64,11 +66,8 @@ export const addNodeFactory = (reactFlow: ReactFlow) => {
 
     if (!canConnectNodes(nextNodes, edges, connection)) return;
 
-    reactFlow.addEdges({
-      id: createEdgeId(sourceNodeId, node.id),
-      source: sourceNodeId,
-      target: node.id,
-    });
+    const edgeId = createEdgeId(sourceNodeId, node.id);
+    reactFlow.addEdges({ id: edgeId, source: sourceNodeId, target: node.id });
   };
 };
 
@@ -101,18 +100,24 @@ export const exportDocumentFactory = (reactFlow: ReactFlow) => () => {
 };
 
 export const onConnectNodesFactory =
-  (reactFlow: ReactFlow) => (connection: Connection) => {
+  (reactFlow: Pick<ReactFlow, "getNodes" | "setEdges">) => (connection: Connection) => {
     const { source, target } = connection;
-    const nodes = reactFlow.getNodes();
-    const edges = reactFlow.getEdges();
-
-    if (!canConnectNodes(nodes, edges, connection)) return;
-
     if (!source || !target) return;
 
-    const edgeId = createEdgeId(source, target);
+    const nodes = reactFlow.getNodes();
 
-    reactFlow.addEdges({ id: edgeId, source, target });
+    reactFlow.setEdges(currentEdges => {
+      // React Flow auto-adds an edge with its own id before onConnect fires in uncontrolled
+      // mode. Filter it out so we can replace it with our own id convention.
+      const withoutAutoEdge = currentEdges.filter(
+        e => !(e.source === source && e.target === target && !e.id.includes("__to__")),
+      );
+
+      if (!canConnectNodes(nodes, withoutAutoEdge, connection)) return withoutAutoEdge;
+
+      const edgeId = createEdgeId(source, target);
+      return [...withoutAutoEdge, { ...connection, id: edgeId }];
+    });
   };
 
 export const updateNodeFactory =

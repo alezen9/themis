@@ -1,12 +1,8 @@
 import type { Connection } from "@xyflow/react";
 
-import { createEdgeId } from "../document/ids";
 import type { EditorEdge, EditorNode } from "../document/types";
 
-type DeleteElementsInput = {
-  edges: EditorEdge[];
-  nodes: EditorNode[];
-};
+type DeleteElementsInput = { edges: EditorEdge[]; nodes: EditorNode[] };
 
 export const canConnectNodes = (
   nodes: EditorNode[],
@@ -18,21 +14,20 @@ export const canConnectNodes = (
   if (!source || !target) return false;
   if (source === target) return false;
 
-  const nodeIds = new Set(nodes.map((node) => node.id));
+  const nodeIds = new Set(nodes.map(node => node.id));
 
   if (!nodeIds.has(source) || !nodeIds.has(target)) return false;
 
-  const edgeId = createEdgeId(source, target);
-  const hasExistingEdge = edges.some((edge) => edge.id === edgeId);
+  const hasExistingEdge = edges.some(e => e.source === source && e.target === target);
 
   if (hasExistingEdge) return false;
 
   return !wouldCreateCycle(edges, source, target);
 };
 
-export const onBeforeDeleteElements = async ({ nodes }: DeleteElementsInput) => {
-  const includesCheckNode = nodes.some((node) => node.type === "check");
-
+export const onBeforeDeleteElements = async (elements: DeleteElementsInput) => {
+  const { nodes } = elements;
+  const includesCheckNode = nodes.some(node => node.type === "check");
   return !includesCheckNode;
 };
 
@@ -52,11 +47,8 @@ const wouldCreateCycle = (
 
     visited.add(nodeId);
 
-    for (const edge of edges) {
-      if (edge.source === nodeId) {
-        pending.push(edge.target);
-      }
-    }
+    for (const edge of edges)
+      if (edge.source === nodeId) pending.push(edge.target);
   }
 
   return false;

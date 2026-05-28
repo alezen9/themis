@@ -12,7 +12,7 @@ import { useNdgEditorStore } from "./useNdgEditorStore";
 
 export const NdgEditorController = () => {
   const reactFlow = useReactFlow<EditorNode, EditorEdge>();
-  const setActions = useNdgEditorStore((state) => state.setActions);
+  const setActions = useNdgEditorStore(state => state.setActions);
 
   useEffect(() => {
     setActions({
