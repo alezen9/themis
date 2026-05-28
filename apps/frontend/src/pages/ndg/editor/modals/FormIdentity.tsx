@@ -1,13 +1,13 @@
-import { Section, SectionTitle } from "../shared";
-import { InputRadio } from "@components/inputs/InputRadio";
-
-import { ChangeHandler, useFormContext } from "react-hook-form";
-import { valueTypeOptions } from "./options";
 import { FormField } from "@components/inputs/shared";
+import { InputRadio } from "@components/inputs/InputRadio";
 import { InputText } from "@components/inputs/InputText";
+import { useFormContext } from "react-hook-form";
+
+import { valueTypeOptions } from "./options";
+import { Section, SectionTitle } from "./shared";
 
 export const FormIdentity = () => {
-  const { register, reset, getValues, trigger } = useFormContext();
+  const { register } = useFormContext();
 
   return (
     <Section>
@@ -26,16 +26,14 @@ export const FormIdentity = () => {
           description="Expected runtime value"
         >
           <div className="flex items-center w-full gap-4">
-            {valueTypeOptions.map(option => {
-              return (
-                <InputRadio
-                  key={option.value}
-                  {...register?.("valueType")}
-                  value={option.value}
-                  label={option.label}
-                />
-              );
-            })}
+            {valueTypeOptions.map(option => (
+              <InputRadio
+                key={option.value}
+                {...register("valueType")}
+                value={option.value}
+                label={option.label}
+              />
+            ))}
           </div>
         </FormField>
       </div>

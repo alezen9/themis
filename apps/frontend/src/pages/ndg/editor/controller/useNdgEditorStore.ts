@@ -53,11 +53,6 @@ const removeFromAdjacency = (
   else adjacency.set(source, updated);
 };
 
-export type NdgEditorModal =
-  | { mode: "create-node"; sourceNodeId?: string }
-  | { mode: "edit-node"; nodeId: string }
-  | { mode: "edit-edge"; edgeId: string };
-
 type NdgEditorStore = {
   nodes: EditorNode[];
   edges: EditorEdge[];
@@ -71,12 +66,6 @@ type NdgEditorStore = {
   onEdgesChange: (changes: EdgeChange<EditorEdge>[]) => void;
   onConnectNodes: (connection: Connection) => void;
   exportDocument: () => EditorDocument;
-
-  modal: NdgEditorModal | undefined;
-  closeModal: () => void;
-  openCreateNodeModal: (sourceNodeId?: string) => void;
-  openEditEdgeModal: (edgeId: string) => void;
-  openEditNodeModal: (nodeId: string) => void;
 };
 
 const { nodes: initialNodes, edges: initialEdges } = initialDocument;
@@ -186,10 +175,4 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
     return { version: EDITOR_DOCUMENT_VERSION, nodes, edges };
   },
 
-  modal: undefined,
-  closeModal: () => set({ modal: undefined }),
-  openCreateNodeModal: sourceNodeId =>
-    set({ modal: { mode: "create-node", sourceNodeId } }),
-  openEditEdgeModal: edgeId => set({ modal: { mode: "edit-edge", edgeId } }),
-  openEditNodeModal: nodeId => set({ modal: { mode: "edit-node", nodeId } }),
 }));

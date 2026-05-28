@@ -8,24 +8,23 @@ import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { Button } from "@components/Button";
-import { useNdgEditorStore } from "../../../controller/useNdgEditorStore";
+import { useNdgEditorModalStore } from "./useNdgEditorModalStore";
 import { FormDefinition } from "./FormDefinition";
 import { FormIdentity } from "./FormIdentity";
 import { FormMetadata } from "./FormMetadata";
 import { FormType } from "./FormType";
 
-export const EditNodeModal = () => {
-  const modal = useNdgEditorStore(s => s.modal);
-  const closeModal = useNdgEditorStore(s => s.closeModal);
-  const open = modal?.mode === "edit-node";
+export const CreateNodeModal = () => {
+  const modal = useNdgEditorModalStore(s => s.modal);
+  const closeModal = useNdgEditorModalStore(s => s.closeModal);
+  const open = modal?.mode === "create-node";
 
   const form = useForm();
 
   useEffect(() => {
-    if (!open || modal?.mode !== "edit-node") return;
-    const node = useNdgEditorStore.getState()._nodeById.get(modal.nodeId);
-    form.reset(node ? { type: node.type, ...node.data } : {});
-  }, [open, modal, form]);
+    if (!open) return;
+    form.reset({});
+  }, [open, form]);
 
   return (
     <Dialog
@@ -33,7 +32,7 @@ export const EditNodeModal = () => {
       onOpenChange={closeModal}
       header={
         <DialogHeader className="flex items-center justify-between">
-          <DialogTitle>Edit node</DialogTitle>
+          <DialogTitle>Add node</DialogTitle>
           <Button type="submit">Save</Button>
         </DialogHeader>
       }

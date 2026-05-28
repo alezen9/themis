@@ -1,7 +1,9 @@
-import { Section, SectionTitle } from "../shared";
 import { useFormContext } from "react-hook-form";
+
 import { FormField } from "@components/inputs/shared";
 import { InputText } from "@components/inputs/InputText";
+
+import { Section, SectionTitle } from "./shared";
 
 export const FormMetadata = () => {
   const { register } = useFormContext();

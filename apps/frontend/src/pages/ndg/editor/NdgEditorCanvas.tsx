@@ -13,6 +13,7 @@ import { useNdgEditorStore } from "./controller/useNdgEditorStore";
 import type { EditorNode } from "./document/types";
 import { nodeTypes } from "./flow/nodeTypes";
 import { onBeforeDeleteElements } from "./graph/rules";
+import { useNdgEditorModalStore } from "./modals/useNdgEditorModalStore";
 
 export const NdgEditorCanvas = () => {
   const nodes = useNdgEditorStore(state => state.nodes);
@@ -20,11 +21,11 @@ export const NdgEditorCanvas = () => {
   const onNodesChange = useNdgEditorStore(state => state.onNodesChange);
   const onEdgesChange = useNdgEditorStore(state => state.onEdgesChange);
   const onConnectNodes = useNdgEditorStore(state => state.onConnectNodes);
-  const openEditNodeModal = useNdgEditorStore(state => state.openEditNodeModal);
+  const openModal = useNdgEditorModalStore(state => state.openModal);
 
   const onNodeDoubleClick = useCallback<NodeMouseHandler<EditorNode>>(
-    (_, node) => openEditNodeModal(node.id),
-    [openEditNodeModal],
+    (_, node) => openModal({ mode: "edit-node", nodeId: node.id }),
+    [openModal],
   );
 
   return (

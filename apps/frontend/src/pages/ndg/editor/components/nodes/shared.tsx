@@ -3,7 +3,7 @@ import { Handle, Position } from "@xyflow/react";
 import type { MouseEvent, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
+import { useNdgEditorModalStore } from "../../modals/useNdgEditorModalStore";
 import { IconButton } from "@components/Button";
 
 type NodeCardProps = { children: ReactNode };
@@ -59,13 +59,11 @@ export const NodeBody = (props: NodeBodyProps) => {
 
 export const NodeAddChildHandle = (props: { sourceNodeId: string }) => {
   const { sourceNodeId } = props;
-  const openCreateNodeModal = useNdgEditorStore(
-    state => state.openCreateNodeModal,
-  );
+  const openModal = useNdgEditorModalStore(state => state.openModal);
 
   const onClick = (e: MouseEvent) => {
     e.stopPropagation();
-    openCreateNodeModal(sourceNodeId);
+    openModal({ mode: "create-node", sourceNodeId });
   };
 
   return (

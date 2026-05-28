@@ -1,10 +1,12 @@
-import { Section, SectionTitle } from "../shared";
+import { ComponentProps } from "react";
 import { useFormContext } from "react-hook-form";
+import { twMerge } from "tailwind-merge";
+
 import { FormField } from "@components/inputs/shared";
 import { InputText } from "@components/inputs/InputText";
-import { ComponentProps } from "react";
 import { Latex } from "@components/Latex";
-import { twMerge } from "tailwind-merge";
+
+import { Section, SectionTitle } from "./shared";
 
 export const FormDefinition = () => {
   const { register } = useFormContext();
@@ -31,11 +33,7 @@ export const FormDefinition = () => {
             <InputText {...register("expression")} />
           </FormFieldLatex>
         </div>
-        <FormFieldLatex
-          name="symbol"
-          label="Symbol"
-          description="Expression symbol"
-        >
+        <FormFieldLatex name="symbol" label="Symbol" description="Expression symbol">
           <InputText {...register("symbol")} />
         </FormFieldLatex>
         <FormFieldLatex name="unit" label="Unit" description="Display unit">
