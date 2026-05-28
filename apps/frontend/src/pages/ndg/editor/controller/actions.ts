@@ -1,19 +1,6 @@
-import {
-  type Connection,
-  type ReactFlowInstance,
-  type XYPosition,
-} from "@xyflow/react";
+import type { XYPosition } from "@xyflow/react";
 
-import { createEdgeId, createNodeId } from "../document/ids";
-import {
-  EDITOR_DOCUMENT_VERSION,
-  type EditorDocument,
-  type EditorEdge,
-  type EditorNode,
-} from "../document/types";
-import { canConnectNodes } from "../graph/rules";
-
-type ReactFlow = ReactFlowInstance<EditorNode, EditorEdge>;
+import type { EditorNode } from "../document/types";
 
 export type AddNodeInput = {
   expression: string;
@@ -34,117 +21,46 @@ export type AddNodeInput = {
   verificationRef: string;
 };
 
-export type UpdateNodeInput = Omit<
-  AddNodeInput,
-  "position" | "sourceNodeId"
-> & { id: string };
-
-export type NdgEditorActions = {
-  addNode: (input: AddNodeInput) => void;
-  exportDocument: () => EditorDocument;
-  onConnectNodes: (connection: Connection) => void;
-  updateNode: (input: UpdateNodeInput) => void;
+export type UpdateNodeInput = Omit<AddNodeInput, "position" | "sourceNodeId"> & {
+  id: string;
 };
 
-export const addNodeFactory = (reactFlow: ReactFlow) => {
-  return (input: AddNodeInput) => {
-    const { sourceNodeId } = input;
-    const nodes = reactFlow.getNodes();
-    const node = toEditorNode(createNodeId(), input);
-    reactFlow.addNodes(node);
-
-    if (!sourceNodeId) return;
-
-    const edges = reactFlow.getEdges();
-    const connection: Connection = {
-      source: sourceNodeId,
-      sourceHandle: null,
-      target: node.id,
-      targetHandle: null,
-    };
-    const nextNodes = [...nodes, node];
-
-    if (!canConnectNodes(nextNodes, edges, connection)) return;
-
-    const edgeId = createEdgeId(sourceNodeId, node.id);
-    reactFlow.addEdges({ id: edgeId, source: sourceNodeId, target: node.id });
-  };
-};
-
-const toEditorNode = (id: string, input: AddNodeInput): EditorNode => {
+export const toEditorNode = (id: string, input: AddNodeInput): EditorNode => {
   const { position, type } = input;
   switch (type) {
     case "check":
-      return { id, data: toCheckData(input), position, type };
+      return { id, position, data: toCheckData(input), type };
     case "coefficient":
-      return { id, data: toCoefficientData(input), position, type };
+      return { id, position, data: toCoefficientData(input), type };
     case "constant":
-      return { id, data: toConstantData(input), position, type };
+      return { id, position, data: toConstantData(input), type };
     case "formula":
-      return { id, data: toFormulaData(input), position, type };
+      return { id, position, data: toFormulaData(input), type };
     case "table":
-      return { id, data: toTableData(input), position, type };
+      return { id, position, data: toTableData(input), type };
     case "user-input":
-      return { id, data: toUserInputData(input), position, type };
+      return { id, position, data: toUserInputData(input), type };
   }
 };
 
-export const exportDocumentFactory = (reactFlow: ReactFlow) => () => {
-  const { edges, nodes } = reactFlow.toObject();
-
-  return {
-    version: EDITOR_DOCUMENT_VERSION,
-    nodes,
-    edges,
-  } satisfies EditorDocument;
+export const applyNodeUpdate = (existing: EditorNode, input: UpdateNodeInput): EditorNode => {
+  const { id, position } = existing;
+  const { type } = input;
+  switch (type) {
+    case "check":
+      return { id, position, data: toCheckData(input), type };
+    case "coefficient":
+      return { id, position, data: toCoefficientData(input), type };
+    case "constant":
+      return { id, position, data: toConstantData(input), type };
+    case "formula":
+      return { id, position, data: toFormulaData(input), type };
+    case "table":
+      return { id, position, data: toTableData(input), type };
+    case "user-input":
+      return { id, position, data: toUserInputData(input), type };
+  }
 };
-
-export const onConnectNodesFactory =
-  (reactFlow: Pick<ReactFlow, "getNodes" | "setEdges">) => (connection: Connection) => {
-    const { source, target } = connection;
-    if (!source || !target) return;
-
-    const nodes = reactFlow.getNodes();
-
-    reactFlow.setEdges(currentEdges => {
-      // React Flow auto-adds an edge with its own id before onConnect fires in uncontrolled
-      // mode. Filter it out so we can replace it with our own id convention.
-      const withoutAutoEdge = currentEdges.filter(
-        e => !(e.source === source && e.target === target && !e.id.includes("__to__")),
-      );
-
-      if (!canConnectNodes(nodes, withoutAutoEdge, connection)) return withoutAutoEdge;
-
-      const edgeId = createEdgeId(source, target);
-      return [...withoutAutoEdge, { ...connection, id: edgeId }];
-    });
-  };
-
-export const updateNodeFactory =
-  (reactFlow: ReactFlow) => (input: UpdateNodeInput) => {
-    const { id, type } = input;
-
-    switch (type) {
-      case "check":
-        reactFlow.updateNode(id, { data: toCheckData(input), type });
-        return;
-      case "coefficient":
-        reactFlow.updateNode(id, { data: toCoefficientData(input), type });
-        return;
-      case "constant":
-        reactFlow.updateNode(id, { data: toConstantData(input), type });
-        return;
-      case "formula":
-        reactFlow.updateNode(id, { data: toFormulaData(input), type });
-        return;
-      case "table":
-        reactFlow.updateNode(id, { data: toTableData(input), type });
-        return;
-      case "user-input":
-        reactFlow.updateNode(id, { data: toUserInputData(input), type });
-        return;
-    }
-  };
 
 const toCheckData = (input: AddNodeInput | UpdateNodeInput) => ({
   key: input.key,
@@ -207,13 +123,12 @@ const toMeta = (input: AddNodeInput | UpdateNodeInput) => {
     ...(input.tableRef && { tableRef: input.tableRef }),
     ...(input.verificationRef && { verificationRef: input.verificationRef }),
   };
-
   if (Object.keys(meta).length === 0) return;
   return meta;
 };
 
 const optional = (value: string) => {
-  const trimmedValue = value.trim();
-  if (!trimmedValue) return;
-  return trimmedValue;
+  const trimmed = value.trim();
+  if (!trimmed) return;
+  return trimmed;
 };

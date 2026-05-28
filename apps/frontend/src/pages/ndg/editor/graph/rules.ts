@@ -4,52 +4,53 @@ import type { EditorEdge, EditorNode } from "../document/types";
 
 type DeleteElementsInput = { edges: EditorEdge[]; nodes: EditorNode[] };
 
-export const canConnectNodes = (
-  nodes: EditorNode[],
-  edges: EditorEdge[],
-  connection: Connection,
-) => {
-  const { source, target } = connection;
+export const isSelfConnection = (source: string, target: string) =>
+  source === target;
 
-  if (!source || !target) return false;
-  if (source === target) return false;
+export const doNodesExist = (
+  nodeById: Map<string, EditorNode>,
+  source: string,
+  target: string,
+) => nodeById.has(source) && nodeById.has(target);
 
-  const nodeIds = new Set(nodes.map(node => node.id));
+export const areConnected = (
+  adjacency: Map<string, Set<string>>,
+  source: string,
+  target: string,
+) => adjacency.get(source)?.has(target) ?? false;
 
-  if (!nodeIds.has(source) || !nodeIds.has(target)) return false;
-
-  const hasExistingEdge = edges.some(e => e.source === source && e.target === target);
-
-  if (hasExistingEdge) return false;
-
-  return !wouldCreateCycle(edges, source, target);
-};
-
-export const onBeforeDeleteElements = async (elements: DeleteElementsInput) => {
-  const { nodes } = elements;
-  const includesCheckNode = nodes.some(node => node.type === "check");
-  return !includesCheckNode;
-};
-
-const wouldCreateCycle = (
-  edges: EditorEdge[],
+export const wouldCreateCycle = (
+  adjacency: Map<string, Set<string>>,
   source: string,
   target: string,
 ) => {
-  const pending = [target];
   const visited = new Set<string>();
+  const stack = [target];
 
-  while (pending.length > 0) {
-    const nodeId = pending.pop();
-
-    if (!nodeId || visited.has(nodeId)) continue;
-    if (nodeId === source) return true;
-
-    visited.add(nodeId);
-
-    for (const edge of edges)
-      if (edge.source === nodeId) pending.push(edge.target);
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node === source) return true;
+    if (visited.has(node)) continue;
+    visited.add(node);
+    for (const child of adjacency.get(node) ?? []) stack.push(child);
   }
 
   return false;
 };
+
+export const canConnectNodes = (
+  nodeById: Map<string, EditorNode>,
+  adjacency: Map<string, Set<string>>,
+  connection: Connection,
+) => {
+  const { source, target } = connection;
+  if (!source || !target) return false;
+  if (isSelfConnection(source, target)) return false;
+  if (!doNodesExist(nodeById, source, target)) return false;
+  if (areConnected(adjacency, source, target)) return false;
+  if (wouldCreateCycle(adjacency, source, target)) return false;
+  return true;
+};
+
+export const onBeforeDeleteElements = async (elements: DeleteElementsInput) =>
+  !elements.nodes.some(node => node.type === "check");

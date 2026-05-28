@@ -3,21 +3,22 @@ import {
   BackgroundVariant,
   Controls,
   MarkerType,
-  NodeMouseHandler,
+  type NodeMouseHandler,
   ReactFlow,
   SelectionMode,
 } from "@xyflow/react";
-
-import { useNdgEditorStore } from "./controller/useNdgEditorStore";
-import type { EditorEdge, EditorNode } from "./document/types";
-import { nodeTypes } from "./flow/nodeTypes";
-import { onBeforeDeleteElements } from "./graph/rules";
 import { useCallback } from "react";
 
-type Props = { initialEdges: EditorEdge[]; initialNodes: EditorNode[] };
+import { useNdgEditorStore } from "./controller/useNdgEditorStore";
+import type { EditorNode } from "./document/types";
+import { nodeTypes } from "./flow/nodeTypes";
+import { onBeforeDeleteElements } from "./graph/rules";
 
-export const NdgEditorCanvas = (props: Props) => {
-  const { initialEdges, initialNodes } = props;
+export const NdgEditorCanvas = () => {
+  const nodes = useNdgEditorStore(state => state.nodes);
+  const edges = useNdgEditorStore(state => state.edges);
+  const onNodesChange = useNdgEditorStore(state => state.onNodesChange);
+  const onEdgesChange = useNdgEditorStore(state => state.onEdgesChange);
   const onConnectNodes = useNdgEditorStore(state => state.onConnectNodes);
   const openEditNodeModal = useNdgEditorStore(state => state.openEditNodeModal);
 
@@ -30,8 +31,10 @@ export const NdgEditorCanvas = (props: Props) => {
     <ReactFlow
       fitView
       className="ndg-editor-flow"
-      defaultNodes={initialNodes}
-      defaultEdges={initialEdges}
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
       defaultEdgeOptions={{
         markerEnd: { type: MarkerType.Arrow },
         type: "smoothstep",
@@ -42,6 +45,7 @@ export const NdgEditorCanvas = (props: Props) => {
       onConnect={onConnectNodes}
       onBeforeDelete={onBeforeDeleteElements}
       onNodeDoubleClick={onNodeDoubleClick}
+      onlyRenderVisibleElements={nodes.length > 50}
       panOnDrag={[1, 2]}
       panOnScroll
       panOnScrollSpeed={1.2}
