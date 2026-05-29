@@ -1,3 +1,4 @@
+import { ConditionSchema } from "@ndg/ndg-core";
 import { z } from "zod";
 
 import { EDITOR_DOCUMENT_VERSION } from "./types";
@@ -13,6 +14,11 @@ export const editorDocumentSchema = z.object({
     }),
   ),
   edges: z.array(
-    z.object({ id: z.string(), source: z.string(), target: z.string() }),
+    z.object({
+      id: z.string(),
+      source: z.string(),
+      target: z.string(),
+      data: z.object({ condition: ConditionSchema.optional() }).optional(),
+    }),
   ),
 });

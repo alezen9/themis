@@ -5,6 +5,7 @@ import type {
   NodeChange,
   OnSelectionChangeParams,
 } from "@xyflow/react";
+import type { Condition } from "@ndg/ndg-core";
 import { create } from "zustand";
 
 import { createEdgeId, createNodeId } from "../document/ids";
@@ -102,6 +103,7 @@ type NdgEditorStore = {
   onNodesChange: (changes: NodeChange<EditorNode>[]) => void;
   onEdgesChange: (changes: EdgeChange<EditorEdge>[]) => void;
   onConnectNodes: (connection: Connection) => void;
+  setEdgeCondition: (edgeId: string, condition: Condition | undefined) => void;
   exportDocument: () => EditorDocument;
   exportSelected: () => EditorDocument;
   importFull: (document: EditorDocument) => boolean;
@@ -270,6 +272,15 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       state._edgeById.set(edgeId, newEdge);
       addToAdjacencyList(state._adjacencyList, source, target);
       return { edges };
+    }),
+
+  setEdgeCondition: (edgeId, condition) =>
+    set(state => {
+      const existing = state._edgeById.get(edgeId);
+      if (!existing) return state;
+      const updated = { ...existing, data: { ...existing.data, condition } };
+      state._edgeById.set(edgeId, updated);
+      return { edges: state.edges.map(e => (e.id === edgeId ? updated : e)) };
     }),
 
   exportDocument: () => {

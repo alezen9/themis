@@ -232,6 +232,27 @@ describe("importPartial", () => {
   });
 });
 
+describe("setEdgeCondition", () => {
+  it("sets and clears the condition on an edge", () => {
+    useNdgEditorStore.setState({
+      edges: [edgeAtoB],
+      _edgeById: new Map([[edgeAtoB.id, edgeAtoB]]),
+    });
+
+    useNdgEditorStore
+      .getState()
+      .setEdgeCondition(edgeAtoB.id, { eq: ["section_class", { value: 1 }] });
+    expect(
+      useNdgEditorStore.getState().getEdgeById(edgeAtoB.id)?.data?.condition,
+    ).toEqual({ eq: ["section_class", { value: 1 }] });
+
+    useNdgEditorStore.getState().setEdgeCondition(edgeAtoB.id, undefined);
+    expect(
+      useNdgEditorStore.getState().getEdgeById(edgeAtoB.id)?.data?.condition,
+    ).toBeUndefined();
+  });
+});
+
 describe("export", () => {
   it("exportDocument returns every node and edge with the version", () => {
     useNdgEditorStore.setState({
