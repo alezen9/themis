@@ -56,6 +56,8 @@ beforeEach(() => {
   useNdgEditorStore.setState({
     nodes: [nodeA, nodeB, nodeC],
     edges: [],
+    selectedNodes: [],
+    selectedEdges: [],
     _nodeById: new Map([
       ["a", nodeA],
       ["b", nodeB],
@@ -124,6 +126,25 @@ describe("onEdgesChange — remove", () => {
     expect(edges).toHaveLength(0);
     expect(_edgeById.has(edgeAtoB.id)).toBe(false);
     expect(_adjacencyList.has("a")).toBe(false);
+  });
+});
+
+describe("onNodesChange — remove", () => {
+  it("drops the node from _nodeById and decrements its key count", () => {
+    useNdgEditorStore.getState().addNode({
+      type: "user-input",
+      key: "a",
+      valueType: { type: "number" },
+    });
+    const addedId = useNdgEditorStore.getState().nodes.at(-1)!.id;
+    expect(useNdgEditorStore.getState().isDuplicateKey("a")).toBe(true);
+
+    useNdgEditorStore.getState().onNodesChange([{ type: "remove", id: addedId }]);
+
+    const { nodes, _nodeById } = useNdgEditorStore.getState();
+    expect(nodes.map(n => n.id)).not.toContain(addedId);
+    expect(_nodeById.has(addedId)).toBe(false);
+    expect(useNdgEditorStore.getState().isDuplicateKey("a")).toBe(false);
   });
 });
 
@@ -224,11 +245,8 @@ describe("export", () => {
 
   it("exportSelected keeps only selected nodes and their internal edges", () => {
     useNdgEditorStore.setState({
-      nodes: [
-        { ...nodeA, selected: true },
-        { ...nodeB, selected: true },
-        { ...nodeC, selected: false },
-      ],
+      nodes: [nodeA, nodeB, nodeC],
+      selectedNodes: [nodeA, nodeB],
       edges: [
         edgeAtoB,
         { id: createEdgeId("b", "c"), source: "b", target: "c" },
@@ -273,11 +291,11 @@ describe("duplicate keys", () => {
       id: "a2",
       position: { x: 0, y: 0 },
       type: "user-input",
-      selected: true,
       data: { key: "a", valueType: { type: "number" } },
     };
     useNdgEditorStore.setState({
       nodes: [nodeA, duplicate],
+      selectedNodes: [duplicate],
       _nodeById: new Map([
         ["a", nodeA],
         ["a2", duplicate],

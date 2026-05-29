@@ -168,12 +168,13 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
 
   deleteSelected: () =>
     set(state => {
-      const selectedNodes = state.nodes.filter(n => n.selected);
+      const { selectedNodes, selectedEdges } = state;
       if (selectedNodes.some(n => n.type === "check")) return state;
       const selectedNodeIds = new Set(selectedNodes.map(n => n.id));
+      const selectedEdgeIds = new Set(selectedEdges.map(e => e.id));
       const edgesToRemove = state.edges.filter(
         e =>
-          e.selected ||
+          selectedEdgeIds.has(e.id) ||
           selectedNodeIds.has(e.source) ||
           selectedNodeIds.has(e.target),
       );
@@ -188,26 +189,19 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
         state._edgeById.delete(e.id);
         removeFromAdjacencyList(state._adjacencyList, e.source, e.target);
       }
-      return { nodes, edges };
+      return { nodes, edges, selectedNodes: [], selectedEdges: [] };
     }),
 
   onNodesChange: changes =>
     set(state => {
       const nodes = applyNodeChanges(changes, state.nodes);
-      const structural = changes.filter(
-        c => c.type === "add" || c.type === "remove",
-      );
-      if (structural.length === 0) return { nodes };
-      for (const change of structural) {
-        if (change.type === "remove") {
-          const node = state._nodeById.get(change.id);
-          if (node) {
-            state._nodeById.delete(change.id);
-            decrementKeyCount(state._keyCounts, node.data.key);
-          }
-        } else if (change.type === "add") {
-          state._nodeById.set(change.item.id, change.item);
-          incrementKeyCount(state._keyCounts, change.item.data.key);
+      const removals = changes.filter(change => change.type === "remove");
+      if (removals.length === 0) return { nodes };
+      for (const change of removals) {
+        const node = state._nodeById.get(change.id);
+        if (node) {
+          state._nodeById.delete(change.id);
+          decrementKeyCount(state._keyCounts, node.data.key);
         }
       }
       return { nodes };
@@ -258,8 +252,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   },
 
   exportSelected: () => {
-    const { nodes, edges } = get();
-    const selectedNodes = nodes.filter(n => n.selected);
+    const { edges, selectedNodes } = get();
     const selectedIds = new Set(selectedNodes.map(n => n.id));
     const selectedEdges = edges.filter(
       e => selectedIds.has(e.source) && selectedIds.has(e.target),
@@ -276,6 +269,8 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
     set({
       nodes: document.nodes,
       edges: document.edges,
+      selectedNodes: [],
+      selectedEdges: [],
       _nodeById: new Map(document.nodes.map(n => [n.id, n])),
       _edgeById: new Map(document.edges.map(e => [e.id, e])),
       _adjacencyList: createAdjacencyList(document.edges),
