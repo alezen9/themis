@@ -63,6 +63,11 @@ beforeEach(() => {
     ]),
     _edgeById: new Map(),
     _adjacencyList: new Map(),
+    _keyCounts: new Map([
+      ["a", 1],
+      ["b", 1],
+      ["c", 1],
+    ]),
   });
 });
 
@@ -234,6 +239,72 @@ describe("export", () => {
     expect(exported.nodes.map(n => n.id).sort()).toEqual(["a", "b"]);
     expect(exported.edges).toHaveLength(1);
     expect(exported.edges[0].id).toBe(edgeAtoB.id);
+  });
+});
+
+describe("duplicate keys", () => {
+  it("flags a key as duplicate once a second node shares it", () => {
+    expect(useNdgEditorStore.getState().isDuplicateKey("a")).toBe(false);
+
+    useNdgEditorStore.getState().addNode({
+      type: "user-input",
+      key: "a",
+      valueType: { type: "number" },
+    });
+
+    expect(useNdgEditorStore.getState().isDuplicateKey("a")).toBe(true);
+  });
+
+  it("moves the count from the old key to the new one on update", () => {
+    useNdgEditorStore.getState().updateNode({
+      id: "a",
+      type: "user-input",
+      key: "b",
+      valueType: { type: "number" },
+    });
+
+    const store = useNdgEditorStore.getState();
+    expect(store.isDuplicateKey("b")).toBe(true);
+    expect(store.isDuplicateKey("a")).toBe(false);
+  });
+
+  it("clears the duplicate flag when one of the colliding nodes is deleted", () => {
+    const duplicate: EditorNode = {
+      id: "a2",
+      position: { x: 0, y: 0 },
+      type: "user-input",
+      selected: true,
+      data: { key: "a", valueType: { type: "number" } },
+    };
+    useNdgEditorStore.setState({
+      nodes: [nodeA, duplicate],
+      _nodeById: new Map([
+        ["a", nodeA],
+        ["a2", duplicate],
+      ]),
+      _keyCounts: new Map([["a", 2]]),
+    });
+
+    expect(useNdgEditorStore.getState().isDuplicateKey("a")).toBe(true);
+    useNdgEditorStore.getState().deleteSelected();
+    expect(useNdgEditorStore.getState().isDuplicateKey("a")).toBe(false);
+  });
+
+  it("rebuilds the counts on a full import", () => {
+    const duplicate: EditorNode = { ...nodeA, id: "a2" };
+    useNdgEditorStore
+      .getState()
+      .importFull(createDocument([checkNode, nodeA, duplicate]));
+
+    const store = useNdgEditorStore.getState();
+    expect(store.isDuplicateKey("a")).toBe(true);
+    expect(store.isDuplicateKey("chk")).toBe(false);
+  });
+
+  it("counts a merged key against the existing graph on a partial import", () => {
+    useNdgEditorStore.getState().importPartial(createDocument([nodeA]));
+
+    expect(useNdgEditorStore.getState().isDuplicateKey("a")).toBe(true);
   });
 });
 

@@ -35,7 +35,7 @@ export const AddNodeModal = () => {
     form.reset({ type: "user-input", valueType: { type: "number" } });
   }, [open, form]);
 
-  const handleSubmit = form.handleSubmit(values => {
+  const onSubmit = form.handleSubmit(values => {
     addNode({
       ...values,
       sourceNodeId: modal?.mode === "create-node" ? modal.sourceNodeId : undefined,
@@ -55,7 +55,7 @@ export const AddNodeModal = () => {
       }
     >
       <DialogContent className="gap-8">
-        <form id="add-node-form" onSubmit={handleSubmit}>
+        <form id="add-node-form" onSubmit={onSubmit}>
           <FormProvider {...form}>
             <FormType />
             <FormIdentity />

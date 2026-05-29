@@ -7,9 +7,10 @@ import { InputText } from "@components/inputs/InputText";
 import { Latex } from "@components/Latex";
 
 import { Section, SectionTitle } from "./shared";
+import type { NodeFormValues } from "./schema";
 
 export const FormDefinition = () => {
-  const { register, watch } = useFormContext();
+  const { register, watch } = useFormContext<NodeFormValues>();
   const type = watch("type");
 
   return (

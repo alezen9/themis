@@ -18,7 +18,6 @@ export const initialDocument: EditorDocument = {
       data: {
         key: "ratio",
         valueType: { type: "number" },
-        name: "Tension check",
         verificationExpression: "\\frac{N_{Ed}}{N_{pl,Rd}} \\leq 1.0",
       },
     },
@@ -29,7 +28,6 @@ export const initialDocument: EditorDocument = {
       data: {
         key: "N_Ed_N",
         valueType: { type: "number" },
-        name: "Design force",
         symbol: "N_{Ed}",
         unit: "N",
       },
@@ -42,7 +40,6 @@ export const initialDocument: EditorDocument = {
         key: "N_pl_Rd_N",
         valueType: { type: "number" },
         symbol: "N_{pl,Rd}",
-        name: "Plastic resistance",
         expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
       },
     },
@@ -53,7 +50,6 @@ export const initialDocument: EditorDocument = {
       data: {
         key: "A_mm2",
         valueType: { type: "number" },
-        name: "Area",
         symbol: "A",
         unit: "mm^{2}",
       },
@@ -65,7 +61,6 @@ export const initialDocument: EditorDocument = {
       data: {
         key: "fy_MPa",
         valueType: { type: "number" },
-        name: "Yield strength",
         symbol: "f_y",
         unit: "MPa",
       },
@@ -78,7 +73,6 @@ export const initialDocument: EditorDocument = {
         key: "gamma_M0",
         symbol: "\\gamma_{M0}",
         valueType: { type: "number" },
-        name: "Safety factor",
         meta: { sectionRef: "6.1" },
       },
     },

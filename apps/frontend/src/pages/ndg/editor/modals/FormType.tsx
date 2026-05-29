@@ -5,9 +5,10 @@ import { InputRadio } from "@components/inputs/InputRadio";
 
 import { Section, SectionTitle } from "./shared";
 import { typeOptions } from "./options";
+import type { NodeFormValues } from "./schema";
 
 export const FormType = () => {
-  const { register, watch, clearErrors } = useFormContext();
+  const { register, watch, clearErrors } = useFormContext<NodeFormValues>();
   const type = watch("type");
 
   useEffect(() => {

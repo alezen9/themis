@@ -4,11 +4,17 @@ import { FormField } from "@components/inputs/shared";
 import { InputText } from "@components/inputs/InputText";
 
 import { Section, SectionTitle } from "./shared";
+import type { NodeFormValues } from "./schema";
 
-const TYPES_WITH_META = ["check", "formula", "coefficient", "table"];
+const TYPES_WITH_META: NodeFormValues["type"][] = [
+  "check",
+  "formula",
+  "coefficient",
+  "table",
+];
 
 export const FormMetadata = () => {
-  const { register, watch } = useFormContext();
+  const { register, watch } = useFormContext<NodeFormValues>();
   const type = watch("type");
 
   if (!TYPES_WITH_META.includes(type)) return null;

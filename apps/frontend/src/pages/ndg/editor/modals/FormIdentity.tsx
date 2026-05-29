@@ -9,11 +9,16 @@ import { InputText } from "@components/inputs/InputText";
 import { tableKeyOptions, userInputKeyOptions } from "./ec311KeyOptions";
 import { valueTypeOptions } from "./options";
 import { Section, SectionTitle } from "./shared";
+import type { NodeFormValues } from "./schema";
 
-const FORCED_NUMERIC_TYPES = ["check", "coefficient", "constant"];
+const FORCED_NUMERIC_TYPES: NodeFormValues["type"][] = [
+  "check",
+  "coefficient",
+  "constant",
+];
 
 export const FormIdentity = () => {
-  const { control, register, watch, setValue } = useFormContext();
+  const { control, register, watch, setValue } = useFormContext<NodeFormValues>();
   const type = watch("type");
   const isValueTypeForced = FORCED_NUMERIC_TYPES.includes(type);
 

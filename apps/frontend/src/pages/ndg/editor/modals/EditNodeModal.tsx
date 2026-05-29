@@ -37,7 +37,7 @@ export const EditNodeModal = () => {
     form.reset({ type: node.type, ...node.data } as NodeFormValues);
   }, [open, modal, form, getNodeById]);
 
-  const handleSubmit = form.handleSubmit(values => {
+  const onSubmit = form.handleSubmit(values => {
     if (modal?.mode !== "edit-node") return;
     updateNode({ ...values, id: modal.nodeId });
     closeModal();
@@ -59,7 +59,7 @@ export const EditNodeModal = () => {
       }
     >
       <DialogContent className="gap-8">
-        <form id="edit-node-form" onSubmit={handleSubmit}>
+        <form id="edit-node-form" onSubmit={onSubmit}>
           <FormProvider {...form}>
             {!isCheckNode && <FormType />}
             <FormIdentity />
