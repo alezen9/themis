@@ -72,6 +72,7 @@ beforeEach(() => {
     ]),
     _invalidNodeIds: new Set(),
     _unreachableNodeIds: new Set(),
+    _invalidEdgeIds: new Set(),
   });
 });
 
@@ -415,6 +416,21 @@ describe("validateGraph", () => {
       .importFull(createDocument([checkNode, invalidNode]));
 
     expect(useNdgEditorStore.getState().isInvalidNode("bad")).toBe(true);
+  });
+
+  it("flags an edge live when its condition references an unknown key", () => {
+    useNdgEditorStore.setState({
+      edges: [edgeAtoB],
+      _edgeById: new Map([[edgeAtoB.id, edgeAtoB]]),
+    });
+
+    useNdgEditorStore
+      .getState()
+      .setEdgeCondition(edgeAtoB.id, { eq: ["nope", { value: 1 }] });
+    expect(useNdgEditorStore.getState().isInvalidEdge(edgeAtoB.id)).toBe(true);
+
+    useNdgEditorStore.getState().setEdgeCondition(edgeAtoB.id, undefined);
+    expect(useNdgEditorStore.getState().isInvalidEdge(edgeAtoB.id)).toBe(false);
   });
 
   it("flags nodes that are not reachable from the check", () => {

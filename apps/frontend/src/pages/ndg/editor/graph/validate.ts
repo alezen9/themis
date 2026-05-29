@@ -1,4 +1,6 @@
-import type { EditorNode } from "../document/types";
+import type { EditorEdge, EditorNode } from "../document/types";
+import { findUnknownConditionKeys } from "../conditions/validate";
+import { tableKeys, userInputKeys } from "../modals/ec311KeyOptions";
 import { nodeFormSchema } from "../modals/schema";
 
 export const findInvalidNodeIds = (nodes: EditorNode[]) => {
@@ -7,4 +9,20 @@ export const findInvalidNodeIds = (nodes: EditorNode[]) => {
     if (!nodeFormSchema.safeParse({ type: node.type, ...node.data }).success)
       invalidNodeIds.add(node.id);
   return invalidNodeIds;
+};
+
+export const findInvalidEdgeIds = (
+  nodes: EditorNode[],
+  edges: EditorEdge[],
+) => {
+  const availableKeys = new Set([
+    ...userInputKeys,
+    ...tableKeys,
+    ...nodes.map(node => node.data.key),
+  ]);
+  const invalidEdgeIds = new Set<string>();
+  for (const edge of edges)
+    if (findUnknownConditionKeys(edge.data?.condition, availableKeys).length)
+      invalidEdgeIds.add(edge.id);
+  return invalidEdgeIds;
 };

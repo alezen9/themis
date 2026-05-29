@@ -113,7 +113,7 @@ const ValidateButton = () => {
     }
     toast(
       <ToastError title="Validation found issues">
-        {invalidCount} node{invalidCount === 1 ? "" : "s"} need attention.
+        {invalidCount} item{invalidCount === 1 ? "" : "s"} need attention.
       </ToastError>,
     );
   };

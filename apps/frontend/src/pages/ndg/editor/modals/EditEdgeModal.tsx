@@ -78,10 +78,9 @@ const EditEdgeForm = (props: { edgeId: string; onClose: () => void }) => {
     return () => clearTimeout(timeout);
   }, [text]);
 
-  const unknownKeys =
-    parsed.ok && parsed.condition
-      ? findUnknownConditionKeys(parsed.condition, availableKeys)
-      : [];
+  const unknownKeys = parsed.ok
+    ? findUnknownConditionKeys(parsed.condition, availableKeys)
+    : [];
   const canSave = parsed.ok && unknownKeys.length === 0;
 
   const onSave = () => {

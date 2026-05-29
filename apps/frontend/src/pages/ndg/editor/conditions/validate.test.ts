@@ -22,4 +22,8 @@ describe("findUnknownConditionKeys", () => {
     const condition: Condition = { eq: ["shape", { value: "I" }] };
     expect(findUnknownConditionKeys(condition, new Set(["shape"]))).toEqual([]);
   });
+
+  it("treats an absent condition as no unknown keys", () => {
+    expect(findUnknownConditionKeys(undefined, new Set())).toEqual([]);
+  });
 });

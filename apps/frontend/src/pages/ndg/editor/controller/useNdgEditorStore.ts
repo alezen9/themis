@@ -24,8 +24,14 @@ import {
   type UpdateNodeInput,
 } from "./actions";
 import { canConnectNodes } from "../graph/rules";
-import { findInvalidNodeIds } from "../graph/validate";
+import { findInvalidEdgeIds, findInvalidNodeIds } from "../graph/validate";
 import { findUnreachableNodeIds } from "../graph/reachability";
+
+const validateAll = (nodes: EditorNode[], edges: EditorEdge[]) => ({
+  _invalidNodeIds: findInvalidNodeIds(nodes),
+  _unreachableNodeIds: findUnreachableNodeIds(nodes, edges),
+  _invalidEdgeIds: findInvalidEdgeIds(nodes, edges),
+});
 
 const createKeyCounts = (nodes: EditorNode[]) => {
   const keyCounts = new Map<string, number>();
@@ -83,6 +89,7 @@ type NdgEditorStore = {
   _keyCounts: Map<string, number>;
   _invalidNodeIds: Set<string>;
   _unreachableNodeIds: Set<string>;
+  _invalidEdgeIds: Set<string>;
 
   selectedNodes: EditorNode[];
   selectedEdges: EditorEdge[];
@@ -95,6 +102,7 @@ type NdgEditorStore = {
   isDuplicateKey: (key: string) => boolean;
   isInvalidNode: (id: string) => boolean;
   isUnreachableNode: (id: string) => boolean;
+  isInvalidEdge: (id: string) => boolean;
   validateGraph: () => number;
 
   addNode: (input: AddNodeInput) => void;
@@ -121,8 +129,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   _edgeById: new Map(initialEdges.map(e => [e.id, e])),
   _adjacencyList: createAdjacencyList(initialEdges),
   _keyCounts: createKeyCounts(initialNodes),
-  _invalidNodeIds: new Set(),
-  _unreachableNodeIds: new Set(),
+  ...validateAll(initialNodes, initialEdges),
 
   onSelectionChange: ({ nodes, edges }) =>
     set({ selectedNodes: nodes, selectedEdges: edges }),
@@ -132,15 +139,16 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   isDuplicateKey: key => (get()._keyCounts.get(key) ?? 0) > 1,
   isInvalidNode: id => get()._invalidNodeIds.has(id),
   isUnreachableNode: id => get()._unreachableNodeIds.has(id),
+  isInvalidEdge: id => get()._invalidEdgeIds.has(id),
   validateGraph: () => {
     const { nodes, edges } = get();
-    const invalidNodeIds = findInvalidNodeIds(nodes);
-    const unreachableNodeIds = findUnreachableNodeIds(nodes, edges);
-    set({
-      _invalidNodeIds: invalidNodeIds,
-      _unreachableNodeIds: unreachableNodeIds,
-    });
-    return new Set([...invalidNodeIds, ...unreachableNodeIds]).size;
+    const validation = validateAll(nodes, edges);
+    set(validation);
+    const flaggedNodeIds = new Set([
+      ...validation._invalidNodeIds,
+      ...validation._unreachableNodeIds,
+    ]);
+    return flaggedNodeIds.size + validation._invalidEdgeIds.size;
   },
 
   addNode: input =>
@@ -151,7 +159,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       incrementKeyCount(state._keyCounts, node.data.key);
       const nodes = [...state.nodes, node];
 
-      if (!sourceNodeId) return { nodes };
+      if (!sourceNodeId) return { nodes, ...validateAll(nodes, state.edges) };
 
       const connection: Connection = {
         source: sourceNodeId,
@@ -161,7 +169,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       };
 
       if (!canConnectNodes(state._nodeById, state._adjacencyList, connection))
-        return { nodes };
+        return { nodes, ...validateAll(nodes, state.edges) };
 
       const edgeId = createEdgeId(sourceNodeId, node.id);
       const newEdge: EditorEdge = {
@@ -172,7 +180,8 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       state._edgeById.set(edgeId, newEdge);
       addToAdjacencyList(state._adjacencyList, sourceNodeId, node.id);
 
-      return { nodes, edges: [...state.edges, newEdge] };
+      const edges = [...state.edges, newEdge];
+      return { nodes, edges, ...validateAll(nodes, edges) };
     }),
 
   updateNode: input =>
@@ -182,12 +191,11 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       const updated = applyNodeUpdate(existing, input);
       const nodes = state.nodes.map(n => (n.id === input.id ? updated : n));
       state._nodeById.set(input.id, updated);
-      state._invalidNodeIds.delete(input.id);
       if (existing.data.key !== updated.data.key) {
         decrementKeyCount(state._keyCounts, existing.data.key);
         incrementKeyCount(state._keyCounts, updated.data.key);
       }
-      return { nodes };
+      return { nodes, ...validateAll(nodes, state.edges) };
     }),
 
   deleteSelected: () =>
@@ -208,14 +216,18 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       for (const n of selectedNodes) {
         state._nodeById.delete(n.id);
         decrementKeyCount(state._keyCounts, n.data.key);
-        state._invalidNodeIds.delete(n.id);
-        state._unreachableNodeIds.delete(n.id);
       }
       for (const e of edgesToRemove) {
         state._edgeById.delete(e.id);
         removeFromAdjacencyList(state._adjacencyList, e.source, e.target);
       }
-      return { nodes, edges, selectedNodes: [], selectedEdges: [] };
+      return {
+        nodes,
+        edges,
+        selectedNodes: [],
+        selectedEdges: [],
+        ...validateAll(nodes, edges),
+      };
     }),
 
   onNodesChange: changes =>
@@ -228,11 +240,9 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
         if (node) {
           state._nodeById.delete(change.id);
           decrementKeyCount(state._keyCounts, node.data.key);
-          state._invalidNodeIds.delete(change.id);
-          state._unreachableNodeIds.delete(change.id);
         }
       }
-      return { nodes };
+      return { nodes, ...validateAll(nodes, state.edges) };
     }),
 
   onEdgesChange: changes =>
@@ -262,7 +272,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
           );
         }
       }
-      return { edges };
+      return { edges, ...validateAll(state.nodes, edges) };
     }),
 
   onConnectNodes: connection =>
@@ -275,7 +285,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       const edges = [...state.edges, newEdge];
       state._edgeById.set(edgeId, newEdge);
       addToAdjacencyList(state._adjacencyList, source, target);
-      return { edges };
+      return { edges, ...validateAll(state.nodes, edges) };
     }),
 
   setEdgeCondition: (edgeId, condition) =>
@@ -284,7 +294,8 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       if (!existing) return state;
       const updated = { ...existing, data: { ...existing.data, condition } };
       state._edgeById.set(edgeId, updated);
-      return { edges: state.edges.map(e => (e.id === edgeId ? updated : e)) };
+      const edges = state.edges.map(e => (e.id === edgeId ? updated : e));
+      return { edges, ...validateAll(state.nodes, edges) };
     }),
 
   exportDocument: () => {
@@ -317,11 +328,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       _edgeById: new Map(document.edges.map(e => [e.id, e])),
       _adjacencyList: createAdjacencyList(document.edges),
       _keyCounts: createKeyCounts(document.nodes),
-      _invalidNodeIds: findInvalidNodeIds(document.nodes),
-      _unreachableNodeIds: findUnreachableNodeIds(
-        document.nodes,
-        document.edges,
-      ),
+      ...validateAll(document.nodes, document.edges),
     });
     return true;
   },
@@ -340,12 +347,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       }
       const nodes = [...state.nodes, ...addedNodes];
       const edges = [...state.edges, ...addedEdges];
-      return {
-        nodes,
-        edges,
-        _invalidNodeIds: findInvalidNodeIds(nodes),
-        _unreachableNodeIds: findUnreachableNodeIds(nodes, edges),
-      };
+      return { nodes, edges, ...validateAll(nodes, edges) };
     });
     return true;
   },
