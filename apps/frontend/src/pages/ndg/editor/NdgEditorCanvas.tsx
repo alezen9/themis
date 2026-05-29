@@ -3,6 +3,7 @@ import {
   BackgroundVariant,
   Controls,
   MarkerType,
+  type EdgeMouseHandler,
   type NodeMouseHandler,
   ReactFlow,
   SelectionMode,
@@ -10,7 +11,8 @@ import {
 import { useCallback } from "react";
 
 import { useNdgEditorStore } from "./controller/useNdgEditorStore";
-import type { EditorNode } from "./document/types";
+import type { EditorEdge, EditorNode } from "./document/types";
+import { edgeTypes } from "./flow/edgeTypes";
 import { nodeTypes } from "./flow/nodeTypes";
 import { onBeforeDeleteElements } from "./graph/rules";
 import { useNdgEditorModalStore } from "./modals/useNdgEditorModalStore";
@@ -29,6 +31,11 @@ export const NdgEditorCanvas = () => {
     [openModal],
   );
 
+  const onEdgeDoubleClick = useCallback<EdgeMouseHandler<EditorEdge>>(
+    (_, edge) => openModal({ mode: "edit-edge", edgeId: edge.id }),
+    [openModal],
+  );
+
   return (
     <ReactFlow
       fitView
@@ -39,8 +46,9 @@ export const NdgEditorCanvas = () => {
       onEdgesChange={onEdgesChange}
       defaultEdgeOptions={{
         markerEnd: { type: MarkerType.Arrow },
-        type: "smoothstep",
+        type: "condition",
       }}
+      edgeTypes={edgeTypes}
       nodeTypes={nodeTypes}
       maxZoom={8}
       minZoom={0.05}
@@ -48,6 +56,7 @@ export const NdgEditorCanvas = () => {
       onSelectionChange={onSelectionChange}
       onBeforeDelete={onBeforeDeleteElements}
       onNodeDoubleClick={onNodeDoubleClick}
+      onEdgeDoubleClick={onEdgeDoubleClick}
       onlyRenderVisibleElements={nodes.length > 50}
       panOnDrag={[1, 2]}
       panOnScroll

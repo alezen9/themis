@@ -1,3 +1,4 @@
+import type { Condition } from "@ndg/ndg-core";
 import { describe, expect, it } from "vitest";
 
 import { formatCondition } from "./format";
@@ -21,12 +22,12 @@ describe("formatCondition", () => {
   });
 
   it("joins and/or and parenthesizes nested groups", () => {
-    const condition = {
+    const condition: Condition = {
       and: [
         { eq: ["section_class", { value: 1 }] },
         { or: [{ eq: ["shape", { value: "I" }] }, { eq: ["shape", { value: "H" }] }] },
       ],
-    } as const;
+    };
     expect(formatCondition(condition)).toBe(
       'section_class = 1 AND (shape = "I" OR shape = "H")',
     );

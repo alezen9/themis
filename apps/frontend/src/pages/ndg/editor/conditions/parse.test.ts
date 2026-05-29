@@ -1,3 +1,4 @@
+import type { Condition } from "@ndg/ndg-core";
 import { describe, expect, it } from "vitest";
 
 import { formatCondition } from "./format";
@@ -56,7 +57,7 @@ describe("parseCondition", () => {
   });
 
   it("round-trips every formatted condition back to the same tree", () => {
-    const conditions = [
+    const conditions: Condition[] = [
       { eq: ["section_class", { value: 1 }] },
       { gte: ["lambda", { value: 0.5 }] },
       { eq: ["a", { key: "b" }] },
@@ -72,7 +73,7 @@ describe("parseCondition", () => {
           { eq: ["bypass", { value: "yes" }] },
         ],
       },
-    ] as const;
+    ];
 
     for (const condition of conditions)
       expect(parseCondition(formatCondition(condition))).toEqual({

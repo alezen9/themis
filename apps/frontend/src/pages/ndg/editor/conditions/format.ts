@@ -4,7 +4,7 @@ import type {
   ConditionTuple,
 } from "@ndg/ndg-core";
 
-const OPERATOR_SYMBOL = {
+export const OPERATOR_SYMBOL = {
   eq: "=",
   lt: "<",
   lte: "≤",
@@ -12,7 +12,7 @@ const OPERATOR_SYMBOL = {
   gte: "≥",
 } as const;
 
-const formatOperand = (operand: ConditionOperand) => {
+export const formatOperand = (operand: ConditionOperand) => {
   if ("key" in operand) return operand.key;
   return typeof operand.value === "string"
     ? `"${operand.value}"`

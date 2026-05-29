@@ -17,17 +17,17 @@ const FORCED_NUMERIC_TYPES: NodeFormValues["type"][] = [
   "constant",
 ];
 
+const getKeyOptions = (type: NodeFormValues["type"]) => {
+  if (type === "user-input") return userInputKeyOptions;
+  if (type === "table") return tableKeyOptions;
+  return null;
+};
+
 export const FormIdentity = () => {
   const { control, register, watch, setValue } = useFormContext<NodeFormValues>();
   const type = watch("type");
   const isValueTypeForced = FORCED_NUMERIC_TYPES.includes(type);
-
-  const keyOptions =
-    type === "user-input"
-      ? userInputKeyOptions
-      : type === "table"
-        ? tableKeyOptions
-        : null;
+  const keyOptions = getKeyOptions(type);
 
   useEffect(() => {
     if (isValueTypeForced) setValue("valueType", { type: "number" });
@@ -42,7 +42,7 @@ export const FormIdentity = () => {
           label="Key"
           description="Unique id used by formulas"
         >
-          {keyOptions ? (
+          {keyOptions && (
             <Controller
               name="key"
               control={control}
@@ -56,9 +56,8 @@ export const FormIdentity = () => {
                 />
               )}
             />
-          ) : (
-            <InputText {...register("key")} />
           )}
+          {!keyOptions && <InputText {...register("key")} />}
         </FormField>
         {!isValueTypeForced && (
           <FormField
