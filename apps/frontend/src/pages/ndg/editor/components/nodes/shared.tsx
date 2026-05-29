@@ -1,15 +1,28 @@
-import { IconPlus } from "@components/Icons";
+import { IconPlus, IconWarning } from "@components/Icons";
 import { Handle, Position } from "@xyflow/react";
 import type { MouseEvent, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useNdgEditorModalStore } from "../../modals/useNdgEditorModalStore";
+import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { IconButton } from "@components/Button";
 
-type NodeCardProps = { children: ReactNode; duplicate?: boolean };
+type NodeCardProps = { children: ReactNode; nodeId: string; nodeKey: string };
 
 export const NodeCard = (props: NodeCardProps) => {
-  const { children, duplicate } = props;
+  const { children, nodeId, nodeKey } = props;
+  const isDuplicateKey = useNdgEditorStore(state =>
+    state.isDuplicateKey(nodeKey),
+  );
+  const isInvalid = useNdgEditorStore(state => state.isInvalidNode(nodeId));
+  const isUnreachable = useNdgEditorStore(state =>
+    state.isUnreachableNode(nodeId),
+  );
+
+  const reasons: string[] = [];
+  if (isDuplicateKey) reasons.push("duplicate key");
+  if (isInvalid) reasons.push("incomplete");
+  if (isUnreachable) reasons.push("unreachable");
 
   return (
     <div
@@ -18,10 +31,16 @@ export const NodeCard = (props: NodeCardProps) => {
         "overflow-hidden rounded-sm border border-sand-300 bg-sand-50",
         "text-sand-900",
         "flex flex-col gap-1",
-        duplicate && "border-red-300 bg-red-50 text-red-900",
+        reasons.length > 0 && "border-red-300 bg-red-50 text-red-900",
       )}
     >
       {children}
+      {reasons.length > 0 && (
+        <p className="flex items-center gap-1 px-0.5 text-[10px] leading-none text-red-700">
+          <IconWarning className="size-3 shrink-0" />
+          {reasons.join(" · ")}
+        </p>
+      )}
     </div>
   );
 };

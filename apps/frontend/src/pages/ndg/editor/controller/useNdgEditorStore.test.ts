@@ -70,6 +70,8 @@ beforeEach(() => {
       ["b", 1],
       ["c", 1],
     ]),
+    _invalidNodeIds: new Set(),
+    _unreachableNodeIds: new Set(),
   });
 });
 
@@ -323,6 +325,76 @@ describe("duplicate keys", () => {
     useNdgEditorStore.getState().importPartial(createDocument([nodeA]));
 
     expect(useNdgEditorStore.getState().isDuplicateKey("a")).toBe(true);
+  });
+});
+
+describe("validateGraph", () => {
+  const invalidNode: EditorNode = {
+    id: "bad",
+    position: { x: 0, y: 0 },
+    type: "user-input",
+    data: { key: "", valueType: { type: "number" } },
+  };
+
+  it("flags nodes that miss their expected shape and returns the count", () => {
+    useNdgEditorStore.setState({
+      nodes: [nodeA, invalidNode],
+      _nodeById: new Map([
+        ["a", nodeA],
+        ["bad", invalidNode],
+      ]),
+    });
+
+    const invalidCount = useNdgEditorStore.getState().validateGraph();
+
+    const store = useNdgEditorStore.getState();
+    expect(invalidCount).toBe(1);
+    expect(store.isInvalidNode("bad")).toBe(true);
+    expect(store.isInvalidNode("a")).toBe(false);
+  });
+
+  it("clears a node's invalid flag when it is edited", () => {
+    useNdgEditorStore.setState({ _invalidNodeIds: new Set(["a"]) });
+    expect(useNdgEditorStore.getState().isInvalidNode("a")).toBe(true);
+
+    useNdgEditorStore.getState().updateNode({
+      id: "a",
+      type: "user-input",
+      key: "a",
+      valueType: { type: "number" },
+    });
+
+    expect(useNdgEditorStore.getState().isInvalidNode("a")).toBe(false);
+  });
+
+  it("auto-validates on a full import", () => {
+    useNdgEditorStore
+      .getState()
+      .importFull(createDocument([checkNode, invalidNode]));
+
+    expect(useNdgEditorStore.getState().isInvalidNode("bad")).toBe(true);
+  });
+
+  it("flags nodes that are not reachable from the check", () => {
+    const orphan: EditorNode = {
+      id: "orphan",
+      position: { x: 0, y: 0 },
+      type: "user-input",
+      data: { key: "orphan", valueType: { type: "number" } },
+    };
+    useNdgEditorStore
+      .getState()
+      .importFull(
+        createDocument(
+          [checkNode, nodeA, orphan],
+          [{ id: createEdgeId("chk", "a"), source: "chk", target: "a" }],
+        ),
+      );
+
+    const store = useNdgEditorStore.getState();
+    expect(store.isUnreachableNode("orphan")).toBe(true);
+    expect(store.isUnreachableNode("a")).toBe(false);
+    expect(store.isUnreachableNode("chk")).toBe(false);
   });
 });
 
