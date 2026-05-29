@@ -1,19 +1,28 @@
 import { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 import { FormField } from "@components/inputs/shared";
+import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
 import { InputRadio } from "@components/inputs/InputRadio";
 import { InputText } from "@components/inputs/InputText";
 
+import { tableKeyOptions, userInputKeyOptions } from "./ec311KeyOptions";
 import { valueTypeOptions } from "./options";
 import { Section, SectionTitle } from "./shared";
 
 const FORCED_NUMERIC_TYPES = ["check", "coefficient", "constant"];
 
 export const FormIdentity = () => {
-  const { register, watch, setValue } = useFormContext();
+  const { control, register, watch, setValue } = useFormContext();
   const type = watch("type");
   const isValueTypeForced = FORCED_NUMERIC_TYPES.includes(type);
+
+  const keyOptions =
+    type === "user-input"
+      ? userInputKeyOptions
+      : type === "table"
+        ? tableKeyOptions
+        : null;
 
   useEffect(() => {
     if (isValueTypeForced) setValue("valueType", { type: "number" });
@@ -23,11 +32,35 @@ export const FormIdentity = () => {
     <Section>
       <SectionTitle>Identity</SectionTitle>
       <div className="grid grid-cols-2 grid-rows-1 gap-4">
-        <FormField name="key" label="Key" description="Unique id used by formulas">
-          <InputText {...register("key")} />
+        <FormField
+          name="key"
+          label="Key"
+          description="Unique id used by formulas"
+        >
+          {keyOptions ? (
+            <Controller
+              name="key"
+              control={control}
+              render={({ field }) => (
+                <InputAutocomplete
+                  name={field.name}
+                  options={keyOptions}
+                  value={field.value ?? ""}
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          ) : (
+            <InputText {...register("key")} />
+          )}
         </FormField>
         {!isValueTypeForced && (
-          <FormField name="valueType" label="Value type" description="Expected runtime value">
+          <FormField
+            name="valueType"
+            label="Value type"
+            description="Expected runtime value"
+          >
             <div className="flex items-center w-full gap-4">
               {valueTypeOptions.map(option => (
                 <InputRadio
