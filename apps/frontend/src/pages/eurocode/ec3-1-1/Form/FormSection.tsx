@@ -60,7 +60,7 @@ export const FormSection = () => {
   const shape = watch("shape");
 
   const onSectionChange = useCallback<ChangeHandler>(
-    async (e) => {
+    async e => {
       const { name, value } = e.target;
       const values = getValues();
       const shape = values.shape;
@@ -93,7 +93,7 @@ export const FormSection = () => {
   );
 
   const onFabricationTypeChange = useCallback<ChangeHandler>(
-    async (e) => {
+    async e => {
       const { name, value } = e.target;
       const values = getValues();
 
@@ -126,7 +126,7 @@ export const FormSection = () => {
         label={<TextLabel>Fabrication</TextLabel>}
       >
         <div className="flex items-center w-full gap-1">
-          {fabricationTypeOptionsMap[shape].options.map((option) => {
+          {fabricationTypeOptionsMap[shape].options.map(option => {
             return (
               <InputRadio
                 key={`${shape}-${option.value}`}

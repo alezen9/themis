@@ -3507,5 +3507,5 @@ export const hollowSections = [
 ] satisfies HollowSection[];
 
 export const hollowSectionsMap = new Map(
-  hollowSections.map((section) => [section.id, section]),
+  hollowSections.map(section => [section.id, section]),
 );

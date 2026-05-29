@@ -18,7 +18,7 @@ export const extractValues = <
 >(
   options: T,
 ) =>
-  options.map((option) => option.value) as {
+  options.map(option => option.value) as {
     readonly [K in keyof T]: T[K]["value"];
   };
 
@@ -145,17 +145,17 @@ export const getSteelGradeOptions = (
   const standards = getSteelGradeStandards(shape, fabricationType);
 
   return standards
-    .map<OptionGroup<SteelGrade>>((standard) => ({
+    .map<OptionGroup<SteelGrade>>(standard => ({
       label: standard,
       options: steelGrades
-        .filter((grade) => grade.standard === standard)
-        .map((grade) => {
+        .filter(grade => grade.standard === standard)
+        .map(grade => {
           const label = composeSteelGradeLabel(grade);
           const value = composeSteelGradeId(grade);
           return { label, value, ctx: grade };
         }),
     }))
-    .filter((group) => group.options.length > 0);
+    .filter(group => group.options.length > 0);
 };
 
 export const customSectionId = "custom";

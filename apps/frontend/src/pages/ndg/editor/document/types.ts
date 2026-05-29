@@ -1,7 +1,4 @@
-import type {
-  Condition,
-  Node as NdgNode,
-} from "@ndg/ndg-core";
+import type { Condition, Node as NdgNode } from "@ndg/ndg-core";
 import type {
   Edge as FlowEdge,
   Node as FlowNode,
@@ -43,9 +40,7 @@ export type EditorNodeProps =
   | NodeProps<TableEditorNode>
   | NodeProps<UserInputEditorNode>;
 
-type EditorEdgeData = {
-  condition?: Condition;
-};
+type EditorEdgeData = { condition?: Condition };
 
 export type EditorEdge = FlowEdge<EditorEdgeData>;
 

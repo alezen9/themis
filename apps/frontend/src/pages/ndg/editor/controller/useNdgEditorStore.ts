@@ -247,7 +247,11 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
           const edge = state._edgeById.get(change.id);
           if (edge) {
             state._edgeById.delete(change.id);
-            removeFromAdjacencyList(state._adjacencyList, edge.source, edge.target);
+            removeFromAdjacencyList(
+              state._adjacencyList,
+              edge.source,
+              edge.target,
+            );
           }
         } else if (change.type === "add") {
           state._edgeById.set(change.item.id, change.item);
@@ -302,7 +306,8 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   },
 
   importFull: document => {
-    if (document.nodes.filter(n => n.type === "check").length !== 1) return false;
+    if (document.nodes.filter(n => n.type === "check").length !== 1)
+      return false;
     set({
       nodes: document.nodes,
       edges: document.edges,

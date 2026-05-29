@@ -18,13 +18,13 @@ type Ec311DerivedState = {
   setThreshold: (threshold: number) => void;
 };
 
-export const useEc311DerivedStore = create<Ec311DerivedState>((set) => ({
+export const useEc311DerivedStore = create<Ec311DerivedState>(set => ({
   geometry: computeGeometryProperties(defaultValues),
   classification: classifySection(defaultValues),
   verifications: [],
   threshold: 1,
-  setGeometry: (geometry) => set({ geometry }),
-  setClassification: (classification) => set({ classification }),
-  setVerifications: (verifications) => set({ verifications }),
-  setThreshold: (threshold) => set({ threshold }),
+  setGeometry: geometry => set({ geometry }),
+  setClassification: classification => set({ classification }),
+  setVerifications: verifications => set({ verifications }),
+  setThreshold: threshold => set({ threshold }),
 }));

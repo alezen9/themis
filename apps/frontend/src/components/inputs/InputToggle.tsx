@@ -17,7 +17,7 @@ export const InputToggle = forwardRef<HTMLInputElement, Props>((props, ref) => {
   const { className, thumbClassName, onChange, name, ...inputProps } = props;
 
   const onCheckedChange = useCallback<NonNullable<Props["onCheckedChange"]>>(
-    (checked) => {
+    checked => {
       const changeEvent = { target: { name, type: "checkbox", checked } };
       onChange?.(changeEvent as ChangeEvent<HTMLInputElement>);
     },

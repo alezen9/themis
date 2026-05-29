@@ -7,11 +7,7 @@ import { EDITOR_DOCUMENT_VERSION, type EditorDocument } from "./types";
 const createDocument = (
   nodes: EditorDocument["nodes"],
   edges: EditorDocument["edges"] = [],
-): EditorDocument => ({
-  version: EDITOR_DOCUMENT_VERSION,
-  nodes,
-  edges,
-});
+): EditorDocument => ({ version: EDITOR_DOCUMENT_VERSION, nodes, edges });
 
 const userInput = (id: string): EditorDocument["nodes"][number] => ({
   id,

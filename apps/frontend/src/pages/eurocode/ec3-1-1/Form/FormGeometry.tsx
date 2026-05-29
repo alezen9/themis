@@ -247,7 +247,7 @@ export const FormGeometry = () => {
 };
 
 const GeometryPropertiesInfo = () => {
-  const computedProperties = useEc311DerivedStore((state) => state.geometry);
+  const computedProperties = useEc311DerivedStore(state => state.geometry);
 
   return (
     <div className="flex flex-col gap-3 text-sand-900">

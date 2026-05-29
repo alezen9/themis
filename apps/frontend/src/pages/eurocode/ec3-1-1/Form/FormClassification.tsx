@@ -48,7 +48,7 @@ export const FormClassification = () => {
 const ClassificationInfo = () => {
   const { watch } = useEc311FormContext();
   const [computedClass, parts] = useEc311DerivedStore(
-    (state) => state.classification,
+    state => state.classification,
   );
   const providedClass = watch("section_class");
   const isAutoMode = providedClass === "auto";
@@ -91,7 +91,7 @@ const ClassificationInfo = () => {
         </AccordionHeader>
         <AccordionContent className="px-0">
           <div className="flex flex-col gap-4 pt-2">
-            {parts.map((part) => (
+            {parts.map(part => (
               <PartInfoTable key={part.label} part={part} />
             ))}
           </div>
@@ -128,7 +128,7 @@ const PartInfoTable = (props: PartInfoTableProps) => {
             </TableRow>
           );
         })}
-        {part.trace.map((row) => {
+        {part.trace.map(row => {
           const { label, ratio, limit, note, satisfied } = row;
           const formattedRatio =
             typeof ratio === "number" ? formatNumber(ratio) : undefined;

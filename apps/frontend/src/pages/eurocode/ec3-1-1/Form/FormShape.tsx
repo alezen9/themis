@@ -17,7 +17,7 @@ export const FormShape = () => {
   const { register, reset, getValues, trigger } = useEc311FormContext();
 
   const onShapeChange = useCallback<ChangeHandler>(
-    async (e) => {
+    async e => {
       const { value } = e.target;
       const values = getValues();
 
@@ -72,7 +72,7 @@ export const FormShape = () => {
     <Section>
       <SectionTitle>Shape</SectionTitle>
       <div className="flex items-center w-full gap-1">
-        {shapeOptions.map((option) => {
+        {shapeOptions.map(option => {
           return (
             <InputRadio
               key={option.value}

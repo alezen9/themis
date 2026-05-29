@@ -22,7 +22,7 @@ export const classifyISection = (
 
   const rawParts = decompose(i_geometry);
 
-  const classifiedParts = rawParts.map((rawPart) => {
+  const classifiedParts = rawParts.map(rawPart => {
     if (rawPart.type === "outstand")
       return classifyOutstandPart(rawPart, steel_grade_id, ctx);
     return classifyInternalPart(rawPart, steel_grade_id, ctx);

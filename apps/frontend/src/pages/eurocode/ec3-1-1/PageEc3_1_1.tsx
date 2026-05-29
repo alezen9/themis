@@ -85,12 +85,12 @@ type ObserverProps = {
 const Observer = (props: ObserverProps) => {
   const { children, onValuesChange, onValidValuesChange } = props;
   const { subscribe, getValues } = useEc311FormContext();
-  const setGeometry = useEc311DerivedStore((state) => state.setGeometry);
+  const setGeometry = useEc311DerivedStore(state => state.setGeometry);
   const setClassification = useEc311DerivedStore(
-    (state) => state.setClassification,
+    state => state.setClassification,
   );
   const setVerifications = useEc311DerivedStore(
-    (state) => state.setVerifications,
+    state => state.setVerifications,
   );
 
   const runPipeline = useMemo(

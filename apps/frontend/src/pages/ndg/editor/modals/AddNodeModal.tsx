@@ -38,7 +38,8 @@ export const AddNodeModal = () => {
   const onSubmit = form.handleSubmit(values => {
     addNode({
       ...values,
-      sourceNodeId: modal?.mode === "create-node" ? modal.sourceNodeId : undefined,
+      sourceNodeId:
+        modal?.mode === "create-node" ? modal.sourceNodeId : undefined,
     });
     closeModal();
   });
@@ -50,7 +51,9 @@ export const AddNodeModal = () => {
       header={
         <DialogHeader className="flex items-center justify-between">
           <DialogTitle>Add node</DialogTitle>
-          <Button type="submit" form="add-node-form">Save</Button>
+          <Button type="submit" form="add-node-form">
+            Save
+          </Button>
         </DialogHeader>
       }
     >

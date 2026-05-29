@@ -21,7 +21,11 @@ const missingExpression: EditorNode = {
   id: "missing-expression",
   position: { x: 0, y: 0 },
   type: "check",
-  data: { key: "ratio", valueType: { type: "number" }, verificationExpression: "" },
+  data: {
+    key: "ratio",
+    valueType: { type: "number" },
+    verificationExpression: "",
+  },
 };
 
 describe("findInvalidNodeIds", () => {

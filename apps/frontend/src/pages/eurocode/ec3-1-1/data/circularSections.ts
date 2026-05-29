@@ -2379,5 +2379,5 @@ export const circularSections = [
 ] satisfies CircularSection[];
 
 export const circularSectionsMap = new Map(
-  circularSections.map((section) => [section.id, section]),
+  circularSections.map(section => [section.id, section]),
 );

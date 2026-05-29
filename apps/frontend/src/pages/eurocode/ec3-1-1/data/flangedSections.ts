@@ -4984,5 +4984,5 @@ export const flangedSections = [
 ] satisfies FlangedSection[];
 
 export const flangedSectionsMap = new Map(
-  flangedSections.map((section) => [section.id, section]),
+  flangedSections.map(section => [section.id, section]),
 );

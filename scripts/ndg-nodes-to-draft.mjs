@@ -9,7 +9,7 @@ const VERTICAL_GAP = 220;
 const DRAFT_FORMAT = "ndg-editor-draft";
 const DRAFT_VERSION = 1;
 
-const fail = (message) => {
+const fail = message => {
   console.error(`Error: ${message}`);
   process.exit(1);
 };
@@ -57,7 +57,7 @@ const failAtNode = (sourceFile, node, message) => {
   fail(`${message} (${formatNodeLocation(sourceFile, node)})`);
 };
 
-const unwrapExpression = (expression) => {
+const unwrapExpression = expression => {
   let current = expression;
 
   while (true) {
@@ -194,10 +194,10 @@ const parseLiteralExpression = (sourceFile, expression) => {
   );
 };
 
-const findDefineNodesArrayLiteral = (sourceFile) => {
+const findDefineNodesArrayLiteral = sourceFile => {
   let foundArrayLiteral = null;
 
-  const visit = (node) => {
+  const visit = node => {
     if (foundArrayLiteral) {
       return;
     }
@@ -244,10 +244,10 @@ const findDefineNodesArrayLiteral = (sourceFile) => {
   return foundArrayLiteral;
 };
 
-const formatSchemaIssue = (issue) => {
+const formatSchemaIssue = issue => {
   const pathLabel =
     issue.path.length > 0
-      ? issue.path.map((segment) => String(segment)).join(".")
+      ? issue.path.map(segment => String(segment)).join(".")
       : "<root>";
   return `${pathLabel}: ${issue.message}`;
 };
@@ -263,7 +263,7 @@ const loadNDGSchema = async () => {
   }
 };
 
-const buildWeakAdjacency = (nodesById) => {
+const buildWeakAdjacency = nodesById => {
   const adjacency = new Map();
 
   for (const nodeId of nodesById.keys()) {
@@ -326,10 +326,10 @@ const collectWeakComponents = (nodeIds, adjacency, preferredFirstId) => {
   return components;
 };
 
-const buildLayoutById = (nodes) => {
-  const nodesById = new Map(nodes.map((node) => [node.id, node]));
+const buildLayoutById = nodes => {
+  const nodesById = new Map(nodes.map(node => [node.id, node]));
   const layoutById = {};
-  const checkNode = nodes.find((node) => node.type === "check");
+  const checkNode = nodes.find(node => node.type === "check");
   const components = collectWeakComponents(
     [...nodesById.keys()],
     buildWeakAdjacency(nodesById),
@@ -339,7 +339,7 @@ const buildLayoutById = (nodes) => {
 
   for (const componentNodeIds of components) {
     const componentNodeIdSet = new Set(componentNodeIds);
-    const indegreeById = new Map(componentNodeIds.map((nodeId) => [nodeId, 0]));
+    const indegreeById = new Map(componentNodeIds.map(nodeId => [nodeId, 0]));
 
     for (const nodeId of componentNodeIds) {
       const node = nodesById.get(nodeId);
@@ -355,7 +355,7 @@ const buildLayoutById = (nodes) => {
     }
 
     const roots = componentNodeIds.filter(
-      (nodeId) => (indegreeById.get(nodeId) ?? 0) === 0,
+      nodeId => (indegreeById.get(nodeId) ?? 0) === 0,
     );
     const queue = roots.length > 0 ? [...roots] : [componentNodeIds[0]];
     const visited = new Set();
@@ -456,7 +456,7 @@ const main = async () => {
   }
 
   const nodesById = Object.fromEntries(
-    validatedNodes.data.map((node) => [node.id, node]),
+    validatedNodes.data.map(node => [node.id, node]),
   );
 
   const draft = {
@@ -478,6 +478,6 @@ const main = async () => {
   );
 };
 
-main().catch((error) => {
+main().catch(error => {
   fail(error instanceof Error ? error.message : "Unknown CLI failure");
 });

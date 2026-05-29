@@ -13,7 +13,9 @@ describe("findUnknownConditionKeys", () => {
     };
     const available = new Set(["A_mm2", "section_class"]);
 
-    expect(findUnknownConditionKeys(condition, available)).toEqual(["min_area"]);
+    expect(findUnknownConditionKeys(condition, available)).toEqual([
+      "min_area",
+    ]);
   });
 
   it("returns nothing when every referenced key exists", () => {

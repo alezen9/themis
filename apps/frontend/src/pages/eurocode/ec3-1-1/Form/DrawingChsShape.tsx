@@ -48,7 +48,7 @@ export const DrawingChsShape = () => {
     const geometryGroup = scene.current.geometry.group();
     const dimensionsGroup = scene.current.dimensions.group();
 
-    scene.current.draw((p) => {
+    scene.current.draw(p => {
       const { d_mm, t_mm } = p;
       const scale = targetHeight / (d_mm / 2);
       const roDrawing = (d_mm / 2) * scale;

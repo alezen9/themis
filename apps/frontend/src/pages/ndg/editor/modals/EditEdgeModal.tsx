@@ -105,7 +105,9 @@ const EditEdgeForm = (props: { edgeId: string; onClose: () => void }) => {
         autoFocus
       />
       <ConditionStatus parsed={parsed} unknownKeys={unknownKeys} />
-      <p className="text-xs text-sand-600">Leave empty to remove the condition.</p>
+      <p className="text-xs text-sand-600">
+        Leave empty to remove the condition.
+      </p>
       <KeyReference graphKeys={graphKeys} />
       <div className="flex items-center justify-end gap-2">
         {initialText !== "" && (
@@ -166,7 +168,9 @@ const KeyReference = (props: { graphKeys: string[] }) => {
         <div className="flex flex-col gap-2 pt-2">
           <KeyGroup label="Inputs" keys={userInputKeys} />
           <KeyGroup label="Tables" keys={tableKeys} />
-          {graphKeys.length > 0 && <KeyGroup label="This graph" keys={graphKeys} />}
+          {graphKeys.length > 0 && (
+            <KeyGroup label="This graph" keys={graphKeys} />
+          )}
         </div>
       </AccordionContent>
     </Accordion>

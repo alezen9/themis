@@ -20,7 +20,7 @@ describe("[EC3-1-1] schema", () => {
     assert(!result.success);
 
     expect(result.error.issues[0]?.path).toEqual(["h_mm"]);
-    expect(result.error.issues.map((issue) => issue.path)).toEqual(
+    expect(result.error.issues.map(issue => issue.path)).toEqual(
       expect.arrayContaining([
         ["h_mm"],
         ["b_mm"],
@@ -44,7 +44,7 @@ describe("[EC3-1-1] schema", () => {
     assert(!result.success);
 
     expect(result.error.issues[0]?.path).toEqual(["ro_mm"]);
-    expect(result.error.issues.map((issue) => issue.path)).toEqual(
+    expect(result.error.issues.map(issue => issue.path)).toEqual(
       expect.arrayContaining([
         ["h_mm"],
         ["b_mm"],

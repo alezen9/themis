@@ -38,7 +38,7 @@ const getVerificationStatus = (
 const getFibonacciTicks = (maxRatio: number, extraTicks: number) => {
   const ticks = [0, 1, 2];
 
-  while (ticks.filter((tick) => tick > maxRatio).length < extraTicks) {
+  while (ticks.filter(tick => tick > maxRatio).length < extraTicks) {
     const nextTick = ticks[ticks.length - 1] + ticks[ticks.length - 2];
     ticks.push(nextTick);
   }
@@ -47,7 +47,7 @@ const getFibonacciTicks = (maxRatio: number, extraTicks: number) => {
 };
 
 const getMaxVerificationRatio = (verifications: readonly Verification[]) => {
-  const ratios = verifications.flatMap((verification) => {
+  const ratios = verifications.flatMap(verification => {
     const ratio = getVerificationRatio(verification);
     return ratio === null ? [] : [ratio];
   });
@@ -64,7 +64,7 @@ const createScale = (verifications: readonly Verification[]): Scale => {
     const maxTick = ticks[ticks.length - 1];
     if (ratio >= maxTick) return 1;
 
-    const upperTickIndex = ticks.findIndex((tick) => ratio <= tick);
+    const upperTickIndex = ticks.findIndex(tick => ratio <= tick);
     if (upperTickIndex <= 0) return 0;
 
     const lowerTick = ticks[upperTickIndex - 1];
@@ -85,7 +85,7 @@ const createScale = (verifications: readonly Verification[]): Scale => {
 };
 
 export const VerificationBarChart = () => {
-  const v = useEc311DerivedStore((state) => state.verifications);
+  const v = useEc311DerivedStore(state => state.verifications);
   const verifications = [...v, ...v];
   const scale = createScale(verifications);
 
@@ -139,11 +139,11 @@ type ChartGuidesProps = { scale: Scale };
 
 const ChartGuides = (props: ChartGuidesProps) => {
   const { scale } = props;
-  const threshold = useEc311DerivedStore((state) => state.threshold);
+  const threshold = useEc311DerivedStore(state => state.threshold);
 
   return (
     <div className="pointer-events-none absolute inset-0">
-      {scale.ticks.map((tick) => (
+      {scale.ticks.map(tick => (
         <div
           className={twMerge(
             "absolute inset-y-0 right-(--tick-width)",
@@ -190,8 +190,8 @@ type ThresholdSliderProps = { scale: Scale };
 
 const ThresholdSlider = (props: ThresholdSliderProps) => {
   const { scale } = props;
-  const setThreshold = useEc311DerivedStore((state) => state.setThreshold);
-  const threshold = useEc311DerivedStore((state) => state.threshold);
+  const setThreshold = useEc311DerivedStore(state => state.setThreshold);
+  const threshold = useEc311DerivedStore(state => state.threshold);
   const sliderValue = minThreshold + maxThreshold - threshold;
 
   return (
@@ -201,9 +201,7 @@ const ThresholdSlider = (props: ThresholdSliderProps) => {
       format={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
       max={maxThreshold}
       min={minThreshold}
-      onValueChange={(value) =>
-        setThreshold(minThreshold + maxThreshold - value)
-      }
+      onValueChange={value => setThreshold(minThreshold + maxThreshold - value)}
       step={thresholdStep}
       style={{
         left: `calc(100% - ${scale.getScaledWidth(maxThreshold)})`,
@@ -255,7 +253,7 @@ const VerificationRow = (props: VerificationRowProps) => {
 
 const VerificationBar = (props: VerificationThresholdItemProps) => {
   const { scale, verification } = props;
-  const threshold = useEc311DerivedStore((state) => state.threshold);
+  const threshold = useEc311DerivedStore(state => state.threshold);
   const ratio = getVerificationRatio(verification);
   const status = getVerificationStatus(ratio, threshold);
 
@@ -287,7 +285,7 @@ const VerificationBar = (props: VerificationThresholdItemProps) => {
 
 const VerificationLabel = (props: VerificationThresholdItemProps) => {
   const { verification } = props;
-  const threshold = useEc311DerivedStore((state) => state.threshold);
+  const threshold = useEc311DerivedStore(state => state.threshold);
   const ratio = getVerificationRatio(verification);
   const status = getVerificationStatus(ratio, threshold);
   const formattedRatio = formatRatio(ratio);

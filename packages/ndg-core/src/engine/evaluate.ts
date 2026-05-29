@@ -56,10 +56,10 @@ const getActiveChildren = (node: Node, state: EvaluationState) => {
 
 const matchesCondition = (condition: Condition, state: EvaluationState) => {
   const unresolvedKeys = collectConditionKeys(condition).filter(
-    (key) => !Object.hasOwn(state.lookup, key),
+    key => !Object.hasOwn(state.lookup, key),
   );
 
-  const unknownKey = unresolvedKeys.find((key) => !state.nodeByKey.has(key));
+  const unknownKey = unresolvedKeys.find(key => !state.nodeByKey.has(key));
   if (unknownKey) {
     throw new Error(`Condition references unknown key: "${unknownKey}"`);
   }

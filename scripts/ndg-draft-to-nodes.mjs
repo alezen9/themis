@@ -8,7 +8,7 @@ const VERTICAL_GAP = 220;
 const DRAFT_FORMAT = "ndg-editor-draft";
 const DRAFT_VERSION = 1;
 
-const fail = (message) => {
+const fail = message => {
   console.error(`Error: ${message}`);
   process.exit(1);
 };
@@ -45,19 +45,19 @@ const parseArgs = () => {
   return out;
 };
 
-const isRecord = (value) =>
+const isRecord = value =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-const isFiniteNumber = (value) =>
+const isFiniteNumber = value =>
   typeof value === "number" && Number.isFinite(value);
 
-const isLayoutPosition = (value) =>
+const isLayoutPosition = value =>
   isRecord(value) && isFiniteNumber(value.x) && isFiniteNumber(value.y);
 
-const formatSchemaIssue = (issue) => {
+const formatSchemaIssue = issue => {
   const pathLabel =
     issue.path.length > 0
-      ? issue.path.map((segment) => String(segment)).join(".")
+      ? issue.path.map(segment => String(segment)).join(".")
       : "<root>";
   return `${pathLabel}: ${issue.message}`;
 };
@@ -73,8 +73,8 @@ const loadNDGSchema = async () => {
   }
 };
 
-const orderNodesRootFirstBfs = (nodes) => {
-  const nodesById = new Map(nodes.map((node) => [node.id, node]));
+const orderNodesRootFirstBfs = nodes => {
+  const nodesById = new Map(nodes.map(node => [node.id, node]));
   const parentById = new Map();
 
   for (const node of nodes) {
@@ -84,7 +84,7 @@ const orderNodesRootFirstBfs = (nodes) => {
   }
 
   const rootNode = nodes.find(
-    (node) => node.type === "check" && !parentById.has(node.id),
+    node => node.type === "check" && !parentById.has(node.id),
   );
   if (!rootNode) {
     fail("Could not determine root check node for BFS ordering");
@@ -114,13 +114,13 @@ const orderNodesRootFirstBfs = (nodes) => {
   }
 
   const unvisitedNodes = nodes
-    .filter((node) => !visited.has(node.id))
+    .filter(node => !visited.has(node.id))
     .sort((left, right) => left.id.localeCompare(right.id));
 
   return [...orderedNodes, ...unvisitedNodes];
 };
 
-const buildWeakAdjacency = (nodesById) => {
+const buildWeakAdjacency = nodesById => {
   const adjacency = new Map();
 
   for (const nodeId of nodesById.keys()) {
@@ -183,10 +183,10 @@ const collectWeakComponents = (nodeIds, adjacency, preferredFirstId) => {
   return components;
 };
 
-const buildLayoutById = (nodes) => {
-  const nodesById = new Map(nodes.map((node) => [node.id, node]));
+const buildLayoutById = nodes => {
+  const nodesById = new Map(nodes.map(node => [node.id, node]));
   const layoutById = {};
-  const checkNode = nodes.find((node) => node.type === "check");
+  const checkNode = nodes.find(node => node.type === "check");
   const components = collectWeakComponents(
     [...nodesById.keys()],
     buildWeakAdjacency(nodesById),
@@ -196,7 +196,7 @@ const buildLayoutById = (nodes) => {
 
   for (const componentNodeIds of components) {
     const componentNodeIdSet = new Set(componentNodeIds);
-    const indegreeById = new Map(componentNodeIds.map((nodeId) => [nodeId, 0]));
+    const indegreeById = new Map(componentNodeIds.map(nodeId => [nodeId, 0]));
 
     for (const nodeId of componentNodeIds) {
       const node = nodesById.get(nodeId);
@@ -212,7 +212,7 @@ const buildLayoutById = (nodes) => {
     }
 
     const roots = componentNodeIds.filter(
-      (nodeId) => (indegreeById.get(nodeId) ?? 0) === 0,
+      nodeId => (indegreeById.get(nodeId) ?? 0) === 0,
     );
     const queue = roots.length > 0 ? [...roots] : [componentNodeIds[0]];
     const visited = new Set();
@@ -360,6 +360,6 @@ const main = async () => {
   );
 };
 
-main().catch((error) => {
+main().catch(error => {
   fail(error instanceof Error ? error.message : "Unknown CLI failure");
 });

@@ -47,7 +47,7 @@ export const DrawingIShape = () => {
     const geometryGroup = scene.current.geometry.group();
     const dimensionsGroup = scene.current.dimensions.group();
 
-    scene.current.draw((p) => {
+    scene.current.draw(p => {
       const { h_mm, b_mm, tf_mm, tw_mm, r_mm } = p;
       const heightScale = targetHeight / h_mm;
       const widthScale = targetWidth / b_mm;

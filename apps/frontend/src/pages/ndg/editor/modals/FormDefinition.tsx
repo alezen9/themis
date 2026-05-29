@@ -41,12 +41,20 @@ export const FormDefinition = () => {
         )}
         {type === "table" && (
           <div className="col-span-2">
-            <FormField name="source" label="Source" description="Normative table reference e.g. EC3-1-1 Table 6.2">
+            <FormField
+              name="source"
+              label="Source"
+              description="Normative table reference e.g. EC3-1-1 Table 6.2"
+            >
               <InputText {...register("source")} />
             </FormField>
           </div>
         )}
-        <FormFieldLatex name="symbol" label="Symbol" description="Expression symbol">
+        <FormFieldLatex
+          name="symbol"
+          label="Symbol"
+          description="Expression symbol"
+        >
           <InputText {...register("symbol")} />
         </FormFieldLatex>
         {type !== "check" && type !== "constant" && (

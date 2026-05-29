@@ -6,10 +6,7 @@ const anyValueType = z.discriminatedUnion("type", [
   z.object({ type: z.literal("string") }),
 ]);
 
-const base = {
-  key: z.string().min(1),
-  symbol: z.string().optional(),
-};
+const base = { key: z.string().min(1), symbol: z.string().optional() };
 
 const meta = z.object({
   sectionRef: z.string().optional(),
@@ -21,12 +18,48 @@ const meta = z.object({
 });
 
 export const nodeFormSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("check"), ...base, valueType: numericValueType, verificationExpression: z.string().min(1), meta: meta.optional() }),
-  z.object({ type: z.literal("user-input"), ...base, valueType: anyValueType, unit: z.string().optional() }),
-  z.object({ type: z.literal("formula"), ...base, valueType: anyValueType, expression: z.string().optional(), unit: z.string().optional(), meta: meta.optional() }),
-  z.object({ type: z.literal("coefficient"), ...base, valueType: numericValueType, unit: z.string().optional(), meta: meta.optional() }),
-  z.object({ type: z.literal("constant"), key: z.string().min(1), symbol: z.string().min(1), valueType: numericValueType }),
-  z.object({ type: z.literal("table"), ...base, valueType: anyValueType, source: z.string().min(1), unit: z.string().optional(), meta: meta.optional() }),
+  z.object({
+    type: z.literal("check"),
+    ...base,
+    valueType: numericValueType,
+    verificationExpression: z.string().min(1),
+    meta: meta.optional(),
+  }),
+  z.object({
+    type: z.literal("user-input"),
+    ...base,
+    valueType: anyValueType,
+    unit: z.string().optional(),
+  }),
+  z.object({
+    type: z.literal("formula"),
+    ...base,
+    valueType: anyValueType,
+    expression: z.string().optional(),
+    unit: z.string().optional(),
+    meta: meta.optional(),
+  }),
+  z.object({
+    type: z.literal("coefficient"),
+    ...base,
+    valueType: numericValueType,
+    unit: z.string().optional(),
+    meta: meta.optional(),
+  }),
+  z.object({
+    type: z.literal("constant"),
+    key: z.string().min(1),
+    symbol: z.string().min(1),
+    valueType: numericValueType,
+  }),
+  z.object({
+    type: z.literal("table"),
+    ...base,
+    valueType: anyValueType,
+    source: z.string().min(1),
+    unit: z.string().optional(),
+    meta: meta.optional(),
+  }),
 ]);
 
 export type NodeFormValues = z.infer<typeof nodeFormSchema>;

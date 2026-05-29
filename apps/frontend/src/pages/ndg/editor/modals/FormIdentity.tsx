@@ -24,7 +24,8 @@ const getKeyOptions = (type: NodeFormValues["type"]) => {
 };
 
 export const FormIdentity = () => {
-  const { control, register, watch, setValue } = useFormContext<NodeFormValues>();
+  const { control, register, watch, setValue } =
+    useFormContext<NodeFormValues>();
   const type = watch("type");
   const isValueTypeForced = FORCED_NUMERIC_TYPES.includes(type);
   const keyOptions = getKeyOptions(type);

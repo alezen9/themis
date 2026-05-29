@@ -20,7 +20,7 @@ export const classifyRhsSection = (
   const ctx = { ...geometricProperties, ...actions };
 
   const rawParts = decompose(rhs_geometry);
-  const classifiedParts = rawParts.map((rawPart) =>
+  const classifiedParts = rawParts.map(rawPart =>
     classifyInternalPart(rawPart, steel_grade_id, ctx),
   );
 

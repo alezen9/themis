@@ -64,7 +64,12 @@ describe("parseCondition", () => {
       {
         and: [
           { eq: ["section_class", { value: 1 }] },
-          { or: [{ eq: ["shape", { value: "I" }] }, { eq: ["shape", { value: "H" }] }] },
+          {
+            or: [
+              { eq: ["shape", { value: "I" }] },
+              { eq: ["shape", { value: "H" }] },
+            ],
+          },
         ],
       },
       {

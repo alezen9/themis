@@ -44,8 +44,7 @@ export const EditNodeModal = () => {
   });
 
   const isCheckNode =
-    modal?.mode === "edit-node" &&
-    getNodeById(modal.nodeId)?.type === "check";
+    modal?.mode === "edit-node" && getNodeById(modal.nodeId)?.type === "check";
 
   return (
     <Dialog
@@ -54,7 +53,9 @@ export const EditNodeModal = () => {
       header={
         <DialogHeader className="flex items-center justify-between">
           <DialogTitle>Edit node</DialogTitle>
-          <Button type="submit" form="edit-node-form">Save</Button>
+          <Button type="submit" form="edit-node-form">
+            Save
+          </Button>
         </DialogHeader>
       }
     >

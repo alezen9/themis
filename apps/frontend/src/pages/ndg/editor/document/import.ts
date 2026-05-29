@@ -6,7 +6,9 @@ export const parseDocumentFile = async (
   file: File,
 ): Promise<EditorDocument | null> => {
   try {
-    const result = editorDocumentSchema.safeParse(JSON.parse(await file.text()));
+    const result = editorDocumentSchema.safeParse(
+      JSON.parse(await file.text()),
+    );
     return result.success ? (result.data as EditorDocument) : null;
   } catch {
     return null;

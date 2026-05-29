@@ -55,7 +55,7 @@ export const validateNDG = <
 
   for (const node of nodes) {
     const unknownChild = node.children.find(
-      (child) => !nodeById.has(child.nodeId),
+      child => !nodeById.has(child.nodeId),
     );
     if (unknownChild) {
       throw new Error(
@@ -73,7 +73,7 @@ export const validateNDG = <
   }
 
   const unknownEvaluatorKey = Object.keys(evaluators).find(
-    (key) => !nodeByKey.has(key),
+    key => !nodeByKey.has(key),
   );
   if (unknownEvaluatorKey) {
     throw new Error(

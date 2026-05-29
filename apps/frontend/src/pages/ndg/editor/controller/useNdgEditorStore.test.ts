@@ -77,12 +77,14 @@ beforeEach(() => {
 
 describe("onConnectNodes", () => {
   it("adds an edge with the source__to__target id convention", () => {
-    useNdgEditorStore.getState().onConnectNodes({
-      source: "a",
-      target: "b",
-      sourceHandle: null,
-      targetHandle: null,
-    });
+    useNdgEditorStore
+      .getState()
+      .onConnectNodes({
+        source: "a",
+        target: "b",
+        sourceHandle: null,
+        targetHandle: null,
+      });
 
     const { edges, _edgeById, _adjacencyList } = useNdgEditorStore.getState();
     expect(edges).toHaveLength(1);
@@ -106,9 +108,24 @@ describe("onConnectNodes", () => {
 
   it("ignores a connection that would create a cycle: A→B→C then C→A", () => {
     const store = useNdgEditorStore.getState();
-    store.onConnectNodes({ source: "a", target: "b", sourceHandle: null, targetHandle: null });
-    store.onConnectNodes({ source: "b", target: "c", sourceHandle: null, targetHandle: null });
-    store.onConnectNodes({ source: "c", target: "a", sourceHandle: null, targetHandle: null });
+    store.onConnectNodes({
+      source: "a",
+      target: "b",
+      sourceHandle: null,
+      targetHandle: null,
+    });
+    store.onConnectNodes({
+      source: "b",
+      target: "c",
+      sourceHandle: null,
+      targetHandle: null,
+    });
+    store.onConnectNodes({
+      source: "c",
+      target: "a",
+      sourceHandle: null,
+      targetHandle: null,
+    });
 
     expect(useNdgEditorStore.getState().edges).toHaveLength(2);
   });
@@ -122,7 +139,9 @@ describe("onEdgesChange — remove", () => {
       _adjacencyList: new Map([["a", new Set(["b"])]]),
     });
 
-    useNdgEditorStore.getState().onEdgesChange([{ type: "remove", id: edgeAtoB.id }]);
+    useNdgEditorStore
+      .getState()
+      .onEdgesChange([{ type: "remove", id: edgeAtoB.id }]);
 
     const { edges, _edgeById, _adjacencyList } = useNdgEditorStore.getState();
     expect(edges).toHaveLength(0);
@@ -133,15 +152,15 @@ describe("onEdgesChange — remove", () => {
 
 describe("onNodesChange — remove", () => {
   it("drops the node from _nodeById and decrements its key count", () => {
-    useNdgEditorStore.getState().addNode({
-      type: "user-input",
-      key: "a",
-      valueType: { type: "number" },
-    });
+    useNdgEditorStore
+      .getState()
+      .addNode({ type: "user-input", key: "a", valueType: { type: "number" } });
     const addedId = useNdgEditorStore.getState().nodes.at(-1)!.id;
     expect(useNdgEditorStore.getState().isDuplicateKey("a")).toBe(true);
 
-    useNdgEditorStore.getState().onNodesChange([{ type: "remove", id: addedId }]);
+    useNdgEditorStore
+      .getState()
+      .onNodesChange([{ type: "remove", id: addedId }]);
 
     const { nodes, _nodeById } = useNdgEditorStore.getState();
     expect(nodes.map(n => n.id)).not.toContain(addedId);
@@ -152,12 +171,14 @@ describe("onNodesChange — remove", () => {
 
 describe("addNode", () => {
   it("adds the node and a connecting edge when sourceNodeId is provided", () => {
-    useNdgEditorStore.getState().addNode({
-      type: "user-input",
-      key: "x",
-      valueType: { type: "number" },
-      sourceNodeId: "a",
-    });
+    useNdgEditorStore
+      .getState()
+      .addNode({
+        type: "user-input",
+        key: "x",
+        valueType: { type: "number" },
+        sourceNodeId: "a",
+      });
 
     const { nodes, edges, _adjacencyList } = useNdgEditorStore.getState();
     expect(nodes).toHaveLength(4);
@@ -168,11 +189,9 @@ describe("addNode", () => {
   });
 
   it("adds only the node when no sourceNodeId is provided", () => {
-    useNdgEditorStore.getState().addNode({
-      type: "user-input",
-      key: "x",
-      valueType: { type: "number" },
-    });
+    useNdgEditorStore
+      .getState()
+      .addNode({ type: "user-input", key: "x", valueType: { type: "number" } });
 
     const { nodes, edges } = useNdgEditorStore.getState();
     expect(nodes).toHaveLength(4);
@@ -287,22 +306,22 @@ describe("duplicate keys", () => {
   it("flags a key as duplicate once a second node shares it", () => {
     expect(useNdgEditorStore.getState().isDuplicateKey("a")).toBe(false);
 
-    useNdgEditorStore.getState().addNode({
-      type: "user-input",
-      key: "a",
-      valueType: { type: "number" },
-    });
+    useNdgEditorStore
+      .getState()
+      .addNode({ type: "user-input", key: "a", valueType: { type: "number" } });
 
     expect(useNdgEditorStore.getState().isDuplicateKey("a")).toBe(true);
   });
 
   it("moves the count from the old key to the new one on update", () => {
-    useNdgEditorStore.getState().updateNode({
-      id: "a",
-      type: "user-input",
-      key: "b",
-      valueType: { type: "number" },
-    });
+    useNdgEditorStore
+      .getState()
+      .updateNode({
+        id: "a",
+        type: "user-input",
+        key: "b",
+        valueType: { type: "number" },
+      });
 
     const store = useNdgEditorStore.getState();
     expect(store.isDuplicateKey("b")).toBe(true);
@@ -378,12 +397,14 @@ describe("validateGraph", () => {
     useNdgEditorStore.setState({ _invalidNodeIds: new Set(["a"]) });
     expect(useNdgEditorStore.getState().isInvalidNode("a")).toBe(true);
 
-    useNdgEditorStore.getState().updateNode({
-      id: "a",
-      type: "user-input",
-      key: "a",
-      valueType: { type: "number" },
-    });
+    useNdgEditorStore
+      .getState()
+      .updateNode({
+        id: "a",
+        type: "user-input",
+        key: "a",
+        valueType: { type: "number" },
+      });
 
     expect(useNdgEditorStore.getState().isInvalidNode("a")).toBe(false);
   });
@@ -427,13 +448,17 @@ describe("duplicate edge regression", () => {
       _adjacencyList: new Map([["a", new Set(["b"])]]),
     });
 
-    useNdgEditorStore.getState().onEdgesChange([{ type: "remove", id: edgeAtoB.id }]);
-    useNdgEditorStore.getState().onConnectNodes({
-      source: "a",
-      target: "b",
-      sourceHandle: null,
-      targetHandle: null,
-    });
+    useNdgEditorStore
+      .getState()
+      .onEdgesChange([{ type: "remove", id: edgeAtoB.id }]);
+    useNdgEditorStore
+      .getState()
+      .onConnectNodes({
+        source: "a",
+        target: "b",
+        sourceHandle: null,
+        targetHandle: null,
+      });
 
     const { edges } = useNdgEditorStore.getState();
     expect(edges).toHaveLength(1);

@@ -283,5 +283,5 @@ export const composeSteelGradeId = (grade: SteelGrade) =>
 export const composeSteelGradeLabel = (grade: SteelGrade) => grade.id;
 
 export const steelGradesMap = new Map(
-  steelGrades.map((grade) => [composeSteelGradeId(grade), grade]),
+  steelGrades.map(grade => [composeSteelGradeId(grade), grade]),
 );

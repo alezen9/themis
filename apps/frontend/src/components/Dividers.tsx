@@ -5,10 +5,7 @@ export const LineDivider = (props: ComponentProps<"div">) => {
   const { className, ...rest } = props;
 
   return (
-    <div
-      className={twMerge("h-px w-full bg-slate-300", className)}
-      {...rest}
-    />
+    <div className={twMerge("h-px w-full bg-slate-300", className)} {...rest} />
   );
 };
 

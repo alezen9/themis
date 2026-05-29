@@ -33,7 +33,7 @@ const chsSectionBaseInput = {
 } as const;
 
 const getPart = (parts: Part[], label: string) => {
-  const part = parts.find((item) => item.label === label);
+  const part = parts.find(item => item.label === label);
   if (!part) throw new Error(`${label} not found`);
   return part;
 };

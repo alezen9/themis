@@ -51,7 +51,7 @@ export const DrawingRhsShape = () => {
     const geometryGroup = scene.current.geometry.group();
     const dimensionsGroup = scene.current.dimensions.group();
 
-    scene.current.draw((p) => {
+    scene.current.draw(p => {
       const { h_mm, b_mm, tw_mm, ro_mm, ri_mm } = p;
       const heightScale = targetHeight / h_mm;
       const widthScale = targetWidth / b_mm;

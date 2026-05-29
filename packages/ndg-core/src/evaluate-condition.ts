@@ -67,9 +67,9 @@ export const evaluateCondition = (
       );
     }
     case "and" in condition:
-      return condition.and.every((item) => evaluateCondition(item, ctx));
+      return condition.and.every(item => evaluateCondition(item, ctx));
     case "or" in condition:
-      return condition.or.some((item) => evaluateCondition(item, ctx));
+      return condition.or.some(item => evaluateCondition(item, ctx));
     default:
       throw new Error(`Unknown condition: ${JSON.stringify(condition)}`);
   }
@@ -92,9 +92,9 @@ export const collectConditionKeys = (condition: Condition): string[] => {
     return getConditionTupleKeys(condition.gte);
   }
   if ("and" in condition) {
-    return condition.and.flatMap((item) => collectConditionKeys(item));
+    return condition.and.flatMap(item => collectConditionKeys(item));
   }
-  return condition.or.flatMap((item) => collectConditionKeys(item));
+  return condition.or.flatMap(item => collectConditionKeys(item));
 };
 
 const getConditionTupleKeys = (condition: ConditionTuple) => {

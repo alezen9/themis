@@ -3,10 +3,10 @@ import { useEc311DerivedStore } from "../useEc311DerivedStore";
 import { formatNumber } from "@formatters/number";
 
 export const VerificationsHeader = () => {
-  const verifications = useEc311DerivedStore((state) => state.verifications);
-  const threshold = useEc311DerivedStore((state) => state.threshold);
+  const verifications = useEc311DerivedStore(state => state.verifications);
+  const threshold = useEc311DerivedStore(state => state.threshold);
 
-  const ratios = verifications.flatMap((verification) =>
+  const ratios = verifications.flatMap(verification =>
     verification.payload.data ? [verification.payload.data.ratio] : [],
   );
   const maxRatio = Math.max(...ratios);

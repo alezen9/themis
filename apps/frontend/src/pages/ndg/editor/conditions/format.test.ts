@@ -25,7 +25,12 @@ describe("formatCondition", () => {
     const condition: Condition = {
       and: [
         { eq: ["section_class", { value: 1 }] },
-        { or: [{ eq: ["shape", { value: "I" }] }, { eq: ["shape", { value: "H" }] }] },
+        {
+          or: [
+            { eq: ["shape", { value: "I" }] },
+            { eq: ["shape", { value: "H" }] },
+          ],
+        },
       ],
     };
     expect(formatCondition(condition)).toBe(

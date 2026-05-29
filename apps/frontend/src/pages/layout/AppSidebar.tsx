@@ -201,7 +201,7 @@ const SubSectionItemLabel = (props: { children: ReactNode }) => {
 const Nav = (props: { children: ReactNode }) => {
   const { children } = props;
   const ref = useRef<HTMLElement>(null);
-  const pathname = useLocation({ select: (location) => location.pathname });
+  const pathname = useLocation({ select: location => location.pathname });
 
   useLayoutEffect(() => {
     if (!ref.current) return;
