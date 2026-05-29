@@ -12,12 +12,12 @@ export const Button = forwardRef<
       {...rest}
       ref={ref}
       className={twMerge(
-        "bg-sand-900 text-white",
+        "bg-sand-800 text-white hover:bg-sand-900",
         "px-4 py-2 rounded-sm grid place-content-center",
         "text-sm",
         "cursor-pointer",
-        "disabled:bg-sand-100 disabled:text-sand-300 disabled:cursor-not-allowed",
-        "active:scale-[97.5%] transition-transform",
+        "disabled:bg-transparent disabled:text-sand-200 disabled:cursor-not-allowed",
+        "active:scale-[97.5%] transition-transform transition-color",
         className,
       )}
     />

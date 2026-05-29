@@ -4,9 +4,7 @@ import { useFormContext } from "react-hook-form";
 import { Section, SectionTitle } from "./shared";
 import { typeOptions } from "./options";
 
-type FormTypeProps = { locked?: boolean };
-
-export const FormType = ({ locked }: FormTypeProps) => {
+export const FormType = () => {
   const { register } = useFormContext();
 
   return (
@@ -19,7 +17,6 @@ export const FormType = ({ locked }: FormTypeProps) => {
             {...register("type")}
             value={option.value}
             label={option.label}
-            disabled={locked}
           />
         ))}
       </div>

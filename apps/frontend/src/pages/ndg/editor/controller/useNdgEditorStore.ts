@@ -3,6 +3,11 @@ import type { Connection, EdgeChange, NodeChange } from "@xyflow/react";
 import { create } from "zustand";
 
 import { createEdgeId, createNodeId } from "../document/ids";
+import {
+  isValidFullImport,
+  isValidPartialImport,
+  remapDocumentIds,
+} from "../document/import";
 import { initialDocument } from "../document/initialDocument";
 import {
   EDITOR_DOCUMENT_VERSION,
@@ -60,12 +65,22 @@ type NdgEditorStore = {
   _edgeById: Map<string, EditorEdge>;
   _adjacency: Map<string, Set<string>>;
 
+  selectedNodes: EditorNode[];
+  selectedEdges: EditorEdge[];
+  setSelection: (nodes: EditorNode[], edges: EditorEdge[]) => void;
+
   addNode: (input: AddNodeInput) => void;
   updateNode: (input: UpdateNodeInput) => void;
+  deleteSelected: () => void;
   onNodesChange: (changes: NodeChange<EditorNode>[]) => void;
   onEdgesChange: (changes: EdgeChange<EditorEdge>[]) => void;
   onConnectNodes: (connection: Connection) => void;
   exportDocument: () => EditorDocument;
+  exportSelected: () => EditorDocument;
+  // replace the whole graph; rejected (returns false) unless it has one check
+  importFull: (doc: EditorDocument) => boolean;
+  // merge with fresh ids; rejected (returns false) if it carries a check
+  importPartial: (doc: EditorDocument) => boolean;
 };
 
 const { nodes: initialNodes, edges: initialEdges } = initialDocument;
@@ -73,6 +88,9 @@ const { nodes: initialNodes, edges: initialEdges } = initialDocument;
 export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   nodes: initialNodes,
   edges: initialEdges,
+  selectedNodes: [],
+  selectedEdges: [],
+  setSelection: (nodes, edges) => set({ selectedNodes: nodes, selectedEdges: edges }),
   _nodeById: new Map(initialNodes.map(n => [n.id, n])),
   _edgeById: new Map(initialEdges.map(e => [e.id, e])),
   _adjacency: buildAdjacency(initialEdges),
@@ -119,6 +137,25 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       const nodes = state.nodes.map(n => (n.id === input.id ? updated : n));
       state._nodeById.set(input.id, updated);
       return { nodes };
+    }),
+
+  deleteSelected: () =>
+    set(state => {
+      const selectedNodes = state.nodes.filter(n => n.selected);
+      if (selectedNodes.some(n => n.type === "check")) return state;
+      const selectedNodeIds = new Set(selectedNodes.map(n => n.id));
+      const edgesToRemove = state.edges.filter(
+        e => e.selected || selectedNodeIds.has(e.source) || selectedNodeIds.has(e.target),
+      );
+      const edgeIdsToRemove = new Set(edgesToRemove.map(e => e.id));
+      const nodes = state.nodes.filter(n => !selectedNodeIds.has(n.id));
+      const edges = state.edges.filter(e => !edgeIdsToRemove.has(e.id));
+      for (const n of selectedNodes) state._nodeById.delete(n.id);
+      for (const e of edgesToRemove) {
+        state._edgeById.delete(e.id);
+        removeFromAdjacency(state._adjacency, e.source, e.target);
+      }
+      return { nodes, edges };
     }),
 
   onNodesChange: changes =>
@@ -178,5 +215,44 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   exportDocument: () => {
     const { nodes, edges } = get();
     return { version: EDITOR_DOCUMENT_VERSION, nodes, edges };
+  },
+
+  exportSelected: () => {
+    const { nodes, edges } = get();
+    const selectedNodes = nodes.filter(n => n.selected);
+    const selectedIds = new Set(selectedNodes.map(n => n.id));
+    const selectedEdges = edges.filter(
+      e => selectedIds.has(e.source) && selectedIds.has(e.target),
+    );
+    return { version: EDITOR_DOCUMENT_VERSION, nodes: selectedNodes, edges: selectedEdges };
+  },
+
+  importFull: doc => {
+    if (!isValidFullImport(doc)) return false;
+    set({
+      nodes: doc.nodes,
+      edges: doc.edges,
+      _nodeById: new Map(doc.nodes.map(n => [n.id, n])),
+      _edgeById: new Map(doc.edges.map(e => [e.id, e])),
+      _adjacency: buildAdjacency(doc.edges),
+    });
+    return true;
+  },
+
+  importPartial: doc => {
+    if (!isValidPartialImport(doc)) return false;
+    const { nodes: addedNodes, edges: addedEdges } = remapDocumentIds(doc);
+    set(state => {
+      for (const n of addedNodes) state._nodeById.set(n.id, n);
+      for (const e of addedEdges) {
+        state._edgeById.set(e.id, e);
+        addToAdjacency(state._adjacency, e.source, e.target);
+      }
+      return {
+        nodes: [...state.nodes, ...addedNodes],
+        edges: [...state.edges, ...addedEdges],
+      };
+    });
+    return true;
   },
 }));

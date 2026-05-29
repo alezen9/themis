@@ -201,7 +201,7 @@ export const IconDelete = (props: ComponentPropsWithoutRef<"svg">) => {
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      strokeWidth="2"
+      strokeWidth="1"
       strokeLinecap="round"
       strokeLinejoin="round"
       stroke="currentColor"
@@ -295,6 +295,80 @@ export const IconPencil = (props: ComponentPropsWithoutRef<"svg">) => {
       {...props}
     >
       <path d="M20.1497 7.93997 8.27971 19.81c-1.06 1.07-4.23 1.5599-5 .8499s-.21002-3.8799.84998-4.9499L15.9997 3.84c.5481-.52199 1.2786-.80903 2.0354-.79981.7568.00923 1.48.31399 2.0152.84919.5352.53519.84 1.25843.8492 2.01525.0093.75683-.2778 1.48726-.7998 2.03534zM21 21h-9" />
+    </svg>
+  );
+};
+
+export const IconImport = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 28 28"
+      fill="none"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      stroke="currentColor"
+      {...props}
+    >
+      <path d="M0.75 18.7498C0.75 18.7498 0.75 20.9316 0.75 23.1134C0.75 25.2952 2.32576 26.7498 4.68939 26.7498C7.05303 26.7498 20.447 26.7498 22.8106 26.7498C25.1742 26.7498 26.75 25.2952 26.75 23.1134C26.75 20.9316 26.75 18.7498 26.75 18.7498" />
+      <path d="M13.75 15.75L13.75 0.75M7.75 9.25657L13.75 15.75L19.75 9.25657" />
+    </svg>
+  );
+};
+
+export const IconExport = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 28 28"
+      fill="none"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      stroke="currentColor"
+      {...props}
+    >
+      <path d="M0.75 18.75C0.75 18.75 0.75 20.9318 0.75 23.1136C0.75 25.2955 2.32576 26.75 4.68939 26.75C7.05303 26.75 20.447 26.75 22.8106 26.75C25.1742 26.75 26.75 25.2955 26.75 23.1136C26.75 20.9318 26.75 18.75 26.75 18.75" />
+      <path d="M13.75 0.75L13.75 15.75M19.75 7.24343L13.75 0.75L7.75 7.24343" />
+    </svg>
+  );
+};
+
+export const IconImportPartial = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 28 28"
+      fill="none"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      stroke="currentColor"
+      {...props}
+    >
+      <path d="M0.75 18.7498C0.75 18.7498 0.75 20.9316 0.75 23.1134C0.75 25.2952 2.32576 26.7498 4.68939 26.7498C7.05303 26.7498 20.447 26.7498 22.8106 26.7498C25.1742 26.7498 26.75 25.2952 26.75 23.1134C26.75 20.9316 26.75 18.7498 26.75 18.7498" />
+      <path d="M13.75 15.75L13.75 0.75M7.75 9.25657L13.75 15.75L19.75 9.25657" />
+      <rect x="11.75" y="19.75" width="4" height="4" fill="currentColor" />
+    </svg>
+  );
+};
+
+export const IconExportPartial = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 28 28"
+      fill="none"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      stroke="currentColor"
+      {...props}
+    >
+      <path d="M0.75 18.75C0.75 18.75 0.75 20.9318 0.75 23.1136C0.75 25.2955 2.32576 26.75 4.68939 26.75C7.05303 26.75 20.447 26.75 22.8106 26.75C25.1742 26.75 26.75 25.2955 26.75 23.1136C26.75 20.9318 26.75 18.75 26.75 18.75" />
+      <path d="M13.75 0.75L13.75 15.75M19.75 7.24343L13.75 0.75L7.75 7.24343" />
+      <rect x="11.75" y="19.75" width="4" height="4" fill="currentColor" />
     </svg>
   );
 };

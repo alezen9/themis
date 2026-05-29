@@ -21,6 +21,7 @@ export const NdgEditorCanvas = () => {
   const onNodesChange = useNdgEditorStore(state => state.onNodesChange);
   const onEdgesChange = useNdgEditorStore(state => state.onEdgesChange);
   const onConnectNodes = useNdgEditorStore(state => state.onConnectNodes);
+  const setSelection = useNdgEditorStore(state => state.setSelection);
   const openModal = useNdgEditorModalStore(state => state.openModal);
 
   const onNodeDoubleClick = useCallback<NodeMouseHandler<EditorNode>>(
@@ -44,6 +45,7 @@ export const NdgEditorCanvas = () => {
       maxZoom={8}
       minZoom={0.05}
       onConnect={onConnectNodes}
+      onSelectionChange={({ nodes, edges }) => setSelection(nodes, edges)}
       onBeforeDelete={onBeforeDeleteElements}
       onNodeDoubleClick={onNodeDoubleClick}
       onlyRenderVisibleElements={nodes.length > 50}

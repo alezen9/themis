@@ -64,7 +64,7 @@ export const EditNodeModal = () => {
       <DialogContent className="gap-8">
         <form id="edit-node-form" onSubmit={handleSubmit}>
           <FormProvider {...form}>
-            <FormType locked={isCheckNode} />
+            {!isCheckNode && <FormType />}
             <FormIdentity />
             <FormDefinition />
             <FormMetadata />

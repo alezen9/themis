@@ -1,7 +1,6 @@
 import { Option } from "@components/inputs/shared";
 
 export const typeOptions = [
-  { value: "check", label: "Check" },
   { value: "user-input", label: "User input" },
   { value: "formula", label: "Formula" },
   { value: "coefficient", label: "Coefficient" },

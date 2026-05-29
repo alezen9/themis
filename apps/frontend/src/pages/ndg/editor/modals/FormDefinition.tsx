@@ -49,9 +49,9 @@ export const FormDefinition = () => {
           <InputText {...register("symbol")} />
         </FormFieldLatex>
         {type !== "check" && type !== "constant" && (
-          <FormField name="unit" label="Unit" description="Display unit">
+          <FormFieldLatex name="unit" label="Unit" description="Display unit">
             <InputText {...register("unit")} />
-          </FormField>
+          </FormFieldLatex>
         )}
       </div>
     </Section>
