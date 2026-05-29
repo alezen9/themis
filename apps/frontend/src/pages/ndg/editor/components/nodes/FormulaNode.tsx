@@ -1,14 +1,16 @@
 import { Latex } from "@components/Latex";
 import type { EditorNodeProps } from "../../document/types";
+import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { NodeAddChildHandle, NodeBody, NodeCard, NodeHeader } from "./shared";
 import { Handle, Position } from "@xyflow/react";
 
 export const FormulaNode = (props: EditorNodeProps) => {
   const { data, type } = props;
+  const duplicate = useNdgEditorStore(state => state.isDuplicateKey(data.key));
   if (type !== "formula") return null;
 
   return (
-    <NodeCard>
+    <NodeCard duplicate={duplicate}>
       <Handle type="target" position={Position.Top} />
       <NodeHeader label={data.key} type="formula" />
       {data.expression && (

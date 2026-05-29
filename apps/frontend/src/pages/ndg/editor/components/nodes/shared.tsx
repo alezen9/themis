@@ -6,10 +6,10 @@ import { twMerge } from "tailwind-merge";
 import { useNdgEditorModalStore } from "../../modals/useNdgEditorModalStore";
 import { IconButton } from "@components/Button";
 
-type NodeCardProps = { children: ReactNode };
+type NodeCardProps = { children: ReactNode; duplicate?: boolean };
 
 export const NodeCard = (props: NodeCardProps) => {
-  const { children } = props;
+  const { children, duplicate } = props;
 
   return (
     <div
@@ -18,6 +18,7 @@ export const NodeCard = (props: NodeCardProps) => {
         "overflow-hidden rounded-sm border border-sand-300 bg-sand-50",
         "text-sand-900",
         "flex flex-col gap-1",
+        duplicate && "border-red-300 bg-red-50 text-red-900",
       )}
     >
       {children}

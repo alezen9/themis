@@ -1,13 +1,15 @@
 import { Handle, Position } from "@xyflow/react";
 import type { EditorNodeProps } from "../../document/types";
+import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { NodeAddChildHandle, NodeBody, NodeCard, NodeHeader } from "./shared";
 
 export const TableNode = (props: EditorNodeProps) => {
   const { type, data } = props;
+  const duplicate = useNdgEditorStore(state => state.isDuplicateKey(data.key));
   if (type !== "table") return null;
 
   return (
-    <NodeCard>
+    <NodeCard duplicate={duplicate}>
       <Handle type="target" position={Position.Top} />
       <NodeHeader label={data.key} type="table" />
       {data.source && (
