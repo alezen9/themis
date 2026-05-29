@@ -36,6 +36,22 @@ const edgeAtoB: EditorEdge = {
   target: "b",
 };
 
+const checkNode: EditorNode = {
+  id: "chk",
+  position: { x: 0, y: 0 },
+  type: "check",
+  data: {
+    key: "chk",
+    valueType: { type: "number" },
+    verificationExpression: "x \\leq 1",
+  },
+};
+
+const createDocument = (
+  nodes: EditorNode[],
+  edges: EditorEdge[] = [],
+): EditorDocument => ({ version: EDITOR_DOCUMENT_VERSION, nodes, edges });
+
 beforeEach(() => {
   useNdgEditorStore.setState({
     nodes: [nodeA, nodeB, nodeC],
@@ -46,8 +62,7 @@ beforeEach(() => {
       ["c", nodeC],
     ]),
     _edgeById: new Map(),
-    _adjacency: new Map(),
-    modal: undefined,
+    _adjacencyList: new Map(),
   });
 });
 
@@ -60,22 +75,22 @@ describe("onConnectNodes", () => {
       targetHandle: null,
     });
 
-    const { edges, _edgeById, _adjacency } = useNdgEditorStore.getState();
+    const { edges, _edgeById, _adjacencyList } = useNdgEditorStore.getState();
     expect(edges).toHaveLength(1);
     expect(edges[0].id).toBe("a__to__b");
     expect(_edgeById.has("a__to__b")).toBe(true);
-    expect(_adjacency.get("a")?.has("b")).toBe(true);
+    expect(_adjacencyList.get("a")?.has("b")).toBe(true);
   });
 
   it("ignores a duplicate connection", () => {
-    const conn = {
+    const connection = {
       source: "a",
       target: "b",
       sourceHandle: null,
       targetHandle: null,
     };
-    useNdgEditorStore.getState().onConnectNodes(conn);
-    useNdgEditorStore.getState().onConnectNodes(conn);
+    useNdgEditorStore.getState().onConnectNodes(connection);
+    useNdgEditorStore.getState().onConnectNodes(connection);
 
     expect(useNdgEditorStore.getState().edges).toHaveLength(1);
   });
@@ -91,19 +106,19 @@ describe("onConnectNodes", () => {
 });
 
 describe("onEdgesChange — remove", () => {
-  it("removes the edge from edges, _edgeById, and _adjacency", () => {
+  it("removes the edge from edges, _edgeById, and _adjacencyList", () => {
     useNdgEditorStore.setState({
       edges: [edgeAtoB],
       _edgeById: new Map([[edgeAtoB.id, edgeAtoB]]),
-      _adjacency: new Map([["a", new Set(["b"])]]),
+      _adjacencyList: new Map([["a", new Set(["b"])]]),
     });
 
     useNdgEditorStore.getState().onEdgesChange([{ type: "remove", id: edgeAtoB.id }]);
 
-    const { edges, _edgeById, _adjacency } = useNdgEditorStore.getState();
+    const { edges, _edgeById, _adjacencyList } = useNdgEditorStore.getState();
     expect(edges).toHaveLength(0);
     expect(_edgeById.has(edgeAtoB.id)).toBe(false);
-    expect(_adjacency.has("a")).toBe(false);
+    expect(_adjacencyList.has("a")).toBe(false);
   });
 });
 
@@ -116,12 +131,12 @@ describe("addNode", () => {
       sourceNodeId: "a",
     });
 
-    const { nodes, edges, _adjacency } = useNdgEditorStore.getState();
+    const { nodes, edges, _adjacencyList } = useNdgEditorStore.getState();
     expect(nodes).toHaveLength(4);
     expect(edges).toHaveLength(1);
     const newNode = nodes[3];
     expect(edges[0].id).toBe(createEdgeId("a", newNode.id));
-    expect(_adjacency.get("a")?.has(newNode.id)).toBe(true);
+    expect(_adjacencyList.get("a")?.has(newNode.id)).toBe(true);
   });
 
   it("adds only the node when no sourceNodeId is provided", () => {
@@ -137,23 +152,11 @@ describe("addNode", () => {
   });
 });
 
-const checkNode: EditorNode = {
-  id: "chk",
-  position: { x: 0, y: 0 },
-  type: "check",
-  data: { key: "chk", valueType: { type: "number" }, verificationExpression: "x \\leq 1" },
-};
-
-const docOf = (
-  nodes: EditorNode[],
-  edges: EditorEdge[] = [],
-): EditorDocument => ({ version: EDITOR_DOCUMENT_VERSION, nodes, edges });
-
 describe("importFull", () => {
   it("replaces the graph and rebuilds the lookup maps when it has one check", () => {
     const ok = useNdgEditorStore
       .getState()
-      .importFull(docOf([checkNode, nodeA], [edgeAtoB]));
+      .importFull(createDocument([checkNode, nodeA], [edgeAtoB]));
 
     const { nodes, edges, _nodeById, _edgeById } = useNdgEditorStore.getState();
     expect(ok).toBe(true);
@@ -165,7 +168,7 @@ describe("importFull", () => {
   });
 
   it("rejects and leaves the graph untouched when there is no check", () => {
-    const ok = useNdgEditorStore.getState().importFull(docOf([nodeA]));
+    const ok = useNdgEditorStore.getState().importFull(createDocument([nodeA]));
 
     expect(ok).toBe(false);
     expect(useNdgEditorStore.getState().nodes).toHaveLength(3);
@@ -174,13 +177,13 @@ describe("importFull", () => {
 
 describe("importPartial", () => {
   it("merges with fresh ids that do not collide with existing nodes", () => {
-    const imported = docOf(
+    const imported = createDocument(
       [nodeA, nodeB],
       [{ id: createEdgeId("a", "b"), source: "a", target: "b" }],
     );
     const ok = useNdgEditorStore.getState().importPartial(imported);
 
-    const { nodes, edges, _adjacency } = useNdgEditorStore.getState();
+    const { nodes, edges, _adjacencyList } = useNdgEditorStore.getState();
     expect(ok).toBe(true);
     expect(nodes).toHaveLength(5);
     expect(nodes.map(n => n.id).filter(id => id === "a")).toHaveLength(1);
@@ -188,13 +191,13 @@ describe("importPartial", () => {
 
     const newEdge = edges[edges.length - 1];
     expect(newEdge.source).not.toBe("a");
-    expect(_adjacency.get(newEdge.source)?.has(newEdge.target)).toBe(true);
+    expect(_adjacencyList.get(newEdge.source)?.has(newEdge.target)).toBe(true);
   });
 
   it("rejects and leaves the graph untouched when it carries a check", () => {
     const ok = useNdgEditorStore
       .getState()
-      .importPartial(docOf([checkNode, nodeA]));
+      .importPartial(createDocument([checkNode, nodeA]));
 
     expect(ok).toBe(false);
     expect(useNdgEditorStore.getState().nodes).toHaveLength(3);
@@ -239,7 +242,7 @@ describe("duplicate edge regression", () => {
     useNdgEditorStore.setState({
       edges: [edgeAtoB],
       _edgeById: new Map([[edgeAtoB.id, edgeAtoB]]),
-      _adjacency: new Map([["a", new Set(["b"])]]),
+      _adjacencyList: new Map([["a", new Set(["b"])]]),
     });
 
     useNdgEditorStore.getState().onEdgesChange([{ type: "remove", id: edgeAtoB.id }]);

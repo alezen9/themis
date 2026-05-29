@@ -14,13 +14,13 @@ export const doNodesExist = (
 ) => nodeById.has(source) && nodeById.has(target);
 
 export const areConnected = (
-  adjacency: Map<string, Set<string>>,
+  adjacencyList: Map<string, Set<string>>,
   source: string,
   target: string,
-) => adjacency.get(source)?.has(target) ?? false;
+) => adjacencyList.get(source)?.has(target) ?? false;
 
 export const wouldCreateCycle = (
-  adjacency: Map<string, Set<string>>,
+  adjacencyList: Map<string, Set<string>>,
   source: string,
   target: string,
 ) => {
@@ -32,7 +32,7 @@ export const wouldCreateCycle = (
     if (node === source) return true;
     if (visited.has(node)) continue;
     visited.add(node);
-    for (const child of adjacency.get(node) ?? []) stack.push(child);
+    for (const child of adjacencyList.get(node) ?? []) stack.push(child);
   }
 
   return false;
@@ -40,15 +40,15 @@ export const wouldCreateCycle = (
 
 export const canConnectNodes = (
   nodeById: Map<string, EditorNode>,
-  adjacency: Map<string, Set<string>>,
+  adjacencyList: Map<string, Set<string>>,
   connection: Connection,
 ) => {
   const { source, target } = connection;
   if (!source || !target) return false;
   if (isSelfConnection(source, target)) return false;
   if (!doNodesExist(nodeById, source, target)) return false;
-  if (areConnected(adjacency, source, target)) return false;
-  if (wouldCreateCycle(adjacency, source, target)) return false;
+  if (areConnected(adjacencyList, source, target)) return false;
+  if (wouldCreateCycle(adjacencyList, source, target)) return false;
   return true;
 };
 

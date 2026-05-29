@@ -1,11 +1,18 @@
-import { InputRadio } from "@components/inputs/InputRadio";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+
+import { InputRadio } from "@components/inputs/InputRadio";
 
 import { Section, SectionTitle } from "./shared";
 import { typeOptions } from "./options";
 
 export const FormType = () => {
-  const { register } = useFormContext();
+  const { register, watch, clearErrors } = useFormContext();
+  const type = watch("type");
+
+  useEffect(() => {
+    clearErrors();
+  }, [type, clearErrors]);
 
   return (
     <Section>

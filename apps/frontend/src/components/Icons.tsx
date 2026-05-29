@@ -372,3 +372,53 @@ export const IconExportPartial = (props: ComponentPropsWithoutRef<"svg">) => {
     </svg>
   );
 };
+
+export const IconClose = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      {...props}
+    >
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+};
+
+export const IconCheck = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M5 12.5l4.5 4.5L19 7" />
+    </svg>
+  );
+};
+
+export const IconWarning = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+    </svg>
+  );
+};

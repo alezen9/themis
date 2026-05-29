@@ -32,24 +32,24 @@ const nodeById = new Map([
 
 describe("wouldCreateCycle", () => {
   it("detects a direct cycle: A→B, adding B→A", () => {
-    const adjacency = new Map([["a", new Set(["b"])]]);
-    expect(wouldCreateCycle(adjacency, "b", "a")).toBe(true);
+    const adjacencyList = new Map([["a", new Set(["b"])]]);
+    expect(wouldCreateCycle(adjacencyList, "b", "a")).toBe(true);
   });
 
   it("detects an indirect cycle in a chain: A→B→C, adding C→A", () => {
-    const adjacency = new Map([
+    const adjacencyList = new Map([
       ["a", new Set(["b"])],
       ["b", new Set(["c"])],
     ]);
-    expect(wouldCreateCycle(adjacency, "c", "a")).toBe(true);
+    expect(wouldCreateCycle(adjacencyList, "c", "a")).toBe(true);
   });
 
   it("returns false when no path from target back to source: A→B→C, adding A→C", () => {
-    const adjacency = new Map([
+    const adjacencyList = new Map([
       ["a", new Set(["b"])],
       ["b", new Set(["c"])],
     ]);
-    expect(wouldCreateCycle(adjacency, "a", "c")).toBe(false);
+    expect(wouldCreateCycle(adjacencyList, "a", "c")).toBe(false);
   });
 
   it("returns false on an empty graph", () => {
@@ -92,9 +92,9 @@ describe("canConnectNodes", () => {
   });
 
   it("rejects a duplicate edge", () => {
-    const adjacency = new Map([["a", new Set(["b"])]]);
+    const adjacencyList = new Map([["a", new Set(["b"])]]);
     expect(
-      canConnectNodes(nodeById, adjacency, {
+      canConnectNodes(nodeById, adjacencyList, {
         source: "a",
         target: "b",
         sourceHandle: null,
@@ -104,12 +104,12 @@ describe("canConnectNodes", () => {
   });
 
   it("rejects a connection that would close a cycle: A→B→C, adding C→A", () => {
-    const adjacency = new Map([
+    const adjacencyList = new Map([
       ["a", new Set(["b"])],
       ["b", new Set(["c"])],
     ]);
     expect(
-      canConnectNodes(nodeById, adjacency, {
+      canConnectNodes(nodeById, adjacencyList, {
         source: "c",
         target: "a",
         sourceHandle: null,

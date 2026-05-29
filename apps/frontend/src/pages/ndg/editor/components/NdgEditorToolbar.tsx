@@ -1,11 +1,5 @@
-import {
-  useRef,
-  type ChangeEvent,
-  type ComponentProps,
-  type ReactNode,
-} from "react";
+import { useRef, type ChangeEvent, type ComponentProps } from "react";
 import { twMerge } from "tailwind-merge";
-import { z } from "zod";
 
 import { IconButton } from "@components/Button";
 import {
@@ -17,13 +11,12 @@ import {
   IconImport,
   IconImportPartial,
 } from "@components/Icons";
+import { toast } from "@components/toast/store";
+import { ToastError, ToastSuccess } from "@components/toast/presets";
 import { downloadAs } from "@utils";
 
 import { useNdgEditorStore } from "../controller/useNdgEditorStore";
-import {
-  EDITOR_DOCUMENT_VERSION,
-  type EditorDocument,
-} from "../document/types";
+import { parseDocumentFile } from "../document/import";
 import { useNdgEditorModalStore } from "../modals/useNdgEditorModalStore";
 
 export const NdgEditorToolbar = () => {
@@ -59,16 +52,12 @@ const EditButton = () => {
   const openModal = useNdgEditorModalStore(s => s.openModal);
   const disabled = selectedNodes.length !== 1 || selectedEdges.length > 0;
 
-  const handleClick = () => {
+  const onClick = () => {
     openModal({ mode: "edit-node", nodeId: selectedNodes[0].id });
   };
 
   return (
-    <ToolbarIconButton
-      title="Edit node"
-      disabled={disabled}
-      onClick={handleClick}
-    >
+    <ToolbarIconButton title="Edit node" disabled={disabled} onClick={onClick}>
       <IconPencil />
     </ToolbarIconButton>
   );
@@ -93,85 +82,94 @@ const EditDelete = () => {
   );
 };
 
-const importSchema = z.object({
-  version: z.literal(EDITOR_DOCUMENT_VERSION),
-  nodes: z.array(
-    z.object({
-      id: z.string(),
-      position: z.object({ x: z.number(), y: z.number() }),
-      type: z.string(),
-      data: z.record(z.string(), z.unknown()),
-    }),
-  ),
-  edges: z.array(
-    z.object({ id: z.string(), source: z.string(), target: z.string() }),
-  ),
-});
+const notifyInvalidFile = () =>
+  toast(
+    <ToastError title="Invalid file">
+      Could not read a valid NDG document.
+    </ToastError>,
+  );
 
-const parseDocument = async (file: File): Promise<EditorDocument | null> => {
-  try {
-    const result = importSchema.safeParse(JSON.parse(await file.text()));
-    if (result.success) return result.data as EditorDocument;
-    console.error("Invalid NDG document", result.error);
-  } catch {
-    console.error("Failed to parse file");
-  }
-  return null;
-};
+const EditImportFull = () => {
+  const importFull = useNdgEditorStore(s => s.importFull);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-const FileImportButton = (props: {
-  title: string;
-  icon: ReactNode;
-  onDocument: (doc: EditorDocument) => void;
-}) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const onSuccess = () => toast(<ToastSuccess title="Graph replaced" />);
+  const onRejected = () =>
+    toast(
+      <ToastError title="Import rejected">
+        A full import must contain exactly one check node.
+      </ToastError>,
+    );
 
-  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = "";
+  const onChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
     if (!file) return;
-    const doc = await parseDocument(file);
-    if (doc) props.onDocument(doc);
+
+    const document = await parseDocumentFile(file);
+    if (!document) return notifyInvalidFile();
+    if (importFull(document)) onSuccess();
+    else onRejected();
   };
 
   return (
     <>
       <ToolbarIconButton
-        title={props.title}
-        onClick={() => fileInputRef.current?.click()}
+        title="Import (replace graph)"
+        onClick={() => inputRef.current?.click()}
       >
-        {props.icon}
+        <IconImport />
       </ToolbarIconButton>
       <input
-        ref={fileInputRef}
+        ref={inputRef}
         type="file"
         accept=".json"
         className="hidden"
-        onChange={handleChange}
+        onChange={onChange}
       />
     </>
   );
 };
 
-const EditImportFull = () => {
-  const importFull = useNdgEditorStore(s => s.importFull);
-  return (
-    <FileImportButton
-      title="Import (replace graph)"
-      icon={<IconImport />}
-      onDocument={importFull}
-    />
-  );
-};
-
 const EditImportPartial = () => {
   const importPartial = useNdgEditorStore(s => s.importPartial);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const onSuccess = () => toast(<ToastSuccess title="Nodes imported" />);
+  const onRejected = () =>
+    toast(
+      <ToastError title="Import rejected">
+        A partial import cannot contain a check node.
+      </ToastError>,
+    );
+
+  const onChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    const document = await parseDocumentFile(file);
+    if (!document) return notifyInvalidFile();
+    if (importPartial(document)) onSuccess();
+    else onRejected();
+  };
+
   return (
-    <FileImportButton
-      title="Import into graph"
-      icon={<IconImportPartial />}
-      onDocument={importPartial}
-    />
+    <>
+      <ToolbarIconButton
+        title="Import into graph"
+        onClick={() => inputRef.current?.click()}
+      >
+        <IconImportPartial />
+      </ToolbarIconButton>
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".json"
+        className="hidden"
+        onChange={onChange}
+      />
+    </>
   );
 };
 
@@ -180,7 +178,7 @@ const EditExportPartial = () => {
   const exportSelected = useNdgEditorStore(s => s.exportSelected);
   const disabled = selectedNodes.length === 0;
 
-  const handleClick = () => {
+  const onClick = () => {
     const date = new Date().toISOString().slice(0, 10);
     const blob = new Blob([JSON.stringify(exportSelected(), null, 2)], {
       type: "application/json",
@@ -192,7 +190,7 @@ const EditExportPartial = () => {
     <ToolbarIconButton
       title="Export selection"
       disabled={disabled}
-      onClick={handleClick}
+      onClick={onClick}
     >
       <IconExportPartial />
     </ToolbarIconButton>
@@ -202,7 +200,7 @@ const EditExportPartial = () => {
 const EditExportFull = () => {
   const exportDocument = useNdgEditorStore(s => s.exportDocument);
 
-  const handleClick = () => {
+  const onClick = () => {
     const date = new Date().toISOString().slice(0, 10);
     const blob = new Blob([JSON.stringify(exportDocument(), null, 2)], {
       type: "application/json",
@@ -211,18 +209,21 @@ const EditExportFull = () => {
   };
 
   return (
-    <ToolbarIconButton title="Export full graph" onClick={handleClick}>
+    <ToolbarIconButton title="Export full graph" onClick={onClick}>
       <IconExport />
     </ToolbarIconButton>
   );
 };
 
-const ToolbarIconButton = (props: ComponentProps<typeof IconButton>) => (
-  <IconButton
-    {...props}
-    className={twMerge(
-      "rounded-sm p-2 grid place-items-center [&>svg]:size-5",
-      props.className,
-    )}
-  />
-);
+const ToolbarIconButton = (props: ComponentProps<typeof IconButton>) => {
+  const { className, ...rest } = props;
+  return (
+    <IconButton
+      {...rest}
+      className={twMerge(
+        "rounded-sm p-2 grid place-items-center [&>svg]:size-5",
+        className,
+      )}
+    />
+  );
+};

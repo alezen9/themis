@@ -18,7 +18,7 @@ import { FormIdentity } from "./FormIdentity";
 import { FormMetadata } from "./FormMetadata";
 import { FormType } from "./FormType";
 
-export const CreateNodeModal = () => {
+export const AddNodeModal = () => {
   const modal = useNdgEditorModalStore(s => s.modal);
   const closeModal = useNdgEditorModalStore(s => s.closeModal);
   const addNode = useNdgEditorStore(s => s.addNode);
@@ -26,19 +26,14 @@ export const CreateNodeModal = () => {
 
   const form = useForm<NodeFormValues>({
     resolver: zodResolver(nodeFormSchema),
+    mode: "onChange",
     defaultValues: { type: "user-input", valueType: { type: "number" } },
   });
-
-  const type = form.watch("type");
 
   useEffect(() => {
     if (!open) return;
     form.reset({ type: "user-input", valueType: { type: "number" } });
   }, [open, form]);
-
-  useEffect(() => {
-    form.clearErrors();
-  }, [type, form]);
 
   const handleSubmit = form.handleSubmit(values => {
     addNode({
@@ -55,12 +50,12 @@ export const CreateNodeModal = () => {
       header={
         <DialogHeader className="flex items-center justify-between">
           <DialogTitle>Add node</DialogTitle>
-          <Button type="submit" form="create-node-form">Save</Button>
+          <Button type="submit" form="add-node-form">Save</Button>
         </DialogHeader>
       }
     >
       <DialogContent className="gap-8">
-        <form id="create-node-form" onSubmit={handleSubmit}>
+        <form id="add-node-form" onSubmit={handleSubmit}>
           <FormProvider {...form}>
             <FormType />
             <FormIdentity />

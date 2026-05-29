@@ -1,27 +1,30 @@
 import { createEdgeId, createNodeId } from "./ids";
+import { editorDocumentSchema } from "./schema";
 import type { EditorDocument } from "./types";
 
-const checkNodeCount = (doc: EditorDocument) =>
-  doc.nodes.filter(n => n.type === "check").length;
+export const parseDocumentFile = async (
+  file: File,
+): Promise<EditorDocument | null> => {
+  try {
+    const result = editorDocumentSchema.safeParse(JSON.parse(await file.text()));
+    return result.success ? (result.data as EditorDocument) : null;
+  } catch {
+    return null;
+  }
+};
 
-export const isValidFullImport = (doc: EditorDocument) =>
-  checkNodeCount(doc) === 1;
-
-export const isValidPartialImport = (doc: EditorDocument) =>
-  checkNodeCount(doc) === 0;
-
-export const remapDocumentIds = (doc: EditorDocument): EditorDocument => {
+export const remapDocumentIds = (document: EditorDocument): EditorDocument => {
   const idMap = new Map<string, string>();
-  const nodes = doc.nodes.map(node => {
+  const nodes = document.nodes.map(node => {
     const id = createNodeId();
     idMap.set(node.id, id);
     return { ...node, id };
   });
-  const edges = doc.edges.flatMap(edge => {
+  const edges = document.edges.flatMap(edge => {
     const source = idMap.get(edge.source);
     const target = idMap.get(edge.target);
     if (!source || !target) return [];
     return [{ ...edge, id: createEdgeId(source, target), source, target }];
   });
-  return { ...doc, nodes, edges };
+  return { ...document, nodes, edges };
 };

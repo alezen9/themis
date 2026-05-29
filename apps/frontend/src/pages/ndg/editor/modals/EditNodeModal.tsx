@@ -22,24 +22,20 @@ export const EditNodeModal = () => {
   const modal = useNdgEditorModalStore(s => s.modal);
   const closeModal = useNdgEditorModalStore(s => s.closeModal);
   const updateNode = useNdgEditorStore(s => s.updateNode);
+  const getNodeById = useNdgEditorStore(s => s.getNodeById);
   const open = modal?.mode === "edit-node";
 
   const form = useForm<NodeFormValues>({
     resolver: zodResolver(nodeFormSchema),
+    mode: "onChange",
   });
-
-  const type = form.watch("type");
 
   useEffect(() => {
     if (!open || modal?.mode !== "edit-node") return;
-    const node = useNdgEditorStore.getState()._nodeById.get(modal.nodeId);
+    const node = getNodeById(modal.nodeId);
     if (!node) return;
     form.reset({ type: node.type, ...node.data } as NodeFormValues);
-  }, [open, modal, form]);
-
-  useEffect(() => {
-    form.clearErrors();
-  }, [type, form]);
+  }, [open, modal, form, getNodeById]);
 
   const handleSubmit = form.handleSubmit(values => {
     if (modal?.mode !== "edit-node") return;
@@ -47,8 +43,9 @@ export const EditNodeModal = () => {
     closeModal();
   });
 
-  const isCheckNode = modal?.mode === "edit-node"
-    && useNdgEditorStore.getState()._nodeById.get(modal.nodeId)?.type === "check";
+  const isCheckNode =
+    modal?.mode === "edit-node" &&
+    getNodeById(modal.nodeId)?.type === "check";
 
   return (
     <Dialog
