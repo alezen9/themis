@@ -41,6 +41,20 @@ svg.pluton-root[data-drawing-error] {
   outline: 2px solid var(--color-sand-700);
 }
 
+.ndg-editor-flow .react-flow__edge-path {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ndg-editor-flow .react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--color-sand-800);
+  stroke-width: 2;
+}
+
+.ndg-editor-flow .react-flow__edgelabel-renderer {
+  z-index: 1001;
+}
+
 .ndg-editor-flow .react-flow__node.draggable.dragging,
 .ndg-editor-flow .react-flow__pane.dragging {
   cursor: grabbing;

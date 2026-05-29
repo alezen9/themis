@@ -446,3 +446,20 @@ export const IconQuestionMark = (props: ComponentPropsWithoutRef<"svg">) => {
     </svg>
   );
 };
+
+export const IconBranch = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      viewBox="0 0 15 15"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M2.5 4.5c-1.10457 0-2-.89543-2-2s.89543-2 2-2 2 .89543 2 2-.89543 2-2 2Zm0 0v6m2 2c0 1.1046-.89543 2-2 2s-2-.8954-2-2 .89543-2 2-2m2 2c0-1.1046-.89543-2-2-2m2 2h5c1.6569 0 3-1.3431 3-3v-2m0 0c-1.1046 0-2-.89543-2-2s.8954-2 2-2 2 .89543 2 2-.8954 2-2 2Z" />
+    </svg>
+  );
+};

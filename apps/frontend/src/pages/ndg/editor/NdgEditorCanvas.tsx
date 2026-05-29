@@ -50,6 +50,7 @@ export const NdgEditorCanvas = () => {
       }}
       edgeTypes={edgeTypes}
       nodeTypes={nodeTypes}
+      elevateEdgesOnSelect
       maxZoom={8}
       minZoom={0.05}
       onConnect={onConnectNodes}
