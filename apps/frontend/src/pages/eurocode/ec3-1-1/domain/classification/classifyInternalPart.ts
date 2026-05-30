@@ -74,7 +74,8 @@ const classifyTension = (part: Part): [SectionClass, Part] => {
 
 const classifyCompression = (part: Part): [SectionClass, Part] => {
   const { cOverT, epsilon } = part.metadata;
-  if (cOverT === undefined || epsilon === undefined) throw new Error();
+  if (cOverT === undefined || epsilon === undefined)
+    throw new Error("Missing cOverT or epsilon in part metadata");
 
   part.trace.push({
     label: "Class 1",
@@ -111,7 +112,8 @@ const classifyCompression = (part: Part): [SectionClass, Part] => {
 
 const classifyBending = (part: Part): [SectionClass, Part] => {
   const { cOverT, epsilon } = part.metadata;
-  if (cOverT === undefined || epsilon === undefined) throw new Error();
+  if (cOverT === undefined || epsilon === undefined)
+    throw new Error("Missing cOverT or epsilon in part metadata");
 
   part.trace.push({
     label: "Class 1",
@@ -162,7 +164,9 @@ const classifyCompressionBending = (
     sigma_a_MPa === undefined ||
     sigma_b_MPa === undefined
   )
-    throw new Error();
+    throw new Error(
+      "Missing required metadata for compression-bending classification",
+    );
 
   if (alpha > 0.5) {
     part.trace.push({

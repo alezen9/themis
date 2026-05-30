@@ -1,154 +1,57 @@
 import { defineEvaluators } from "@ndg/ndg-core";
 import { Ec3VerificationError } from "../../errors";
+import {
+  assertFinite,
+  assertNonNegative,
+  assertPositive,
+} from "../../assertions";
 import { nodes } from "./bendingYAxial-nodes";
 
 export const evaluate = defineEvaluators(nodes, {
   M_pl_y_Rd_Nmm: ({ Wpl_y_mm3, fy_MPa, gamma_M0 }) => {
-    if (!Number.isFinite(Wpl_y_mm3) || Wpl_y_mm3 <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: Wpl_y_mm3 must be > 0",
-        details: { Wpl_y_mm3, sectionRef: "6.2.5" },
-      });
-    }
-
-    if (!Number.isFinite(fy_MPa) || fy_MPa <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: fy_MPa must be > 0",
-        details: { fy_MPa, sectionRef: "6.2.5" },
-      });
-    }
-
-    if (!Number.isFinite(gamma_M0) || gamma_M0 <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: gamma_M0 must be > 0",
-        details: { gamma_M0, sectionRef: "6.1" },
-      });
-    }
+    assertPositive(Wpl_y_mm3, "bending-y-axial: Wpl_y_mm3 must be > 0");
+    assertPositive(fy_MPa, "bending-y-axial: fy_MPa must be > 0");
+    assertPositive(gamma_M0, "bending-y-axial: gamma_M0 must be > 0");
 
     return (Wpl_y_mm3 * fy_MPa) / gamma_M0;
   },
 
   N_pl_Rd_N: ({ A_mm2, fy_MPa, gamma_M0 }) => {
-    if (!Number.isFinite(A_mm2) || A_mm2 <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: A_mm2 must be > 0",
-        details: { A_mm2, sectionRef: "6.2.4" },
-      });
-    }
-
-    if (!Number.isFinite(fy_MPa) || fy_MPa <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: fy_MPa must be > 0",
-        details: { fy_MPa, sectionRef: "6.2.4" },
-      });
-    }
-
-    if (!Number.isFinite(gamma_M0) || gamma_M0 <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: gamma_M0 must be > 0",
-        details: { gamma_M0, sectionRef: "6.1" },
-      });
-    }
+    assertPositive(A_mm2, "bending-y-axial: A_mm2 must be > 0");
+    assertPositive(fy_MPa, "bending-y-axial: fy_MPa must be > 0");
+    assertPositive(gamma_M0, "bending-y-axial: gamma_M0 must be > 0");
 
     return (A_mm2 * fy_MPa) / gamma_M0;
   },
 
   n: ({ N_Ed_N, N_pl_Rd_N }) => {
-    if (!Number.isFinite(N_Ed_N)) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: N_Ed_N must be finite",
-        details: { N_Ed_N, sectionRef: "6.2.9.1" },
-      });
-    }
-    if (!Number.isFinite(N_pl_Rd_N) || N_pl_Rd_N <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message:
-          "bending-y-axial: denominator N_pl_Rd_N must be > 0 (division by zero)",
-        details: { N_pl_Rd_N, sectionRef: "6.2.9.1" },
-      });
-    }
+    assertFinite(N_Ed_N, "bending-y-axial: N_Ed_N must be finite");
+    assertPositive(
+      N_pl_Rd_N,
+      "bending-y-axial: denominator N_pl_Rd_N must be > 0 (division by zero)",
+    );
 
     return Math.abs(N_Ed_N) / N_pl_Rd_N;
   },
 
   a_w_i: ({ A_mm2, b_mm, tf_mm }) => {
-    if (!Number.isFinite(A_mm2) || A_mm2 <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: A_mm2 must be > 0",
-        details: { A_mm2, sectionRef: "6.2.9.1" },
-      });
-    }
-
-    if (!Number.isFinite(b_mm) || b_mm <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: b_mm must be > 0",
-        details: { b_mm, sectionRef: "6.2.9.1" },
-      });
-    }
-
-    if (!Number.isFinite(tf_mm) || tf_mm <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: tf_mm must be > 0",
-        details: { tf_mm, sectionRef: "6.2.9.1" },
-      });
-    }
+    assertPositive(A_mm2, "bending-y-axial: A_mm2 must be > 0");
+    assertPositive(b_mm, "bending-y-axial: b_mm must be > 0");
+    assertPositive(tf_mm, "bending-y-axial: tf_mm must be > 0");
 
     const areaRatio = (A_mm2 - 2 * b_mm * tf_mm) / A_mm2;
-    if (!Number.isFinite(areaRatio) || areaRatio < 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: a_w_i must be >= 0",
-        details: { areaRatio, sectionRef: "6.2.9.1" },
-      });
-    }
+    assertNonNegative(areaRatio, "bending-y-axial: a_w_i must be >= 0");
 
     return Math.min(areaRatio, 0.5);
   },
 
   a_w_rhs: ({ A_mm2, b_mm, t_mm }) => {
-    if (!Number.isFinite(A_mm2) || A_mm2 <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: A_mm2 must be > 0",
-        details: { A_mm2, sectionRef: "6.2.9.1" },
-      });
-    }
-
-    if (!Number.isFinite(b_mm) || b_mm <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: b_mm must be > 0",
-        details: { b_mm, sectionRef: "6.2.9.1" },
-      });
-    }
-
-    if (!Number.isFinite(t_mm) || t_mm <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: t_mm must be > 0",
-        details: { t_mm, sectionRef: "6.2.9.1" },
-      });
-    }
+    assertPositive(A_mm2, "bending-y-axial: A_mm2 must be > 0");
+    assertPositive(b_mm, "bending-y-axial: b_mm must be > 0");
+    assertPositive(t_mm, "bending-y-axial: t_mm must be > 0");
 
     const areaRatio = (A_mm2 - 2 * b_mm * t_mm) / A_mm2;
-    if (!Number.isFinite(areaRatio) || areaRatio < 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: a_w_rhs must be >= 0",
-        details: { areaRatio, sectionRef: "6.2.9.1" },
-      });
-    }
+    assertNonNegative(areaRatio, "bending-y-axial: a_w_rhs must be >= 0");
 
     return Math.min(areaRatio, 0.5);
   },
@@ -160,119 +63,57 @@ export const evaluate = defineEvaluators(nodes, {
     if (n <= a_w_half) return 1;
 
     const denominator = 1 - a_w_half;
-    if (!Number.isFinite(denominator) || denominator <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message:
-          "bending-y-axial: denominator (1 - 0.5*a_w) must be > 0 (division by zero)",
-        details: { denominator, sectionRef: "6.2.9.1" },
-      });
-    }
+    assertPositive(
+      denominator,
+      "bending-y-axial: denominator (1 - 0.5*a_w) must be > 0 (division by zero)",
+    );
 
     return 1 - ((n - a_w_half) / denominator) ** 2;
   },
 
   k_y_rhs_chs: ({ n, a_w }) => {
     const denominator = 1 - 0.5 * a_w;
-    if (!Number.isFinite(denominator) || denominator <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message:
-          "bending-y-axial: denominator (1 - 0.5*a_w) must be > 0 (division by zero)",
-        details: { denominator, sectionRef: "6.2.9.1" },
-      });
-    }
+    assertPositive(
+      denominator,
+      "bending-y-axial: denominator (1 - 0.5*a_w) must be > 0 (division by zero)",
+    );
 
     return Math.min(1, (1 - n) / denominator);
   },
 
   M_N_y_Rd_Nmm: ({ M_pl_y_Rd_Nmm, k_y }) => {
-    if (!Number.isFinite(M_pl_y_Rd_Nmm) || M_pl_y_Rd_Nmm <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: M_pl_y_Rd_Nmm must be > 0",
-        details: { M_pl_y_Rd_Nmm, sectionRef: "6.2.9.1" },
-      });
-    }
-
-    if (!Number.isFinite(k_y)) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: k_y must be finite",
-        details: { k_y, sectionRef: "6.2.9.1" },
-      });
-    }
+    assertPositive(M_pl_y_Rd_Nmm, "bending-y-axial: M_pl_y_Rd_Nmm must be > 0");
+    assertFinite(k_y, "bending-y-axial: k_y must be finite");
 
     const reducedResistance = M_pl_y_Rd_Nmm * k_y;
-    if (!Number.isFinite(reducedResistance) || reducedResistance <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message:
-          "bending-y-axial: denominator M_N_y_Rd_Nmm must be > 0 (division by zero)",
-        details: { reducedResistance, sectionRef: "6.2.9.1" },
-      });
-    }
+    assertPositive(
+      reducedResistance,
+      "bending-y-axial: denominator M_N_y_Rd_Nmm must be > 0 (division by zero)",
+    );
 
     return reducedResistance;
   },
 
   utilization_class12: ({ M_y_Ed_Nmm, M_N_y_Rd_Nmm }) => {
-    if (!Number.isFinite(M_y_Ed_Nmm)) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: M_y_Ed_Nmm must be finite",
-        details: { M_y_Ed_Nmm, sectionRef: "6.2.9.1" },
-      });
-    }
-
-    if (!Number.isFinite(M_N_y_Rd_Nmm) || M_N_y_Rd_Nmm <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message:
-          "bending-y-axial: denominator M_N_y_Rd_Nmm must be > 0 (division by zero)",
-        details: { M_N_y_Rd_Nmm, sectionRef: "6.2.9.1" },
-      });
-    }
+    assertFinite(M_y_Ed_Nmm, "bending-y-axial: M_y_Ed_Nmm must be finite");
+    assertPositive(
+      M_N_y_Rd_Nmm,
+      "bending-y-axial: denominator M_N_y_Rd_Nmm must be > 0 (division by zero)",
+    );
 
     return Math.abs(M_y_Ed_Nmm) / M_N_y_Rd_Nmm;
   },
 
   sigma_N_MPa: ({ N_Ed_N, A_mm2 }) => {
-    if (!Number.isFinite(N_Ed_N)) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: N_Ed_N must be finite",
-        details: { N_Ed_N, sectionRef: "6.2.9.2" },
-      });
-    }
-
-    if (!Number.isFinite(A_mm2) || A_mm2 <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: A_mm2 must be > 0",
-        details: { A_mm2, sectionRef: "6.2.9.2" },
-      });
-    }
+    assertFinite(N_Ed_N, "bending-y-axial: N_Ed_N must be finite");
+    assertPositive(A_mm2, "bending-y-axial: A_mm2 must be > 0");
 
     return Math.abs(N_Ed_N) / A_mm2;
   },
 
   sigma_M_y_MPa: ({ M_y_Ed_Nmm, Wel_y_mm3 }) => {
-    if (!Number.isFinite(M_y_Ed_Nmm)) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: M_y_Ed_Nmm must be finite",
-        details: { M_y_Ed_Nmm, sectionRef: "6.2.9.2" },
-      });
-    }
-
-    if (!Number.isFinite(Wel_y_mm3) || Wel_y_mm3 <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: Wel_y_mm3 must be > 0",
-        details: { Wel_y_mm3, sectionRef: "6.2.9.2" },
-      });
-    }
+    assertFinite(M_y_Ed_Nmm, "bending-y-axial: M_y_Ed_Nmm must be finite");
+    assertPositive(Wel_y_mm3, "bending-y-axial: Wel_y_mm3 must be > 0");
 
     return Math.abs(M_y_Ed_Nmm) / Wel_y_mm3;
   },
@@ -282,34 +123,17 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   sigma_limit_MPa: ({ fy_MPa, gamma_M0 }) => {
-    if (!Number.isFinite(fy_MPa) || fy_MPa <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: fy_MPa must be > 0",
-        details: { fy_MPa, sectionRef: "6.2.9.2" },
-      });
-    }
-
-    if (!Number.isFinite(gamma_M0) || gamma_M0 <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message: "bending-y-axial: gamma_M0 must be > 0",
-        details: { gamma_M0, sectionRef: "6.1" },
-      });
-    }
+    assertPositive(fy_MPa, "bending-y-axial: fy_MPa must be > 0");
+    assertPositive(gamma_M0, "bending-y-axial: gamma_M0 must be > 0");
 
     return fy_MPa / gamma_M0;
   },
 
   utilization_class3: ({ sigma_x_class3_MPa, sigma_limit_MPa }) => {
-    if (!Number.isFinite(sigma_limit_MPa) || sigma_limit_MPa <= 0) {
-      throw new Ec3VerificationError({
-        type: "invalid-input-domain",
-        message:
-          "bending-y-axial: denominator sigma_limit_MPa must be > 0 (division by zero)",
-        details: { sigma_limit_MPa, sectionRef: "6.2.9.2" },
-      });
-    }
+    assertPositive(
+      sigma_limit_MPa,
+      "bending-y-axial: denominator sigma_limit_MPa must be > 0 (division by zero)",
+    );
 
     return sigma_x_class3_MPa / sigma_limit_MPa;
   },
