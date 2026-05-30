@@ -43,9 +43,12 @@ const createAdjacencyList = (edges: EditorEdge[]) => {
   return map;
 };
 
+const indexById = <T extends { id: string }>(items: T[]) =>
+  new Map(items.map(item => [item.id, item]));
+
 const derive = (nodes: EditorNode[], edges: EditorEdge[]) => ({
-  _nodeById: new Map(nodes.map(node => [node.id, node])),
-  _edgeById: new Map(edges.map(edge => [edge.id, edge])),
+  _nodeById: indexById(nodes),
+  _edgeById: indexById(edges),
   _adjacencyList: createAdjacencyList(edges),
   _keyCounts: createKeyCounts(nodes),
   _invalidNodeIds: findInvalidNodeIds(nodes),
@@ -170,18 +173,12 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   onNodesChange: changes =>
     set(state => {
       const nodes = applyNodeChanges(changes, state.nodes);
-      const hasRemoval = changes.some(change => change.type === "remove");
-      if (!hasRemoval) return { nodes };
       return { nodes, ...derive(nodes, state.edges) };
     }),
 
   onEdgesChange: changes =>
     set(state => {
       const edges = applyEdgeChanges(changes, state.edges);
-      const hasStructural = changes.some(
-        c => c.type === "add" || c.type === "remove",
-      );
-      if (!hasStructural) return { edges };
       return { edges, ...derive(state.nodes, edges) };
     }),
 

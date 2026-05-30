@@ -252,6 +252,28 @@ describe("importPartial", () => {
   });
 });
 
+describe("updateNode", () => {
+  it("keeps the latest dragged position when editing", () => {
+    useNdgEditorStore
+      .getState()
+      .onNodesChange([
+        { type: "position", id: "a", position: { x: 120, y: 80 } },
+      ]);
+
+    useNdgEditorStore
+      .getState()
+      .updateNode({
+        id: "a",
+        type: "user-input",
+        key: "a",
+        valueType: { type: "number" },
+      });
+
+    const node = useNdgEditorStore.getState().nodes.find(n => n.id === "a");
+    expect(node?.position).toEqual({ x: 120, y: 80 });
+  });
+});
+
 describe("setEdgeCondition", () => {
   it("sets and clears the condition on an edge", () => {
     useNdgEditorStore.setState({

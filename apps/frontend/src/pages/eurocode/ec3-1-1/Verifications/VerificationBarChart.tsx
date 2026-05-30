@@ -98,11 +98,9 @@ export const VerificationBarChart = () => {
         "gap-x-0.5 gap-y-0.5 pt-10",
         "[&:has(.verification-hover-trigger:hover)_.verification-row:not(:has(.verification-hover-trigger:hover))_.verification-hover-surface]:opacity-25",
       )}
-      style={
-        {
-          gridTemplateRows: `repeat(${verifications.length}, calc(var(--spacing) * 5))`,
-        } as CSSProperties
-      }
+      style={{
+        gridTemplateRows: `repeat(${verifications.length}, calc(var(--spacing) * 5))`,
+      }}
     >
       <div
         className="pointer-events-none absolute inset-0"
@@ -259,7 +257,7 @@ const VerificationBar = (props: VerificationThresholdItemProps) => {
   return (
     <div className="relative h-5">
       {ratio !== null && (
-        <div className="absolute inset-0 overflow-x-hidden overflow-y-visible">
+        <div className="absolute inset-0 overflow-hidden">
           <div
             className={twMerge(
               "verification-hover-surface verification-hover-trigger",
