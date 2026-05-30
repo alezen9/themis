@@ -369,30 +369,13 @@ describe("duplicate keys", () => {
   });
 });
 
-describe("validateGraph", () => {
+describe("live validation", () => {
   const invalidNode: EditorNode = {
     id: "bad",
     position: { x: 0, y: 0 },
     type: "user-input",
     data: { key: "", valueType: { type: "number" } },
   };
-
-  it("flags nodes that miss their expected shape and returns the count", () => {
-    useNdgEditorStore.setState({
-      nodes: [nodeA, invalidNode],
-      _nodeById: new Map([
-        ["a", nodeA],
-        ["bad", invalidNode],
-      ]),
-    });
-
-    const invalidCount = useNdgEditorStore.getState().validateGraph();
-
-    const store = useNdgEditorStore.getState();
-    expect(invalidCount).toBe(1);
-    expect(store.isInvalidNode("bad")).toBe(true);
-    expect(store.isInvalidNode("a")).toBe(false);
-  });
 
   it("clears a node's invalid flag when it is edited", () => {
     useNdgEditorStore.setState({ _invalidNodeIds: new Set(["a"]) });

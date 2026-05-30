@@ -76,7 +76,6 @@ type NdgEditorStore = {
   isInvalidNode: (id: string) => boolean;
   isUnreachableNode: (id: string) => boolean;
   isInvalidEdge: (id: string) => boolean;
-  validateGraph: () => number;
 
   addNode: (input: AddNodeInput) => void;
   updateNode: (input: UpdateNodeInput) => void;
@@ -109,16 +108,6 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   isInvalidNode: id => get()._invalidNodeIds.has(id),
   isUnreachableNode: id => get()._unreachableNodeIds.has(id),
   isInvalidEdge: id => get()._invalidEdgeIds.has(id),
-  validateGraph: () => {
-    const { nodes, edges } = get();
-    const derived = derive(nodes, edges);
-    set(derived);
-    const flaggedNodeIds = new Set([
-      ...derived._invalidNodeIds,
-      ...derived._unreachableNodeIds,
-    ]);
-    return flaggedNodeIds.size + derived._invalidEdgeIds.size;
-  },
 
   addNode: input =>
     set(state => {

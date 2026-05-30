@@ -11,7 +11,6 @@ import { IconButton } from "@components/Button";
 import {
   IconChevron,
   IconDelete,
-  IconMagnifier,
   IconPencil,
   IconPlus,
 } from "@components/Icons";
@@ -30,7 +29,6 @@ export const NdgEditorToolbar = () => {
       <AddButton />
       <EditButton />
       <DeleteButton />
-      <ValidateButton />
       <div className="mx-1 h-8 w-px bg-sand-600" />
       <NavigationMenu.Root delay={100}>
         <NavigationMenu.List className="flex items-center gap-1">
@@ -98,29 +96,6 @@ const DeleteButton = () => {
       onClick={deleteSelected}
     >
       <IconDelete />
-    </ToolbarIconButton>
-  );
-};
-
-const ValidateButton = () => {
-  const validateGraph = useNdgEditorStore(s => s.validateGraph);
-
-  const onClick = () => {
-    const invalidCount = validateGraph();
-    if (invalidCount === 0) {
-      toast(<ToastSuccess title="Graph is valid" />);
-      return;
-    }
-    toast(
-      <ToastError title="Validation found issues">
-        {invalidCount} item{invalidCount === 1 ? "" : "s"} need attention.
-      </ToastError>,
-    );
-  };
-
-  return (
-    <ToolbarIconButton title="Validate graph" onClick={onClick}>
-      <IconMagnifier />
     </ToolbarIconButton>
   );
 };
