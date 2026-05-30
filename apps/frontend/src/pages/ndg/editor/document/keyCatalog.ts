@@ -1,8 +1,3 @@
-import type { Option } from "@components/inputs/shared";
-
-const toOptions = (keys: string[]): Option[] =>
-  keys.map(key => ({ value: key, label: key }));
-
 export const tableKeys = [
   "buckling_curve_y",
   "buckling_curve_z",
@@ -69,6 +64,3 @@ export const userInputKeys = [
   "support_condition_LT",
   "load_LT",
 ];
-
-export const tableKeyOptions = toOptions(tableKeys);
-export const userInputKeyOptions = toOptions(userInputKeys);

@@ -6,10 +6,13 @@ import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
 import { InputRadio } from "@components/inputs/InputRadio";
 import { InputText } from "@components/inputs/InputText";
 
-import { tableKeyOptions, userInputKeyOptions } from "./ec311KeyOptions";
-import { valueTypeOptions } from "./options";
+import {
+  valueTypeOptions,
+  tableKeyOptions,
+  userInputKeyOptions,
+} from "./options";
 import { Section, SectionTitle } from "./shared";
-import type { NodeFormValues } from "./schema";
+import type { NodeFormValues } from "../document/nodeSchema";
 
 const FORCED_NUMERIC_TYPES: NodeFormValues["type"][] = [
   "check",

@@ -12,7 +12,7 @@ import { Button } from "@components/Button";
 
 import { useNdgEditorStore } from "../controller/useNdgEditorStore";
 import { useNdgEditorModalStore } from "./useNdgEditorModalStore";
-import { nodeFormSchema, type NodeFormValues } from "./schema";
+import { nodeFormSchema, type NodeFormValues } from "../document/nodeSchema";
 import { FormDefinition } from "./FormDefinition";
 import { FormIdentity } from "./FormIdentity";
 import { FormMetadata } from "./FormMetadata";

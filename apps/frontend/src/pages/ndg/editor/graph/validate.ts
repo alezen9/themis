@@ -1,7 +1,7 @@
-import type { EditorEdge, EditorNode } from "../document/types";
 import { findUnknownConditionKeys } from "../conditions/validate";
-import { tableKeys, userInputKeys } from "../modals/ec311KeyOptions";
-import { nodeFormSchema } from "../modals/schema";
+import { tableKeys, userInputKeys } from "../document/keyCatalog";
+import { nodeFormSchema } from "../document/nodeSchema";
+import type { EditorEdge, EditorNode } from "../document/types";
 
 export const findInvalidNodeIds = (nodes: EditorNode[]) => {
   const invalidNodeIds = new Set<string>();

@@ -1,7 +1,7 @@
 import type { XYPosition } from "@xyflow/react";
 
+import type { NodeFormValues } from "../document/nodeSchema";
 import type { EditorNode } from "../document/types";
-import type { NodeFormValues } from "../modals/schema";
 
 export type AddNodeInput = NodeFormValues & { sourceNodeId?: string };
 export type UpdateNodeInput = NodeFormValues & { id: string };
