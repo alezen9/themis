@@ -1,8 +1,7 @@
 import { Popover as BasePopover } from "@base-ui/react/popover";
 import {
-  forwardRef,
   type ComponentProps,
-  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
   type ReactNode,
 } from "react";
 import { twMerge } from "tailwind-merge";
@@ -22,11 +21,8 @@ type PopoverTriggerProps = Omit<
   "className"
 > & { className?: string; unstyled?: boolean };
 
-export const PopoverTrigger = forwardRef<
-  HTMLButtonElement,
-  PopoverTriggerProps
->((props, ref) => {
-  const { className, unstyled = false, ...rest } = props;
+export const PopoverTrigger = (props: PopoverTriggerProps) => {
+  const { className, unstyled = false, ref, ...rest } = props;
 
   return (
     <BasePopover.Trigger
@@ -42,9 +38,7 @@ export const PopoverTrigger = forwardRef<
       {...rest}
     />
   );
-});
-
-PopoverTrigger.displayName = "PopoverTrigger";
+};
 
 type PopoverPopupProps = Omit<
   ComponentProps<typeof BasePopover.Popup>,
@@ -59,90 +53,80 @@ type PopoverPopupProps = Omit<
   withArrow?: boolean;
 };
 
-export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopupProps>(
-  (props, ref) => {
-    const {
-      children,
-      className,
-      positionerProps,
-      withArrow = true,
-      ...popupProps
-    } = props;
-    const {
-      className: positionerClassName,
-      collisionPadding = 12,
-      sideOffset = 8,
-      ...restPositionerProps
-    } = positionerProps ?? {};
+export const PopoverPopup = (props: PopoverPopupProps) => {
+  const {
+    children,
+    className,
+    positionerProps,
+    withArrow = true,
+    ref,
+    ...popupProps
+  } = props;
+  const {
+    className: positionerClassName,
+    collisionPadding = 12,
+    sideOffset = 8,
+    ...restPositionerProps
+  } = positionerProps ?? {};
 
-    return (
-      <BasePopover.Portal>
-        <BasePopover.Positioner
-          className={twMerge("outline-none", positionerClassName)}
-          collisionPadding={collisionPadding}
-          sideOffset={sideOffset}
-          {...restPositionerProps}
+  return (
+    <BasePopover.Portal>
+      <BasePopover.Positioner
+        className={twMerge("outline-none", positionerClassName)}
+        collisionPadding={collisionPadding}
+        sideOffset={sideOffset}
+        {...restPositionerProps}
+      >
+        <BasePopover.Popup
+          ref={ref}
+          className={twMerge(
+            "max-w-sm rounded-sm border border-sand-200 bg-white",
+            "px-3 py-2 text-sm text-slate-800",
+            "shadow-xl shadow-sand-600/20",
+            "focus:outline-none",
+            className,
+          )}
+          {...popupProps}
         >
-          <BasePopover.Popup
-            ref={ref}
-            className={twMerge(
-              "max-w-sm rounded-sm border border-sand-200 bg-white",
-              "px-3 py-2 text-sm text-slate-800",
-              "shadow-xl shadow-sand-600/20",
-              "focus:outline-none",
-              className,
-            )}
-            {...popupProps}
-          >
-            {withArrow && (
-              <BasePopover.Arrow className="data-[side=bottom]:-top-2 data-[side=left]:-right-3.25 data-[side=left]:rotate-90 data-[side=right]:-left-3.25 data-[side=right]:-rotate-90 data-[side=top]:-bottom-2 data-[side=top]:rotate-180">
-                <ArrowSvg />
-              </BasePopover.Arrow>
-            )}
-            {children}
-          </BasePopover.Popup>
-        </BasePopover.Positioner>
-      </BasePopover.Portal>
-    );
-  },
-);
-
-PopoverPopup.displayName = "PopoverPopup";
+          {withArrow && (
+            <BasePopover.Arrow className="data-[side=bottom]:-top-2 data-[side=left]:-right-3.25 data-[side=left]:rotate-90 data-[side=right]:-left-3.25 data-[side=right]:-rotate-90 data-[side=top]:-bottom-2 data-[side=top]:rotate-180">
+              <ArrowSvg />
+            </BasePopover.Arrow>
+          )}
+          {children}
+        </BasePopover.Popup>
+      </BasePopover.Positioner>
+    </BasePopover.Portal>
+  );
+};
 
 type PopoverTitleProps = Omit<
   ComponentProps<typeof BasePopover.Title>,
   "className"
 > & { className?: string };
 
-export const PopoverTitle = forwardRef<HTMLHeadingElement, PopoverTitleProps>(
-  (props, ref) => {
-    const { className, ...rest } = props;
+export const PopoverTitle = (props: PopoverTitleProps) => {
+  const { className, ref, ...rest } = props;
 
-    return (
-      <BasePopover.Title
-        ref={ref}
-        className={twMerge(
-          "text-sm leading-tight font-semibold text-slate-950",
-          className,
-        )}
-        {...rest}
-      />
-    );
-  },
-);
-
-PopoverTitle.displayName = "PopoverTitle";
+  return (
+    <BasePopover.Title
+      ref={ref}
+      className={twMerge(
+        "text-sm leading-tight font-semibold text-slate-950",
+        className,
+      )}
+      {...rest}
+    />
+  );
+};
 
 type PopoverDescriptionProps = Omit<
   ComponentProps<typeof BasePopover.Description>,
   "className"
 > & { className?: string };
 
-export const PopoverDescription = forwardRef<
-  HTMLParagraphElement,
-  PopoverDescriptionProps
->((props, ref) => {
-  const { className, ...rest } = props;
+export const PopoverDescription = (props: PopoverDescriptionProps) => {
+  const { className, ref, ...rest } = props;
 
   return (
     <BasePopover.Description
@@ -154,36 +138,30 @@ export const PopoverDescription = forwardRef<
       {...rest}
     />
   );
-});
+};
 
-PopoverDescription.displayName = "PopoverDescription";
-
-type PopoverCloseProps = ComponentPropsWithoutRef<typeof BasePopover.Close> & {
+type PopoverCloseProps = ComponentPropsWithRef<typeof BasePopover.Close> & {
   className?: string;
 };
 
-export const PopoverClose = forwardRef<HTMLButtonElement, PopoverCloseProps>(
-  (props, ref) => {
-    const { className, type = "button", ...rest } = props;
+export const PopoverClose = (props: PopoverCloseProps) => {
+  const { className, type = "button", ref, ...rest } = props;
 
-    return (
-      <BasePopover.Close
-        ref={ref}
-        className={twMerge(
-          "inline-flex cursor-pointer items-center justify-center rounded-sm",
-          "border border-sand-300 bg-white px-2 py-1",
-          "text-xs font-medium text-slate-800 transition-colors",
-          "hover:border-sand-400 hover:bg-sand-50 hover:text-slate-950",
-          className,
-        )}
-        type={type}
-        {...rest}
-      />
-    );
-  },
-);
-
-PopoverClose.displayName = "PopoverClose";
+  return (
+    <BasePopover.Close
+      ref={ref}
+      className={twMerge(
+        "inline-flex cursor-pointer items-center justify-center rounded-sm",
+        "border border-sand-300 bg-white px-2 py-1",
+        "text-xs font-medium text-slate-800 transition-colors",
+        "hover:border-sand-400 hover:bg-sand-50 hover:text-slate-950",
+        className,
+      )}
+      type={type}
+      {...rest}
+    />
+  );
+};
 
 const ArrowSvg = (props: React.ComponentProps<"svg">) => {
   return (

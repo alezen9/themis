@@ -1,10 +1,10 @@
-import { forwardRef, type ComponentPropsWithoutRef } from "react";
+import { type ComponentPropsWithRef } from "react";
 import { twMerge } from "tailwind-merge";
 
-type Props = ComponentPropsWithoutRef<"input">;
+type Props = ComponentPropsWithRef<"input">;
 
-export const InputText = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { className, ...inputProps } = props;
+export const InputText = (props: Props) => {
+  const { className, ref, ...inputProps } = props;
 
   return (
     <input
@@ -24,6 +24,4 @@ export const InputText = forwardRef<HTMLInputElement, Props>((props, ref) => {
       {...inputProps}
     />
   );
-});
-
-InputText.displayName = "InputText";
+};

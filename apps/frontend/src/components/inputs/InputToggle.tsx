@@ -1,20 +1,17 @@
 import { Switch } from "@base-ui/react/switch";
-import {
-  ChangeEvent,
-  ComponentPropsWithoutRef,
-  forwardRef,
-  useCallback,
-} from "react";
+import { ChangeEvent, ComponentPropsWithoutRef, Ref, useCallback } from "react";
 import { twMerge } from "tailwind-merge";
 
 type Props = ComponentPropsWithoutRef<typeof Switch.Root> & {
+  ref?: Ref<HTMLInputElement>;
   className?: string;
   thumbClassName?: string;
   onChange?: ComponentPropsWithoutRef<"input">["onChange"];
 };
 
-export const InputToggle = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { className, thumbClassName, onChange, name, ...inputProps } = props;
+export const InputToggle = (props: Props) => {
+  const { className, thumbClassName, onChange, name, ref, ...inputProps } =
+    props;
 
   const onCheckedChange = useCallback<NonNullable<Props["onCheckedChange"]>>(
     checked => {
@@ -49,6 +46,4 @@ export const InputToggle = forwardRef<HTMLInputElement, Props>((props, ref) => {
       />
     </Switch.Root>
   );
-});
-
-InputToggle.displayName = "InputToggle";
+};

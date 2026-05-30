@@ -1,13 +1,13 @@
-import { ComponentPropsWithoutRef, forwardRef, ReactNode } from "react";
+import { ComponentPropsWithRef, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-type Props = ComponentPropsWithoutRef<"input"> & {
+type Props = ComponentPropsWithRef<"input"> & {
   value: string;
   label: ReactNode;
 };
 
-export const InputRadio = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { className, label, ...inputProps } = props;
+export const InputRadio = (props: Props) => {
+  const { className, label, ref, ...inputProps } = props;
 
   return (
     <label
@@ -33,6 +33,4 @@ export const InputRadio = forwardRef<HTMLInputElement, Props>((props, ref) => {
       {label}
     </label>
   );
-});
-
-InputRadio.displayName = "InputRadio";
+};

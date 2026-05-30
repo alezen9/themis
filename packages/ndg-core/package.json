@@ -19,13 +19,13 @@
   },
   "devDependencies": {
     "typescript": "^6.0.3",
-    "vite": "^8.0.3",
-    "vitest": "^4.1.2"
+    "vite": "^8.0.14",
+    "vitest": "^4.1.7"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   }
 }

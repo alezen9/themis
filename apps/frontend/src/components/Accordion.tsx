@@ -1,6 +1,6 @@
 import { IconChevron } from "@components/Icons";
 import { Collapsible as BaseCollapsible } from "@base-ui/react/collapsible";
-import { type ComponentProps, type CSSProperties, forwardRef } from "react";
+import { type ComponentProps, type CSSProperties } from "react";
 import { twMerge } from "tailwind-merge";
 
 const accordionTransitionDurationClass =
@@ -16,47 +16,41 @@ type AccordionProps = Omit<
   style?: CSSProperties & { "--accordion-duration"?: string };
 };
 
-export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
-  (props, ref) => {
-    const {
-      canExpand = true,
-      className,
-      duration = "200ms",
-      style,
-      ...rest
-    } = props;
-    const accordionStyle: AccordionProps["style"] = {
-      ...style,
-      "--accordion-duration": style?.["--accordion-duration"] ?? duration,
-    };
+export const Accordion = (props: AccordionProps) => {
+  const {
+    canExpand = true,
+    className,
+    duration = "200ms",
+    style,
+    ref,
+    ...rest
+  } = props;
+  const accordionStyle: AccordionProps["style"] = {
+    ...style,
+    "--accordion-duration": style?.["--accordion-duration"] ?? duration,
+  };
 
-    return (
-      <BaseCollapsible.Root
-        ref={ref}
-        className={twMerge("group", className)}
-        style={
-          accordionStyle as ComponentProps<typeof BaseCollapsible.Root>["style"]
-        }
-        data-expandable={canExpand}
-        {...rest}
-        {...(!canExpand && { open: false })}
-      />
-    );
-  },
-);
-
-Accordion.displayName = "Accordion";
+  return (
+    <BaseCollapsible.Root
+      ref={ref}
+      className={twMerge("group", className)}
+      style={
+        accordionStyle as ComponentProps<typeof BaseCollapsible.Root>["style"]
+      }
+      data-expandable={canExpand}
+      {...rest}
+      {...(!canExpand && { open: false })}
+    />
+  );
+};
 
 type AccordionHeaderProps = Omit<
   ComponentProps<typeof BaseCollapsible.Trigger>,
   "className"
 > & { className?: string; iconPosition?: "left" | "right" | "none" };
 
-export const AccordionHeader = forwardRef<
-  HTMLButtonElement,
-  AccordionHeaderProps
->((props, ref) => {
-  const { children, className, iconPosition = "right", ...rest } = props;
+export const AccordionHeader = (props: AccordionHeaderProps) => {
+  const { children, className, iconPosition = "right", ref, ...rest } = props;
 
   return (
     <BaseCollapsible.Trigger
@@ -74,20 +68,15 @@ export const AccordionHeader = forwardRef<
       {iconPosition === "right" && <Chevron />}
     </BaseCollapsible.Trigger>
   );
-});
-
-AccordionHeader.displayName = "AccordionHeader";
+};
 
 type AccordionContentProps = Omit<
   ComponentProps<typeof BaseCollapsible.Panel>,
   "className"
 > & { className?: string };
 
-export const AccordionContent = forwardRef<
-  HTMLDivElement,
-  AccordionContentProps
->((props, ref) => {
-  const { children, className, keepMounted = true, ...rest } = props;
+export const AccordionContent = (props: AccordionContentProps) => {
+  const { children, className, keepMounted = true, ref, ...rest } = props;
 
   return (
     <BaseCollapsible.Panel
@@ -104,9 +93,7 @@ export const AccordionContent = forwardRef<
       <div className="min-h-0 overflow-hidden">{children}</div>
     </BaseCollapsible.Panel>
   );
-});
-
-AccordionContent.displayName = "AccordionContent";
+};
 
 const Chevron = () => (
   <IconChevron

@@ -1,8 +1,7 @@
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import {
-  forwardRef,
   type ComponentProps,
-  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
   type ReactNode,
 } from "react";
 import { twMerge } from "tailwind-merge";
@@ -43,11 +42,8 @@ export const Dialog = (props: DialogProps) => {
   );
 };
 
-export const DialogHeader = forwardRef<
-  HTMLElement,
-  ComponentPropsWithoutRef<"header">
->((props, ref) => {
-  const { className, ...rest } = props;
+export const DialogHeader = (props: ComponentPropsWithRef<"header">) => {
+  const { className, ref, ...rest } = props;
 
   return (
     <header
@@ -56,15 +52,10 @@ export const DialogHeader = forwardRef<
       {...rest}
     />
   );
-});
+};
 
-DialogHeader.displayName = "DialogHeader";
-
-export const DialogFooter = forwardRef<
-  HTMLElement,
-  ComponentPropsWithoutRef<"footer">
->((props, ref) => {
-  const { className, ...rest } = props;
+export const DialogFooter = (props: ComponentPropsWithRef<"footer">) => {
+  const { className, ref, ...rest } = props;
 
   return (
     <footer
@@ -73,39 +64,30 @@ export const DialogFooter = forwardRef<
       {...rest}
     />
   );
-});
-
-DialogFooter.displayName = "DialogFooter";
+};
 
 type DialogTitleProps = Omit<
   ComponentProps<typeof BaseDialog.Title>,
   "className"
 > & { className?: string };
 
-export const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitleProps>(
-  (props, ref) => {
-    const { className, ...rest } = props;
+export const DialogTitle = (props: DialogTitleProps) => {
+  const { className, ref, ...rest } = props;
 
-    return (
-      <BaseDialog.Title
-        ref={ref}
-        className={twMerge(
-          "text-[20px] leading-[1.1] font-semibold text-sand-900",
-          className,
-        )}
-        {...rest}
-      />
-    );
-  },
-);
+  return (
+    <BaseDialog.Title
+      ref={ref}
+      className={twMerge(
+        "text-[20px] leading-[1.1] font-semibold text-sand-900",
+        className,
+      )}
+      {...rest}
+    />
+  );
+};
 
-DialogTitle.displayName = "DialogTitle";
-
-export const DialogContent = forwardRef<
-  HTMLElement,
-  ComponentPropsWithoutRef<"div">
->((props, ref) => {
-  const { className, ...rest } = props;
+export const DialogContent = (props: ComponentPropsWithRef<"header">) => {
+  const { className, ref, ...rest } = props;
 
   return (
     <header
@@ -114,6 +96,4 @@ export const DialogContent = forwardRef<
       {...rest}
     />
   );
-});
-
-DialogContent.displayName = "DialogContent";
+};

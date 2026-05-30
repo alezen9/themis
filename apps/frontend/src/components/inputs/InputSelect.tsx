@@ -3,21 +3,20 @@ import { IconChevron } from "@components/Icons";
 import {
   ChangeEvent,
   ComponentProps,
-  forwardRef,
+  ComponentPropsWithRef,
   useCallback,
-  type ComponentPropsWithoutRef,
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { Option } from "./shared";
 
-type Props = ComponentPropsWithoutRef<"input"> & { options: Option[] };
+type Props = ComponentPropsWithRef<"input"> & { options: Option[] };
 
 type OnValueChange = ComponentProps<
   typeof Select.Root<Option>
 >["onValueChange"];
 type OnBlur = ComponentProps<typeof Select.Trigger>["onBlur"];
 
-export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
+export const InputSelect = (props: Props) => {
   const {
     name,
     options,
@@ -30,6 +29,7 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
     onChange,
     defaultValue,
     value,
+    ref,
   } = props;
 
   const onValueChange = useCallback<NonNullable<OnValueChange>>(
@@ -132,6 +132,4 @@ export const InputSelect = forwardRef<HTMLInputElement, Props>((props, ref) => {
       </Select.Portal>
     </Select.Root>
   );
-});
-
-InputSelect.displayName = "InputSelect";
+};

@@ -29,6 +29,7 @@ const renderGroup = (
   connective: string,
 ): ReactNode =>
   conditions.map((condition, index) => (
+    // eslint-disable-next-line @eslint-react/no-array-index-key -- static, non-reordered render of a condition tree
     <Fragment key={index}>
       {index > 0 && (
         <span className="font-semibold text-sand-500"> {connective} </span>

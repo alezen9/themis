@@ -1,5 +1,5 @@
 import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
+import eslintReact from "@eslint-react/eslint-plugin";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginReactRefresh from "eslint-plugin-react-refresh";
 import pluginRouter from "@tanstack/eslint-plugin-router";
@@ -24,17 +24,27 @@ export default tseslint.config(
   },
   {
     files: ["apps/frontend/**/*.{ts,tsx}"],
+    ...eslintReact.configs["recommended-typescript"],
+    rules: {
+      ...eslintReact.configs["recommended-typescript"].rules,
+      // defer hooks linting to the official eslint-plugin-react-hooks below
+      "@eslint-react/exhaustive-deps": "off",
+      "@eslint-react/rules-of-hooks": "off",
+      "@eslint-react/set-state-in-effect": "off",
+      "@eslint-react/set-state-in-render": "off",
+      // our ref names (e.g. `scene`) are already domain-clear
+      "@eslint-react/naming-convention-ref-name": "off",
+    },
+  },
+  {
+    files: ["apps/frontend/**/*.{ts,tsx}"],
     plugins: {
-      react: pluginReact,
       "react-hooks": pluginReactHooks,
       "react-refresh": pluginReactRefresh,
       "@tanstack/router": pluginRouter,
     },
-    settings: { react: { version: "detect" } },
     rules: {
-      ...pluginReact.configs.recommended.rules,
       ...pluginReactHooks.configs.recommended.rules,
-      "react/react-in-jsx-scope": "off",
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },

@@ -1,4 +1,4 @@
-import { ComponentPropsWithRef, forwardRef } from "react";
+import { ComponentPropsWithRef } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
 
@@ -25,8 +25,8 @@ const button = cva(
 
 type Props = ComponentPropsWithRef<"button"> & VariantProps<typeof button>;
 
-export const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
-  const { className, variant, size, ...rest } = props;
+export const Button = (props: Props) => {
+  const { className, variant, size, ref, ...rest } = props;
   return (
     <button
       type="button"
@@ -35,19 +35,11 @@ export const Button = forwardRef<HTMLButtonElement, Props>((props, ref) => {
       className={twMerge(button({ variant, size }), className)}
     />
   );
-});
+};
 
-Button.displayName = "Button";
-
-export const IconButton = forwardRef<HTMLButtonElement, Props>((props, ref) => {
+export const IconButton = (props: Props) => {
   const { className, ...rest } = props;
   return (
-    <Button
-      {...rest}
-      ref={ref}
-      className={twMerge("rounded-full p-0", className)}
-    />
+    <Button {...rest} className={twMerge("rounded-full p-0", className)} />
   );
-});
-
-IconButton.displayName = "IconButton";
+};

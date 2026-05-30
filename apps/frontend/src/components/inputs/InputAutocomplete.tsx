@@ -3,8 +3,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import {
   ChangeEvent,
   ComponentProps,
-  ComponentPropsWithoutRef,
-  forwardRef,
+  ComponentPropsWithRef,
   useCallback,
   useMemo,
   useRef,
@@ -22,7 +21,7 @@ type OptionVirtualRow = {
 };
 type VirtualRow = GroupVirtualRow | OptionVirtualRow;
 
-type Props = ComponentPropsWithoutRef<"input"> & {
+type Props = ComponentPropsWithRef<"input"> & {
   options: Option[] | OptionGroup[];
 };
 
@@ -40,126 +39,123 @@ type IsItemEqualToValue = NonNullable<
 const isOptionEqualToValue: IsItemEqualToValue = (option, value) =>
   option.value === value.value;
 
-export const InputAutocomplete = forwardRef<HTMLInputElement, Props>(
-  (props, ref) => {
-    const {
-      name,
-      options,
-      required,
-      disabled,
-      readOnly,
-      placeholder,
-      className,
-      onBlur,
-      onChange,
-      defaultValue,
-      value,
-    } = props;
+export const InputAutocomplete = (props: Props) => {
+  const {
+    name,
+    options,
+    required,
+    disabled,
+    readOnly,
+    placeholder,
+    className,
+    onBlur,
+    onChange,
+    defaultValue,
+    value,
+    ref,
+  } = props;
 
-    const flatOptions = useMemo(
-      () =>
-        options.flatMap(option =>
-          "options" in option ? option.options : option,
-        ),
-      [options],
-    );
-    const optionsMap = useMemo(
-      () => new Map<typeof value, Option>(flatOptions.map(o => [o.value, o])),
-      [flatOptions],
-    );
+  const flatOptions = useMemo(
+    () =>
+      options.flatMap(option =>
+        "options" in option ? option.options : option,
+      ),
+    [options],
+  );
+  const optionsMap = useMemo(
+    () => new Map<typeof value, Option>(flatOptions.map(o => [o.value, o])),
+    [flatOptions],
+  );
 
-    const onValueChange = useCallback<NonNullable<OnValueChange>>(
-      option => {
-        const changeEvent = { target: { name, value: option?.value ?? "" } };
-        onChange?.(changeEvent as ChangeEvent<HTMLInputElement>);
-      },
-      [onChange, name],
-    );
+  const onValueChange = useCallback<NonNullable<OnValueChange>>(
+    option => {
+      const changeEvent = { target: { name, value: option?.value ?? "" } };
+      onChange?.(changeEvent as ChangeEvent<HTMLInputElement>);
+    },
+    [onChange, name],
+  );
 
-    return (
-      <Combobox.Root<Option>
-        items={flatOptions}
-        defaultValue={optionsMap.get(defaultValue)}
-        value={optionsMap.get(value)}
-        autoHighlight
-        highlightItemOnHover
-        virtualized
-        modal={false}
-        disabled={disabled}
-        readOnly={readOnly}
-        required={required}
-        name={name}
-        inputRef={ref}
-        onValueChange={onValueChange}
-        isItemEqualToValue={isOptionEqualToValue}
+  return (
+    <Combobox.Root<Option>
+      items={flatOptions}
+      defaultValue={optionsMap.get(defaultValue)}
+      value={optionsMap.get(value)}
+      autoHighlight
+      highlightItemOnHover
+      virtualized
+      modal={false}
+      disabled={disabled}
+      readOnly={readOnly}
+      required={required}
+      name={name}
+      inputRef={ref}
+      onValueChange={onValueChange}
+      isItemEqualToValue={isOptionEqualToValue}
+    >
+      <Combobox.InputGroup
+        className={twMerge(
+          "group/input relative flex w-full grow gap-1 items-center h-9",
+          "has-[data-disabled]:opacity-30 has-[data-disabled]:pointer-events-none",
+        )}
       >
-        <Combobox.InputGroup
+        <Combobox.Value>
+          {(option: Option | null) => (
+            <>
+              {option?.item && (
+                <span
+                  className={twMerge(
+                    "pointer-events-none absolute inset-y-0 left-0 right-16",
+                    "flex min-w-0 items-center justify-center overflow-hidden rounded-l-sm",
+                    "bg-(--bg-color) px-3 py-2 text-sm font-light text-gray-600",
+                    "group-focus-within/input:hidden",
+                  )}
+                >
+                  {option.item}
+                </span>
+              )}
+              <Combobox.Input
+                data-testid={name ? `input-${name}` : undefined}
+                onBlur={onBlur}
+                placeholder={placeholder}
+                className={twMerge(
+                  "flex h-full w-full min-w-0 flex-1 items-center text-center rounded-l-sm",
+                  "bg-(--bg-color)",
+                  "text-gray-600",
+                  "px-3 py-2",
+                  "font-light leading-0",
+                  "data-placeholder:text-gray-400",
+                  "focus:outline-none",
+                  "transition-colors",
+                  "text-sm",
+                  className,
+                  option?.item && "text-transparent focus:text-gray-600",
+                )}
+              />
+            </>
+          )}
+        </Combobox.Value>
+        <Combobox.Trigger
+          data-testid={name ? `input-${name}-trigger` : undefined}
           className={twMerge(
-            "group/input relative flex w-full grow gap-1 items-center h-9",
-            "has-[data-disabled]:opacity-30 has-[data-disabled]:pointer-events-none",
+            "h-full w-15 rounded-r-sm flex items-center justify-center",
+            "bg-(--bg-color)",
+            "text-gray-500",
+            "transition-colors",
           )}
         >
-          <Combobox.Value>
-            {(option: Option | null) => (
-              <>
-                {option?.item && (
-                  <span
-                    className={twMerge(
-                      "pointer-events-none absolute inset-y-0 left-0 right-16",
-                      "flex min-w-0 items-center justify-center overflow-hidden rounded-l-sm",
-                      "bg-(--bg-color) px-3 py-2 text-sm font-light text-gray-600",
-                      "group-focus-within/input:hidden",
-                    )}
-                  >
-                    {option.item}
-                  </span>
-                )}
-                <Combobox.Input
-                  data-testid={name ? `input-${name}` : undefined}
-                  onBlur={onBlur}
-                  placeholder={placeholder}
-                  className={twMerge(
-                    "flex h-full w-full min-w-0 flex-1 items-center text-center rounded-l-sm",
-                    "bg-(--bg-color)",
-                    "text-gray-600",
-                    "px-3 py-2",
-                    "font-light leading-0",
-                    "data-placeholder:text-gray-400",
-                    "focus:outline-none",
-                    "transition-colors",
-                    "text-sm",
-                    className,
-                    option?.item && "text-transparent focus:text-gray-600",
-                  )}
-                />
-              </>
-            )}
-          </Combobox.Value>
-          <Combobox.Trigger
-            data-testid={name ? `input-${name}-trigger` : undefined}
-            className={twMerge(
-              "h-full w-15 rounded-r-sm flex items-center justify-center",
-              "bg-(--bg-color)",
-              "text-gray-500",
-              "transition-colors",
-            )}
-          >
-            <Combobox.Icon>
-              <IconMagnifier className="size-3 stroke-1 overflow-visible" />
-            </Combobox.Icon>
-          </Combobox.Trigger>
-        </Combobox.InputGroup>
-        <Combobox.Portal>
-          <Combobox.Positioner className="z-50 outline-none">
-            <VirtualizedPopup options={options} />
-          </Combobox.Positioner>
-        </Combobox.Portal>
-      </Combobox.Root>
-    );
-  },
-);
-
-InputAutocomplete.displayName = "InputAutocomplete";
+          <Combobox.Icon>
+            <IconMagnifier className="size-3 stroke-1 overflow-visible" />
+          </Combobox.Icon>
+        </Combobox.Trigger>
+      </Combobox.InputGroup>
+      <Combobox.Portal>
+        <Combobox.Positioner className="z-50 outline-none">
+          <VirtualizedPopup options={options} />
+        </Combobox.Positioner>
+      </Combobox.Portal>
+    </Combobox.Root>
+  );
+};
 
 const VirtualizedPopup = (props: { options: Option[] | OptionGroup[] }) => {
   const { options } = props;

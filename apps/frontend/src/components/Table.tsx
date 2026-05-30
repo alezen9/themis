@@ -1,11 +1,11 @@
 import { cva } from "class-variance-authority";
-import { ComponentPropsWithoutRef, forwardRef } from "react";
+import { ComponentPropsWithRef } from "react";
 import { twMerge } from "tailwind-merge";
 
-type TableProps = ComponentPropsWithoutRef<"table">;
+type TableProps = ComponentPropsWithRef<"table">;
 
-export const Table = forwardRef<HTMLTableElement, TableProps>((props, ref) => {
-  const { className, ...rest } = props;
+export const Table = (props: TableProps) => {
+  const { className, ref, ...rest } = props;
 
   return (
     <table
@@ -17,23 +17,16 @@ export const Table = forwardRef<HTMLTableElement, TableProps>((props, ref) => {
       {...rest}
     />
   );
-});
-
-Table.displayName = "Table";
+};
 
 const tableHeaderVariants = cva("relative box-border", {
   variants: { sticky: { true: "sticky top-0 z-10 bg-white" } },
 });
 
-type TableHeaderProps = ComponentPropsWithoutRef<"thead"> & {
-  sticky?: boolean;
-};
+type TableHeaderProps = ComponentPropsWithRef<"thead"> & { sticky?: boolean };
 
-export const TableHeader = forwardRef<
-  HTMLTableSectionElement,
-  TableHeaderProps
->((props, ref) => {
-  const { className, sticky = false, ...rest } = props;
+export const TableHeader = (props: TableHeaderProps) => {
+  const { className, sticky = false, ref, ...rest } = props;
 
   return (
     <thead
@@ -42,41 +35,30 @@ export const TableHeader = forwardRef<
       {...rest}
     />
   );
-});
+};
 
-TableHeader.displayName = "TableHeader";
+type TableBodyProps = ComponentPropsWithRef<"tbody">;
 
-type TableBodyProps = ComponentPropsWithoutRef<"tbody">;
+export const TableBody = (props: TableBodyProps) => {
+  const { className, ref, ...rest } = props;
 
-export const TableBody = forwardRef<HTMLTableSectionElement, TableBodyProps>(
-  (props, ref) => {
-    const { className, ...rest } = props;
-
-    return (
-      <tbody
-        ref={ref}
-        className={twMerge("relative box-border", className)}
-        {...rest}
-      />
-    );
-  },
-);
-
-TableBody.displayName = "TableBody";
+  return (
+    <tbody
+      ref={ref}
+      className={twMerge("relative box-border", className)}
+      {...rest}
+    />
+  );
+};
 
 const tableFooterVariants = cva("relative box-border", {
   variants: { sticky: { true: "sticky bottom-0 z-10 bg-white" } },
 });
 
-type TableFooterProps = ComponentPropsWithoutRef<"tfoot"> & {
-  sticky?: boolean;
-};
+type TableFooterProps = ComponentPropsWithRef<"tfoot"> & { sticky?: boolean };
 
-export const TableFooter = forwardRef<
-  HTMLTableSectionElement,
-  TableFooterProps
->((props, ref) => {
-  const { className, sticky = false, ...rest } = props;
+export const TableFooter = (props: TableFooterProps) => {
+  const { className, sticky = false, ref, ...rest } = props;
 
   return (
     <tfoot
@@ -85,32 +67,26 @@ export const TableFooter = forwardRef<
       {...rest}
     />
   );
-});
-
-TableFooter.displayName = "TableFooter";
+};
 
 const tableRowVariants = cva(
   "relative box-border border-b border-sand-800 last:border-b-0 transition-colors",
   { variants: { active: { true: "bg-sand-50" } } },
 );
 
-type TableRowProps = ComponentPropsWithoutRef<"tr"> & { active?: boolean };
+type TableRowProps = ComponentPropsWithRef<"tr"> & { active?: boolean };
 
-export const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>(
-  (props, ref) => {
-    const { active = false, className, ...rest } = props;
+export const TableRow = (props: TableRowProps) => {
+  const { active = false, className, ref, ...rest } = props;
 
-    return (
-      <tr
-        ref={ref}
-        className={twMerge(tableRowVariants({ active }), className)}
-        {...rest}
-      />
-    );
-  },
-);
-
-TableRow.displayName = "TableRow";
+  return (
+    <tr
+      ref={ref}
+      className={twMerge(tableRowVariants({ active }), className)}
+      {...rest}
+    />
+  );
+};
 
 const tableCellVariants = cva("relative box-border px-2 py-1 align-middle", {
   variants: {
@@ -126,15 +102,12 @@ const tableCellVariants = cva("relative box-border px-2 py-1 align-middle", {
 
 type TableCellAlign = "left" | "center" | "right" | "justify";
 
-type TableHeaderCellProps = ComponentPropsWithoutRef<"th"> & {
+type TableHeaderCellProps = ComponentPropsWithRef<"th"> & {
   align?: TableCellAlign;
 };
 
-export const TableHeaderCell = forwardRef<
-  HTMLTableCellElement,
-  TableHeaderCellProps
->((props, ref) => {
-  const { align = "left", className, ...rest } = props;
+export const TableHeaderCell = (props: TableHeaderCellProps) => {
+  const { align = "left", className, ref, ...rest } = props;
 
   return (
     <th
@@ -147,19 +120,14 @@ export const TableHeaderCell = forwardRef<
       {...rest}
     />
   );
-});
+};
 
-TableHeaderCell.displayName = "TableHeaderCell";
-
-type TableDataCellProps = ComponentPropsWithoutRef<"td"> & {
+type TableDataCellProps = ComponentPropsWithRef<"td"> & {
   align?: TableCellAlign;
 };
 
-export const TableDataCell = forwardRef<
-  HTMLTableCellElement,
-  TableDataCellProps
->((props, ref) => {
-  const { align = "left", className, ...rest } = props;
+export const TableDataCell = (props: TableDataCellProps) => {
+  const { align = "left", className, ref, ...rest } = props;
 
   return (
     <td
@@ -168,6 +136,4 @@ export const TableDataCell = forwardRef<
       {...rest}
     />
   );
-});
-
-TableDataCell.displayName = "TableDataCell";
+};

@@ -1,15 +1,14 @@
 import {
-  forwardRef,
-  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
   type ReactNode,
   type WheelEvent,
 } from "react";
 import { twMerge } from "tailwind-merge";
 
-type Props = ComponentPropsWithoutRef<"input"> & { suffix?: ReactNode };
+type Props = ComponentPropsWithRef<"input"> & { suffix?: ReactNode };
 
-export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
-  const { className, name, onWheel, suffix, ...inputProps } = props;
+export const InputNumber = (props: Props) => {
+  const { className, name, onWheel, suffix, ref, ...inputProps } = props;
 
   const handleWheel = (event: WheelEvent<HTMLInputElement>) => {
     onWheel?.(event);
@@ -59,6 +58,4 @@ export const InputNumber = forwardRef<HTMLInputElement, Props>((props, ref) => {
       )}
     </div>
   );
-});
-
-InputNumber.displayName = "InputNumber";
+};
