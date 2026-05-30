@@ -17,6 +17,7 @@ export default defineConfig({
       generatedRouteTree: "./src/routeTree.gen.ts",
       routeFileIgnorePattern:
         "^(?!(__root|route)(\\.|$))(?!.*\\.route\\.(tsx?|jsx?)$).*\\.(tsx?|jsx?)$",
+      autoCodeSplitting: true,
     }),
     react(),
     tailwindcss(),

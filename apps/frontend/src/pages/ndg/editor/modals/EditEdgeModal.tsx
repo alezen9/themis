@@ -110,10 +110,7 @@ const EditEdgeForm = (props: { edgeId: string; onClose: () => void }) => {
       <KeyReference graphKeys={graphKeys} />
       <div className="flex items-center justify-end gap-2">
         {initialText !== "" && (
-          <Button
-            onClick={onRemove}
-            className="mr-auto bg-transparent text-red-700 hover:bg-red-50 hover:text-red-800"
-          >
+          <Button variant="danger" onClick={onRemove} className="mr-auto">
             Remove
           </Button>
         )}

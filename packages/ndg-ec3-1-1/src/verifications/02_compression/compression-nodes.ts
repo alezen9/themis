@@ -63,7 +63,7 @@ export const nodes = defineNodes([
     key: "gamma_M0",
     valueType: { type: "number" },
     name: "Partial safety factor",
-    symbol: "\gamma_{M0}",
+    symbol: "\\gamma_{M0}",
     meta: { sectionRef: "6.1" },
     children: [],
   },

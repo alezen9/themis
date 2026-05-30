@@ -1,6 +1,6 @@
 import { Ec3VerificationError } from "../errors";
 
-const imperfectionFactors = new Map();
+const imperfectionFactors = new Map<string, number>();
 imperfectionFactors.set("a0", 0.13);
 imperfectionFactors.set("a", 0.21);
 imperfectionFactors.set("b", 0.34);
