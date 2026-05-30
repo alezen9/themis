@@ -38,7 +38,7 @@ svg.pluton-root[data-drawing-error] {
 
 .ndg-editor-flow .react-flow__node.selected {
   border-radius: 4px;
-  outline: 2px solid var(--color-sand-700);
+  box-shadow: 0 0 0 2px var(--color-sand-700);
 }
 
 .ndg-editor-flow .react-flow__edge-path {

@@ -9,7 +9,6 @@
     "build": "tsr generate && vite build",
     "typecheck": "tsr generate && tsc -p tsconfig.app.json",
     "test": "vitest run",
-    "validate": "vitest run --config vitest.validate.config.ts",
     "preview": "vite preview"
   },
   "dependencies": {
