@@ -2,6 +2,7 @@ node_modules/
 dist/
 .env
 .env.local
+.claude/
 src/routeTree.gen.ts
 apps/frontend/src/routeTree.gen.ts
 *.tsbuildinfo
