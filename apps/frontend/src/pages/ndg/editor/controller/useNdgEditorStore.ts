@@ -331,5 +331,4 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
         ...reconcileSelection(nodes, edges),
       };
     }),
-
 }));

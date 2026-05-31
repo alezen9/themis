@@ -18,14 +18,18 @@ export const useToastStore = create<{
   dismiss: (id: string) => void;
 }>((set, get) => ({
   items: [],
-  add: (input, { id = crypto.randomUUID(), duration = DEFAULT_DURATION } = {}) => {
+  add: (
+    input,
+    { id = crypto.randomUUID(), duration = DEFAULT_DURATION } = {},
+  ) => {
     set(state => ({
       items: [...state.items.filter(t => t.id !== id), { id, input }],
     }));
     if (duration !== null) setTimeout(() => get().dismiss(id), duration);
     return id;
   },
-  dismiss: id => set(state => ({ items: state.items.filter(t => t.id !== id) })),
+  dismiss: id =>
+    set(state => ({ items: state.items.filter(t => t.id !== id) })),
 }));
 
 export const toast = (input: ToastInput, options?: ToastOptions) =>

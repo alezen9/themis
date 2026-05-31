@@ -42,7 +42,10 @@ const RedoButton = () => {
 const AddButton = () => {
   const openModal = useNdgEditorModalStore(s => s.openModal);
   return (
-    <ToolbarButton title="Add Node" onClick={() => openModal({ mode: "create-node" })}>
+    <ToolbarButton
+      title="Add Node"
+      onClick={() => openModal({ mode: "create-node" })}
+    >
       <IconPlus className="size-4" />
     </ToolbarButton>
   );
@@ -57,7 +60,9 @@ const EditButton = () => {
     <ToolbarButton
       title="Edit Node"
       disabled={disabled}
-      onClick={() => openModal({ mode: "edit-node", nodeId: selectedNodes[0].id })}
+      onClick={() =>
+        openModal({ mode: "edit-node", nodeId: selectedNodes[0].id })
+      }
     >
       <IconPencil className="size-4" />
     </ToolbarButton>
@@ -72,7 +77,11 @@ const DeleteButton = () => {
     (selectedNodes.length === 0 && selectedEdges.length === 0) ||
     selectedNodes.some(n => n.type === "check");
   return (
-    <ToolbarButton title="Delete Selected" disabled={disabled} onClick={deleteSelected}>
+    <ToolbarButton
+      title="Delete Selected"
+      disabled={disabled}
+      onClick={deleteSelected}
+    >
       <IconDelete className="size-4" />
     </ToolbarButton>
   );

@@ -25,7 +25,11 @@ const ToastSuccess = (props: PresetProps) => {
         <p className="font-medium">{title}</p>
         {children && <div className="text-sand-800">{children}</div>}
       </div>
-      <button type="button" onClick={dismiss} className="shrink-0 rounded-sm p-0.5 text-current/60 hover:text-current">
+      <button
+        type="button"
+        onClick={dismiss}
+        className="shrink-0 rounded-sm p-0.5 text-current/60 hover:text-current"
+      >
         <IconClose className="size-4" />
       </button>
     </div>
@@ -42,7 +46,11 @@ const ToastError = (props: PresetProps) => {
         <p className="font-medium">{title}</p>
         {children && <div className="text-sand-800">{children}</div>}
       </div>
-      <button type="button" onClick={dismiss} className="shrink-0 rounded-sm p-0.5 text-current/60 hover:text-current">
+      <button
+        type="button"
+        onClick={dismiss}
+        className="shrink-0 rounded-sm p-0.5 text-current/60 hover:text-current"
+      >
         <IconClose className="size-4" />
       </button>
     </div>
