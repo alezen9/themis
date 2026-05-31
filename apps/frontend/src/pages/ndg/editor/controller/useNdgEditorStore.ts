@@ -56,6 +56,14 @@ const derive = (nodes: EditorNode[], edges: EditorEdge[]) => ({
   _invalidEdgeIds: findInvalidEdgeIds(nodes, edges),
 });
 
+const isStructuralNodeChange = (change: NodeChange<EditorNode>) =>
+  change.type === "add" ||
+  change.type === "remove" ||
+  change.type === "replace";
+
+const isStructuralEdgeChange = (change: EdgeChange<EditorEdge>) =>
+  change.type !== "select";
+
 type NdgEditorStore = {
   nodes: EditorNode[];
   edges: EditorEdge[];
@@ -173,12 +181,16 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   onNodesChange: changes =>
     set(state => {
       const nodes = applyNodeChanges(changes, state.nodes);
+      if (!changes.some(isStructuralNodeChange))
+        return { nodes, _nodeById: indexById(nodes) };
       return { nodes, ...derive(nodes, state.edges) };
     }),
 
   onEdgesChange: changes =>
     set(state => {
       const edges = applyEdgeChanges(changes, state.edges);
+      if (!changes.some(isStructuralEdgeChange))
+        return { edges, _edgeById: indexById(edges) };
       return { edges, ...derive(state.nodes, edges) };
     }),
 
