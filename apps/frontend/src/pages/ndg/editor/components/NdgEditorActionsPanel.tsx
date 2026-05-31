@@ -98,7 +98,11 @@ const LayoutButton = () => {
     try {
       applyLayout(await computeLayout(nodes, edges));
     } catch {
-      toast({ type: "error", title: "Layout failed", message: "Could not compute auto layout." });
+      toast({
+        type: "error",
+        title: "Layout failed",
+        message: "Could not compute auto layout.",
+      });
     }
   };
   return (

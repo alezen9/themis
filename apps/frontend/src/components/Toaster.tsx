@@ -1,30 +1,9 @@
 import { createContext, use } from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { create } from "zustand";
 
 import { IconCheck, IconClose, IconWarning } from "@components/Icons";
-
-type ToastItem = { id: string; content: ReactNode };
-type ToastOptions = { id?: string; duration?: number | null };
-
-const DEFAULT_DURATION = 4000;
-
-const useToastStore = create<{
-  toasts: ToastItem[];
-  add: (content: ReactNode, options?: ToastOptions) => string;
-  dismiss: (id: string) => void;
-}>((set, get) => ({
-  toasts: [],
-  add: (content, { id = crypto.randomUUID(), duration = DEFAULT_DURATION } = {}) => {
-    set(state => ({
-      toasts: [...state.toasts.filter(t => t.id !== id), { id, content }],
-    }));
-    if (duration !== null) setTimeout(() => get().dismiss(id), duration);
-    return id;
-  },
-  dismiss: id => set(state => ({ toasts: state.toasts.filter(t => t.id !== id) })),
-}));
+import { useToastStore, type ToastInput } from "@components/toast";
 
 const ToastContext = createContext<{ dismiss: () => void } | null>(null);
 
@@ -34,9 +13,9 @@ const useToast = () => {
   return ctx;
 };
 
-type ToastPresetProps = { title: string; children?: ReactNode };
+type PresetProps = { title: string; children?: ReactNode };
 
-const ToastSuccess = (props: ToastPresetProps) => {
+const ToastSuccess = (props: PresetProps) => {
   const { title, children } = props;
   const { dismiss } = useToast();
   return (
@@ -53,7 +32,7 @@ const ToastSuccess = (props: ToastPresetProps) => {
   );
 };
 
-const ToastError = (props: ToastPresetProps) => {
+const ToastError = (props: PresetProps) => {
   const { title, children } = props;
   const { dismiss } = useToast();
   return (
@@ -70,31 +49,27 @@ const ToastError = (props: ToastPresetProps) => {
   );
 };
 
-type ToastInput =
-  | { type: "success"; title: string; message?: string }
-  | { type: "error"; title: string; message?: string }
-  | { type: "custom"; component: ReactNode };
-
-export const toast = (input: ToastInput, options?: ToastOptions) => {
-  const { add } = useToastStore.getState();
+const ToastContent = ({ input }: { input: ToastInput }) => {
   switch (input.type) {
     case "success":
-      return add(<ToastSuccess title={input.title}>{input.message}</ToastSuccess>, options);
+      return <ToastSuccess title={input.title}>{input.message}</ToastSuccess>;
     case "error":
-      return add(<ToastError title={input.title}>{input.message}</ToastError>, options);
+      return <ToastError title={input.title}>{input.message}</ToastError>;
     case "custom":
-      return add(input.component, options);
+      return <>{input.component}</>;
   }
 };
 
 export const Toaster = () => {
-  const toasts = useToastStore(s => s.toasts);
+  const items = useToastStore(s => s.items);
   const dismiss = useToastStore(s => s.dismiss);
   return createPortal(
     <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex w-full max-w-sm flex-col gap-2">
-      {toasts.map(({ id, content }) => (
+      {items.map(({ id, input }) => (
         <ToastContext key={id} value={{ dismiss: () => dismiss(id) }}>
-          <div className="pointer-events-auto">{content}</div>
+          <div className="pointer-events-auto">
+            <ToastContent input={input} />
+          </div>
         </ToastContext>
       ))}
     </div>,

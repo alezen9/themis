@@ -342,7 +342,10 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       return {
         nodes,
         _nodeById: indexById(nodes),
-        history: recordHistory(state.history, { nodes: state.nodes, edges: state.edges }),
+        history: recordHistory(state.history, {
+          nodes: state.nodes,
+          edges: state.edges,
+        }),
       };
     }),
 }));

@@ -3,17 +3,22 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const fail = msg => { console.error(`Error: ${msg}`); process.exit(1); };
+const fail = msg => {
+  console.error(`Error: ${msg}`);
+  process.exit(1);
+};
 
 const parseArgs = () => {
   const get = flag => {
     const i = process.argv.indexOf(flag);
-    return i >= 0 ? process.argv[i + 1] ?? "" : "";
+    return i >= 0 ? (process.argv[i + 1] ?? "") : "";
   };
   const inPath = path.resolve(get("--in"));
   const outPath = path.resolve(get("--out"));
   if (!inPath || !outPath)
-    fail("Usage: pnpm ndg:editor-to-nodes --in <input.ndg.json> --out <output-nodes.ts>");
+    fail(
+      "Usage: pnpm ndg:editor-to-nodes --in <input.ndg.json> --out <output-nodes.ts>",
+    );
   return { inPath, outPath };
 };
 
@@ -21,7 +26,9 @@ const loadNDGSchema = async () => {
   try {
     return (await import("../packages/ndg-core/dist/index.js")).NDGSchema;
   } catch {
-    fail('Could not load ndg-core. Run "pnpm --filter @ndg/ndg-core build" first');
+    fail(
+      'Could not load ndg-core. Run "pnpm --filter @ndg/ndg-core build" first',
+    );
   }
 };
 
@@ -47,7 +54,9 @@ const sortBfs = nodes => {
 
   return [
     ...ordered,
-    ...nodes.filter(n => !seen.has(n.id)).sort((a, b) => a.id.localeCompare(b.id)),
+    ...nodes
+      .filter(n => !seen.has(n.id))
+      .sort((a, b) => a.id.localeCompare(b.id)),
   ];
 };
 
@@ -75,11 +84,18 @@ const main = async () => {
   const NDGSchema = await loadNDGSchema();
 
   let doc;
-  try { doc = JSON.parse(await fs.readFile(inPath, "utf8")); }
-  catch { fail(`Could not parse JSON from "${inPath}"`); }
+  try {
+    doc = JSON.parse(await fs.readFile(inPath, "utf8"));
+  } catch {
+    fail(`Could not parse JSON from "${inPath}"`);
+  }
 
-  if (doc?.version !== 1 || !Array.isArray(doc.nodes) || !Array.isArray(doc.edges))
-    fail('Input must be an EditorDocument (version: 1, nodes: [], edges: [])');
+  if (
+    doc?.version !== 1 ||
+    !Array.isArray(doc.nodes) ||
+    !Array.isArray(doc.edges)
+  )
+    fail("Input must be an EditorDocument (version: 1, nodes: [], edges: [])");
 
   const result = NDGSchema.safeParse(toNdgNodes(doc));
   if (!result.success) {

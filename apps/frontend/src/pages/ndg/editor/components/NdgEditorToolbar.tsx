@@ -1,8 +1,4 @@
-import {
-  useRef,
-  type ChangeEvent,
-  type ReactNode,
-} from "react";
+import { useRef, type ChangeEvent, type ReactNode } from "react";
 import { NavigationMenu } from "@base-ui/react/navigation-menu";
 
 import { IconChevron } from "@components/Icons";
@@ -43,7 +39,8 @@ const ImportMenu = () => {
   const onReplace = async (event: ChangeEvent<HTMLInputElement>) => {
     const document = await readDocument(event);
     if (!document) return;
-    if (importFull(document)) toast({ type: "success", title: "Graph replaced" });
+    if (importFull(document))
+      toast({ type: "success", title: "Graph replaced" });
     else
       toast({
         type: "error",
@@ -55,7 +52,8 @@ const ImportMenu = () => {
   const onMerge = async (event: ChangeEvent<HTMLInputElement>) => {
     const document = await readDocument(event);
     if (!document) return;
-    if (importPartial(document)) toast({ type: "success", title: "Nodes imported" });
+    if (importPartial(document))
+      toast({ type: "success", title: "Nodes imported" });
     else
       toast({
         type: "error",
@@ -79,8 +77,20 @@ const ImportMenu = () => {
           onClick={() => mergeInputRef.current?.click()}
         />
       </MenuContent>
-      <input ref={replaceInputRef} type="file" accept=".json" className="hidden" onChange={onReplace} />
-      <input ref={mergeInputRef} type="file" accept=".json" className="hidden" onChange={onMerge} />
+      <input
+        ref={replaceInputRef}
+        type="file"
+        accept=".json"
+        className="hidden"
+        onChange={onReplace}
+      />
+      <input
+        ref={mergeInputRef}
+        type="file"
+        accept=".json"
+        className="hidden"
+        onChange={onMerge}
+      />
     </NavigationMenu.Item>
   );
 };
@@ -132,7 +142,9 @@ const MenuOption = (props: {
         render={<button type="button" disabled={disabled} />}
       >
         <span className="block text-sm font-medium text-sand-900">{title}</span>
-        <span className="mt-0.5 block text-xs text-sand-600">{description}</span>
+        <span className="mt-0.5 block text-xs text-sand-600">
+          {description}
+        </span>
       </NavigationMenu.Link>
     </li>
   );
@@ -153,7 +165,11 @@ const readDocument = async (event: ChangeEvent<HTMLInputElement>) => {
   if (!file) return null;
   const document = await parseDocumentFile(file);
   if (!document)
-    toast({ type: "error", title: "Invalid file", message: "Could not read a valid NDG document." });
+    toast({
+      type: "error",
+      title: "Invalid file",
+      message: "Could not read a valid NDG document.",
+    });
   return document;
 };
 
