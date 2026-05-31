@@ -3,6 +3,7 @@ import {
   BackgroundVariant,
   Controls,
   MarkerType,
+  MiniMap,
   type EdgeMouseHandler,
   type NodeMouseHandler,
   type OnBeforeDelete,
@@ -92,6 +93,12 @@ export const NdgEditorCanvas = () => {
         variant={BackgroundVariant.Lines}
       />
       <Controls showZoom={false} />
+      <MiniMap
+        position="bottom-right"
+        className="max-2xl:hidden"
+        pannable
+        zoomable
+      />
     </ReactFlow>
   );
 };
