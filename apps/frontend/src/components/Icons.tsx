@@ -482,6 +482,26 @@ export const IconUndo = (props: ComponentPropsWithoutRef<"svg">) => {
   );
 };
 
+export const IconLayout = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <rect x="7" y="2" width="10" height="5" rx="1" />
+      <path d="M12 7v3M5 10h14M5 10v5M19 10v5" />
+      <rect x="2" y="15" width="7" height="5" rx="1" />
+      <rect x="15" y="15" width="7" height="5" rx="1" />
+    </svg>
+  );
+};
+
 export const IconRedo = (props: ComponentPropsWithoutRef<"svg">) => {
   return (
     <svg

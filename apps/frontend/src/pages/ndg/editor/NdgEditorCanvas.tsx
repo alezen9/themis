@@ -18,6 +18,7 @@ import { edgeTypes } from "./flow/edgeTypes";
 import { nodeTypes } from "./flow/nodeTypes";
 import { onBeforeDeleteElements } from "./graph/rules";
 import { useNdgEditorModalStore } from "./modals/useNdgEditorModalStore";
+import { NdgEditorActionsPanel } from "./components/NdgEditorActionsPanel";
 
 export const NdgEditorCanvas = () => {
   const nodes = useNdgEditorStore(state => state.nodes);
@@ -92,10 +93,12 @@ export const NdgEditorCanvas = () => {
         id="coarse-grid"
         variant={BackgroundVariant.Lines}
       />
-      <Controls showZoom={false} />
+      <Controls showZoom={false}>
+        <NdgEditorActionsPanel />
+      </Controls>
       <MiniMap
         position="bottom-right"
-        className="max-2xl:hidden"
+        className="max-2xl:scale-50 origin-bottom-right"
         pannable
         zoomable
       />

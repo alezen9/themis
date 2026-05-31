@@ -118,6 +118,7 @@ type NdgEditorStore = {
   commitHistory: () => void;
   undo: () => void;
   redo: () => void;
+  applyLayout: (positions: Record<string, { x: number; y: number }>) => void;
 };
 
 const withHistory = (state: NdgEditorStore, next: Partial<NdgEditorStore>) => ({
@@ -329,6 +330,19 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
         history: result.history,
         ...derive(nodes, edges),
         ...reconcileSelection(nodes, edges),
+      };
+    }),
+
+  // Only positions change — skip full derive, just rebuild the index.
+  applyLayout: positions =>
+    set(state => {
+      const nodes = state.nodes.map(n =>
+        positions[n.id] ? { ...n, position: positions[n.id] } : n,
+      );
+      return {
+        nodes,
+        _nodeById: indexById(nodes),
+        history: recordHistory(state.history, { nodes: state.nodes, edges: state.edges }),
       };
     }),
 }));
