@@ -26,6 +26,13 @@ import {
 import { canConnectNodes } from "../graph/rules";
 import { findInvalidEdgeIds, findInvalidNodeIds } from "../graph/validate";
 import { findUnreachableNodeIds } from "../graph/reachability";
+import {
+  emptyHistory,
+  record as recordHistory,
+  undo as undoHistory,
+  redo as redoHistory,
+  type History,
+} from "./history";
 
 const createKeyCounts = (nodes: EditorNode[]) => {
   const keyCounts = new Map<string, number>();
@@ -64,6 +71,13 @@ const isStructuralNodeChange = (change: NodeChange<EditorNode>) =>
 const isStructuralEdgeChange = (change: EdgeChange<EditorEdge>) =>
   change.type !== "select";
 
+type Snapshot = { nodes: EditorNode[]; edges: EditorEdge[] };
+
+const reconcileSelection = (nodes: EditorNode[], edges: EditorEdge[]) => ({
+  selectedNodes: nodes.filter(node => node.selected),
+  selectedEdges: edges.filter(edge => edge.selected),
+});
+
 type NdgEditorStore = {
   nodes: EditorNode[];
   edges: EditorEdge[];
@@ -74,6 +88,8 @@ type NdgEditorStore = {
   _invalidNodeIds: Set<string>;
   _unreachableNodeIds: Set<string>;
   _invalidEdgeIds: Set<string>;
+
+  history: History<Snapshot>;
 
   selectedNodes: EditorNode[];
   selectedEdges: EditorEdge[];
@@ -99,7 +115,18 @@ type NdgEditorStore = {
   exportSelected: () => EditorDocument;
   importFull: (document: EditorDocument) => boolean;
   importPartial: (document: EditorDocument) => boolean;
+  commitHistory: () => void;
+  undo: () => void;
+  redo: () => void;
 };
+
+const withHistory = (state: NdgEditorStore, next: Partial<NdgEditorStore>) => ({
+  ...next,
+  history: recordHistory(state.history, {
+    nodes: state.nodes,
+    edges: state.edges,
+  }),
+});
 
 const { nodes: initialNodes, edges: initialEdges } = initialDocument;
 
@@ -108,6 +135,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   edges: initialEdges,
   selectedNodes: [],
   selectedEdges: [],
+  history: emptyHistory(),
   ...derive(initialNodes, initialEdges),
 
   onSelectionChange: ({ nodes, edges }) =>
@@ -126,7 +154,8 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       const node = toEditorNode(createNodeId(), { x: 0, y: 200 }, input);
       const nodes = [...state.nodes, node];
 
-      if (!sourceNodeId) return { nodes, ...derive(nodes, state.edges) };
+      if (!sourceNodeId)
+        return withHistory(state, { nodes, ...derive(nodes, state.edges) });
 
       const connection: Connection = {
         source: sourceNodeId,
@@ -136,7 +165,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       };
       const nodeById = new Map(nodes.map(n => [n.id, n]));
       if (!canConnectNodes(nodeById, state._adjacencyList, connection))
-        return { nodes, ...derive(nodes, state.edges) };
+        return withHistory(state, { nodes, ...derive(nodes, state.edges) });
 
       const newEdge: EditorEdge = {
         id: createEdgeId(sourceNodeId, node.id),
@@ -144,7 +173,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
         target: node.id,
       };
       const edges = [...state.edges, newEdge];
-      return { nodes, edges, ...derive(nodes, edges) };
+      return withHistory(state, { nodes, edges, ...derive(nodes, edges) });
     }),
 
   updateNode: input =>
@@ -153,7 +182,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       if (!existing) return state;
       const updated = applyNodeUpdate(existing, input);
       const nodes = state.nodes.map(n => (n.id === input.id ? updated : n));
-      return { nodes, ...derive(nodes, state.edges) };
+      return withHistory(state, { nodes, ...derive(nodes, state.edges) });
     }),
 
   deleteSelected: () =>
@@ -169,13 +198,13 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
           !selectedNodeIds.has(e.source) &&
           !selectedNodeIds.has(e.target),
       );
-      return {
+      return withHistory(state, {
         nodes,
         edges,
         selectedNodes: [],
         selectedEdges: [],
         ...derive(nodes, edges),
-      };
+      });
     }),
 
   onNodesChange: changes =>
@@ -205,7 +234,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
         target,
       };
       const edges = [...state.edges, newEdge];
-      return { edges, ...derive(state.nodes, edges) };
+      return withHistory(state, { edges, ...derive(state.nodes, edges) });
     }),
 
   setEdgeCondition: (edgeId, condition) =>
@@ -214,7 +243,7 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       if (!existing) return state;
       const updated = { ...existing, data: { ...existing.data, condition } };
       const edges = state.edges.map(e => (e.id === edgeId ? updated : e));
-      return { edges, ...derive(state.nodes, edges) };
+      return withHistory(state, { edges, ...derive(state.nodes, edges) });
     }),
 
   exportDocument: () => {
@@ -238,13 +267,15 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   importFull: document => {
     if (document.nodes.filter(n => n.type === "check").length !== 1)
       return false;
-    set({
-      nodes: document.nodes,
-      edges: document.edges,
-      selectedNodes: [],
-      selectedEdges: [],
-      ...derive(document.nodes, document.edges),
-    });
+    set(state =>
+      withHistory(state, {
+        nodes: document.nodes,
+        edges: document.edges,
+        selectedNodes: [],
+        selectedEdges: [],
+        ...derive(document.nodes, document.edges),
+      }),
+    );
     return true;
   },
 
@@ -254,8 +285,50 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
     set(state => {
       const nodes = [...state.nodes, ...addedNodes];
       const edges = [...state.edges, ...addedEdges];
-      return { nodes, edges, ...derive(nodes, edges) };
+      return withHistory(state, { nodes, edges, ...derive(nodes, edges) });
     });
     return true;
   },
+
+  commitHistory: () =>
+    set(state => ({
+      history: recordHistory(state.history, {
+        nodes: state.nodes,
+        edges: state.edges,
+      }),
+    })),
+
+  undo: () =>
+    set(state => {
+      const result = undoHistory(state.history, {
+        nodes: state.nodes,
+        edges: state.edges,
+      });
+      if (!result) return state;
+      const { nodes, edges } = result.value;
+      return {
+        nodes,
+        edges,
+        history: result.history,
+        ...derive(nodes, edges),
+        ...reconcileSelection(nodes, edges),
+      };
+    }),
+
+  redo: () =>
+    set(state => {
+      const result = redoHistory(state.history, {
+        nodes: state.nodes,
+        edges: state.edges,
+      });
+      if (!result) return state;
+      const { nodes, edges } = result.value;
+      return {
+        nodes,
+        edges,
+        history: result.history,
+        ...derive(nodes, edges),
+        ...reconcileSelection(nodes, edges),
+      };
+    }),
 }));

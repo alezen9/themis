@@ -486,3 +486,56 @@ describe("duplicate edge regression", () => {
     expect(edges[0].id).toBe("a__to__b");
   });
 });
+
+describe("undo / redo", () => {
+  it("undo reverts the last structural change and redo replays it", () => {
+    const before = useNdgEditorStore.getState().nodes.length;
+    useNdgEditorStore
+      .getState()
+      .addNode({
+        type: "user-input",
+        key: "undo_probe",
+        valueType: { type: "number" },
+      });
+    expect(useNdgEditorStore.getState().nodes).toHaveLength(before + 1);
+
+    useNdgEditorStore.getState().undo();
+    expect(useNdgEditorStore.getState().nodes).toHaveLength(before);
+    expect(
+      useNdgEditorStore.getState().nodes.some(n => n.data.key === "undo_probe"),
+    ).toBe(false);
+
+    useNdgEditorStore.getState().redo();
+    expect(useNdgEditorStore.getState().nodes).toHaveLength(before + 1);
+    expect(
+      useNdgEditorStore.getState().nodes.some(n => n.data.key === "undo_probe"),
+    ).toBe(true);
+  });
+
+  it("does not record selection-only changes in history", () => {
+    const targetId = useNdgEditorStore.getState().nodes[0].id;
+    const pastBefore = useNdgEditorStore.getState().history.past.length;
+    useNdgEditorStore
+      .getState()
+      .onNodesChange([{ type: "select", id: targetId, selected: true }]);
+
+    expect(useNdgEditorStore.getState().history.past.length).toBe(pastBefore);
+  });
+
+  it("restores a node removed through React Flow when commitHistory ran first", () => {
+    const targetId = useNdgEditorStore.getState().nodes[0].id;
+    const before = useNdgEditorStore.getState().nodes.length;
+
+    useNdgEditorStore.getState().commitHistory();
+    useNdgEditorStore
+      .getState()
+      .onNodesChange([{ type: "remove", id: targetId }]);
+    expect(useNdgEditorStore.getState().nodes).toHaveLength(before - 1);
+
+    useNdgEditorStore.getState().undo();
+    expect(useNdgEditorStore.getState().nodes).toHaveLength(before);
+    expect(
+      useNdgEditorStore.getState().nodes.some(n => n.id === targetId),
+    ).toBe(true);
+  });
+});

@@ -464,3 +464,37 @@ export const IconBranch = (props: ComponentPropsWithoutRef<"svg">) => {
     </svg>
   );
 };
+
+export const IconUndo = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M18 13c-.5096-1.0039-1.3753-1.8345-2.4666-2.3667-1.0914-.5322-2.3492-.73706-3.584-.5838C9.93127 10.3 8.52468 11.6116 7 12.8186M7 10v3h3" />
+    </svg>
+  );
+};
+
+export const IconRedo = (props: ComponentPropsWithoutRef<"svg">) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M6 13c.50963-1.0039 1.37532-1.8345 2.46665-2.3667 1.09132-.5322 2.34915-.73706 3.58395-.5838 2.0181.2505 3.4247 1.5621 4.9494 2.7691M17 10v3h-3" />
+    </svg>
+  );
+};

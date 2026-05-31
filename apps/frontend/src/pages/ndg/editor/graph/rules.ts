@@ -52,5 +52,5 @@ export const canConnectNodes = (
   return true;
 };
 
-export const onBeforeDeleteElements = async (elements: DeleteElementsInput) =>
+export const onBeforeDeleteElements = (elements: DeleteElementsInput) =>
   !elements.nodes.some(node => node.type === "check");

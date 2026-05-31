@@ -5,6 +5,7 @@ import {
   MarkerType,
   type EdgeMouseHandler,
   type NodeMouseHandler,
+  type OnBeforeDelete,
   ReactFlow,
   SelectionMode,
 } from "@xyflow/react";
@@ -24,6 +25,7 @@ export const NdgEditorCanvas = () => {
   const onEdgesChange = useNdgEditorStore(state => state.onEdgesChange);
   const onConnectNodes = useNdgEditorStore(state => state.onConnectNodes);
   const onSelectionChange = useNdgEditorStore(state => state.onSelectionChange);
+  const commitHistory = useNdgEditorStore(state => state.commitHistory);
   const openModal = useNdgEditorModalStore(state => state.openModal);
 
   const onNodeDoubleClick = useCallback<NodeMouseHandler<EditorNode>>(
@@ -34,6 +36,15 @@ export const NdgEditorCanvas = () => {
   const onEdgeDoubleClick = useCallback<EdgeMouseHandler<EditorEdge>>(
     (_, edge) => openModal({ mode: "edit-edge", edgeId: edge.id }),
     [openModal],
+  );
+
+  const onBeforeDelete = useCallback<OnBeforeDelete<EditorNode, EditorEdge>>(
+    async elements => {
+      const allowed = onBeforeDeleteElements(elements);
+      if (allowed) commitHistory();
+      return allowed;
+    },
+    [commitHistory],
   );
 
   return (
@@ -54,8 +65,9 @@ export const NdgEditorCanvas = () => {
       maxZoom={8}
       minZoom={0.05}
       onConnect={onConnectNodes}
+      onNodeDragStart={commitHistory}
       onSelectionChange={onSelectionChange}
-      onBeforeDelete={onBeforeDeleteElements}
+      onBeforeDelete={onBeforeDelete}
       onNodeDoubleClick={onNodeDoubleClick}
       onEdgeDoubleClick={onEdgeDoubleClick}
       onlyRenderVisibleElements={nodes.length > 50}

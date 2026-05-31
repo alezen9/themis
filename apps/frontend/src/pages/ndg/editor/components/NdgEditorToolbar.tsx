@@ -13,6 +13,8 @@ import {
   IconDelete,
   IconPencil,
   IconPlus,
+  IconRedo,
+  IconUndo,
 } from "@components/Icons";
 import { toast } from "@components/toast/store";
 import { ToastError, ToastSuccess } from "@components/toast/presets";
@@ -26,6 +28,9 @@ import { useNdgEditorModalStore } from "../modals/useNdgEditorModalStore";
 export const NdgEditorToolbar = () => {
   return (
     <div className="flex items-center gap-1 border border-sand-600 p-1 rounded-sm">
+      <UndoButton />
+      <RedoButton />
+      <div className="mx-1 h-8 w-px bg-sand-600" />
       <AddButton />
       <EditButton />
       <DeleteButton />
@@ -49,6 +54,26 @@ export const NdgEditorToolbar = () => {
         </NavigationMenu.Portal>
       </NavigationMenu.Root>
     </div>
+  );
+};
+
+const UndoButton = () => {
+  const undo = useNdgEditorStore(s => s.undo);
+  const canUndo = useNdgEditorStore(s => s.history.past.length > 0);
+  return (
+    <ToolbarIconButton title="Undo" disabled={!canUndo} onClick={undo}>
+      <IconUndo />
+    </ToolbarIconButton>
+  );
+};
+
+const RedoButton = () => {
+  const redo = useNdgEditorStore(s => s.redo);
+  const canRedo = useNdgEditorStore(s => s.history.future.length > 0);
+  return (
+    <ToolbarIconButton title="Redo" disabled={!canRedo} onClick={redo}>
+      <IconRedo />
+    </ToolbarIconButton>
   );
 };
 
