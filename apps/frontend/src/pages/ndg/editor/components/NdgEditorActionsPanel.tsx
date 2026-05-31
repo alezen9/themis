@@ -8,8 +8,7 @@ import {
   IconRedo,
   IconUndo,
 } from "@components/Icons";
-import { toast } from "@components/toast/store";
-import { ToastError } from "@components/toast/presets";
+import { toast } from "@components/toast";
 
 import { useNdgEditorStore } from "../controller/useNdgEditorStore";
 import { computeLayout } from "../graph/layout";
@@ -99,11 +98,7 @@ const LayoutButton = () => {
     try {
       applyLayout(await computeLayout(nodes, edges));
     } catch {
-      toast(
-        <ToastError title="Layout failed">
-          Could not compute auto layout.
-        </ToastError>,
-      );
+      toast({ type: "error", title: "Layout failed", message: "Could not compute auto layout." });
     }
   };
   return (

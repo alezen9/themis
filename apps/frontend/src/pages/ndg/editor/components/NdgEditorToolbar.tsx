@@ -6,8 +6,7 @@ import {
 import { NavigationMenu } from "@base-ui/react/navigation-menu";
 
 import { IconChevron } from "@components/Icons";
-import { toast } from "@components/toast/store";
-import { ToastError, ToastSuccess } from "@components/toast/presets";
+import { toast } from "@components/toast";
 import { downloadAs } from "@utils";
 
 import { useNdgEditorStore } from "../controller/useNdgEditorStore";
@@ -44,25 +43,25 @@ const ImportMenu = () => {
   const onReplace = async (event: ChangeEvent<HTMLInputElement>) => {
     const document = await readDocument(event);
     if (!document) return;
-    if (importFull(document)) toast(<ToastSuccess title="Graph replaced" />);
+    if (importFull(document)) toast({ type: "success", title: "Graph replaced" });
     else
-      toast(
-        <ToastError title="Import rejected">
-          A full import must contain exactly one check node.
-        </ToastError>,
-      );
+      toast({
+        type: "error",
+        title: "Import rejected",
+        message: "A full import must contain exactly one check node.",
+      });
   };
 
   const onMerge = async (event: ChangeEvent<HTMLInputElement>) => {
     const document = await readDocument(event);
     if (!document) return;
-    if (importPartial(document)) toast(<ToastSuccess title="Nodes imported" />);
+    if (importPartial(document)) toast({ type: "success", title: "Nodes imported" });
     else
-      toast(
-        <ToastError title="Import rejected">
-          A partial import cannot contain a check node.
-        </ToastError>,
-      );
+      toast({
+        type: "error",
+        title: "Import rejected",
+        message: "A partial import cannot contain a check node.",
+      });
   };
 
   return (
@@ -154,11 +153,7 @@ const readDocument = async (event: ChangeEvent<HTMLInputElement>) => {
   if (!file) return null;
   const document = await parseDocumentFile(file);
   if (!document)
-    toast(
-      <ToastError title="Invalid file">
-        Could not read a valid NDG document.
-      </ToastError>,
-    );
+    toast({ type: "error", title: "Invalid file", message: "Could not read a valid NDG document." });
   return document;
 };
 
