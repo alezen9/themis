@@ -22,7 +22,6 @@
     "@xyflow/react": "^12.10.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "elkjs": "^0.11.1",
     "katex": "^0.17.0",
     "lodash-es": "^4.18.1",
     "pluton-2d": "^0.2.0",
