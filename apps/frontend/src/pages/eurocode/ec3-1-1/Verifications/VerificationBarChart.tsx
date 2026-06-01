@@ -1,9 +1,10 @@
 import { Slider } from "@base-ui/react/slider";
 import type { VerificationRow as Verification } from "@ndg/ndg-ec3-1-1";
-import { type CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useEc311DerivedStore } from "../useEc311DerivedStore";
+import { VerificationTraceDrawer } from "./VerificationTraceDrawer";
 
 const minThreshold = 0.5;
 const maxThreshold = 1;
@@ -86,49 +87,59 @@ const createScale = (verifications: readonly Verification[]): Scale => {
 
 export const VerificationBarChart = () => {
   const verifications = useEc311DerivedStore(state => state.verifications);
+  const [activeVerification, setActiveVerification] = useState<
+    Verification | undefined
+  >();
   const scale = createScale(verifications);
 
   if (verifications.length === 0) return null;
 
   return (
-    <div
-      className={twMerge(
-        "pl-1",
-        "relative grid w-full grid-cols-[minmax(0,1fr)_max-content]",
-        "gap-x-0.5 gap-y-0.5 pt-10",
-        "[&:has(.verification-hover-trigger:hover)_.verification-row:not(:has(.verification-hover-trigger:hover))_.verification-hover-surface]:opacity-25",
-      )}
-      style={{
-        gridTemplateRows: `repeat(${verifications.length}, calc(var(--spacing) * 5))`,
-      }}
-    >
+    <>
       <div
-        className="pointer-events-none absolute inset-0"
+        className={twMerge(
+          "pl-1",
+          "relative grid w-full grid-cols-[minmax(0,1fr)_max-content]",
+          "gap-x-0.5 gap-y-0.5 pt-10",
+          "[&:has(.verification-hover-trigger:hover)_.verification-row:not(:has(.verification-hover-trigger:hover))_.verification-hover-surface]:opacity-25",
+        )}
         style={{
-          gridColumn: "1 / 2",
-          gridRow: `1 / span ${verifications.length}`,
+          gridTemplateRows: `repeat(${verifications.length}, calc(var(--spacing) * 5))`,
         }}
       >
-        <ChartGuides scale={scale} />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            gridColumn: "1 / 2",
+            gridRow: `1 / span ${verifications.length}`,
+          }}
+        >
+          <ChartGuides scale={scale} />
+        </div>
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            gridColumn: "1 / 2",
+            gridRow: `1 / span ${verifications.length}`,
+          }}
+        >
+          <ThresholdSlider scale={scale} />
+        </div>
+        {verifications.map((verification, index) => (
+          <VerificationRow
+            key={verification.id}
+            rowIndex={index}
+            scale={scale}
+            verification={verification}
+            onClick={() => setActiveVerification(verification)}
+          />
+        ))}
       </div>
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          gridColumn: "1 / 2",
-          gridRow: `1 / span ${verifications.length}`,
-        }}
-      >
-        <ThresholdSlider scale={scale} />
-      </div>
-      {verifications.map((verification, index) => (
-        <VerificationRow
-          key={verification.id}
-          rowIndex={index}
-          scale={scale}
-          verification={verification}
-        />
-      ))}
-    </div>
+      <VerificationTraceDrawer
+        verification={activeVerification}
+        onClose={() => setActiveVerification(undefined)}
+      />
+    </>
   );
 };
 
@@ -225,7 +236,11 @@ const ThresholdSlider = (props: ThresholdSliderProps) => {
   );
 };
 
-type VerificationItemProps = { scale: Scale; verification: Verification };
+type VerificationItemProps = {
+  scale: Scale;
+  verification: Verification;
+  onClick: VoidFunction;
+};
 
 type VerificationThresholdItemProps = VerificationItemProps;
 
@@ -234,7 +249,7 @@ type VerificationRowProps = VerificationThresholdItemProps & {
 };
 
 const VerificationRow = (props: VerificationRowProps) => {
-  const { rowIndex, scale, verification } = props;
+  const { rowIndex, scale, verification, onClick } = props;
   const gridRow = rowIndex + 1;
 
   return (
@@ -242,14 +257,22 @@ const VerificationRow = (props: VerificationRowProps) => {
       className="verification-row col-span-full grid grid-cols-subgrid gap-x-0.5"
       style={{ gridRow }}
     >
-      <VerificationBar scale={scale} verification={verification} />
-      <VerificationLabel scale={scale} verification={verification} />
+      <VerificationBar
+        scale={scale}
+        verification={verification}
+        onClick={onClick}
+      />
+      <VerificationLabel
+        scale={scale}
+        verification={verification}
+        onClick={onClick}
+      />
     </div>
   );
 };
 
 const VerificationBar = (props: VerificationThresholdItemProps) => {
-  const { scale, verification } = props;
+  const { scale, verification, onClick } = props;
   const threshold = useEc311DerivedStore(state => state.threshold);
   const ratio = getVerificationRatio(verification);
   const status = getVerificationStatus(ratio, threshold);
@@ -258,8 +281,11 @@ const VerificationBar = (props: VerificationThresholdItemProps) => {
     <div className="relative h-5">
       {ratio !== null && (
         <div className="absolute inset-0 overflow-hidden">
-          <div
+          <button
+            type="button"
+            onClick={onClick}
             className={twMerge(
+              "cursor-pointer",
               "verification-hover-surface verification-hover-trigger",
               "relative h-full w-full rounded-l-sm bg-envy-200",
               "before:absolute before:-inset-y-0.5 before:inset-x-0 before:content-['']",
@@ -281,19 +307,21 @@ const VerificationBar = (props: VerificationThresholdItemProps) => {
 };
 
 const VerificationLabel = (props: VerificationThresholdItemProps) => {
-  const { verification } = props;
+  const { verification, onClick } = props;
   const threshold = useEc311DerivedStore(state => state.threshold);
   const ratio = getVerificationRatio(verification);
   const status = getVerificationStatus(ratio, threshold);
   const formattedRatio = formatRatio(ratio);
 
   return (
-    <div
+    <button
+      type="button"
+      onClick={onClick}
       className={twMerge(
         "verification-hover-surface verification-hover-trigger",
-        "relative grid h-5 grid-cols-[4ch_1rem_max-content] items-center",
+        "relative grid h-5 w-full cursor-pointer grid-cols-[4ch_1rem_max-content] items-center",
         "before:absolute before:-inset-y-0.5 before:inset-x-0 before:content-['']",
-        "rounded-r-sm px-4 text-sm font-light leading-none",
+        "rounded-r-sm px-4 text-left text-sm font-light leading-none",
         "transition-[background-color,color,opacity] duration-200 ease-out",
         "data-[status=pass]:bg-envy-100 data-[status=pass]:text-envy-900",
         "data-[status=fail]:bg-red-100 data-[status=fail]:text-red-800",
@@ -308,6 +336,6 @@ const VerificationLabel = (props: VerificationThresholdItemProps) => {
       <span className="whitespace-nowrap text-left text-xs">
         {verification.name}
       </span>
-    </div>
+    </button>
   );
 };
