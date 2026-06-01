@@ -2,14 +2,23 @@ import type { NDGValue, NodeMeta } from "@ndg/ndg-core";
 import type { VerificationRow } from "@ndg/ndg-ec3-1-1";
 import { twMerge } from "tailwind-merge";
 
-import { Drawer } from "@components/Drawer";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionHeader,
+} from "@components/Accordion";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@components/Drawer";
 import { Latex } from "@components/Latex";
-import { TableBody, TableHeader, TableRow } from "@components/Table";
+import { TableBody, TableRow } from "@components/Table";
 import { formatNumber } from "@formatters/number";
 
 import {
   InfoTable,
-  InfoTableHeaderCell,
   InfoTableLabelCell,
   InfoTableUnitCell,
   InfoTableValueCell,
@@ -24,6 +33,7 @@ export const VerificationTraceDrawer = (
   props: VerificationTraceDrawerProps,
 ) => {
   const { verification, onClose } = props;
+  const data = verification?.payload.data;
 
   return (
     <Drawer
@@ -31,10 +41,40 @@ export const VerificationTraceDrawer = (
       onOpenChange={open => {
         if (!open) onClose();
       }}
-      title={verification?.name}
     >
-      {verification && <VerificationTrace verification={verification} />}
+      <DrawerHeader>
+        <DrawerTitle>{verification?.name}</DrawerTitle>
+        {data && <VerificationStatus passed={data.passed} ratio={data.ratio} />}
+      </DrawerHeader>
+      <DrawerContent>
+        {verification && <VerificationTrace verification={verification} />}
+      </DrawerContent>
     </Drawer>
+  );
+};
+
+type VerificationStatusProps = { passed: boolean; ratio: number };
+
+const VerificationStatus = (props: VerificationStatusProps) => {
+  const { passed, ratio } = props;
+
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <span
+        className={twMerge(
+          "inline-flex items-center rounded-sm px-3 py-1 text-sm font-semibold",
+          passed ? "bg-envy-100 text-envy-900" : "bg-red-100 text-red-800",
+        )}
+      >
+        {passed ? "Pass" : "Fail"}
+      </span>
+      <span className="text-sm text-sand-600">
+        Utilisation{" "}
+        <span className="font-semibold tabular-nums text-sand-900">
+          {formatNumber(ratio)}
+        </span>
+      </span>
+    </div>
   );
 };
 
@@ -69,7 +109,7 @@ const VerificationTrace = (props: VerificationTraceProps) => {
   if (payload.error)
     return <p className="text-sm text-red-700">{payload.error.message}</p>;
 
-  const { check, passed, ratio, trace } = payload.data;
+  const { check, trace } = payload.data;
 
   const values = trace.flatMap(entry =>
     entry.symbol === undefined
@@ -83,6 +123,12 @@ const VerificationTrace = (props: VerificationTraceProps) => {
           },
         ],
   );
+  values.sort((a, b) => {
+    if (a.unit === b.unit) return 0;
+    if (a.unit === undefined) return 1;
+    if (b.unit === undefined) return -1;
+    return a.unit.localeCompare(b.unit);
+  });
 
   const steps = trace.flatMap(entry =>
     entry.expression === undefined
@@ -100,75 +146,65 @@ const VerificationTrace = (props: VerificationTraceProps) => {
   );
 
   return (
-    <div className="flex flex-col gap-8 text-sand-900">
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between gap-4">
-          <span
-            className={twMerge(
-              "inline-flex items-center rounded-sm px-3 py-1 text-sm font-semibold",
-              passed ? "bg-envy-100 text-envy-900" : "bg-red-100 text-red-800",
-            )}
-          >
-            {passed ? "Pass" : "Fail"}
-          </span>
-          <span className="text-sm text-sand-600">
-            Utilisation{" "}
-            <span className="font-semibold tabular-nums text-sand-900">
-              {formatNumber(ratio)}
-            </span>
-          </span>
-        </div>
+    <div className="flex flex-col gap-6 text-sand-900">
+      <div className="rounded-md border border-sand-100 bg-sand-50 p-5">
         <Latex
           displayMode
           tex={check.verificationExpression}
-          className="justify-start text-2xl"
+          className="justify-start text-3xl"
         />
       </div>
 
-      <InfoTable>
-        <TableHeader>
-          <TableRow className="bg-sand-100">
-            <InfoTableHeaderCell>Values</InfoTableHeaderCell>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {values.map(value => (
-            <TableRow key={value.id}>
-              <InfoTableLabelCell>
-                <Latex tex={value.symbol} />
-              </InfoTableLabelCell>
-              <InfoTableValueCell>
-                {formatValue(value.value)}
-              </InfoTableValueCell>
-              <InfoTableUnitCell>
-                {value.unit && <Latex tex={value.unit} />}
-              </InfoTableUnitCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </InfoTable>
+      <Accordion>
+        <AccordionHeader className="px-0 py-2">
+          <span className="text-xs font-semibold tracking-widest text-sand-600 uppercase">
+            Values
+          </span>
+        </AccordionHeader>
+        <AccordionContent className="px-0">
+          <InfoTable>
+            <TableBody>
+              {values.map(value => (
+                <TableRow key={value.id}>
+                  <InfoTableLabelCell>
+                    <Latex tex={value.symbol} />
+                  </InfoTableLabelCell>
+                  <InfoTableValueCell>
+                    {formatValue(value.value)}
+                  </InfoTableValueCell>
+                  <InfoTableUnitCell>
+                    {value.unit && <Latex tex={value.unit} />}
+                  </InfoTableUnitCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </InfoTable>
+        </AccordionContent>
+      </Accordion>
 
       <div className="flex flex-col gap-3">
         {steps.map(step => (
           <div
             key={step.id}
-            className="rounded-sm border border-sand-200 bg-white p-4"
+            className="overflow-hidden rounded-md border border-sand-100 bg-sand-50"
           >
             {step.ref && (
-              <p className="mb-3 text-xs tracking-widest text-sand-500 uppercase">
+              <div className="border-b border-sand-100 bg-sand-100 px-4 py-2 text-xs font-semibold tracking-widest text-sand-600 uppercase">
                 {step.ref}
-              </p>
+              </div>
             )}
-            <Latex
-              displayMode
-              tex={stepEquation(
-                step.symbol,
-                step.expression,
-                step.value,
-                step.unit,
-              )}
-              className="justify-start text-xl"
-            />
+            <div className="p-4">
+              <Latex
+                displayMode
+                tex={stepEquation(
+                  step.symbol,
+                  step.expression,
+                  step.value,
+                  step.unit,
+                )}
+                className="justify-start text-2xl"
+              />
+            </div>
           </div>
         ))}
       </div>
