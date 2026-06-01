@@ -35,6 +35,8 @@ export const VerificationTraceDrawer = (
   const { verification, onClose } = props;
   const data = verification?.payload.data;
 
+  const hasPassed = !!data?.passed;
+
   return (
     <Drawer
       open={!!verification}
@@ -44,37 +46,25 @@ export const VerificationTraceDrawer = (
     >
       <DrawerHeader>
         <DrawerTitle>{verification?.name}</DrawerTitle>
-        {data && <VerificationStatus passed={data.passed} ratio={data.ratio} />}
+        <div className="flex items-center justify-between">
+          <span
+            className={twMerge(
+              "rounded-sm px-4 text-center",
+              hasPassed && "bg-envy-100 text-envy-700",
+              !hasPassed && "bg-red-100 text-red-700",
+            )}
+          >
+            {hasPassed ? "Pass" : "Fail"}
+          </span>
+          <span className="font-light tabular-nums text-sand-900 text-3xl">
+            {formatNumber(data?.ratio ?? 0)}
+          </span>
+        </div>
       </DrawerHeader>
       <DrawerContent>
         {verification && <VerificationTrace verification={verification} />}
       </DrawerContent>
     </Drawer>
-  );
-};
-
-type VerificationStatusProps = { passed: boolean; ratio: number };
-
-const VerificationStatus = (props: VerificationStatusProps) => {
-  const { passed, ratio } = props;
-
-  return (
-    <div className="flex items-center justify-between gap-4">
-      <span
-        className={twMerge(
-          "inline-flex items-center rounded-sm px-3 py-1 text-sm font-semibold",
-          passed ? "bg-envy-100 text-envy-900" : "bg-red-100 text-red-800",
-        )}
-      >
-        {passed ? "Pass" : "Fail"}
-      </span>
-      <span className="text-sm text-sand-600">
-        Utilisation{" "}
-        <span className="font-semibold tabular-nums text-sand-900">
-          {formatNumber(ratio)}
-        </span>
-      </span>
-    </div>
   );
 };
 

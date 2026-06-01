@@ -18,8 +18,8 @@ export const VerificationsHeader = () => {
       className={twMerge(
         "h-full w-full flex justify-end items-center px-2 rounded-sm",
         "max-h-32",
-        isSatisfied && "bg-envy-100/75",
-        !isSatisfied && "bg-red-100/75",
+        // isSatisfied && "bg-envy-100/50",
+        // !isSatisfied && "bg-red-100/50",
       )}
     >
       <span

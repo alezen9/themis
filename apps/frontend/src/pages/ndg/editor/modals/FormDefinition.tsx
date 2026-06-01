@@ -24,7 +24,10 @@ export const FormDefinition = () => {
               label="Verification"
               description="LaTeX condition rendered in the check node"
             >
-              <InputText {...register("verificationExpression")} />
+              <InputText
+                placeholder={"\\frac{N_{Ed}}{N_{pl,Rd}} \\leq 1"}
+                {...register("verificationExpression")}
+              />
             </FormFieldLatex>
           </div>
         )}
@@ -35,7 +38,10 @@ export const FormDefinition = () => {
               label="Expression"
               description="LaTeX formula shown as symbol = expression"
             >
-              <InputText {...register("expression")} />
+              <InputText
+                placeholder={"\\frac{A \\cdot f_y}{\\gamma_{M0}}"}
+                {...register("expression")}
+              />
             </FormFieldLatex>
           </div>
         )}
@@ -55,11 +61,11 @@ export const FormDefinition = () => {
           label="Symbol"
           description="Expression symbol"
         >
-          <InputText {...register("symbol")} />
+          <InputText placeholder={"\\gamma_{M0}"} {...register("symbol")} />
         </FormFieldLatex>
         {type !== "check" && type !== "constant" && (
           <FormFieldLatex name="unit" label="Unit" description="Display unit">
-            <InputText {...register("unit")} />
+            <InputText placeholder={"\\mathrm{mm}^2"} {...register("unit")} />
           </FormFieldLatex>
         )}
       </div>

@@ -86,7 +86,8 @@ const createScale = (verifications: readonly Verification[]): Scale => {
 };
 
 export const VerificationBarChart = () => {
-  const verifications = useEc311DerivedStore(state => state.verifications);
+  const v = useEc311DerivedStore(state => state.verifications);
+  const verifications = [...v, ...v];
   const [activeVerification, setActiveVerification] = useState<
     Verification | undefined
   >();

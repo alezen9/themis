@@ -18,7 +18,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Design tensile force",
     symbol: "N_{Ed}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     children: [],
   },
   {
@@ -29,7 +29,7 @@ export const nodes = defineNodes([
     name: "Design plastic resistance to normal forces",
     symbol: "N_{pl,Rd}",
     expression: "\\frac{A_mm2 \\cdot f_y}{\\gamma_{M0}}",
-    unit: "N",
+    unit: "\\mathrm{N}",
     meta: { sectionRef: "6.2.3", formulaRef: "(6.6)" },
     children: [
       { nodeId: "A_mm2" },
@@ -43,8 +43,8 @@ export const nodes = defineNodes([
     key: "A_mm2",
     valueType: { type: "number" },
     name: "Cross-sectional area",
-    symbol: "A_mm2",
-    unit: "mm^{2}",
+    symbol: "A",
+    unit: "\\mathrm{mm^{2}}",
     children: [],
   },
   {
@@ -54,7 +54,7 @@ export const nodes = defineNodes([
     valueType: { type: "number" },
     name: "Yield strength",
     symbol: "f_y",
-    unit: "MPa",
+    unit: "\\mathrm{MPa}",
     children: [],
   },
   {

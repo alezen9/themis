@@ -24,12 +24,8 @@ import {
   AccordionHeader,
 } from "@components/Accordion";
 import { formatNumber } from "@formatters/number";
+import { texUnit } from "./units";
 import { useEc311DerivedStore } from "../useEc311DerivedStore";
-
-const mm2Unit = String.raw`\mathrm{mm}^2`;
-const mm3Unit = String.raw`\mathrm{mm}^3`;
-const mm4Unit = String.raw`\mathrm{mm}^4`;
-const mm6Unit = String.raw`\mathrm{mm}^6`;
 
 export const FormGeometry = () => {
   const { registerNumber, watch } = useEc311FormContext();
@@ -266,7 +262,7 @@ const GeometryPropertiesInfo = () => {
               {formatNumber(computedProperties.A_mm2)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={mm2Unit} />
+              <Latex tex={texUnit.mm2} />
             </InfoTableUnitCell>
           </TableRow>
         </TableBody>
@@ -287,7 +283,7 @@ const GeometryPropertiesInfo = () => {
               {formatNumber(computedProperties.Iy_mm4)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={mm4Unit} />
+              <Latex tex={texUnit.mm4} />
             </InfoTableUnitCell>
           </TableRow>
           <TableRow>
@@ -298,7 +294,7 @@ const GeometryPropertiesInfo = () => {
               {formatNumber(computedProperties.Iz_mm4)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={mm4Unit} />
+              <Latex tex={texUnit.mm4} />
             </InfoTableUnitCell>
           </TableRow>
           <TableRow>
@@ -309,7 +305,7 @@ const GeometryPropertiesInfo = () => {
               {formatNumber(computedProperties.It_mm4)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={mm4Unit} />
+              <Latex tex={texUnit.mm4} />
             </InfoTableUnitCell>
           </TableRow>
           <TableRow>
@@ -320,7 +316,7 @@ const GeometryPropertiesInfo = () => {
               {formatNumber(computedProperties.Iw_mm6)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={mm6Unit} />
+              <Latex tex={texUnit.mm6} />
             </InfoTableUnitCell>
           </TableRow>
         </TableBody>
@@ -341,7 +337,7 @@ const GeometryPropertiesInfo = () => {
               {formatNumber(computedProperties.Wel_y_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={mm3Unit} />
+              <Latex tex={texUnit.mm3} />
             </InfoTableUnitCell>
           </TableRow>
           <TableRow>
@@ -352,7 +348,7 @@ const GeometryPropertiesInfo = () => {
               {formatNumber(computedProperties.Wel_z_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={mm3Unit} />
+              <Latex tex={texUnit.mm3} />
             </InfoTableUnitCell>
           </TableRow>
           <TableRow>
@@ -363,7 +359,7 @@ const GeometryPropertiesInfo = () => {
               {formatNumber(computedProperties.Wpl_y_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={mm3Unit} />
+              <Latex tex={texUnit.mm3} />
             </InfoTableUnitCell>
           </TableRow>
           <TableRow>
@@ -374,7 +370,7 @@ const GeometryPropertiesInfo = () => {
               {formatNumber(computedProperties.Wpl_z_mm3)}
             </InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={mm3Unit} />
+              <Latex tex={texUnit.mm3} />
             </InfoTableUnitCell>
           </TableRow>
         </TableBody>

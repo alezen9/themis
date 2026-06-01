@@ -29,7 +29,7 @@ export const initialDocument: EditorDocument = {
         key: "N_Ed_N",
         valueType: { type: "number" },
         symbol: "N_{Ed}",
-        unit: "N",
+        unit: "\\mathrm{N}",
       },
     },
     {
@@ -51,7 +51,7 @@ export const initialDocument: EditorDocument = {
         key: "A_mm2",
         valueType: { type: "number" },
         symbol: "A",
-        unit: "mm^{2}",
+        unit: "\\mathrm{mm^{2}}",
       },
     },
     {
@@ -62,7 +62,7 @@ export const initialDocument: EditorDocument = {
         key: "fy_MPa",
         valueType: { type: "number" },
         symbol: "f_y",
-        unit: "MPa",
+        unit: "\\mathrm{MPa}",
       },
     },
     {
