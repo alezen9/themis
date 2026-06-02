@@ -24,6 +24,8 @@ export const userInputKeys = [
   "Wel_z_mm3",
   "Av_y_mm2",
   "Av_z_mm2",
+  "S_y_mm3",
+  "S_z_mm3",
   "It_mm4",
   "Iw_mm6",
   "centroid_y_mm",

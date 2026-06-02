@@ -27,6 +27,8 @@ export const userInputCatalog: Record<string, CatalogEntry> = {
   Wel_z_mm3: { symbol: "W_{el,z}", unit: "mm^3", valueType: "number" },
   Av_y_mm2: { symbol: "A_{v,y}", unit: "mm^2", valueType: "number" },
   Av_z_mm2: { symbol: "A_{v,z}", unit: "mm^2", valueType: "number" },
+  S_y_mm3: { symbol: "S_y", unit: "mm^3", valueType: "number" },
+  S_z_mm3: { symbol: "S_z", unit: "mm^3", valueType: "number" },
   It_mm4: { symbol: "I_t", unit: "mm^4", valueType: "number" },
   Iw_mm6: { symbol: "I_w", unit: "mm^6", valueType: "number" },
   centroid_y_mm: { symbol: "y_c", unit: "mm", valueType: "number" },

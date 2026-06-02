@@ -85,6 +85,8 @@ const createRuntimeValues = (
     Wel_z_mm3: inputs.Wel_z_mm3,
     Av_y_mm2: inputs.Av_y_mm2,
     Av_z_mm2: inputs.Av_z_mm2,
+    S_y_mm3: inputs.S_y_mm3,
+    S_z_mm3: inputs.S_z_mm3,
     h_mm,
     hw_mm,
     b_mm,
