@@ -3,9 +3,11 @@ import { LatexLabel, Section, SectionTitle, TextLabel } from "./shared";
 import { InputSelect } from "@components/inputs/InputSelect";
 import {
   annexOptions,
+  betaLTOptions,
   bucklingCurvesLTPolicyOptions,
   coefficientFMethodOptions,
   interactionFactorMethodOptions,
+  lambdaLT0Options,
 } from "./options";
 import { InputNumber } from "@components/inputs/InputNumber";
 import { useEc311FormContext } from "./useEc311FormContext";
@@ -38,11 +40,17 @@ export const FormAnnex = () => {
         name="lambda_LT_0"
         label={<LatexLabel tex="\lambda_{LT,0}" />}
       >
-        <InputNumber {...registerNumber?.("lambda_LT_0")} />
+        <InputSelect
+          {...registerSelect?.("lambda_LT_0")}
+          options={lambdaLT0Options}
+        />
       </HorizontalInput>
 
       <HorizontalInput name="beta_LT" label={<LatexLabel tex="\beta_{LT}" />}>
-        <InputNumber {...registerNumber?.("beta_LT")} />
+        <InputSelect
+          {...registerSelect?.("beta_LT")}
+          options={betaLTOptions}
+        />
       </HorizontalInput>
 
       <HorizontalInput

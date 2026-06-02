@@ -108,6 +108,18 @@ export const coefficientFMethodValues = extractValues(
   coefficientFMethodOptions,
 );
 
+export const lambdaLT0Options = [
+  { value: 0.4, label: "Rolled / welded (0.4)" },
+  { value: 0.2, label: "General (0.2)" },
+] as const satisfies Option[];
+export const lambdaLT0Values = extractValues(lambdaLT0Options);
+
+export const betaLTOptions = [
+  { value: 0.75, label: "Rolled / welded (0.75)" },
+  { value: 1.0, label: "General (1.0)" },
+] as const satisfies Option[];
+export const betaLTValues = extractValues(betaLTOptions);
+
 export const bucklingCurvesLTPolicyOptions = [
   { value: "default-rolled-welded", label: "Default (Rolled / Welded)" },
   { value: "general", label: "General" },
