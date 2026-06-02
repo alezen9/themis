@@ -7,9 +7,9 @@ import { geometrySchema } from "./geometrySchema";
 import { lateralTorsionalBucklingSchema } from "./lateralTorsionalBucklingSchema";
 import { materialSchema } from "./materialSchema";
 import { nationalAnnexSchema } from "./nationalAnnexSchema";
-import { shapeAndCrossSectionSchema } from "./shapeAndCrossSectionSchema";
+import { shapeDependentSchema } from "./shapeDependentSchema";
 
-export const schema = shapeAndCrossSectionSchema
+export const schema = shapeDependentSchema
   .and(materialSchema)
   .and(classificationSchema)
   .and(geometrySchema)
