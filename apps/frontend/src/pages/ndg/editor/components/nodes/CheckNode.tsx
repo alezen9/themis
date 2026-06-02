@@ -11,13 +11,11 @@ export const CheckNode = (props: EditorNodeProps) => {
       <NodeHeader label={data.key} type="check" />
       {data.verificationExpression && (
         <NodeBody className="overflow-x-auto text-sm">
-          <div className="flex w-max min-w-full justify-center">
-            <Latex
-              displayMode
-              tex={data.verificationExpression}
-              className="min-w-max"
-            />
-          </div>
+          <Latex
+            displayMode
+            tex={data.verificationExpression}
+            className="justify-center-safe"
+          />
         </NodeBody>
       )}
       <NodeAddChildHandle sourceNodeId={props.id} />
