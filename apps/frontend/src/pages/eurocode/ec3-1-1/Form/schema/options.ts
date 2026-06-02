@@ -51,6 +51,7 @@ export const ec311InputKeyOptions = [
   option("annex_id"),
   option("gamma_M0"),
   option("gamma_M1"),
+  option("eta"),
   option("lambda_LT_0"),
   option("beta_LT"),
   option("f_method"),

@@ -43,6 +43,7 @@ export const userInputKeys = [
   "fu_MPa",
   "gamma_M0",
   "gamma_M1",
+  "eta",
   "lambda_LT_0",
   "beta_LT",
   "f_method",

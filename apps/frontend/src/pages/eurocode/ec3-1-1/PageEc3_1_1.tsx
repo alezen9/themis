@@ -209,6 +209,7 @@ const createVerifyInputs = (
     chs_geometry: inputs.chs_geometry,
     gamma_M0: inputs.gamma_M0,
     gamma_M1: inputs.gamma_M1,
+    eta: inputs.eta,
     lambda_LT_0: inputs.lambda_LT_0,
     beta_LT: inputs.beta_LT,
     interaction_factor_method: inputs.interaction_factor_method,

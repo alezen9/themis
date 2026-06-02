@@ -116,6 +116,7 @@ export const defaultValues = {
   annex_id: italianAnnex.id,
   gamma_M0: italianAnnex.coefficients.gamma_M0,
   gamma_M1: italianAnnex.coefficients.gamma_M1,
+  eta: italianAnnex.coefficients.eta,
   lambda_LT_0: italianAnnex.coefficients.lambda_LT_0,
   beta_LT: italianAnnex.coefficients.beta_LT,
   f_method: italianAnnex.coefficients.f_method,

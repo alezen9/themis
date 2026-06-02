@@ -92,6 +92,7 @@ const createRuntimeValues = (
     t_mm,
     fy_MPa: inputs.fy_MPa,
     gamma_M0: inputs.gamma_M0,
+    eta: inputs.eta,
   };
 };
 

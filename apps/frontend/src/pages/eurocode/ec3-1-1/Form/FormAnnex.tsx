@@ -30,6 +30,10 @@ export const FormAnnex = () => {
         <InputNumber {...registerNumber?.("gamma_M1")} />
       </HorizontalInput>
 
+      <HorizontalInput name="eta" label={<LatexLabel tex="\eta" />}>
+        <InputNumber {...registerNumber?.("eta")} />
+      </HorizontalInput>
+
       <HorizontalInput
         name="lambda_LT_0"
         label={<LatexLabel tex="\lambda_{LT,0}" />}

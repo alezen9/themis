@@ -15,6 +15,7 @@ const annexCoefficientsSchema = z.strictObject({
   annex_id: z.literal(annexValues),
   gamma_M0: z.number(REQUIRED_NUMBER_MESSAGE).positive(POSITIVE_NUMBER_MESSAGE),
   gamma_M1: z.number(REQUIRED_NUMBER_MESSAGE).positive(POSITIVE_NUMBER_MESSAGE),
+  eta: z.number(REQUIRED_NUMBER_MESSAGE).positive(POSITIVE_NUMBER_MESSAGE),
   lambda_LT_0: z
     .number(REQUIRED_NUMBER_MESSAGE)
     .positive(POSITIVE_NUMBER_MESSAGE),

@@ -46,6 +46,7 @@ export type Ec311Inputs = {
 
   gamma_M0: number;
   gamma_M1: number;
+  eta: number;
   lambda_LT_0: number;
   beta_LT: number;
   f_method?: string | number;
