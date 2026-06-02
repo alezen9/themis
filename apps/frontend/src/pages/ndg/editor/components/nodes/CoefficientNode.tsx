@@ -12,8 +12,12 @@ export const CoefficientNode = (props: EditorNodeProps) => {
       <Handle type="target" position={Position.Top} />
       <NodeHeader label={data.key} type="coefficient" />
       {data.symbol && (
-        <NodeBody className="flex min-h-8 items-center justify-center px-2 py-1 text-sm">
-          <Latex tex={data.symbol} />
+        <NodeBody className="text-sm">
+          <Latex
+            displayMode
+            tex={data.symbol}
+            className="justify-center-safe px-1"
+          />
         </NodeBody>
       )}
     </NodeCard>

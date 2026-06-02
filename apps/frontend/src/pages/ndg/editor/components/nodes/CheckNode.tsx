@@ -10,11 +10,11 @@ export const CheckNode = (props: EditorNodeProps) => {
     <NodeCard nodeId={props.id} nodeKey={data.key}>
       <NodeHeader label={data.key} type="check" />
       {data.verificationExpression && (
-        <NodeBody className="overflow-x-auto text-sm">
+        <NodeBody className="text-sm">
           <Latex
             displayMode
             tex={data.verificationExpression}
-            className="justify-center-safe"
+            className="justify-center-safe px-1"
           />
         </NodeBody>
       )}
