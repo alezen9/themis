@@ -57,7 +57,7 @@ export const VerificationTraceDrawer = (
             {hasPassed ? "Pass" : "Fail"}
           </span>
           <span className="font-light tabular-nums text-sand-900 text-3xl">
-            {formatNumber(data?.ratio ?? 0)}
+            {formatNumber(data?.utilisation ?? 0)}
           </span>
         </div>
       </DrawerHeader>

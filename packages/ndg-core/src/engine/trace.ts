@@ -1,5 +1,5 @@
 import { isComputedNode, type Node } from "../schema";
-import type { NDGTraceEntry, NDGValue } from "../types";
+import type { EvalNote, NDGTraceEntry, NDGValue } from "../types";
 import type { EvaluationState } from "./evaluate";
 
 export const createTraceEntry = (
@@ -7,6 +7,7 @@ export const createTraceEntry = (
   value: NDGValue,
   activeChildren: string[],
   state: EvaluationState,
+  notes: EvalNote[],
 ): NDGTraceEntry => {
   const evaluatorInputs = isComputedNode(node)
     ? createEvaluatorInputs(activeChildren, state)
@@ -27,6 +28,7 @@ export const createTraceEntry = (
     description: node.description,
     meta: "meta" in node ? node.meta : undefined,
     evaluatorInputs,
+    notes: notes.length > 0 ? notes : undefined,
     children: activeChildren,
   };
 };

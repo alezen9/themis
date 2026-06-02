@@ -26,7 +26,7 @@ const formatRatio = (ratio: number | null) => {
 };
 
 const getVerificationRatio = (verification: Verification) =>
-  verification.payload.data?.ratio ?? null;
+  verification.payload.data?.utilisation ?? null;
 
 const getVerificationStatus = (
   ratio: number | null,
@@ -86,8 +86,7 @@ const createScale = (verifications: readonly Verification[]): Scale => {
 };
 
 export const VerificationBarChart = () => {
-  const v = useEc311DerivedStore(state => state.verifications);
-  const verifications = [...v, ...v];
+  const verifications = useEc311DerivedStore(state => state.verifications);
   const [activeVerification, setActiveVerification] = useState<
     Verification | undefined
   >();

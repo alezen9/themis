@@ -7,7 +7,7 @@ export const VerificationsHeader = () => {
   const threshold = useEc311DerivedStore(state => state.threshold);
 
   const ratios = verifications.flatMap(verification =>
-    verification.payload.data ? [verification.payload.data.ratio] : [],
+    verification.payload.data ? [verification.payload.data.utilisation] : [],
   );
   const maxRatio = Math.max(...ratios);
   const formattdMaxRatio = maxRatio ? formatNumber(maxRatio) : "N/A";

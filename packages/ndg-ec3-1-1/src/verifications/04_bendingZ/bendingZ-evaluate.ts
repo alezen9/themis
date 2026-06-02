@@ -1,5 +1,5 @@
 import { defineEvaluators } from "@ndg/ndg-core";
-import { assertFinite, assertPositive } from "../../assertions";
+import { assertPositive } from "../../assertions";
 import { nodes } from "./bendingZ-nodes";
 
 export const evaluate = defineEvaluators(nodes, {
@@ -11,8 +11,8 @@ export const evaluate = defineEvaluators(nodes, {
     return (W_z_res_mm3 * fy_MPa) / gamma_M0;
   },
 
-  ratio: ({ M_z_Ed_Nmm, M_c_z_Rd_Nmm }) => {
-    assertFinite(M_z_Ed_Nmm, "bending-z: M_z_Ed_Nmm must be finite");
+  utilisation: ({ M_z_Ed_Nmm, M_c_z_Rd_Nmm }) => {
+    
     assertPositive(
       M_c_z_Rd_Nmm,
       "bending-z: denominator M_c_z_Rd_Nmm must be > 0 (division by zero)",

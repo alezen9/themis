@@ -1,6 +1,6 @@
 import { collectConditionKeys, evaluateCondition } from "../evaluate-condition";
 import { isSelectorNode, type Condition, type Node } from "../schema";
-import type { NDGContext, NDGTraceEntry, NDGValue } from "../types";
+import type { EvalCtx, EvalNote, NDGContext, NDGTraceEntry, NDGValue } from "../types";
 import type { ValidatedNDG } from "../validate-ndg";
 import { INTERNAL_CONSTANTS } from "./constants";
 import { createTraceEntry } from "./trace";
@@ -31,11 +31,12 @@ export const evaluateNode = (nodeId: string, state: EvaluationState): void => {
   state.activeNode = node;
 
   const activeChildren = getActiveChildren(node, state);
-  const value = resolveNodeValue(node, activeChildren, state);
+  const notes: EvalNote[] = [];
+  const value = resolveNodeValue(node, activeChildren, state, notes);
 
   state.cache[node.key] = value;
   state.lookup[node.key] = value;
-  state.trace.push(createTraceEntry(node, value, activeChildren, state));
+  state.trace.push(createTraceEntry(node, value, activeChildren, state, notes));
   state.visited.add(nodeId);
 };
 
@@ -75,6 +76,7 @@ const resolveNodeValue = (
   node: Node,
   activeChildren: string[],
   state: EvaluationState,
+  notes: EvalNote[],
 ) => {
   switch (node.type) {
     case "constant": {
@@ -98,7 +100,12 @@ const resolveNodeValue = (
         return resolveAutoSelectorNode(node, activeChildren, state);
       }
 
-      const result = evaluator(state.lookup);
+      const ctx: EvalCtx = {
+        addNote({ formula, latex, value, warn }) {
+          notes.push({ formula, latex, value, severity: warn ? "warning" : "ok" });
+        },
+      };
+      const result = evaluator(state.lookup, ctx);
       assertFiniteNumberResult(node, result);
       return result;
     }

@@ -1,5 +1,5 @@
 import { defineEvaluators } from "@ndg/ndg-core";
-import { assertFinite, assertPositive } from "../../assertions";
+import { assertPositive } from "../../assertions";
 import { nodes } from "./shearZ-nodes";
 
 export const evaluate = defineEvaluators(nodes, {
@@ -11,8 +11,8 @@ export const evaluate = defineEvaluators(nodes, {
     return (Av_z_mm2 * fy_MPa) / (Math.sqrt(3) * gamma_M0);
   },
 
-  ratio: ({ V_z_Ed_N, V_pl_z_Rd_N }) => {
-    assertFinite(V_z_Ed_N, "shear-z: V_z_Ed_N must be finite");
+  utilisation: ({ V_z_Ed_N, V_pl_z_Rd_N }) => {
+    
     assertPositive(
       V_pl_z_Rd_N,
       "shear-z: denominator V_pl_z_Rd_N must be > 0 (division by zero)",

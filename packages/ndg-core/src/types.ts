@@ -6,6 +6,22 @@ type ComputedNodeType = "formula" | "check";
 
 export type NDGValue = number | string;
 
+export type EvalNote = {
+  formula: string;
+  latex?: string;
+  value: number;
+  severity: "ok" | "warning";
+};
+
+export type EvalCtx = {
+  addNote(opts: {
+    formula: string;
+    latex?: string;
+    value: number;
+    warn: boolean;
+  }): void;
+};
+
 export type ValueType =
   | { readonly type: "number"; readonly oneOf?: readonly number[] }
   | { readonly type: "string"; readonly oneOf?: readonly string[] };
@@ -74,6 +90,7 @@ type EvaluateRequired<
 > = {
   [K in RequiredComputedKey<TNodes>]: (
     deps: EvaluatorArgs<TNodes, TValues>,
+    ctx: EvalCtx,
   ) => InferComputed<TNodes>[K];
 };
 
@@ -83,6 +100,7 @@ type EvaluateOptional<
 > = {
   [K in SelectorKey<TNodes>]?: (
     deps: EvaluatorArgs<TNodes, TValues>,
+    ctx: EvalCtx,
   ) => InferComputed<TNodes>[K];
 };
 
@@ -121,6 +139,7 @@ export type NDGTraceEntry = {
   description?: string;
   meta?: NodeMeta;
   evaluatorInputs?: Record<string, NDGValue>;
+  notes?: EvalNote[];
   children: string[];
 };
 
@@ -133,7 +152,7 @@ export type NDGRunResult<TNodes extends readonly Node[] = readonly Node[]> = {
     meta?: CheckNode["meta"];
   };
   passed: boolean;
-  ratio: number;
+  utilisation: number;
   cache: InferCache<TNodes>;
   trace: NDGTraceEntry[];
 };

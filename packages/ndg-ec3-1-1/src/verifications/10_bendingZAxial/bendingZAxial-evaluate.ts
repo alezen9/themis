@@ -1,6 +1,6 @@
 import { defineEvaluators } from "@ndg/ndg-core";
 import { Ec3VerificationError } from "../../errors";
-import { assertFinite, assertPositive } from "../../assertions";
+import { assertPositive } from "../../assertions";
 import { nodes } from "./bendingZAxial-nodes";
 
 export const evaluate = defineEvaluators(nodes, {
@@ -21,7 +21,7 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   n: ({ N_Ed_N, N_pl_Rd_N }) => {
-    assertFinite(N_Ed_N, "bending-z-axial: N_Ed_N must be finite");
+    
     assertPositive(
       N_pl_Rd_N,
       "bending-z-axial: denominator N_pl_Rd_N must be > 0 (division by zero)",
@@ -74,7 +74,7 @@ export const evaluate = defineEvaluators(nodes, {
 
   M_N_z_Rd_Nmm: ({ M_pl_z_Rd_Nmm, k_z }) => {
     assertPositive(M_pl_z_Rd_Nmm, "bending-z-axial: M_pl_z_Rd_Nmm must be > 0");
-    assertFinite(k_z, "bending-z-axial: k_z must be finite");
+    
 
     const reducedResistance = M_pl_z_Rd_Nmm * k_z;
     assertPositive(
@@ -86,7 +86,7 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   utilization_class12: ({ M_z_Ed_Nmm, M_N_z_Rd_Nmm }) => {
-    assertFinite(M_z_Ed_Nmm, "bending-z-axial: M_z_Ed_Nmm must be finite");
+    
     assertPositive(
       M_N_z_Rd_Nmm,
       "bending-z-axial: denominator M_N_z_Rd_Nmm must be > 0 (division by zero)",
@@ -96,14 +96,14 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   sigma_N_MPa: ({ N_Ed_N, A_mm2 }) => {
-    assertFinite(N_Ed_N, "bending-z-axial: N_Ed_N must be finite");
+    
     assertPositive(A_mm2, "bending-z-axial: A_mm2 must be > 0");
 
     return Math.abs(N_Ed_N) / A_mm2;
   },
 
   sigma_M_z_MPa: ({ M_z_Ed_Nmm, Wel_z_mm3 }) => {
-    assertFinite(M_z_Ed_Nmm, "bending-z-axial: M_z_Ed_Nmm must be finite");
+    
     assertPositive(Wel_z_mm3, "bending-z-axial: Wel_z_mm3 must be > 0");
 
     return Math.abs(M_z_Ed_Nmm) / Wel_z_mm3;
@@ -129,7 +129,7 @@ export const evaluate = defineEvaluators(nodes, {
     return sigma_x_class3_MPa / sigma_limit_MPa;
   },
 
-  ratio: ({ section_class, utilization_class12, utilization_class3 }) => {
+  utilisation: ({ section_class, utilization_class12, utilization_class3 }) => {
     if (!Number.isFinite(section_class) || !Number.isInteger(section_class)) {
       throw new Ec3VerificationError({
         type: "invalid-input-domain",

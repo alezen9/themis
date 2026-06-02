@@ -1,9 +1,5 @@
 import { defineEvaluators } from "@ndg/ndg-core";
-import {
-  assertFinite,
-  assertNonNegative,
-  assertPositive,
-} from "../../assertions";
+import { assertNonNegative, assertPositive } from "../../assertions";
 import { nodes } from "./bendingYShear-nodes";
 
 export const evaluate = defineEvaluators(nodes, {
@@ -16,7 +12,7 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   u_z: ({ V_z_Ed_N, V_pl_z_Rd_N }) => {
-    assertFinite(V_z_Ed_N, "bending-y-shear: V_z_Ed_N must be finite");
+    
     assertPositive(
       V_pl_z_Rd_N,
       "bending-y-shear: denominator V_pl_z_Rd_N must be > 0 (division by zero)",
@@ -71,8 +67,8 @@ export const evaluate = defineEvaluators(nodes, {
     return Math.min((W_y_eff_mm3 * fy_MPa) / gamma_M0, M_c_y_Rd_Nmm);
   },
 
-  ratio: ({ M_y_Ed_Nmm, M_y_V_Rd_Nmm }) => {
-    assertFinite(M_y_Ed_Nmm, "bending-y-shear: M_y_Ed_Nmm must be finite");
+  utilisation: ({ M_y_Ed_Nmm, M_y_V_Rd_Nmm }) => {
+    
     assertPositive(
       M_y_V_Rd_Nmm,
       "bending-y-shear: denominator M_y_V_Rd_Nmm must be > 0 (division by zero)",

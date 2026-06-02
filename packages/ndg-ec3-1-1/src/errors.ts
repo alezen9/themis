@@ -1,7 +1,5 @@
 type Ec3FailureType =
-  | "not-applicable-section-shape"
-  | "not-applicable-section-class"
-  | "not-applicable-load-case"
+  | "not-applicable"
   | "invalid-input-domain"
   | "missing-input"
   | "evaluation-error";

@@ -33,15 +33,15 @@ export const runNDG = <
   try {
     evaluateNode(check.id, state);
 
-    const ratio = cache[check.key];
-    if (typeof ratio !== "number") {
+    const utilisation = cache[check.key];
+    if (typeof utilisation !== "number") {
       throw new Error(
-        `Check node "${check.key}" must evaluate to a number, got ${typeof ratio}`,
+        `Check node "${check.key}" must evaluate to a number, got ${typeof utilisation}`,
       );
     }
-    if (!isFinite(ratio)) {
+    if (!isFinite(utilisation)) {
       throw new Error(
-        `Check node "${check.key}" produced ${ratio} -- likely division by zero or invalid computation`,
+        `Check node "${check.key}" produced ${utilisation} -- likely division by zero or invalid computation`,
       );
     }
 
@@ -53,8 +53,8 @@ export const runNDG = <
         verificationExpression: check.verificationExpression,
         meta: check.meta,
       },
-      passed: ratio <= 1.0,
-      ratio,
+      passed: utilisation <= 1.0,
+      utilisation,
       cache: cache as InferCache<TNodes>,
       trace,
     };

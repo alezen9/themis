@@ -1,10 +1,6 @@
 import { defineEvaluators } from "@ndg/ndg-core";
 import { nodes } from "./compression-nodes";
-import {
-  assertApplicable,
-  assertFinite,
-  assertPositive,
-} from "../../assertions";
+import { assertPrecondition, assertPositive } from "../../assertions";
 
 export const evaluate = defineEvaluators(nodes, {
   N_c_Rd_N: ({ A_mm2, fy_MPa, gamma_M0 }) => {
@@ -15,9 +11,9 @@ export const evaluate = defineEvaluators(nodes, {
     return (A_mm2 * fy_MPa) / gamma_M0;
   },
 
-  ratio: ({ N_Ed_N, N_c_Rd_N }) => {
-    assertFinite(N_Ed_N, "compression: N_Ed_N must be finite");
-    assertApplicable(
+  utilisation: ({ N_Ed_N, N_c_Rd_N }) => {
+    
+    assertPrecondition(
       N_Ed_N < 0,
       "compression: load case not applicable for sign of N_Ed_N",
     );

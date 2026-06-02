@@ -2,9 +2,9 @@ import { defineNodes } from "@ndg/ndg-core";
 
 export const nodes = defineNodes([
   {
-    id: "ratio",
+    id: "utilisation",
     type: "check",
-    key: "ratio",
+    key: "utilisation",
     valueType: { type: "number" },
     name: "Compression resistance check",
     verificationExpression: "\\frac{\\left|N_{Ed}\\right|}{N_{c,Rd}} \\leq 1.0",
