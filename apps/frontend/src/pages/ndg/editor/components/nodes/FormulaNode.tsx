@@ -11,15 +11,13 @@ export const FormulaNode = (props: EditorNodeProps) => {
     <NodeCard nodeId={props.id} nodeKey={data.key}>
       <Handle type="target" position={Position.Top} />
       <NodeHeader label={data.key} type="formula" />
-      {data.expression && (
-        <NodeBody className="text-sm">
-          <Latex
-            displayMode
-            tex={`${data.symbol} = ${data.expression}`}
-            className="justify-center-safe px-1"
-          />
-        </NodeBody>
-      )}
+      <NodeBody>
+        <Latex
+          displayMode
+          tex={`${data.symbol} = ${data.expression}`}
+          className="justify-center-safe px-1"
+        />
+      </NodeBody>
       <NodeAddChildHandle sourceNodeId={props.id} />
     </NodeCard>
   );

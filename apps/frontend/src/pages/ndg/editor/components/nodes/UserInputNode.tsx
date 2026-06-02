@@ -11,12 +11,13 @@ export const UserInputNode = (props: EditorNodeProps) => {
     <NodeCard nodeId={props.id} nodeKey={data.key}>
       <Handle type="target" position={Position.Top} />
       <NodeHeader label={data.key} type="input" />
-      {(data.symbol || data.unit) && (
-        <NodeBody className="flex min-h-8 items-center justify-center gap-2 px-2 py-1 text-sm">
-          {data.symbol && <Latex tex={data.symbol} />}
-          {data.unit && <Latex tex={`(${data.unit})`} />}
-        </NodeBody>
-      )}
+      <NodeBody>
+        <Latex
+          displayMode
+          tex={`${data.symbol} \\quad (${data.unit})`}
+          className="justify-center-safe px-1"
+        />
+      </NodeBody>
     </NodeCard>
   );
 };

@@ -9,15 +9,13 @@ export const CheckNode = (props: EditorNodeProps) => {
   return (
     <NodeCard nodeId={props.id} nodeKey={data.key}>
       <NodeHeader label={data.key} type="check" />
-      {data.verificationExpression && (
-        <NodeBody className="text-sm">
-          <Latex
-            displayMode
-            tex={data.verificationExpression}
-            className="justify-center-safe px-1"
-          />
-        </NodeBody>
-      )}
+      <NodeBody>
+        <Latex
+          displayMode
+          tex={data.verificationExpression}
+          className="justify-center-safe px-1"
+        />
+      </NodeBody>
       <NodeAddChildHandle sourceNodeId={props.id} />
     </NodeCard>
   );
