@@ -33,6 +33,7 @@ export const ec311InputKeyOptions = [
   option("V_z_Ed_kN"),
   option("M_y_Ed_kNm"),
   option("M_z_Ed_kNm"),
+  option("T_Ed_kNm"),
   option("k_y"),
   option("M_y_Ed_shape"),
   option("psi_y"),

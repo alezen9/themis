@@ -8,6 +8,7 @@ export type Ec311Inputs = {
   V_z_Ed_N: number;
   M_y_Ed_Nmm: number;
   M_z_Ed_Nmm: number;
+  T_Ed_Nmm: number;
 
   L_mm: number;
 

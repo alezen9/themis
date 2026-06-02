@@ -39,6 +39,7 @@ export const FormShape = () => {
         reset({
           ...values,
           shape: "RHS",
+          T_Ed_kNm: defaultValues.T_Ed_kNm,
           section_id: defaultRHSSection.id,
           fabrication_type: "cold-formed",
           steel_grade_id: composeSteelGradeId(
@@ -53,6 +54,7 @@ export const FormShape = () => {
         reset({
           ...values,
           shape: "CHS",
+          T_Ed_kNm: defaultValues.T_Ed_kNm,
           section_id: defaultCHSSection.id,
           fabrication_type: "cold-formed",
           steel_grade_id: composeSteelGradeId(

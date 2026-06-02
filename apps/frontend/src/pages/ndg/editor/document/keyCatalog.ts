@@ -13,6 +13,7 @@ export const userInputKeys = [
   "V_z_Ed_N",
   "M_y_Ed_Nmm",
   "M_z_Ed_Nmm",
+  "T_Ed_Nmm",
   "L_mm",
   "A_mm2",
   "Iy_mm4",

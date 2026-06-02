@@ -14,6 +14,7 @@ export const userInputCatalog: Record<string, CatalogEntry> = {
   V_z_Ed_N: { symbol: "V_{z,Ed}", unit: "N", valueType: "number" },
   M_y_Ed_Nmm: { symbol: "M_{y,Ed}", unit: "N{\\cdot}mm", valueType: "number" },
   M_z_Ed_Nmm: { symbol: "M_{z,Ed}", unit: "N{\\cdot}mm", valueType: "number" },
+  T_Ed_Nmm: { symbol: "T_{Ed}", unit: "N{\\cdot}mm", valueType: "number" },
 
   L_mm: { symbol: "L", unit: "mm", valueType: "number" },
 

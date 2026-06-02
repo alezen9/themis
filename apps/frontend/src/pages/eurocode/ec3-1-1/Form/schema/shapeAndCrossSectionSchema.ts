@@ -4,7 +4,11 @@ import {
   iFabricationTypeValues,
   rhsChsFabricationTypeValues,
 } from "../options";
-import { REQUIRED_STRING_MESSAGE } from "./constants";
+import {
+  inactiveFieldSchema,
+  REQUIRED_NUMBER_MESSAGE,
+  REQUIRED_STRING_MESSAGE,
+} from "./constants";
 
 export const shapeAndCrossSectionSchema = z.discriminatedUnion("shape", [
   z.strictObject({
@@ -13,6 +17,7 @@ export const shapeAndCrossSectionSchema = z.discriminatedUnion("shape", [
       .string(REQUIRED_STRING_MESSAGE)
       .min(1, REQUIRED_STRING_MESSAGE),
     fabrication_type: z.literal(iFabricationTypeValues),
+    T_Ed_kNm: inactiveFieldSchema,
   }),
   z.strictObject({
     shape: z.literal("RHS"),
@@ -20,6 +25,7 @@ export const shapeAndCrossSectionSchema = z.discriminatedUnion("shape", [
       .string(REQUIRED_STRING_MESSAGE)
       .min(1, REQUIRED_STRING_MESSAGE),
     fabrication_type: z.literal(rhsChsFabricationTypeValues),
+    T_Ed_kNm: z.number(REQUIRED_NUMBER_MESSAGE),
   }),
   z.strictObject({
     shape: z.literal("CHS"),
@@ -27,5 +33,6 @@ export const shapeAndCrossSectionSchema = z.discriminatedUnion("shape", [
       .string(REQUIRED_STRING_MESSAGE)
       .min(1, REQUIRED_STRING_MESSAGE),
     fabrication_type: z.literal(rhsChsFabricationTypeValues),
+    T_Ed_kNm: z.number(REQUIRED_NUMBER_MESSAGE),
   }),
 ]);

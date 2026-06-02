@@ -92,6 +92,7 @@ export const defaultValues = {
   V_z_Ed_kN: 50,
   M_y_Ed_kNm: 20,
   M_z_Ed_kNm: 5,
+  T_Ed_kNm: 0,
 
   // FLEXURAL BUCKLING
   k_y: 1,

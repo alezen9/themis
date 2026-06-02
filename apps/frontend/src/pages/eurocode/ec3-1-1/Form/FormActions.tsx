@@ -5,7 +5,8 @@ import { InputNumber } from "@components/inputs/InputNumber";
 import { useEc311FormContext } from "./useEc311FormContext";
 
 export const FormActions = () => {
-  const { registerNumber } = useEc311FormContext();
+  const { registerNumber, watch } = useEc311FormContext();
+  const shape = watch("shape");
 
   return (
     <Section>
@@ -34,6 +35,12 @@ export const FormActions = () => {
       <HorizontalInput name="M_z_Ed_kNm" label={<LatexLabel tex="M_{z,Ed}" />}>
         <InputNumber {...registerNumber?.("M_z_Ed_kNm")} suffix="kNm" />
       </HorizontalInput>
+
+      {shape !== "I" && (
+        <HorizontalInput name="T_Ed_kNm" label={<LatexLabel tex="T_{Ed}" />}>
+          <InputNumber {...registerNumber?.("T_Ed_kNm")} suffix="kNm" />
+        </HorizontalInput>
+      )}
     </Section>
   );
 };

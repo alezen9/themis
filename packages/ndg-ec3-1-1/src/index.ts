@@ -77,6 +77,7 @@ const createRuntimeValues = (
     V_z_Ed_N: inputs.V_z_Ed_N,
     M_y_Ed_Nmm: inputs.M_y_Ed_Nmm,
     M_z_Ed_Nmm: inputs.M_z_Ed_Nmm,
+    T_Ed_Nmm: inputs.T_Ed_Nmm,
     A_mm2: inputs.A_mm2,
     Wpl_y_mm3: inputs.Wpl_y_mm3,
     Wpl_z_mm3: inputs.Wpl_z_mm3,

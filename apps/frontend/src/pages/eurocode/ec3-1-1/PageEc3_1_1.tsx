@@ -201,6 +201,7 @@ const createVerifyInputs = (
     V_z_Ed_N: inputs.V_z_Ed_kN * 1_000,
     M_y_Ed_Nmm: inputs.M_y_Ed_kNm * 1_000_000,
     M_z_Ed_Nmm: inputs.M_z_Ed_kNm * 1_000_000,
+    T_Ed_Nmm: (inputs.T_Ed_kNm ?? 0) * 1_000_000,
     L_mm: inputs.L_m * 1_000,
     shape: inputs.shape,
     fabrication_type: inputs.fabrication_type,
@@ -282,6 +283,7 @@ const gateClassification = (values: Ec311ObservedValues) => {
     N_Ed_kN,
     M_y_Ed_kNm,
     M_z_Ed_kNm,
+    T_Ed_kNm,
   } = values;
 
   let geometry: ActiveGeometry = i_geometry;
@@ -300,6 +302,7 @@ const gateClassification = (values: Ec311ObservedValues) => {
     N_Ed_kN,
     M_y_Ed_kNm,
     M_z_Ed_kNm,
+    T_Ed_kNm,
     ...geometry,
   };
 
