@@ -14,13 +14,13 @@ import {
 import { Button } from "@components/Button";
 import { InputTextarea } from "@components/inputs/InputTextarea";
 
-import { useNdgEditorStore } from "../controller/useNdgEditorStore";
+import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { useNdgEditorModalStore } from "./useNdgEditorModalStore";
-import { tableKeys, userInputKeys } from "../document/keyCatalog";
-import { ConditionText } from "../conditions/ConditionText";
-import { formatCondition } from "../conditions/format";
-import { parseCondition, type ParseResult } from "../conditions/parse";
-import { findUnknownConditionKeys } from "../conditions/validate";
+import { tableKeys, userInputKeys } from "../../document/keyCatalog";
+import { ConditionText } from "../../conditions/ConditionText";
+import { formatCondition } from "../../conditions/format";
+import { parseCondition, type ParseResult } from "../../conditions/parse";
+import { findUnknownConditionKeys } from "../../conditions/validate";
 
 export const EditEdgeModal = () => {
   const modal = useNdgEditorModalStore(s => s.modal);

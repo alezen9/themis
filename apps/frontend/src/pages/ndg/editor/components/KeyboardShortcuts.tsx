@@ -1,7 +1,7 @@
 import { useEffect, type ReactNode } from "react";
 
 import { useNdgEditorStore } from "../controller/useNdgEditorStore";
-import { useNdgEditorModalStore } from "../modals/useNdgEditorModalStore";
+import { useNdgEditorModalStore } from "./modals/useNdgEditorModalStore";
 
 type Props = { children: ReactNode };
 

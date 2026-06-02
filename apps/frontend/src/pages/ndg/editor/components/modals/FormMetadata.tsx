@@ -4,7 +4,7 @@ import { FormField } from "@components/inputs/shared";
 import { InputText } from "@components/inputs/InputText";
 
 import { Section, SectionTitle } from "./shared";
-import type { NodeFormValues } from "../document/nodeSchema";
+import type { NodeFormValues } from "../../document/nodeSchema";
 
 const TYPES_WITH_META: NodeFormValues["type"][] = [
   "check",

@@ -1,7 +1,7 @@
 import { fireEvent, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useNdgEditorModalStore } from "../modals/useNdgEditorModalStore";
+import { useNdgEditorModalStore } from "./modals/useNdgEditorModalStore";
 import { useNdgEditorStore } from "../controller/useNdgEditorStore";
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
 

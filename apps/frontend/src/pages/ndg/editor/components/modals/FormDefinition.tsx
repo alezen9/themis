@@ -7,7 +7,7 @@ import { InputText } from "@components/inputs/InputText";
 import { Latex } from "@components/Latex";
 
 import { Section, SectionTitle } from "./shared";
-import type { NodeFormValues } from "../document/nodeSchema";
+import type { NodeFormValues } from "../../document/nodeSchema";
 
 export const FormDefinition = () => {
   const { register, watch } = useFormContext<NodeFormValues>();
@@ -86,7 +86,7 @@ const FormFieldLatex = (props: ComponentProps<typeof FormField>) => {
       <Latex
         tex={value?.trim() || "Preview"}
         className={twMerge(
-          "border px-1 h-16 rounded-sm border-sand-300 flex items-center text-2xl text-sand-900",
+          "border px-1 h-16 rounded-sm border-sand-300 flex items-center justify-center-safe text-2xl text-sand-900",
           !value?.trim() && "text-lg",
         )}
       />

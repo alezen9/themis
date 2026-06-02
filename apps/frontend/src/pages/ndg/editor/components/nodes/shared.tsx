@@ -3,7 +3,7 @@ import { Handle, Position } from "@xyflow/react";
 import type { MouseEvent, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { useNdgEditorModalStore } from "../../modals/useNdgEditorModalStore";
+import { useNdgEditorModalStore } from "../modals/useNdgEditorModalStore";
 import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { IconButton } from "@components/Button";
 

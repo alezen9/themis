@@ -10,41 +10,39 @@ import {
 } from "@components/Dialog";
 import { Button } from "@components/Button";
 
-import { useNdgEditorStore } from "../controller/useNdgEditorStore";
+import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { useNdgEditorModalStore } from "./useNdgEditorModalStore";
-import { nodeFormSchema, type NodeFormValues } from "../document/nodeSchema";
+import { nodeFormSchema, type NodeFormValues } from "../../document/nodeSchema";
 import { FormDefinition } from "./FormDefinition";
 import { FormIdentity } from "./FormIdentity";
 import { FormMetadata } from "./FormMetadata";
 import { FormType } from "./FormType";
 
-export const EditNodeModal = () => {
+export const AddNodeModal = () => {
   const modal = useNdgEditorModalStore(s => s.modal);
   const closeModal = useNdgEditorModalStore(s => s.closeModal);
-  const updateNode = useNdgEditorStore(s => s.updateNode);
-  const getNodeById = useNdgEditorStore(s => s.getNodeById);
-  const open = modal?.mode === "edit-node";
+  const addNode = useNdgEditorStore(s => s.addNode);
+  const open = modal?.mode === "create-node";
 
   const form = useForm<NodeFormValues>({
     resolver: zodResolver(nodeFormSchema),
     mode: "onChange",
+    defaultValues: { type: "user-input", valueType: { type: "number" } },
   });
 
   useEffect(() => {
-    if (!open || modal?.mode !== "edit-node") return;
-    const node = getNodeById(modal.nodeId);
-    if (!node) return;
-    form.reset({ type: node.type, ...node.data } as NodeFormValues);
-  }, [open, modal, form, getNodeById]);
+    if (!open) return;
+    form.reset({ type: "user-input", valueType: { type: "number" } });
+  }, [open, form]);
 
   const onSubmit = form.handleSubmit(values => {
-    if (modal?.mode !== "edit-node") return;
-    updateNode({ ...values, id: modal.nodeId });
+    addNode({
+      ...values,
+      sourceNodeId:
+        modal?.mode === "create-node" ? modal.sourceNodeId : undefined,
+    });
     closeModal();
   });
-
-  const isCheckNode =
-    modal?.mode === "edit-node" && getNodeById(modal.nodeId)?.type === "check";
 
   return (
     <Dialog
@@ -52,17 +50,17 @@ export const EditNodeModal = () => {
       onOpenChange={closeModal}
       header={
         <DialogHeader className="flex items-center justify-between">
-          <DialogTitle>Edit node</DialogTitle>
-          <Button type="submit" form="edit-node-form">
+          <DialogTitle>Add node</DialogTitle>
+          <Button type="submit" form="add-node-form">
             Save
           </Button>
         </DialogHeader>
       }
     >
       <DialogContent className="gap-8">
-        <form id="edit-node-form" onSubmit={onSubmit}>
+        <form id="add-node-form" onSubmit={onSubmit}>
           <FormProvider {...form}>
-            {!isCheckNode && <FormType />}
+            <FormType />
             <FormIdentity />
             <FormDefinition />
             <FormMetadata />

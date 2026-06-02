@@ -17,7 +17,7 @@ import type { EditorEdge, EditorNode } from "./document/types";
 import { edgeTypes } from "./flow/edgeTypes";
 import { nodeTypes } from "./flow/nodeTypes";
 import { onBeforeDeleteElements } from "./graph/rules";
-import { useNdgEditorModalStore } from "./modals/useNdgEditorModalStore";
+import { useNdgEditorModalStore } from "./components/modals/useNdgEditorModalStore";
 import { NdgEditorActionsPanel } from "./components/NdgEditorActionsPanel";
 
 export const NdgEditorCanvas = () => {

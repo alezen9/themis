@@ -12,7 +12,7 @@ import {
   userInputKeyOptions,
 } from "./options";
 import { Section, SectionTitle } from "./shared";
-import type { NodeFormValues } from "../document/nodeSchema";
+import type { NodeFormValues } from "../../document/nodeSchema";
 
 const FORCED_NUMERIC_TYPES: NodeFormValues["type"][] = [
   "check",

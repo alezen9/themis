@@ -1,8 +1,8 @@
 import "@xyflow/react/dist/style.css";
 import { KeyboardShortcuts } from "./components/KeyboardShortcuts";
-import { AddNodeModal } from "./modals/AddNodeModal";
-import { EditEdgeModal } from "./modals/EditEdgeModal";
-import { EditNodeModal } from "./modals/EditNodeModal";
+import { AddNodeModal } from "./components/modals/AddNodeModal";
+import { EditEdgeModal } from "./components/modals/EditEdgeModal";
+import { EditNodeModal } from "./components/modals/EditNodeModal";
 import { NdgEditorCanvas } from "./NdgEditorCanvas";
 
 export const NdgEditor = () => (

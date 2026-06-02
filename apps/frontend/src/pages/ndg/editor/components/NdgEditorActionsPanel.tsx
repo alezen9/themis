@@ -10,7 +10,7 @@ import {
 } from "@components/Icons";
 
 import { useNdgEditorStore } from "../controller/useNdgEditorStore";
-import { useNdgEditorModalStore } from "../modals/useNdgEditorModalStore";
+import { useNdgEditorModalStore } from "./modals/useNdgEditorModalStore";
 
 const ToolbarButton = (props: ComponentProps<typeof ControlButton>) => (
   <ControlButton

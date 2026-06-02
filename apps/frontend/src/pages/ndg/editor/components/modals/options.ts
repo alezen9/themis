@@ -1,5 +1,5 @@
 import { Option } from "@components/inputs/shared";
-import { tableKeys, userInputKeys } from "../document/keyCatalog";
+import { tableKeys, userInputKeys } from "../../document/keyCatalog";
 
 export const typeOptions = [
   { value: "user-input", label: "User input" },

@@ -13,7 +13,7 @@ import { Tooltip } from "@components/Tooltip";
 import { ConditionText } from "../../conditions/ConditionText";
 import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import type { EditorEdge } from "../../document/types";
-import { useNdgEditorModalStore } from "../../modals/useNdgEditorModalStore";
+import { useNdgEditorModalStore } from "../modals/useNdgEditorModalStore";
 
 export const ConditionEdge = (props: EdgeProps<EditorEdge>) => {
   const {
