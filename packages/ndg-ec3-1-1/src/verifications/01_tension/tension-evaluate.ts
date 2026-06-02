@@ -10,7 +10,6 @@ export const evaluate = defineEvaluators(nodes, {
     return (A_mm2 * fy_MPa) / gamma_M0;
   },
   utilisation: ({ N_Ed_N, N_pl_Rd_N }) => {
-    
     assertPrecondition(
       N_Ed_N > 0,
       "tension: load case not applicable for sign of N_Ed_N",

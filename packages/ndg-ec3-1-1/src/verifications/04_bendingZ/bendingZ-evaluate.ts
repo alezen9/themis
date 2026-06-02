@@ -12,7 +12,6 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   utilisation: ({ M_z_Ed_Nmm, M_c_z_Rd_Nmm }) => {
-    
     assertPositive(
       M_c_z_Rd_Nmm,
       "bending-z: denominator M_c_z_Rd_Nmm must be > 0 (division by zero)",

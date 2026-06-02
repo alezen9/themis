@@ -19,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@components/Table";
-import { texUnit } from "./units";
 import { useEc311FormContext } from "./useEc311FormContext";
 import { getDefaultSteelGrade } from "./defaultValues";
 
@@ -93,7 +92,7 @@ const AdditionalInfoRow = () => {
             </InfoTableLabelCell>
             <InfoTableValueCell>{grade?.fy_MPa ?? "-"}</InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={texUnit.MPa} />
+              <Latex tex={"MPa"} />
             </InfoTableUnitCell>
           </TableRow>
           <TableRow>
@@ -101,12 +100,12 @@ const AdditionalInfoRow = () => {
             <InfoTableValueCell>
               <span className="mr-4 opacity-50 text-xs inline-flex items-baseline">
                 thickness &ge; 40
-                <Latex tex={texUnit.mm} className="text-sm" />
+                <Latex tex={"mm"} className="text-sm" />
               </span>
               {grade?.fy_above_40_MPa ?? grade?.fy_MPa ?? "-"}
             </InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={texUnit.MPa} />
+              <Latex tex={"MPa"} />
             </InfoTableUnitCell>
           </TableRow>
 
@@ -116,7 +115,7 @@ const AdditionalInfoRow = () => {
             </InfoTableLabelCell>
             <InfoTableValueCell>{grade?.fu_MPa ?? "-"}</InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={texUnit.MPa} />
+              <Latex tex={"MPa"} />
             </InfoTableUnitCell>
           </TableRow>
           <TableRow>
@@ -124,12 +123,12 @@ const AdditionalInfoRow = () => {
             <InfoTableValueCell>
               <span className="mr-4 opacity-50 text-xs inline-flex items-baseline">
                 thickness &ge; 40
-                <Latex tex={texUnit.mm} className="text-sm" />
+                <Latex tex={"mm"} className="text-sm" />
               </span>
               {grade?.fu_above_40_MPa ?? grade?.fu_MPa ?? "-"}
             </InfoTableValueCell>
             <InfoTableUnitCell>
-              <Latex tex={texUnit.MPa} />
+              <Latex tex={"MPa"} />
             </InfoTableUnitCell>
           </TableRow>
         </TableBody>

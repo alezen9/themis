@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { twMerge } from "tailwind-merge";
 
 import { FormField } from "@components/inputs/shared";
 import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
 import { InputRadio } from "@components/inputs/InputRadio";
 import { InputText } from "@components/inputs/InputText";
+import { Latex } from "@components/Latex";
 
 import {
   valueTypeOptions,
@@ -13,12 +15,31 @@ import {
 } from "./options";
 import { Section, SectionTitle } from "./shared";
 import type { NodeFormValues } from "../../document/nodeSchema";
+import { userInputCatalog } from "../../document/userInputCatalog";
 
 const FORCED_NUMERIC_TYPES: NodeFormValues["type"][] = [
   "check",
   "coefficient",
   "constant",
 ];
+
+const UserInputPreview = () => {
+  const { watch } = useFormContext<NodeFormValues>();
+  const symbol = watch("symbol");
+  const unit = watch("unit");
+  const tex = symbol ? (unit ? `${symbol} \\quad (${unit})` : symbol) : "";
+
+  return (
+    <Latex
+      displayMode
+      tex={tex}
+      className={twMerge(
+        "px-1 h-auto flex items-center justify-center-safe text-3xl text-sand-900",
+        !tex && "text-lg",
+      )}
+    />
+  );
+};
 
 const getKeyOptions = (type: NodeFormValues["type"]) => {
   if (type === "user-input") return userInputKeyOptions;
@@ -27,15 +48,35 @@ const getKeyOptions = (type: NodeFormValues["type"]) => {
 };
 
 export const FormIdentity = () => {
-  const { control, register, watch, setValue } =
+  const { control, register, watch, setValue, subscribe } =
     useFormContext<NodeFormValues>();
   const type = watch("type");
   const isValueTypeForced = FORCED_NUMERIC_TYPES.includes(type);
   const keyOptions = getKeyOptions(type);
 
   useEffect(() => {
-    if (isValueTypeForced) setValue("valueType", { type: "number" });
-  }, [isValueTypeForced, setValue]);
+    const unsubscribe = subscribe({
+      name: ["type", "key"],
+      formState: { values: true },
+      callback: ({ values }) => {
+        const t = values.type as NodeFormValues["type"];
+        if (FORCED_NUMERIC_TYPES.includes(t)) {
+          setValue("valueType", { type: "number" });
+          return;
+        }
+        if (t === "user-input") {
+          const entry = userInputCatalog[values.key ?? ""];
+          if (!entry) return;
+          setValue("symbol", entry.symbol);
+          setValue("unit", entry.unit);
+          setValue("valueType", { type: entry.valueType });
+        }
+      },
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [subscribe, setValue]);
 
   return (
     <Section>
@@ -63,7 +104,8 @@ export const FormIdentity = () => {
           )}
           {!keyOptions && <InputText {...register("key")} />}
         </FormField>
-        {!isValueTypeForced && (
+        {type === "user-input" && <UserInputPreview />}
+        {!isValueTypeForced && type !== "user-input" && (
           <FormField
             name="valueType"
             label="Value type"

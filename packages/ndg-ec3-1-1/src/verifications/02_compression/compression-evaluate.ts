@@ -12,7 +12,6 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   utilisation: ({ N_Ed_N, N_c_Rd_N }) => {
-    
     assertPrecondition(
       N_Ed_N < 0,
       "compression: load case not applicable for sign of N_Ed_N",

@@ -12,7 +12,6 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   u_y: ({ V_y_Ed_N, V_pl_y_Rd_N }) => {
-    
     assertPositive(
       V_pl_y_Rd_N,
       "bending-z-shear: denominator V_pl_y_Rd_N must be > 0 (division by zero)",
@@ -64,7 +63,6 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   utilisation: ({ M_z_Ed_Nmm, M_z_V_Rd_Nmm }) => {
-    
     assertPositive(
       M_z_V_Rd_Nmm,
       "bending-z-shear: denominator M_z_V_Rd_Nmm must be > 0 (division by zero)",

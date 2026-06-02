@@ -13,6 +13,8 @@ export const FormDefinition = () => {
   const { register, watch } = useFormContext<NodeFormValues>();
   const type = watch("type");
 
+  if (type === "user-input") return null;
+
   return (
     <Section>
       <SectionTitle>Definition</SectionTitle>
@@ -65,7 +67,7 @@ export const FormDefinition = () => {
         </FormFieldLatex>
         {type !== "check" && type !== "constant" && (
           <FormFieldLatex name="unit" label="Unit" description="Display unit">
-            <InputText placeholder={"\\mathrm{mm}^2"} {...register("unit")} />
+            <InputText placeholder={"mm^2"} {...register("unit")} />
           </FormFieldLatex>
         )}
       </div>

@@ -12,7 +12,6 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   utilisation: ({ V_z_Ed_N, V_pl_z_Rd_N }) => {
-    
     assertPositive(
       V_pl_z_Rd_N,
       "shear-z: denominator V_pl_z_Rd_N must be > 0 (division by zero)",

@@ -21,7 +21,6 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   n: ({ N_Ed_N, N_pl_Rd_N }) => {
-    
     assertPositive(
       N_pl_Rd_N,
       "bending-z-axial: denominator N_pl_Rd_N must be > 0 (division by zero)",
@@ -74,7 +73,6 @@ export const evaluate = defineEvaluators(nodes, {
 
   M_N_z_Rd_Nmm: ({ M_pl_z_Rd_Nmm, k_z }) => {
     assertPositive(M_pl_z_Rd_Nmm, "bending-z-axial: M_pl_z_Rd_Nmm must be > 0");
-    
 
     const reducedResistance = M_pl_z_Rd_Nmm * k_z;
     assertPositive(
@@ -86,7 +84,6 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   utilization_class12: ({ M_z_Ed_Nmm, M_N_z_Rd_Nmm }) => {
-    
     assertPositive(
       M_N_z_Rd_Nmm,
       "bending-z-axial: denominator M_N_z_Rd_Nmm must be > 0 (division by zero)",
@@ -96,14 +93,12 @@ export const evaluate = defineEvaluators(nodes, {
   },
 
   sigma_N_MPa: ({ N_Ed_N, A_mm2 }) => {
-    
     assertPositive(A_mm2, "bending-z-axial: A_mm2 must be > 0");
 
     return Math.abs(N_Ed_N) / A_mm2;
   },
 
   sigma_M_z_MPa: ({ M_z_Ed_Nmm, Wel_z_mm3 }) => {
-    
     assertPositive(Wel_z_mm3, "bending-z-axial: Wel_z_mm3 must be > 0");
 
     return Math.abs(M_z_Ed_Nmm) / Wel_z_mm3;

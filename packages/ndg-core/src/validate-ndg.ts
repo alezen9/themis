@@ -6,7 +6,10 @@ import {
   type Node,
 } from "./schema";
 
-type Evaluator = (deps: Record<string, number | string>, ctx: EvalCtx) => number | string;
+type Evaluator = (
+  deps: Record<string, number | string>,
+  ctx: EvalCtx,
+) => number | string;
 
 export type ValidatedNDG = {
   check: CheckNode;

@@ -1,6 +1,12 @@
 import { collectConditionKeys, evaluateCondition } from "../evaluate-condition";
 import { isSelectorNode, type Condition, type Node } from "../schema";
-import type { EvalCtx, EvalNote, NDGContext, NDGTraceEntry, NDGValue } from "../types";
+import type {
+  EvalCtx,
+  EvalNote,
+  NDGContext,
+  NDGTraceEntry,
+  NDGValue,
+} from "../types";
 import type { ValidatedNDG } from "../validate-ndg";
 import { INTERNAL_CONSTANTS } from "./constants";
 import { createTraceEntry } from "./trace";
@@ -102,7 +108,12 @@ const resolveNodeValue = (
 
       const ctx: EvalCtx = {
         addNote({ formula, latex, value, warn }) {
-          notes.push({ formula, latex, value, severity: warn ? "warning" : "ok" });
+          notes.push({
+            formula,
+            latex,
+            value,
+            severity: warn ? "warning" : "ok",
+          });
         },
       };
       const result = evaluator(state.lookup, ctx);

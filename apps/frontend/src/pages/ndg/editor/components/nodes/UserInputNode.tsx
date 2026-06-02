@@ -14,7 +14,7 @@ export const UserInputNode = (props: EditorNodeProps) => {
       <NodeBody>
         <Latex
           displayMode
-          tex={`${data.symbol} \\quad (${data.unit})`}
+          tex={data.unit ? `${data.symbol} \\quad (${data.unit})` : data.symbol ?? ""}
           className="justify-center-safe px-1"
         />
       </NodeBody>
