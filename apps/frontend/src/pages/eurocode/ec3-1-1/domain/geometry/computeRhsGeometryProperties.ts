@@ -38,8 +38,8 @@ export const computeRhsGeometryProperties = (
     existing?.Wpl_z_mm3 ?? (h_mm * b_mm ** 2 - hi_mm * bi_mm ** 2) / 4;
   const Av_y_mm2 = (A_mm2 * b_mm) / (b_mm + h_mm);
   const Av_z_mm2 = (A_mm2 * h_mm) / (b_mm + h_mm);
-  const S_y_mm3 = (b_mm * h_mm ** 2 - bi_mm * hi_mm ** 2) / 8;
-  const S_z_mm3 = (h_mm * b_mm ** 2 - hi_mm * bi_mm ** 2) / 8;
+  const S_y_mm3 = Wpl_y_mm3 / 2;
+  const S_z_mm3 = Wpl_z_mm3 / 2;
   const p_mm = 2 * (h_mm - tw_mm + (b_mm - tw_mm)) - 2 * ro_mm * (4 - Math.PI);
   const Ap_mm = A_mm2 / p_mm;
   const It_mm4 =

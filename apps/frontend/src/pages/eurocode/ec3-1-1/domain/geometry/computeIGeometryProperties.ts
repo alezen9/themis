@@ -36,10 +36,7 @@ export const computeIGeometryProperties = (
     tf_mm * b_mm ** 2 * 0.5 + ((h_mm - 2 * tf_mm) * tw_mm ** 2) / 4;
   const Av_y_mm2 = A_mm2 - 2 * b_mm * tf_mm + (tw_mm + 2 * r_mm) * tf_mm;
   const Av_z_mm2 = A_mm2 - (h_mm - tw_mm) * tw_mm;
-  const S_y_mm3 =
-    b_mm * tf_mm * (h_mm / 2 - tf_mm / 2) +
-    (tw_mm * (h_mm - 2 * tf_mm) ** 2) / 8 +
-    0.4292 * r_mm ** 2 * (h_mm / 2 - tf_mm);
+  const S_y_mm3 = Wpl_y_mm3 / 2;
   const S_z_mm3 = (b_mm ** 2 * tf_mm) / 8;
   const It_mm4 =
     existing?.It_mm4 ??
