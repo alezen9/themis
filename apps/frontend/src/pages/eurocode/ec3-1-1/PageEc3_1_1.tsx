@@ -20,6 +20,7 @@ import {
   rhsGeometrySchema,
 } from "./Form/schema/geometrySchema";
 import { materialSchema } from "./Form/schema/materialSchema";
+import { annexCoefficientsSchema } from "./Form/schema/nationalAnnexSchema";
 import { shapeDependentSchema } from "./Form/schema/shapeDependentSchema";
 import { useEc311FormContext } from "./Form/useEc311FormContext";
 import { useEc311DerivedStore } from "./useEc311DerivedStore";
@@ -260,7 +261,7 @@ const createVerifyInputs = (
 };
 
 const gateDerivedGeometry = (values: Ec311ObservedValues) => {
-  const { shape, i_geometry, rhs_geometry, chs_geometry } = values;
+  const { shape, eta, i_geometry, rhs_geometry, chs_geometry } = values;
 
   let geometry: ActiveGeometry = i_geometry;
   if (shape === "RHS") geometry = rhs_geometry;
@@ -270,7 +271,9 @@ const gateDerivedGeometry = (values: Ec311ObservedValues) => {
   if (shape === "RHS") geometrySchema = rhsGeometrySchema;
   if (shape === "CHS") geometrySchema = chsGeometrySchema;
 
-  return geometrySchema.safeParse(geometry);
+  const geometryValid = geometrySchema.safeParse(geometry).success;
+  const etaValid = annexCoefficientsSchema.shape.eta.safeParse(eta).success;
+  return { success: geometryValid && etaValid };
 };
 
 const gateClassification = (values: Ec311ObservedValues) => {

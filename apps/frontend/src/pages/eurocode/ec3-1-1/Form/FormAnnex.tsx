@@ -11,17 +11,34 @@ import {
 } from "./options";
 import { InputNumber } from "@components/inputs/InputNumber";
 import { useEc311FormContext } from "./useEc311FormContext";
+import { ChangeHandler } from "react-hook-form";
+import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3-1-1";
 
 export const FormAnnex = () => {
-  const { registerNumber, registerSelect, watch } = useEc311FormContext();
+  const { registerNumber, registerSelect, watch, reset, getValues, trigger } =
+    useEc311FormContext();
   const bucklingCase = watch("buckling_curves_LT_policy");
   const isBucklingCaseDefault = bucklingCase === "default-rolled-welded";
+
+  const onAnnexChange: ChangeHandler = async e => {
+    const annex = [eurocodeAnnex, italianAnnex].find(
+      a => a.id === e.target.value,
+    );
+    if (!annex) return;
+    const { gamma_M2: _gamma_M2, ...coefficients } = annex.coefficients;
+    reset({ ...getValues(), ...coefficients, annex_id: annex.id });
+    await trigger();
+  };
 
   return (
     <Section>
       <SectionTitle>National Annex</SectionTitle>
       <HorizontalInput name="annex_id" label={<TextLabel>Annex</TextLabel>}>
-        <InputSelect {...registerSelect?.("annex_id")} options={annexOptions} />
+        <InputSelect
+          {...registerSelect?.("annex_id")}
+          onChange={onAnnexChange}
+          options={annexOptions}
+        />
       </HorizontalInput>
 
       <HorizontalInput name="gamma_M0" label={<LatexLabel tex="\gamma_{M0}" />}>
@@ -47,10 +64,7 @@ export const FormAnnex = () => {
       </HorizontalInput>
 
       <HorizontalInput name="beta_LT" label={<LatexLabel tex="\beta_{LT}" />}>
-        <InputSelect
-          {...registerSelect?.("beta_LT")}
-          options={betaLTOptions}
-        />
+        <InputSelect {...registerSelect?.("beta_LT")} options={betaLTOptions} />
       </HorizontalInput>
 
       <HorizontalInput

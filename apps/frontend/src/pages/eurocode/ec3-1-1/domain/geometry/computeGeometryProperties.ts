@@ -3,20 +3,21 @@ import { computeChsGeometryProperties } from "./computeChsGeometryProperties";
 import { computeIGeometryProperties } from "./computeIGeometryProperties";
 import { computeRhsGeometryProperties } from "./computeRhsGeometryProperties";
 
-type SectionIdObj = Pick<Ec3FormValues, "section_id">;
+type BaseObj = Pick<Ec3FormValues, "section_id">;
 type I_GeometryObj = Pick<Ec3FormValues, "i_geometry">;
 type RHS_GeometryObj = Pick<Ec3FormValues, "rhs_geometry">;
 type CHS_GeometryObj = Pick<Ec3FormValues, "chs_geometry">;
 
-type I_Input = { shape: "I" } & SectionIdObj &
+type I_Input = { shape: "I" } & BaseObj &
+  Pick<Ec3FormValues, "fabrication_type" | "eta"> &
   I_GeometryObj &
   Partial<RHS_GeometryObj> &
   Partial<CHS_GeometryObj>;
-type RHs_Input = { shape: "RHS" } & SectionIdObj &
+type RHs_Input = { shape: "RHS" } & BaseObj &
   RHS_GeometryObj &
   Partial<I_GeometryObj> &
   Partial<CHS_GeometryObj>;
-type CHS_Input = { shape: "CHS" } & SectionIdObj &
+type CHS_Input = { shape: "CHS" } & BaseObj &
   CHS_GeometryObj &
   Partial<RHS_GeometryObj> &
   Partial<I_GeometryObj>;
@@ -26,13 +27,23 @@ type Inputs = I_Input | RHs_Input | CHS_Input;
 export type GeometricProperties = ReturnType<typeof computeGeometryProperties>;
 
 export const computeGeometryProperties = (inputs: Inputs) => {
-  const { shape, section_id, i_geometry, rhs_geometry, chs_geometry } = inputs;
-  switch (shape) {
+  switch (inputs.shape) {
     case "I":
-      return computeIGeometryProperties(section_id, i_geometry);
+      return computeIGeometryProperties(
+        inputs.section_id,
+        inputs.i_geometry,
+        inputs.fabrication_type,
+        inputs.eta,
+      );
     case "RHS":
-      return computeRhsGeometryProperties(section_id, rhs_geometry);
+      return computeRhsGeometryProperties(
+        inputs.section_id,
+        inputs.rhs_geometry,
+      );
     case "CHS":
-      return computeChsGeometryProperties(section_id, chs_geometry);
+      return computeChsGeometryProperties(
+        inputs.section_id,
+        inputs.chs_geometry,
+      );
   }
 };

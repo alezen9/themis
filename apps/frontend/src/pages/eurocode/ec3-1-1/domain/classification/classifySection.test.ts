@@ -5,6 +5,7 @@ import type { Part } from "./types";
 const iSectionBaseInput = {
   shape: "I",
   fabrication_type: "rolled",
+  eta: 1,
   section_id: "IPE300",
   steel_grade_id: "EN10025-2:S355",
   i_geometry: { h_mm: 300, b_mm: 150, tw_mm: 7.1, tf_mm: 10.7, r_mm: 15 },
@@ -15,6 +16,7 @@ const iSectionBaseInput = {
 const rhsSectionBaseInput = {
   shape: "RHS",
   fabrication_type: "rolled",
+  eta: 1,
   section_id: "RHS300x200x6.3",
   steel_grade_id: "EN10025-2:S355",
   i_geometry: { h_mm: 0, b_mm: 0, tw_mm: 0, tf_mm: 0, r_mm: 0 },
@@ -25,6 +27,7 @@ const rhsSectionBaseInput = {
 const chsSectionBaseInput = {
   shape: "CHS",
   fabrication_type: "rolled",
+  eta: 1,
   section_id: "custom",
   steel_grade_id: "EN10025-2:S355",
   i_geometry: { h_mm: 0, b_mm: 0, tw_mm: 0, tf_mm: 0, r_mm: 0 },

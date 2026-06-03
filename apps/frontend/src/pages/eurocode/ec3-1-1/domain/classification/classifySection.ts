@@ -7,6 +7,7 @@ type Input = Pick<
   Ec3FormValues,
   | "shape"
   | "fabrication_type"
+  | "eta"
   | "section_id"
   | "steel_grade_id"
   | "i_geometry"
@@ -20,6 +21,8 @@ type Input = Pick<
 export const classifySection = (input: Input) => {
   const {
     shape,
+    fabrication_type,
+    eta,
     steel_grade_id,
     section_id,
     N_Ed_kN,
@@ -33,7 +36,14 @@ export const classifySection = (input: Input) => {
   const actions = { N_Ed_kN, M_y_Ed_kNm, M_z_Ed_kNm };
   switch (shape) {
     case "I":
-      return classifyISection(i_geometry, steel_grade_id, section_id, actions);
+      return classifyISection(
+        i_geometry,
+        steel_grade_id,
+        section_id,
+        actions,
+        fabrication_type,
+        eta,
+      );
     case "RHS":
       return classifyRhsSection(
         rhs_geometry,

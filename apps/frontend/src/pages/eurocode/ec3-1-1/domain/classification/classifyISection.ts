@@ -12,11 +12,15 @@ export const classifyISection = (
   steel_grade_id: string,
   section_id: string,
   actions: Actions,
+  fabrication_type: Ec3FormValues["fabrication_type"],
+  eta: number,
 ): [SectionClass, Part[]] => {
   const geometricProperties = computeGeometryProperties({
     shape: "I",
     i_geometry,
     section_id,
+    fabrication_type,
+    eta,
   });
   const ctx = { ...geometricProperties, ...actions };
 
