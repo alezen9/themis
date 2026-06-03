@@ -52,9 +52,7 @@ describe("validateNDG", () => {
 
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
-      evaluate: {
-        utilisation: ({ x }) => Number(x),
-      },
+      evaluate: { utilisation: ({ x }) => Number(x) },
     };
 
     expect(() => validateNDG(definition)).toThrow(/Duplicate node key/);
@@ -187,7 +185,10 @@ describe("validateNDG", () => {
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
       // @ts-expect-error -- intentional evaluator typo for validation coverage
-      evaluate: { utilisation: ({ x }) => Number(x), extra: ({ x }) => Number(x) },
+      evaluate: {
+        utilisation: ({ x }) => Number(x),
+        extra: ({ x }) => Number(x),
+      },
     };
 
     expect(() => validateNDG(definition)).toThrow(/Evaluator key/);

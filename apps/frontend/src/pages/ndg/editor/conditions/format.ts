@@ -29,7 +29,8 @@ const wrapNested = (condition: Condition) =>
     ? `(${formatCondition(condition)})`
     : formatCondition(condition);
 
-export const formatCondition = (condition: Condition): string => {
+export const formatCondition = (condition?: Condition): string => {
+  if (!condition) return "";
   if ("eq" in condition) return formatComparison("eq", condition.eq);
   if ("lt" in condition) return formatComparison("lt", condition.lt);
   if ("lte" in condition) return formatComparison("lte", condition.lte);

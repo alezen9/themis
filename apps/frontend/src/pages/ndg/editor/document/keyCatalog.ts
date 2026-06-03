@@ -1,8 +1,12 @@
-export const tableKeys = [
-  "buckling_curve_y",
-  "buckling_curve_z",
-  "buckling_curve_LT",
-];
+const bucklingCurveValues = ["a0", "a", "b", "c", "d"] as const;
+
+export const tableKeyValues: Record<string, readonly (string | number)[]> = {
+  buckling_curve_y: bucklingCurveValues,
+  buckling_curve_z: bucklingCurveValues,
+  buckling_curve_LT: bucklingCurveValues,
+};
+
+export const tableKeys = Object.keys(tableKeyValues);
 
 export const userInputKeys = [
   "shape",
