@@ -20,7 +20,7 @@ describe("validateNDG", () => {
     expect(() => validateNDG(definition)).toThrow(/exactly one check node/);
   });
 
-  it("rejects graphs with multiple check nodes", () => {
+  it("rejects graphs with multiple check nodes (duplicate utilisation key)", () => {
     const nodes = [
       {
         type: "user-input",
@@ -32,7 +32,7 @@ describe("validateNDG", () => {
       },
       {
         type: "check",
-        key: "check_a",
+        key: "utilisation",
         valueType: { type: "number" },
         id: "multi-check-a",
         name: "Check A",
@@ -41,7 +41,7 @@ describe("validateNDG", () => {
       },
       {
         type: "check",
-        key: "check_b",
+        key: "utilisation",
         valueType: { type: "number" },
         id: "multi-check-b",
         name: "Check B",
@@ -53,12 +53,11 @@ describe("validateNDG", () => {
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
       evaluate: {
-        check_a: ({ x }) => Number(x),
-        check_b: ({ x }) => Number(x),
+        utilisation: ({ x }) => Number(x),
       },
     };
 
-    expect(() => validateNDG(definition)).toThrow(/exactly one check node/);
+    expect(() => validateNDG(definition)).toThrow(/Duplicate node key/);
   });
 
   it("rejects duplicate node ids", () => {
@@ -81,7 +80,7 @@ describe("validateNDG", () => {
       },
       {
         type: "check",
-        key: "check",
+        key: "utilisation",
         valueType: { type: "number" },
         id: "duplicate-id-check",
         name: "Check",
@@ -92,7 +91,7 @@ describe("validateNDG", () => {
 
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
-      evaluate: { check: ({ x }) => Number(x) },
+      evaluate: { utilisation: ({ x }) => Number(x) },
     };
 
     expect(() => validateNDG(definition)).toThrow(/Duplicate node ID/);
@@ -118,7 +117,7 @@ describe("validateNDG", () => {
       },
       {
         type: "check",
-        key: "check",
+        key: "utilisation",
         valueType: { type: "number" },
         id: "duplicate-key-check",
         name: "Check",
@@ -129,7 +128,7 @@ describe("validateNDG", () => {
 
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
-      evaluate: { check: ({ x }) => Number(x) },
+      evaluate: { utilisation: ({ x }) => Number(x) },
     };
 
     expect(() => validateNDG(definition)).toThrow(/Duplicate node key/);
@@ -147,7 +146,7 @@ describe("validateNDG", () => {
       },
       {
         type: "check",
-        key: "check",
+        key: "utilisation",
         valueType: { type: "number" },
         id: "unknown-child-check",
         name: "Check",
@@ -158,7 +157,7 @@ describe("validateNDG", () => {
 
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
-      evaluate: { check: ({ x }) => Number(x) },
+      evaluate: { utilisation: ({ x }) => Number(x) },
     };
 
     expect(() => validateNDG(definition)).toThrow(/references unknown child/);
@@ -176,7 +175,7 @@ describe("validateNDG", () => {
       },
       {
         type: "check",
-        key: "check",
+        key: "utilisation",
         valueType: { type: "number" },
         id: "unknown-evaluator-check",
         name: "Check",
@@ -188,7 +187,7 @@ describe("validateNDG", () => {
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
       // @ts-expect-error -- intentional evaluator typo for validation coverage
-      evaluate: { check: ({ x }) => Number(x), extra: ({ x }) => Number(x) },
+      evaluate: { utilisation: ({ x }) => Number(x), extra: ({ x }) => Number(x) },
     };
 
     expect(() => validateNDG(definition)).toThrow(/Evaluator key/);
@@ -215,7 +214,7 @@ describe("validateNDG", () => {
       },
       {
         type: "check",
-        key: "check",
+        key: "utilisation",
         valueType: { type: "number" },
         id: "missing-evaluator-check",
         name: "Check",
@@ -227,7 +226,7 @@ describe("validateNDG", () => {
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
       // @ts-expect-error -- intentional missing evaluator for formula node
-      evaluate: { check: ({ d }) => Number(d) },
+      evaluate: { utilisation: ({ d }) => Number(d) },
     };
 
     expect(() => validateNDG(definition)).toThrow(/Missing evaluator/);
@@ -261,7 +260,7 @@ describe("validateNDG", () => {
       },
       {
         type: "check",
-        key: "check",
+        key: "utilisation",
         valueType: { type: "number" },
         id: "selector-check",
         name: "Check",
@@ -272,7 +271,7 @@ describe("validateNDG", () => {
 
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
-      evaluate: { check: ({ selected }) => Number(selected) },
+      evaluate: { utilisation: ({ selected }) => Number(selected) },
     };
 
     expect(() => validateNDG(definition)).not.toThrow();
@@ -300,7 +299,7 @@ describe("validateNDG", () => {
       },
       {
         type: "check",
-        key: "check",
+        key: "utilisation",
         valueType: { type: "number" },
         id: "cycle-check",
         name: "Check",
@@ -314,7 +313,7 @@ describe("validateNDG", () => {
       evaluate: {
         a: ({ b }) => Number(b),
         b: ({ a }) => Number(a),
-        check: ({ a }) => Number(a),
+        utilisation: ({ a }) => Number(a),
       },
     };
 

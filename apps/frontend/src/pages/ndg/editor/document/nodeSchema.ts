@@ -21,6 +21,7 @@ export const nodeFormSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("check"),
     ...base,
+    key: z.literal("utilisation"),
     valueType: numericValueType,
     verificationExpression: z.string().min(1),
     meta: meta.optional(),

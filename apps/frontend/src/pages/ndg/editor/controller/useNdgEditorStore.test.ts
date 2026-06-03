@@ -41,7 +41,7 @@ const checkNode: EditorNode = {
   position: { x: 0, y: 0 },
   type: "check",
   data: {
-    key: "chk",
+    key: "utilisation",
     valueType: { type: "number" },
     verificationExpression: "x \\leq 1",
   },

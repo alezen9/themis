@@ -22,7 +22,7 @@ const missingExpression: EditorNode = {
   position: { x: 0, y: 0 },
   type: "check",
   data: {
-    key: "ratio",
+    key: "utilisation",
     valueType: { type: "number" },
     verificationExpression: "",
   },

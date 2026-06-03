@@ -79,7 +79,7 @@ const ValueTypeSchema = z.discriminatedUnion("type", [
  */
 export const CheckNodeSchema = BaseNodeSchema.extend({
   type: z.literal("check"),
-  key: z.string(),
+  key: z.literal("utilisation"),
   valueType: NumericValueType,
   meta: NodeMetaSchema.optional(),
   verificationExpression: z.string(), // LaTeX: "\\frac{N_{Ed}}{N_{c,Rd}} \\leq 1.0"

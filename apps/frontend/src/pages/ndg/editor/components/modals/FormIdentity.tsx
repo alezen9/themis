@@ -58,14 +58,14 @@ export const FormIdentity = () => {
     const unsubscribe = subscribe({
       name: ["type", "key"],
       formState: { values: true },
-      callback: ({ values }) => {
-        const t = values.type as NodeFormValues["type"];
-        if (FORCED_NUMERIC_TYPES.includes(t)) {
+      callback: ({ values: { key = "", type } }) => {
+        if (FORCED_NUMERIC_TYPES.includes(type)) {
           setValue("valueType", { type: "number" });
+          if (type === "check") setValue("key", "utilisation");
           return;
         }
-        if (t === "user-input") {
-          const entry = userInputCatalog[values.key ?? ""];
+        if (type === "user-input") {
+          const entry = userInputCatalog[key];
           if (!entry) return;
           setValue("symbol", entry.symbol);
           setValue("unit", entry.unit);
@@ -77,6 +77,8 @@ export const FormIdentity = () => {
       unsubscribe();
     };
   }, [subscribe, setValue]);
+
+  if (type === "check") return null;
 
   return (
     <Section>

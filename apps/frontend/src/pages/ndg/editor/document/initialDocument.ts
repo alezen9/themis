@@ -16,7 +16,7 @@ export const initialDocument: EditorDocument = {
       position: { x: 0, y: 0 },
       type: "check",
       data: {
-        key: "ratio",
+        key: "utilisation",
         valueType: { type: "number" },
         verificationExpression: "\\frac{N_{Ed}}{N_{pl,Rd}} \\leq 1.0",
       },

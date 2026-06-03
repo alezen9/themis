@@ -8,7 +8,7 @@ const checkNode: EditorNode = {
   position: { x: 0, y: 0 },
   type: "check",
   data: {
-    key: "ratio",
+    key: "utilisation",
     valueType: { type: "number" },
     verificationExpression: "x \\leq 1",
   },
