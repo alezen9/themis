@@ -184,9 +184,9 @@ describe("validateNDG", () => {
 
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
-      // @ts-expect-error -- intentional evaluator typo for validation coverage
       evaluate: {
         utilisation: ({ x }) => Number(x),
+        // @ts-expect-error - intentional evaluator typo for validation coverage
         extra: ({ x }) => Number(x),
       },
     };
