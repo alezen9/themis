@@ -72,8 +72,8 @@ importers:
         specifier: ^4.18.1
         version: 4.18.1
       pluton-2d:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.1
+        version: 0.3.1
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -1766,8 +1766,8 @@ packages:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
     engines: {node: '>=12'}
 
-  pluton-2d@0.2.0:
-    resolution: {integrity: sha512-g8GOIXiHQOUgo64n0Y62+m6TtsMiZdJNo4CwjMnNdXhrjRlCvAPRK+fjgOoocOYXuOYqK0co+GxiBmalA0U1fg==}
+  pluton-2d@0.3.1:
+    resolution: {integrity: sha512-PWjL2+8J4xJkelZDKYz8WEaWM9IwA0J4309Ovru55menrkXAgTFJJ1OSG90NTqeZnOQmauqqAOTLHZezYpbRoA==}
 
   postcss@8.5.15:
     resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
@@ -3759,7 +3759,7 @@ snapshots:
 
   picomatch@4.0.4: {}
 
-  pluton-2d@0.2.0: {}
+  pluton-2d@0.3.1: {}
 
   postcss@8.5.15:
     dependencies:
