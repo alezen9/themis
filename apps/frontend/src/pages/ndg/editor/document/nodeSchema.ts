@@ -4,6 +4,7 @@ const numericValueType = z.object({ type: z.literal("number") });
 const anyValueType = z.discriminatedUnion("type", [
   z.object({ type: z.literal("number") }),
   z.object({ type: z.literal("string") }),
+  z.object({ type: z.literal("boolean") }),
 ]);
 
 const base = { key: z.string().min(1), symbol: z.string().optional() };

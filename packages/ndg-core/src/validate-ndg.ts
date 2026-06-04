@@ -7,9 +7,9 @@ import {
 } from "./schema";
 
 type Evaluator = (
-  deps: Record<string, number | string>,
+  deps: Record<string, number | string | boolean>,
   ctx: EvalCtx,
-) => number | string;
+) => number | string | boolean;
 
 export type ValidatedNDG = {
   check: CheckNode;

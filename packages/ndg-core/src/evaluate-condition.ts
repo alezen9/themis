@@ -4,7 +4,7 @@ import {
   type ConditionTuple,
 } from "./schema";
 
-type Context = Record<string, string | number>; // constants + inputs + computed values
+type Context = Record<string, string | number | boolean>; // constants + inputs + computed values
 
 const readKey = (key: string, ctx: Context) => {
   const value = ctx[key];
@@ -19,7 +19,7 @@ const resolveRightOperand = (operand: ConditionOperand, ctx: Context) => {
   return operand.value;
 };
 
-const assertNumber = (value: number | string, label: string) => {
+const assertNumber = (value: number | string | boolean, label: string) => {
   if (typeof value !== "number") {
     throw new Error(`Condition ${label} must resolve to a number`);
   }

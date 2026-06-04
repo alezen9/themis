@@ -1,4 +1,4 @@
-import { defineNDG } from "@ndg/ndg-core";
+import { defineNDG } from "../../define";
 import { evaluate } from "./tension-evaluate";
 import { nodes } from "./tension-nodes";
 

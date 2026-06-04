@@ -1,4 +1,4 @@
-import { defineEvaluators } from "@ndg/ndg-core";
+import { defineEvaluators } from "../../define";
 import { nodes } from "./compression-nodes";
 import { assertPrecondition, assertPositive } from "../../assertions";
 

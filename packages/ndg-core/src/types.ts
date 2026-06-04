@@ -4,7 +4,7 @@ export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
 type ComputedNodeType = "formula" | "check";
 
-export type NDGValue = number | string;
+export type NDGValue = number | string | boolean;
 
 export type NDGInputValue =
   | NDGValue
@@ -17,38 +17,28 @@ export type EvalNote = {
   severity: "ok" | "warning";
 };
 
-export type EvalCtx = {
+export type EvalCtx<
+  TValues extends Record<string, NDGInputValue> = Record<string, NDGInputValue>,
+> = {
   addNote(opts: {
     formula: string;
     latex?: string;
     value: number;
     warn: boolean;
   }): void;
+  inputs: Readonly<TValues>;
 };
 
 export type ValueType =
-  | { readonly type: "number"; readonly oneOf?: readonly number[] }
-  | { readonly type: "string"; readonly oneOf?: readonly string[] };
+  | { readonly type: "number" }
+  | { readonly type: "string" }
+  | { readonly type: "boolean" };
 
-type NumberValue<TValueType extends ValueType> = TValueType extends {
-  type: "number";
-  oneOf: readonly number[];
-}
-  ? TValueType["oneOf"][number]
-  : number;
-
-type StringValue<TValueType extends ValueType> = TValueType extends {
-  type: "string";
-  oneOf: readonly string[];
-}
-  ? TValueType["oneOf"][number]
-  : string;
-
-type ValueFromValueType<TValueType extends ValueType> = TValueType extends {
-  type: "number";
-}
-  ? NumberValue<TValueType>
-  : StringValue<TValueType>;
+type ValueFromValueType<TValueType extends ValueType> = {
+  number: number;
+  string: string;
+  boolean: boolean;
+}[TValueType["type"]];
 
 type NodeValue<TNode extends Node> = ValueFromValueType<TNode["valueType"]>;
 
@@ -83,18 +73,17 @@ type RequiredComputedKey<TNodes extends readonly Node[]> = Exclude<
 
 export type NDGContext = { values: Record<string, NDGInputValue> };
 
-export type EvaluatorArgs<
-  TNodes extends readonly Node[],
-  TValues extends NDGContext["values"] = NDGContext["values"],
-> = Readonly<Prettify<InferCache<TNodes> & TValues>>;
+export type EvaluatorArgs<TNodes extends readonly Node[]> = Readonly<
+  InferCache<TNodes>
+>;
 
 type EvaluateRequired<
   TNodes extends readonly Node[],
   TValues extends NDGContext["values"],
 > = {
   [K in RequiredComputedKey<TNodes>]: (
-    deps: EvaluatorArgs<TNodes, TValues>,
-    ctx: EvalCtx,
+    deps: EvaluatorArgs<TNodes>,
+    ctx: EvalCtx<TValues>,
   ) => InferComputed<TNodes>[K];
 };
 
@@ -103,14 +92,14 @@ type EvaluateOptional<
   TValues extends NDGContext["values"],
 > = {
   [K in SelectorKey<TNodes>]?: (
-    deps: EvaluatorArgs<TNodes, TValues>,
-    ctx: EvalCtx,
+    deps: EvaluatorArgs<TNodes>,
+    ctx: EvalCtx<TValues>,
   ) => InferComputed<TNodes>[K];
 };
 
 export type Evaluate<
   TNodes extends readonly Node[],
-  TValues extends NDGContext["values"],
+  TValues extends NDGContext["values"] = NDGContext["values"],
 > = Prettify<
   EvaluateRequired<TNodes, TValues> & EvaluateOptional<TNodes, TValues>
 >;

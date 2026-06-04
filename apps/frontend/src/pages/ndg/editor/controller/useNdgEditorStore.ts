@@ -163,7 +163,9 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
         sourceHandle: null,
         targetHandle: null,
       };
-      if (!canConnectNodes(derived._nodeById, derived._adjacencyList, connection))
+      if (
+        !canConnectNodes(derived._nodeById, derived._adjacencyList, connection)
+      )
         return withHistory(state, { nodes, ...derived });
 
       const newEdge: EditorEdge = {

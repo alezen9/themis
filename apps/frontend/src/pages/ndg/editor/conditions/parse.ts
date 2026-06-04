@@ -10,6 +10,7 @@ type Token =
   | { kind: "key"; value: string }
   | { kind: "number"; value: number }
   | { kind: "string"; value: string }
+  | { kind: "boolean"; value: boolean }
   | { kind: "operator"; value: OperatorName }
   | { kind: "and" }
   | { kind: "or" }
@@ -68,9 +69,13 @@ const tokenize = (text: string): Token[] => {
       let j = i + 1;
       while (j < text.length && isIdentifierPart(text[j])) j++;
       const word = text.slice(i, j);
-      const keyword = word.toUpperCase();
-      if (keyword === "AND") tokens.push({ kind: "and" });
-      else if (keyword === "OR") tokens.push({ kind: "or" });
+      const keyword = word.toLowerCase();
+      if (keyword === "and") tokens.push({ kind: "and" });
+      else if (keyword === "or") tokens.push({ kind: "or" });
+      else if (keyword === "true")
+        tokens.push({ kind: "boolean", value: true });
+      else if (keyword === "false")
+        tokens.push({ kind: "boolean", value: false });
       else tokens.push({ kind: "key", value: word });
       i = j;
     } else {
@@ -105,13 +110,15 @@ export const parseCondition = (text: string): ParseResult => {
       if (!token) throw new Error("Expected a value");
       if (token.kind === "string") return { value: token.value };
       if (token.kind === "number") return { value: token.value };
+      if (token.kind === "boolean") return { value: token.value };
       if (token.kind === "key") return { key: token.value };
-      throw new Error("Expected a value, number, or key");
+      throw new Error("Expected a value, number, boolean, or key");
     };
 
     const parseComparison = (): Condition => {
       const keyToken = tokens[pos++];
-      if (!keyToken || keyToken.kind !== "key") throw new Error("Expected a key");
+      if (!keyToken || keyToken.kind !== "key")
+        throw new Error("Expected a key");
       const operatorToken = tokens[pos++];
       if (!operatorToken || operatorToken.kind !== "operator")
         throw new Error("Expected a comparison operator (=, <, <=, >, >=)");

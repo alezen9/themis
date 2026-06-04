@@ -102,12 +102,7 @@ const EditEdgeForm = (props: { edgeId: string; onClose: () => void }) => {
       const key = node.data.key;
       if (standard.has(key) || seen.has(key)) continue;
       seen.add(key);
-      const { valueType } = node.data;
-      const values =
-        valueType.oneOf && valueType.oneOf.length > 0
-          ? formatValues(valueType.oneOf)
-          : valueType.type;
-      rows.push({ key, values });
+      rows.push({ key, values: node.data.valueType.type });
     }
     return rows;
   }, [nodes]);

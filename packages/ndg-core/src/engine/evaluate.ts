@@ -1,4 +1,5 @@
 import { get } from "lodash-es";
+import { assertDefined, assertNDGValue } from "../assertions";
 import { collectConditionKeys, evaluateCondition } from "../evaluate-condition";
 import { isSelectorNode, type Condition, type Node } from "../schema";
 import type {
@@ -74,7 +75,8 @@ const matchesCondition = (condition: Condition, state: EvaluationState) => {
 
   for (const key of unresolvedKeys) {
     const dependency = state.nodeByKey.get(key);
-    if (!dependency) throw new Error(`Condition references unknown key: "${key}"`);
+    if (!dependency)
+      throw new Error(`Condition references unknown key: "${key}"`);
     evaluateNode(dependency.id, state);
   }
 
@@ -90,21 +92,15 @@ const resolveNodeValue = (
   switch (node.type) {
     case "constant": {
       const value = state.runtime.constants[node.key];
-      if (value === undefined) {
-        throw new Error(`Unsupported constant: "${node.key}"`);
-      }
+      assertDefined(value, `Unsupported constant: "${node.key}"`);
       return value;
     }
     case "user-input":
     case "coefficient":
     case "table": {
       const value = get(state.runtime.values, node.key);
-      if (value === undefined) throw new Error(`Missing value: "${node.key}"`);
-      if (typeof value !== "number" && typeof value !== "string") {
-        throw new Error(
-          `Value for "${node.key}" must be a number or string, got ${typeof value}`,
-        );
-      }
+      assertDefined(value, `Missing value: "${node.key}"`);
+      assertNDGValue(value, node.key);
       return value;
     }
     case "formula":
@@ -123,6 +119,7 @@ const resolveNodeValue = (
             severity: warn ? "warning" : "ok",
           });
         },
+        inputs: state.runtime.values,
       };
       const result = evaluator(state.lookup, ctx);
       assertFiniteNumberResult(node, result);
@@ -173,4 +170,3 @@ const assertFiniteNumberResult = (node: Node, value: NDGValue) => {
     );
   }
 };
-

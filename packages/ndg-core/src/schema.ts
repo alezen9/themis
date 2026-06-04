@@ -12,7 +12,7 @@ export const NodeMetaSchema = z.strictObject({
 const ConditionKeySchema = z.string();
 
 const ConditionOperandSchema = z.union([
-  z.strictObject({ value: z.union([z.string(), z.number()]) }),
+  z.strictObject({ value: z.union([z.string(), z.number(), z.boolean()]) }),
   z.strictObject({ key: z.string() }),
 ]);
 const ConditionTupleSchema = z
@@ -58,19 +58,14 @@ const BaseNodeSchema = z.strictObject({
   children: z.array(ChildSchema).readonly(),
 });
 
-const NumericValueType = z.strictObject({
-  type: z.literal("number"),
-  oneOf: z.array(z.number()).readonly().optional(),
-});
-
-const StringValueType = z.strictObject({
-  type: z.literal("string"),
-  oneOf: z.array(z.string()).readonly().optional(),
-});
+const NumericValueType = z.strictObject({ type: z.literal("number") });
+const StringValueType = z.strictObject({ type: z.literal("string") });
+const BooleanValueType = z.strictObject({ type: z.literal("boolean") });
 
 const ValueTypeSchema = z.discriminatedUnion("type", [
   NumericValueType,
   StringValueType,
+  BooleanValueType,
 ]);
 
 /**

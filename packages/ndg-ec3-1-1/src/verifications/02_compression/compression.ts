@@ -1,4 +1,4 @@
-import { defineNDG } from "@ndg/ndg-core";
+import { defineNDG } from "../../define";
 import { evaluate } from "./compression-evaluate";
 import { nodes } from "./compression-nodes";
 

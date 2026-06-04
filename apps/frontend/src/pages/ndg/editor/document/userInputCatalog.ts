@@ -1,7 +1,7 @@
 type CatalogEntry = {
   symbol?: string;
   unit?: string;
-  valueType: "number" | "string";
+  valueType: "number" | "string" | "boolean";
   values?: readonly (string | number | boolean)[];
   positive?: boolean;
 };
@@ -194,7 +194,7 @@ export const userInputCatalog: Record<string, CatalogEntry> = {
     valueType: "string",
     values: ["pinned-pinned", "fixed-pinned", "pinned-fixed", "fixed-fixed"],
   },
-  include_torsional_modes: { valueType: "string", values: [true, false] },
+  include_torsional_modes: { valueType: "boolean" },
   k_T: { symbol: "k_T", valueType: "number" },
   k_LT: { symbol: "k_{LT}", valueType: "number" },
   M_y_Ed_shape_LT: {
