@@ -22,7 +22,7 @@ export const runNDG = <
   const state: EvaluationState = {
     ...validated,
     runtime: { ...context, constants: INTERNAL_CONSTANTS },
-    lookup: { ...INTERNAL_CONSTANTS, ...context.values },
+    lookup: { ...INTERNAL_CONSTANTS },
     cache: {},
     trace: [],
     visited: new Set(),

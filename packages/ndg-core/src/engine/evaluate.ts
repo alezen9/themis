@@ -1,3 +1,4 @@
+import { get } from "lodash-es";
 import { collectConditionKeys, evaluateCondition } from "../evaluate-condition";
 import { isSelectorNode, type Condition, type Node } from "../schema";
 import type {
@@ -72,7 +73,9 @@ const matchesCondition = (condition: Condition, state: EvaluationState) => {
   }
 
   for (const key of unresolvedKeys) {
-    evaluateNode(state.nodeByKey.get(key)!.id, state);
+    const dependency = state.nodeByKey.get(key);
+    if (!dependency) throw new Error(`Condition references unknown key: "${key}"`);
+    evaluateNode(dependency.id, state);
   }
 
   return evaluateCondition(condition, state.lookup);
@@ -83,7 +86,7 @@ const resolveNodeValue = (
   activeChildren: string[],
   state: EvaluationState,
   notes: EvalNote[],
-) => {
+): NDGValue => {
   switch (node.type) {
     case "constant": {
       const value = state.runtime.constants[node.key];
@@ -95,8 +98,13 @@ const resolveNodeValue = (
     case "user-input":
     case "coefficient":
     case "table": {
-      const value = state.runtime.values[node.key];
+      const value = get(state.runtime.values, node.key);
       if (value === undefined) throw new Error(`Missing value: "${node.key}"`);
+      if (typeof value !== "number" && typeof value !== "string") {
+        throw new Error(
+          `Value for "${node.key}" must be a number or string, got ${typeof value}`,
+        );
+      }
       return value;
     }
     case "formula":
@@ -133,16 +141,17 @@ const resolveAutoSelectorNode = (
       `Missing evaluator for ${node.type} node: "${node.key}" (id: ${node.id})`,
     );
   }
-  if (activeChildren.length !== 1) {
+  const [childId] = activeChildren;
+  if (activeChildren.length !== 1 || !childId) {
     throw new Error(
       `Auto-selector node "${node.key}" (id: ${node.id}) must have exactly one active child, got ${activeChildren.length}`,
     );
   }
 
-  const selectedChild = state.nodeById.get(activeChildren[0]);
+  const selectedChild = state.nodeById.get(childId);
   if (!selectedChild) {
     throw new Error(
-      `Auto-selector node "${node.key}" (id: ${node.id}) references unknown child "${activeChildren[0]}"`,
+      `Auto-selector node "${node.key}" (id: ${node.id}) references unknown child "${childId}"`,
     );
   }
 
@@ -164,3 +173,4 @@ const assertFiniteNumberResult = (node: Node, value: NDGValue) => {
     );
   }
 };
+

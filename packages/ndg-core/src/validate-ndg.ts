@@ -1,4 +1,4 @@
-import type { EvalCtx, NDGDefinition } from "./types";
+import type { EvalCtx, NDGDefinition, NDGInputValue } from "./types";
 import {
   isComputedNode,
   isSelectorNode,
@@ -20,10 +20,7 @@ export type ValidatedNDG = {
 
 export const validateNDG = <
   TNodes extends readonly Node[],
-  TValues extends Record<string, number | string> = Record<
-    string,
-    number | string
-  >,
+  TValues extends Record<string, NDGInputValue> = Record<string, NDGInputValue>,
 >(
   definition: NDGDefinition<TNodes, TValues>,
 ): ValidatedNDG => {
@@ -84,15 +81,16 @@ export const validateNDG = <
     );
   }
 
-  if (checkNodes.length !== 1) {
+  const [check] = checkNodes;
+  if (checkNodes.length !== 1 || !check) {
     throw new Error(
       `NDG must contain exactly one check node, got ${checkNodes.length}`,
     );
   }
 
-  validateNoCycles(checkNodes[0].id, nodeById);
+  validateNoCycles(check.id, nodeById);
 
-  return { check: checkNodes[0], evaluators, nodeById, nodeByKey };
+  return { check, evaluators, nodeById, nodeByKey };
 };
 
 const validateNoCycles = (

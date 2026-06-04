@@ -29,6 +29,7 @@ import { Verifications } from "./Verifications/Verifications";
 import verify, { type Ec311Inputs } from "@ndg/ndg-ec3-1-1";
 import { steelGradesMap } from "./data/steelGrades";
 import { getBucklingCurves } from "./domain/buckling/buckling";
+import { getSteelProperties } from "./domain/steel/getSteelProperties";
 
 type PageEc3_1_1Props = {
   onValuesChange?: (values: Ec3FormValues) => void;
@@ -184,15 +185,7 @@ const createVerifyInputs = (
   if (!steelGrade)
     throw new Error(`Unknown steel grade: ${inputs.steel_grade_id}`);
 
-  let thickness_mm = Math.max(inputs.i_geometry.tf_mm, inputs.i_geometry.tw_mm);
-  if (inputs.shape === "RHS") thickness_mm = inputs.rhs_geometry.tw_mm;
-  if (inputs.shape === "CHS") thickness_mm = inputs.chs_geometry.t_mm;
-
-  let fy_MPa = steelGrade.fy_above_40_MPa ?? steelGrade.fy_MPa;
-  if (thickness_mm <= 40) fy_MPa = steelGrade.fy_MPa;
-
-  let fu_MPa = steelGrade.fu_above_40_MPa ?? steelGrade.fu_MPa;
-  if (thickness_mm <= 40) fu_MPa = steelGrade.fu_MPa;
+  const { fy_MPa, fu_MPa } = getSteelProperties(steelGrade, inputs);
 
   const bucklingCurves = getBucklingCurves(inputs);
 

@@ -68,7 +68,7 @@ describe("evaluateCondition", () => {
         { eq: ["missing_key", { value: 5 }] },
         conditionContext,
       ),
-    ).toThrow(/undefined context key/);
+    ).toThrow(/unknown key/);
   });
 
   it("throws when a numeric comparison resolves a non-number", () => {

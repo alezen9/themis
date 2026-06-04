@@ -153,9 +153,9 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       const { sourceNodeId } = input;
       const node = toEditorNode(createNodeId(), { x: 0, y: 200 }, input);
       const nodes = [...state.nodes, node];
+      const derived = derive(nodes, state.edges);
 
-      if (!sourceNodeId)
-        return withHistory(state, { nodes, ...derive(nodes, state.edges) });
+      if (!sourceNodeId) return withHistory(state, { nodes, ...derived });
 
       const connection: Connection = {
         source: sourceNodeId,
@@ -163,9 +163,8 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
         sourceHandle: null,
         targetHandle: null,
       };
-      const nodeById = new Map(nodes.map(n => [n.id, n]));
-      if (!canConnectNodes(nodeById, state._adjacencyList, connection))
-        return withHistory(state, { nodes, ...derive(nodes, state.edges) });
+      if (!canConnectNodes(derived._nodeById, derived._adjacencyList, connection))
+        return withHistory(state, { nodes, ...derived });
 
       const newEdge: EditorEdge = {
         id: createEdgeId(sourceNodeId, node.id),

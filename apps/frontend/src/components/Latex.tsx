@@ -32,5 +32,3 @@ export const Latex = (props: Props) => {
     />
   );
 };
-
-Latex.displayName = "Latex";

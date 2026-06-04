@@ -41,9 +41,10 @@ const createEvaluatorInputs = (
 
   for (const childId of activeChildren) {
     const child = state.nodeById.get(childId);
-    if (child) {
-      evaluatorInputs[child.key] = state.cache[child.key];
-    }
+    if (!child) continue;
+    const cached = state.cache[child.key];
+    if (cached === undefined) continue;
+    evaluatorInputs[child.key] = cached;
   }
 
   return evaluatorInputs;

@@ -18,12 +18,9 @@ export const defineEvaluators = <
   const TNodes extends readonly Node[],
   TValues extends NDGContext["values"] = NDGContext["values"],
 >(
-  nodes: TNodes,
+  _nodes: TNodes,
   evaluators: Evaluate<TNodes, TValues>,
-) => {
-  void nodes;
-  return evaluators;
-};
+) => evaluators;
 
 export const defineNDG = <
   const TNodes extends readonly Node[],

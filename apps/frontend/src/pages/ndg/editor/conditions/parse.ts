@@ -41,7 +41,7 @@ const tokenize = (text: string): Token[] => {
       i++;
     } else if (char === '"') {
       const end = text.indexOf('"', i + 1);
-      if (end === -1) throw "Unterminated string";
+      if (end === -1) throw new Error("Unterminated string");
       tokens.push({ kind: "string", value: text.slice(i + 1, end) });
       i = end + 1;
     } else if (text.slice(i, i + 2) === "<=" || char === "≤") {
@@ -74,7 +74,7 @@ const tokenize = (text: string): Token[] => {
       else tokens.push({ kind: "key", value: word });
       i = j;
     } else {
-      throw `Unexpected character "${char}"`;
+      throw new Error(`Unexpected character "${char}"`);
     }
   }
 
@@ -102,19 +102,19 @@ export const parseCondition = (text: string): ParseResult => {
 
     const parseOperand = (): ConditionOperand => {
       const token = tokens[pos++];
-      if (!token) throw "Expected a value";
+      if (!token) throw new Error("Expected a value");
       if (token.kind === "string") return { value: token.value };
       if (token.kind === "number") return { value: token.value };
       if (token.kind === "key") return { key: token.value };
-      throw "Expected a value, number, or key";
+      throw new Error("Expected a value, number, or key");
     };
 
     const parseComparison = (): Condition => {
       const keyToken = tokens[pos++];
-      if (!keyToken || keyToken.kind !== "key") throw "Expected a key";
+      if (!keyToken || keyToken.kind !== "key") throw new Error("Expected a key");
       const operatorToken = tokens[pos++];
       if (!operatorToken || operatorToken.kind !== "operator")
-        throw "Expected a comparison operator (=, <, <=, >, >=)";
+        throw new Error("Expected a comparison operator (=, <, <=, >, >=)");
       const operand = parseOperand();
       const tuple: ConditionTuple = [keyToken.value, operand];
       return comparisonByOperator[operatorToken.value](tuple);
@@ -124,7 +124,7 @@ export const parseCondition = (text: string): ParseResult => {
       if (peek()?.kind === "lparen") {
         pos++;
         const condition = parseOr();
-        if (tokens[pos++]?.kind !== "rparen") throw "Expected )";
+        if (tokens[pos++]?.kind !== "rparen") throw new Error("Expected )");
         return condition;
       }
       return parseComparison();
@@ -151,9 +151,12 @@ export const parseCondition = (text: string): ParseResult => {
     };
 
     const condition = parseOr();
-    if (pos < tokens.length) throw "Unexpected trailing input";
+    if (pos < tokens.length) throw new Error("Unexpected trailing input");
     return { ok: true, condition };
   } catch (error) {
-    return { ok: false, error: typeof error === "string" ? error : "Invalid" };
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Invalid",
+    };
   }
 };

@@ -9,7 +9,7 @@ type Context = Record<string, string | number>; // constants + inputs + computed
 const readKey = (key: string, ctx: Context) => {
   const value = ctx[key];
   if (value === undefined) {
-    throw new Error(`Condition references undefined context key: "${key}"`);
+    throw new Error(`Condition references unknown key: "${key}"`);
   }
   return value;
 };

@@ -6,6 +6,10 @@ type ComputedNodeType = "formula" | "check";
 
 export type NDGValue = number | string;
 
+export type NDGInputValue =
+  | NDGValue
+  | { readonly [key: string]: NDGInputValue };
+
 export type EvalNote = {
   formula: string;
   latex?: string;
@@ -77,7 +81,7 @@ type RequiredComputedKey<TNodes extends readonly Node[]> = Exclude<
   SelectorKey<TNodes>
 >;
 
-export type NDGContext = { values: Record<string, NDGValue> };
+export type NDGContext = { values: Record<string, NDGInputValue> };
 
 export type EvaluatorArgs<
   TNodes extends readonly Node[],

@@ -6,7 +6,7 @@
   "scripts": {
     "generate": "tsr generate",
     "dev": "vite",
-    "build": "tsr generate && vite build",
+    "build": "tsr generate && vite build && cp dist/index.html dist/404.html",
     "typecheck": "tsr generate && tsc -p tsconfig.app.json",
     "test": "vitest run",
     "preview": "vite preview"
@@ -16,7 +16,6 @@
     "@hookform/resolvers": "^5.4.0",
     "@ndg/ndg-core": "workspace:*",
     "@ndg/ndg-ec3-1-1": "workspace:*",
-    "@tanstack/react-query": "^5.100.14",
     "@tanstack/react-router": "^1.170.10",
     "@tanstack/react-virtual": "^3.13.26",
     "@xyflow/react": "^12.10.2",
