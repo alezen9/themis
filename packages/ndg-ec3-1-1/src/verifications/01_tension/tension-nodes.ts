@@ -2,113 +2,92 @@ import { defineNodes } from "@ndg/ndg-core";
 
 export const nodes = defineNodes([
   {
-    "id": "02480d3f-b178-48dd-a39b-b85309a61b3d",
-    "symbol": "",
-    "children": [
-      {
-        "nodeId": "a77f73f6-5d19-4d12-9ff2-35260f63f393"
-      },
-      {
-        "nodeId": "5217f3d1-f584-4fb9-a193-810d95c1f743"
-      }
+    id: "02480d3f-b178-48dd-a39b-b85309a61b3d",
+    symbol: "",
+    children: [
+      { nodeId: "a77f73f6-5d19-4d12-9ff2-35260f63f393" },
+      { nodeId: "5217f3d1-f584-4fb9-a193-810d95c1f743" },
     ],
-    "type": "check",
-    "key": "utilisation",
-    "valueType": {
-      "type": "number"
+    type: "check",
+    key: "utilisation",
+    name: "Tension",
+    valueType: { type: "number" },
+    meta: {
+      sectionRef: "6.2.3",
+      paragraphRef: "(1)",
+      subParagraphRef: "",
+      formulaRef: "(6.5)",
+      tableRef: "",
+      verificationRef: "",
     },
-    "meta": {
-      "sectionRef": "6.2.3",
-      "paragraphRef": "(1)",
-      "subParagraphRef": "",
-      "formulaRef": "(6.5)",
-      "tableRef": "",
-      "verificationRef": ""
-    },
-    "verificationExpression": "\\frac{N_{Ed}}{N_{pl,Rd}} \\leq 1.0"
+    verificationExpression: "\\frac{N_{Ed}}{N_{pl,Rd}} \\leq 1.0",
   },
   {
-    "id": "a77f73f6-5d19-4d12-9ff2-35260f63f393",
-    "symbol": "N_{Ed}",
-    "children": [],
-    "type": "user-input",
-    "key": "N_Ed_N",
-    "valueType": {
-      "type": "number"
-    },
-    "unit": "\\mathrm{N}"
+    id: "a77f73f6-5d19-4d12-9ff2-35260f63f393",
+    symbol: "N_{Ed}",
+    children: [],
+    type: "user-input",
+    key: "N_Ed_N",
+    valueType: { type: "number" },
+    unit: "\\mathrm{N}",
   },
   {
-    "id": "5217f3d1-f584-4fb9-a193-810d95c1f743",
-    "symbol": "N_{pl,Rd}",
-    "children": [
-      {
-        "nodeId": "13e0cff4-8097-463b-8ff5-5364e9089fe9"
-      },
-      {
-        "nodeId": "a6233bbd-8ad1-46b2-a325-fcd0164c8aaf"
-      },
-      {
-        "nodeId": "7ff50833-8392-4e44-a6a7-c0fd8d5cd1c8"
-      }
+    id: "5217f3d1-f584-4fb9-a193-810d95c1f743",
+    symbol: "N_{pl,Rd}",
+    children: [
+      { nodeId: "13e0cff4-8097-463b-8ff5-5364e9089fe9" },
+      { nodeId: "a6233bbd-8ad1-46b2-a325-fcd0164c8aaf" },
+      { nodeId: "7ff50833-8392-4e44-a6a7-c0fd8d5cd1c8" },
     ],
-    "type": "formula",
-    "key": "N_pl_Rd_N",
-    "valueType": {
-      "type": "number"
+    type: "formula",
+    key: "N_pl_Rd_N",
+    valueType: { type: "number" },
+    meta: {
+      sectionRef: "6.2.3",
+      paragraphRef: "(2)",
+      subParagraphRef: "a)",
+      formulaRef: "(6.6)",
+      tableRef: "",
+      verificationRef: "",
     },
-    "meta": {
-      "sectionRef": "6.2.3",
-      "paragraphRef": "(2)",
-      "subParagraphRef": "a)",
-      "formulaRef": "(6.6)",
-      "tableRef": "",
-      "verificationRef": ""
-    },
-    "expression": "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
-    "unit": "\\mathrm{N}"
+    expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
+    unit: "\\mathrm{N}",
   },
   {
-    "id": "13e0cff4-8097-463b-8ff5-5364e9089fe9",
-    "symbol": "A",
-    "children": [],
-    "type": "user-input",
-    "key": "A_mm2",
-    "valueType": {
-      "type": "number"
-    },
-    "unit": "\\mathrm{mm^{2}}"
+    id: "13e0cff4-8097-463b-8ff5-5364e9089fe9",
+    symbol: "A",
+    children: [],
+    type: "user-input",
+    key: "A_mm2",
+    valueType: { type: "number" },
+    unit: "\\mathrm{mm^{2}}",
   },
   {
-    "id": "a6233bbd-8ad1-46b2-a325-fcd0164c8aaf",
-    "symbol": "f_y",
-    "children": [],
-    "type": "user-input",
-    "key": "fy_MPa",
-    "valueType": {
-      "type": "number"
-    },
-    "unit": "\\mathrm{MPa}"
+    id: "a6233bbd-8ad1-46b2-a325-fcd0164c8aaf",
+    symbol: "f_y",
+    children: [],
+    type: "user-input",
+    key: "fy_MPa",
+    valueType: { type: "number" },
+    unit: "\\mathrm{MPa}",
   },
   {
-    "id": "7ff50833-8392-4e44-a6a7-c0fd8d5cd1c8",
-    "symbol": "\\gamma_{M0}",
-    "children": [],
-    "type": "coefficient",
-    "key": "gamma_M0",
-    "valueType": {
-      "type": "number"
+    id: "7ff50833-8392-4e44-a6a7-c0fd8d5cd1c8",
+    symbol: "\\gamma_{M0}",
+    children: [],
+    type: "coefficient",
+    key: "gamma_M0",
+    valueType: { type: "number" },
+    meta: {
+      sectionRef: "6.1",
+      paragraphRef: "(1)",
+      subParagraphRef: "NOTE 2B",
+      formulaRef: "",
+      tableRef: "",
+      verificationRef: "",
     },
-    "meta": {
-      "sectionRef": "6.1",
-      "paragraphRef": "(1)",
-      "subParagraphRef": "NOTE 2B",
-      "formulaRef": "",
-      "tableRef": "",
-      "verificationRef": ""
-    },
-    "unit": ""
-  }
+    unit: "",
+  },
 ]);
 
 export type Nodes = typeof nodes;
