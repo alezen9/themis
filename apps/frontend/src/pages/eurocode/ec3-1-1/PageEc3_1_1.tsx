@@ -21,7 +21,7 @@ import {
 } from "./Form/schema/geometrySchema";
 import { materialSchema } from "./Form/schema/materialSchema";
 import { annexCoefficientsSchema } from "./Form/schema/nationalAnnexSchema";
-import { shapeDependentSchema } from "./Form/schema/shapeDependentSchema";
+import { crossSectionSchema } from "./Form/schema/crossSectionSchema";
 import { useEc311FormContext } from "./Form/useEc311FormContext";
 import { useEc311DerivedStore } from "./useEc311DerivedStore";
 import { twMerge } from "tailwind-merge";
@@ -317,7 +317,7 @@ const gateClassification = (values: Ec311ObservedValues) => {
     ...geometry,
   };
 
-  return shapeDependentSchema
+  return crossSectionSchema
     .and(materialSchema)
     .and(
       actionsSchema.pick({ N_Ed_kN: true, M_y_Ed_kNm: true, M_z_Ed_kNm: true }),

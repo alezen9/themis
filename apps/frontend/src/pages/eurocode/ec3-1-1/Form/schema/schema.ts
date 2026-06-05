@@ -2,14 +2,16 @@ import { z } from "zod";
 
 import { actionsSchema } from "./actionsSchema";
 import { classificationSchema } from "./classificationSchema";
+import { crossSectionSchema } from "./crossSectionSchema";
 import { flexuralBucklingSchema } from "./flexuralBucklingSchema";
 import { geometrySchema } from "./geometrySchema";
 import { lateralTorsionalBucklingSchema } from "./lateralTorsionalBucklingSchema";
 import { materialSchema } from "./materialSchema";
 import { nationalAnnexSchema } from "./nationalAnnexSchema";
-import { shapeDependentSchema } from "./shapeDependentSchema";
+import { shapeSchema } from "./shapeSchema";
 
-export const schema = shapeDependentSchema
+export const schema = shapeSchema
+  .and(crossSectionSchema)
   .and(materialSchema)
   .and(classificationSchema)
   .and(geometrySchema)

@@ -12,6 +12,7 @@ import {
 import { useEc311FormContext } from "./useEc311FormContext";
 import { ChangeHandler } from "react-hook-form";
 import { composeSteelGradeId } from "../data/steelGrades";
+import type { Ec3FormValues } from "./schema/schema";
 
 export const FormShape = () => {
   const { register, reset, getValues, trigger } = useEc311FormContext();
@@ -39,7 +40,6 @@ export const FormShape = () => {
         reset({
           ...values,
           shape: "RHS",
-          T_Ed_kNm: defaultValues.T_Ed_kNm,
           section_id: defaultRHSSection.id,
           fabrication_type: "cold-formed",
           steel_grade_id: composeSteelGradeId(
@@ -48,13 +48,12 @@ export const FormShape = () => {
           i_geometry: defaultValues.i_geometry,
           rhs_geometry: defaultValues.rhs_geometry,
           chs_geometry: defaultValues.chs_geometry,
-        });
+        } as Ec3FormValues);
 
       if (value === "CHS")
         reset({
           ...values,
           shape: "CHS",
-          T_Ed_kNm: defaultValues.T_Ed_kNm,
           section_id: defaultCHSSection.id,
           fabrication_type: "cold-formed",
           steel_grade_id: composeSteelGradeId(
@@ -63,7 +62,7 @@ export const FormShape = () => {
           i_geometry: defaultValues.i_geometry,
           rhs_geometry: defaultValues.rhs_geometry,
           chs_geometry: defaultValues.chs_geometry,
-        });
+        } as Ec3FormValues);
 
       await trigger();
     },

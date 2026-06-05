@@ -10,7 +10,7 @@ import {
   REQUIRED_STRING_MESSAGE,
 } from "./constants";
 
-export const shapeDependentSchema = z.discriminatedUnion("shape", [
+export const crossSectionSchema = z.discriminatedUnion("shape", [
   z.strictObject({
     shape: z.literal("I"),
     section_id: z
