@@ -94,36 +94,48 @@ const Observer = (props: ObserverProps) => {
   const setVerifications = useEc311DerivedStore(
     state => state.setVerifications,
   );
+  const setVerificationsState = useEc311DerivedStore(
+    state => state.setVerificationsState,
+  );
 
   const runPipeline = useMemo(
     () => (values: Ec311ObservedValues) => {
       onValuesChange?.(values);
 
-      const geometryResult = gateDerivedGeometry(values);
-      if (!geometryResult.success) return;
+      try {
+        const geometryResult = gateDerivedGeometry(values);
+        if (!geometryResult.success) throw new Error("Invalid geometry data");
 
-      const geometry = computeGeometryProperties(values);
-      setGeometry(geometry);
+        const geometry = computeGeometryProperties(values);
+        setGeometry(geometry);
 
-      const classificationResult = gateClassification(values);
-      if (!classificationResult.success) return;
+        const classificationResult = gateClassification(values);
+        if (!classificationResult.success)
+          throw new Error("Invalid form inputs");
 
-      const classification = classifySection(values);
-      setClassification(classification);
+        const classification = classifySection(values);
+        setClassification(classification);
 
-      const verifyResult = gateVerify(values);
-      if (!verifyResult.success) return;
+        const verifyResult = gateVerify(values);
+        if (!verifyResult.success) throw new Error("Invalid form inputs");
 
-      onValidValuesChange?.(verifyResult.data);
-      const verifyInputs = createVerifyInputs(
-        verifyResult.data,
-        geometry,
-        classification,
-      );
-      if (!verifyInputs) return;
-      const verifications = verify(verifyInputs);
-      setVerifications(verifications);
-      console.log(verifications);
+        onValidValuesChange?.(verifyResult.data);
+        const verifyInputs = createVerifyInputs(
+          verifyResult.data,
+          geometry,
+          classification,
+        );
+        if (!verifyInputs) throw new Error("Class 4 not supported");
+
+        const verifications = verify(verifyInputs);
+        setVerifications(verifications);
+        setVerificationsState({ isValid: true });
+        console.log(verifications);
+      } catch (error) {
+        let reason = "Invalid inputs";
+        if (error instanceof Error) reason = error.message;
+        setVerificationsState({ isValid: false, reason });
+      }
     },
     [
       onValuesChange,
@@ -131,6 +143,7 @@ const Observer = (props: ObserverProps) => {
       setGeometry,
       setClassification,
       setVerifications,
+      setVerificationsState,
     ],
   );
 

@@ -87,10 +87,13 @@ const createScale = (verifications: readonly Verification[]): Scale => {
 
 export const VerificationBarChart = () => {
   const verifications = useEc311DerivedStore(state => state.verifications);
+  const verificationsState = useEc311DerivedStore(
+    state => state.verificationsState,
+  );
   const [activeVerification, setActiveVerification] = useState<
     Verification | undefined
   >();
-  const scale = createScale(verifications);
+  const scale = createScale(verificationsState.isValid ? verifications : []);
 
   if (verifications.length === 0) return null;
 
@@ -131,7 +134,7 @@ export const VerificationBarChart = () => {
             rowIndex={index}
             scale={scale}
             verification={verification}
-            onClick={() => setActiveVerification(verification)}
+            onSelect={setActiveVerification}
           />
         ))}
       </div>
@@ -236,20 +239,33 @@ const ThresholdSlider = (props: ThresholdSliderProps) => {
   );
 };
 
-type VerificationItemProps = {
-  scale: Scale;
-  verification: Verification;
-  onClick: VoidFunction;
-};
+type VerificationItemProps = { scale: Scale; verification: Verification };
 
 type VerificationThresholdItemProps = VerificationItemProps;
 
 type VerificationRowProps = VerificationThresholdItemProps & {
   rowIndex: number;
+  onSelect: (verification: Verification) => void;
 };
 
 const VerificationRow = (props: VerificationRowProps) => {
-  const { rowIndex, scale, verification, onClick } = props;
+  const { rowIndex, scale, verification, onSelect } = props;
+  const verificationsState = useEc311DerivedStore(
+    state => state.verificationsState,
+  );
+  const ratio = verificationsState.isValid
+    ? getVerificationRatio(verification)
+    : null;
+  const displayedVerification = verificationsState.isValid
+    ? verification
+    : {
+        ...verification,
+        payload: {
+          error: new Error(
+            verificationsState.reason ?? "Verification unavailable",
+          ),
+        },
+      };
   const gridRow = rowIndex + 1;
 
   return (
@@ -258,23 +274,29 @@ const VerificationRow = (props: VerificationRowProps) => {
       style={{ gridRow }}
     >
       <VerificationBar
+        ratio={ratio}
         scale={scale}
         verification={verification}
-        onClick={onClick}
+        onClick={() => onSelect(displayedVerification)}
       />
       <VerificationLabel
+        ratio={ratio}
         scale={scale}
         verification={verification}
-        onClick={onClick}
+        onClick={() => onSelect(displayedVerification)}
       />
     </div>
   );
 };
 
-const VerificationBar = (props: VerificationThresholdItemProps) => {
-  const { scale, verification, onClick } = props;
+type VerificationBarProps = VerificationThresholdItemProps & {
+  ratio: number | null;
+  onClick: VoidFunction;
+};
+
+const VerificationBar = (props: VerificationBarProps) => {
+  const { scale, ratio, onClick } = props;
   const threshold = useEc311DerivedStore(state => state.threshold);
-  const ratio = getVerificationRatio(verification);
   const status = getVerificationStatus(ratio, threshold);
 
   return (
@@ -306,10 +328,14 @@ const VerificationBar = (props: VerificationThresholdItemProps) => {
   );
 };
 
-const VerificationLabel = (props: VerificationThresholdItemProps) => {
-  const { verification, onClick } = props;
+type VerificationLabelProps = VerificationThresholdItemProps & {
+  ratio: number | null;
+  onClick: VoidFunction;
+};
+
+const VerificationLabel = (props: VerificationLabelProps) => {
+  const { verification, ratio, onClick } = props;
   const threshold = useEc311DerivedStore(state => state.threshold);
-  const ratio = getVerificationRatio(verification);
   const status = getVerificationStatus(ratio, threshold);
   const formattedRatio = formatRatio(ratio);
 
@@ -329,7 +355,10 @@ const VerificationLabel = (props: VerificationThresholdItemProps) => {
       )}
       data-status={status}
     >
-      <span className="text-center font-semibold tabular-nums">
+      <span
+        className="text-center font-semibold tabular-nums"
+        data-testid="verification-ratio"
+      >
         {formattedRatio}
       </span>
       <span className="text-center text-current/45">|</span>

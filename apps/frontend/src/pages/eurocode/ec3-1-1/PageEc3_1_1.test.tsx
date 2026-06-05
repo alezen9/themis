@@ -381,4 +381,41 @@ describe("[EC3-1-1] PageEc3_1_1", () => {
       true,
     );
   });
+
+  it("shows default verification utilisation on first load", () => {
+    render(<PageEc3_1_1 />);
+
+    expect(
+      screen.getByTestId("verification-max-utilisation").textContent,
+    ).not.toBe("N/A");
+    expect(screen.getByTestId("verification-state-reason").textContent).toBe(
+      "",
+    );
+  });
+
+  it("marks verification output invalid when verification inputs fail", () => {
+    render(<PageEc3_1_1 />);
+
+    fireEvent.change(screen.getByTestId("input-psi_y"), {
+      target: { value: "" },
+    });
+    act(() => {
+      vi.advanceTimersByTime(60);
+    });
+
+    expect(screen.getByTestId("verification-max-utilisation").textContent).toBe(
+      "N/A",
+    );
+    expect(screen.getByTestId("verification-state-reason").textContent).toBe(
+      "Invalid form inputs",
+    );
+    expect(screen.getAllByTestId("verification-ratio").length).toBeGreaterThan(
+      0,
+    );
+    expect(
+      screen
+        .getAllByTestId("verification-ratio")
+        .every(ratio => ratio.textContent === "N/A"),
+    ).toBe(true);
+  });
 });
