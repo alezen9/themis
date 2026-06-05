@@ -23,6 +23,7 @@ const missingExpression: EditorNode = {
   type: "check",
   data: {
     key: "utilisation",
+    name: "Check",
     valueType: { type: "number" },
     verificationExpression: "",
   },

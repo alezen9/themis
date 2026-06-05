@@ -52,7 +52,6 @@ export const ChildSchema = z.strictObject({
 
 const BaseNodeSchema = z.strictObject({
   id: z.string(),
-  name: z.string().optional(),
   symbol: z.string().optional(), // LaTeX: "N_{cr}", "\bar{\lambda}", "A"
   description: z.string().optional(),
   children: z.array(ChildSchema).readonly(),
@@ -75,9 +74,10 @@ const ValueTypeSchema = z.discriminatedUnion("type", [
 export const CheckNodeSchema = BaseNodeSchema.extend({
   type: z.literal("check"),
   key: z.literal("utilisation"),
+  name: z.string().min(1),
   valueType: NumericValueType,
   meta: NodeMetaSchema.optional(),
-  verificationExpression: z.string(), // LaTeX: "\\frac{N_{Ed}}{N_{c,Rd}} \\leq 1.0"
+  verificationExpression: z.string().min(1), // LaTeX: "\\frac{N_{Ed}}{N_{c,Rd}} \\leq 1.0"
 });
 
 /**
@@ -85,7 +85,7 @@ export const CheckNodeSchema = BaseNodeSchema.extend({
  */
 export const FormulaNodeSchema = BaseNodeSchema.extend({
   type: z.literal("formula"),
-  key: z.string(),
+  key: z.string().min(1),
   valueType: ValueTypeSchema,
   meta: NodeMetaSchema.optional(),
   expression: z.string().optional(), // LaTeX: "\frac{A \cdot f_y}{\gamma_{M0}}"
@@ -98,10 +98,10 @@ export const FormulaNodeSchema = BaseNodeSchema.extend({
  */
 export const TableNodeSchema = BaseNodeSchema.extend({
   type: z.literal("table"),
-  key: z.string(),
+  key: z.string().min(1),
   valueType: ValueTypeSchema,
   meta: NodeMetaSchema.optional(),
-  source: z.string(), // e.g. "EC3-Table-6.2"
+  source: z.string().min(1), // e.g. "EC3-Table-6.2"
   unit: z.string().optional(),
 });
 
@@ -110,7 +110,7 @@ export const TableNodeSchema = BaseNodeSchema.extend({
  */
 export const CoefficientNodeSchema = BaseNodeSchema.extend({
   type: z.literal("coefficient"),
-  key: z.string(),
+  key: z.string().min(1),
   valueType: NumericValueType,
   meta: NodeMetaSchema.optional(),
   unit: z.string().optional(),
@@ -121,7 +121,7 @@ export const CoefficientNodeSchema = BaseNodeSchema.extend({
  */
 export const UserInputNodeSchema = BaseNodeSchema.extend({
   type: z.literal("user-input"),
-  key: z.string(),
+  key: z.string().min(1),
   valueType: ValueTypeSchema,
   unit: z.string().optional(),
 });
@@ -132,9 +132,9 @@ export const UserInputNodeSchema = BaseNodeSchema.extend({
  */
 export const ConstantNodeSchema = BaseNodeSchema.extend({
   type: z.literal("constant"),
-  key: z.string(),
+  key: z.string().min(1),
   valueType: NumericValueType,
-  symbol: z.string(), // overrides BaseNode's optional symbol -- required here
+  symbol: z.string().min(1), // overrides BaseNode's optional symbol -- required here
 });
 
 export const NodeSchema = z.discriminatedUnion("type", [

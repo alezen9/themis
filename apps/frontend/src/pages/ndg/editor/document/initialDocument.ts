@@ -17,6 +17,7 @@ export const initialDocument: EditorDocument = {
       type: "check",
       data: {
         key: "utilisation",
+        name: "Tension",
         valueType: { type: "number" },
         verificationExpression: "\\frac{N_{Ed}}{N_{pl,Rd}} \\leq 1.0",
       },

@@ -14,17 +14,17 @@ import {
   userInputKeyOptions,
 } from "./options";
 import { Section, SectionTitle } from "./shared";
-import type { NodeFormValues } from "../../document/nodeSchema";
+import type { EditorNodeInput } from "../../document/editorNodeSchema";
 import { userInputCatalog } from "../../document/userInputCatalog";
 
-const FORCED_NUMERIC_TYPES: NodeFormValues["type"][] = [
+const FORCED_NUMERIC_TYPES: EditorNodeInput["type"][] = [
   "check",
   "coefficient",
   "constant",
 ];
 
 const UserInputPreview = () => {
-  const { watch } = useFormContext<NodeFormValues>();
+  const { watch } = useFormContext<EditorNodeInput>();
   const symbol = watch("symbol");
   const unit = watch("unit");
   const tex = symbol ? (unit ? `${symbol} \\quad (${unit})` : symbol) : "";
@@ -41,7 +41,7 @@ const UserInputPreview = () => {
   );
 };
 
-const getKeyOptions = (type: NodeFormValues["type"]) => {
+const getKeyOptions = (type: EditorNodeInput["type"]) => {
   if (type === "user-input") return userInputKeyOptions;
   if (type === "table") return tableKeyOptions;
   return null;
@@ -49,7 +49,7 @@ const getKeyOptions = (type: NodeFormValues["type"]) => {
 
 export const FormIdentity = () => {
   const { control, register, watch, setValue, subscribe } =
-    useFormContext<NodeFormValues>();
+    useFormContext<EditorNodeInput>();
   const type = watch("type");
   const isValueTypeForced = FORCED_NUMERIC_TYPES.includes(type);
   const keyOptions = getKeyOptions(type);
@@ -78,7 +78,16 @@ export const FormIdentity = () => {
     };
   }, [subscribe, setValue]);
 
-  if (type === "check") return null;
+  if (type === "check") {
+    return (
+      <Section>
+        <SectionTitle>Identity</SectionTitle>
+        <FormField name="name" label="Name" description="Check label">
+          <InputText {...register("name")} />
+        </FormField>
+      </Section>
+    );
+  }
 
   return (
     <Section>

@@ -86,11 +86,11 @@ export const DialogTitle = (props: DialogTitleProps) => {
   );
 };
 
-export const DialogContent = (props: ComponentPropsWithRef<"header">) => {
+export const DialogContent = (props: ComponentPropsWithRef<"div">) => {
   const { className, ref, ...rest } = props;
 
   return (
-    <header
+    <div
       ref={ref}
       className={twMerge("shrink-0 p-4 flex flex-col", className)}
       {...rest}

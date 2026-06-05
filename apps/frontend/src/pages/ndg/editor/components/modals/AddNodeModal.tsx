@@ -12,7 +12,10 @@ import { Button } from "@components/Button";
 
 import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { useNdgEditorModalStore } from "./useNdgEditorModalStore";
-import { nodeFormSchema, type NodeFormValues } from "../../document/nodeSchema";
+import {
+  editorNodeSchema,
+  type EditorNodeInput,
+} from "../../document/editorNodeSchema";
 import { FormDefinition } from "./FormDefinition";
 import { FormIdentity } from "./FormIdentity";
 import { FormMetadata } from "./FormMetadata";
@@ -24,8 +27,8 @@ export const AddNodeModal = () => {
   const addNode = useNdgEditorStore(s => s.addNode);
   const open = modal?.mode === "create-node";
 
-  const form = useForm<NodeFormValues>({
-    resolver: zodResolver(nodeFormSchema),
+  const form = useForm<EditorNodeInput>({
+    resolver: zodResolver(editorNodeSchema),
     mode: "onChange",
     defaultValues: { type: "user-input", valueType: { type: "number" } },
   });

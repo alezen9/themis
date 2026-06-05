@@ -9,9 +9,11 @@ export const VerificationsHeader = () => {
   const ratios = verifications.flatMap(verification =>
     verification.payload.data ? [verification.payload.data.utilisation] : [],
   );
-  const maxRatio = Math.max(...ratios);
-  const formattdMaxRatio = maxRatio ? formatNumber(maxRatio) : "N/A";
-  const isSatisfied = maxRatio < threshold;
+  const maxRatio = ratios.length > 0 ? Math.max(...ratios) : undefined;
+  const formattedMaxRatio =
+    maxRatio === undefined ? "N/A" : formatNumber(maxRatio);
+  const status =
+    maxRatio === undefined ? "empty" : maxRatio < threshold ? "pass" : "fail";
 
   return (
     <div
@@ -25,11 +27,12 @@ export const VerificationsHeader = () => {
       <span
         className={twMerge(
           "text-8xl tabular-nums font-light",
-          isSatisfied && "text-envy-400",
-          !isSatisfied && "text-red-400",
+          status === "empty" && "text-sand-300",
+          status === "pass" && "text-envy-400",
+          status === "fail" && "text-red-400",
         )}
       >
-        {formattdMaxRatio}
+        {formattedMaxRatio}
       </span>
     </div>
   );

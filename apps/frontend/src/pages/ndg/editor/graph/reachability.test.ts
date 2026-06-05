@@ -9,6 +9,7 @@ const checkNode: EditorNode = {
   type: "check",
   data: {
     key: "utilisation",
+    name: "Check",
     valueType: { type: "number" },
     verificationExpression: "x \\leq 1",
   },

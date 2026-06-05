@@ -10,7 +10,6 @@ describe("validateNDG", () => {
         key: "x",
         valueType: { type: "number" },
         id: "no-check-x",
-        name: "X",
         children: [],
       },
     ] as const;
@@ -27,7 +26,6 @@ describe("validateNDG", () => {
         key: "x",
         valueType: { type: "number" },
         id: "multi-check-x",
-        name: "X",
         children: [],
       },
       {
@@ -65,7 +63,6 @@ describe("validateNDG", () => {
         key: "x",
         valueType: { type: "number" },
         id: "duplicate-id",
-        name: "X",
         children: [],
       },
       {
@@ -73,7 +70,6 @@ describe("validateNDG", () => {
         key: "y",
         valueType: { type: "number" },
         id: "duplicate-id",
-        name: "Y",
         children: [],
       },
       {
@@ -102,7 +98,6 @@ describe("validateNDG", () => {
         key: "x",
         valueType: { type: "number" },
         id: "duplicate-key-x",
-        name: "X",
         children: [],
       },
       {
@@ -110,7 +105,6 @@ describe("validateNDG", () => {
         key: "x",
         valueType: { type: "number" },
         id: "duplicate-key-y",
-        name: "Y",
         children: [],
       },
       {
@@ -139,7 +133,6 @@ describe("validateNDG", () => {
         key: "x",
         valueType: { type: "number" },
         id: "unknown-child-x",
-        name: "X",
         children: [],
       },
       {
@@ -168,7 +161,6 @@ describe("validateNDG", () => {
         key: "x",
         valueType: { type: "number" },
         id: "unknown-evaluator-x",
-        name: "X",
         children: [],
       },
       {
@@ -201,7 +193,6 @@ describe("validateNDG", () => {
         key: "x",
         valueType: { type: "number" },
         id: "missing-evaluator-x",
-        name: "X",
         children: [],
       },
       {
@@ -209,7 +200,6 @@ describe("validateNDG", () => {
         key: "d",
         valueType: { type: "number" },
         id: "missing-evaluator-d",
-        name: "D",
         expression: "x",
         children: [{ nodeId: "missing-evaluator-x" }],
       },
@@ -240,7 +230,6 @@ describe("validateNDG", () => {
         key: "low",
         valueType: { type: "number" },
         id: "selector-low",
-        name: "Low",
         children: [],
       },
       {
@@ -248,7 +237,6 @@ describe("validateNDG", () => {
         key: "high",
         valueType: { type: "number" },
         id: "selector-high",
-        name: "High",
         children: [],
       },
       {
@@ -256,7 +244,6 @@ describe("validateNDG", () => {
         key: "selected",
         valueType: { type: "number" },
         id: "selector-selected",
-        name: "Selected",
         children: [{ nodeId: "selector-low" }, { nodeId: "selector-high" }],
       },
       {
@@ -285,7 +272,6 @@ describe("validateNDG", () => {
         key: "a",
         valueType: { type: "number" },
         id: "cycle-a",
-        name: "A",
         expression: "b",
         children: [{ nodeId: "cycle-b" }],
       },
@@ -294,7 +280,6 @@ describe("validateNDG", () => {
         key: "b",
         valueType: { type: "number" },
         id: "cycle-b",
-        name: "B",
         expression: "a",
         children: [{ nodeId: "cycle-a" }],
       },

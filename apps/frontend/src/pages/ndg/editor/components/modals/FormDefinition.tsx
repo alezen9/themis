@@ -7,10 +7,10 @@ import { InputText } from "@components/inputs/InputText";
 import { Latex } from "@components/Latex";
 
 import { Section, SectionTitle } from "./shared";
-import type { NodeFormValues } from "../../document/nodeSchema";
+import type { EditorNodeInput } from "../../document/editorNodeSchema";
 
 export const FormDefinition = () => {
-  const { register, watch } = useFormContext<NodeFormValues>();
+  const { register, watch } = useFormContext<EditorNodeInput>();
   const type = watch("type");
 
   if (type === "user-input") return null;
@@ -58,13 +58,15 @@ export const FormDefinition = () => {
             </FormField>
           </div>
         )}
-        <FormFieldLatex
-          name="symbol"
-          label="Symbol"
-          description="Expression symbol"
-        >
-          <InputText placeholder={"\\gamma_{M0}"} {...register("symbol")} />
-        </FormFieldLatex>
+        {type !== "check" && (
+          <FormFieldLatex
+            name="symbol"
+            label="Symbol"
+            description="Expression symbol"
+          >
+            <InputText placeholder={"\\gamma_{M0}"} {...register("symbol")} />
+          </FormFieldLatex>
+        )}
         {type !== "check" && type !== "constant" && (
           <FormFieldLatex name="unit" label="Unit" description="Display unit">
             <InputText placeholder={"mm^2"} {...register("unit")} />

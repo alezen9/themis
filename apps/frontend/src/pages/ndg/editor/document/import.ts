@@ -1,5 +1,5 @@
 import { createEdgeId, createNodeId } from "./ids";
-import { editorDocumentSchema } from "./schema";
+import { editorDocumentSchema } from "./importExportSchema";
 import type { EditorDocument } from "./types";
 
 export const parseDocumentFile = async (

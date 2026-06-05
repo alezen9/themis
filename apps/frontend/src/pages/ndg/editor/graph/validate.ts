@@ -1,12 +1,13 @@
+import { ConditionSchema } from "@ndg/ndg-core";
 import { findUnknownConditionKeys } from "../conditions/validate";
 import { tableKeys, userInputKeys } from "../document/keyCatalog";
-import { nodeFormSchema } from "../document/nodeSchema";
+import { editorNodeSchema } from "../document/editorNodeSchema";
 import type { EditorEdge, EditorNode } from "../document/types";
 
 export const findInvalidNodeIds = (nodes: EditorNode[]) => {
   const invalidNodeIds = new Set<string>();
   for (const node of nodes)
-    if (!nodeFormSchema.safeParse({ type: node.type, ...node.data }).success)
+    if (!editorNodeSchema.safeParse({ type: node.type, ...node.data }).success)
       invalidNodeIds.add(node.id);
   return invalidNodeIds;
 };
@@ -21,8 +22,15 @@ export const findInvalidEdgeIds = (
     ...nodes.map(node => node.data.key),
   ]);
   const invalidEdgeIds = new Set<string>();
-  for (const edge of edges)
-    if (findUnknownConditionKeys(edge.data?.condition, availableKeys).length)
+  for (const edge of edges) {
+    if (!edge.data?.condition) continue;
+    const result = ConditionSchema.safeParse(edge.data?.condition);
+    if (!result.success) {
       invalidEdgeIds.add(edge.id);
+      continue;
+    }
+    const unknownKeys = findUnknownConditionKeys(result.data, availableKeys);
+    if (!!unknownKeys.length) invalidEdgeIds.add(edge.id);
+  }
   return invalidEdgeIds;
 };

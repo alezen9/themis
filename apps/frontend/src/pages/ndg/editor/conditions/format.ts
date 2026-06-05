@@ -1,7 +1,8 @@
-import type {
-  Condition,
-  ConditionOperand,
-  ConditionTuple,
+import {
+  ConditionSchema,
+  type Condition,
+  type ConditionOperand,
+  type ConditionTuple,
 } from "@ndg/ndg-core";
 
 export const OPERATOR_SYMBOL = {
@@ -29,13 +30,16 @@ const wrapNested = (condition: Condition) =>
     ? `(${formatCondition(condition)})`
     : formatCondition(condition);
 
-export const formatCondition = (condition?: Condition): string => {
+export const formatCondition = (condition?: unknown): string => {
   if (!condition) return "";
-  if ("eq" in condition) return formatComparison("eq", condition.eq);
-  if ("lt" in condition) return formatComparison("lt", condition.lt);
-  if ("lte" in condition) return formatComparison("lte", condition.lte);
-  if ("gt" in condition) return formatComparison("gt", condition.gt);
-  if ("gte" in condition) return formatComparison("gte", condition.gte);
-  if ("and" in condition) return condition.and.map(wrapNested).join(" AND ");
-  return condition.or.map(wrapNested).join(" OR ");
+  const result = ConditionSchema.safeParse(condition);
+  if (!result.success) return "";
+  const value = result.data;
+  if ("eq" in value) return formatComparison("eq", value.eq);
+  if ("lt" in value) return formatComparison("lt", value.lt);
+  if ("lte" in value) return formatComparison("lte", value.lte);
+  if ("gt" in value) return formatComparison("gt", value.gt);
+  if ("gte" in value) return formatComparison("gte", value.gte);
+  if ("and" in value) return value.and.map(wrapNested).join(" AND ");
+  return value.or.map(wrapNested).join(" OR ");
 };

@@ -12,7 +12,10 @@ import { Button } from "@components/Button";
 
 import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { useNdgEditorModalStore } from "./useNdgEditorModalStore";
-import { nodeFormSchema, type NodeFormValues } from "../../document/nodeSchema";
+import {
+  editorNodeSchema,
+  type EditorNodeInput,
+} from "../../document/editorNodeSchema";
 import { FormDefinition } from "./FormDefinition";
 import { FormIdentity } from "./FormIdentity";
 import { FormMetadata } from "./FormMetadata";
@@ -25,8 +28,8 @@ export const EditNodeModal = () => {
   const getNodeById = useNdgEditorStore(s => s.getNodeById);
   const open = modal?.mode === "edit-node";
 
-  const form = useForm<NodeFormValues>({
-    resolver: zodResolver(nodeFormSchema),
+  const form = useForm<EditorNodeInput>({
+    resolver: zodResolver(editorNodeSchema),
     mode: "onChange",
   });
 
@@ -34,7 +37,7 @@ export const EditNodeModal = () => {
     if (!open || modal?.mode !== "edit-node") return;
     const node = getNodeById(modal.nodeId);
     if (!node) return;
-    form.reset({ type: node.type, ...node.data } as NodeFormValues);
+    form.reset({ type: node.type, ...node.data } as EditorNodeInput);
   }, [open, modal, form, getNodeById]);
 
   const onSubmit = form.handleSubmit(values => {

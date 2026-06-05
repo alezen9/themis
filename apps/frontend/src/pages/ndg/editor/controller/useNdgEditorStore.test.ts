@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { createEdgeId } from "../document/ids";
+import { editorDocumentSchema } from "../document/importExportSchema";
 import {
   EDITOR_DOCUMENT_VERSION,
   type EditorDocument,
@@ -42,6 +43,7 @@ const checkNode: EditorNode = {
   type: "check",
   data: {
     key: "utilisation",
+    name: "Check",
     valueType: { type: "number" },
     verificationExpression: "x \\leq 1",
   },
@@ -322,6 +324,29 @@ describe("export", () => {
     expect(exported.nodes.map(n => n.id).sort()).toEqual(["a", "b"]);
     expect(exported.edges).toHaveLength(1);
     expect(exported.edges[0].id).toBe(edgeAtoB.id);
+  });
+
+  it("imports an incomplete draft and exports it back with ids and types intact", () => {
+    const draft = editorDocumentSchema.safeParse({
+      version: EDITOR_DOCUMENT_VERSION,
+      nodes: [
+        checkNode,
+        { id: "draft", position: { x: 0, y: 0 }, type: "user-input", data: {} },
+      ],
+      edges: [],
+    });
+    expect(draft.success).toBe(true);
+    if (!draft.success) return;
+
+    const ok = useNdgEditorStore
+      .getState()
+      .importFull(draft.data as EditorDocument);
+    expect(ok).toBe(true);
+    expect(useNdgEditorStore.getState().isInvalidNode("draft")).toBe(true);
+
+    const exported = useNdgEditorStore.getState().exportDocument();
+    expect(exported.nodes.every(n => !!n.id && !!n.type)).toBe(true);
+    expect(editorDocumentSchema.safeParse(exported).success).toBe(true);
   });
 });
 

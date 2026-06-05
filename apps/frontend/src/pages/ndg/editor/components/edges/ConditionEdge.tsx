@@ -14,6 +14,7 @@ import { ConditionText } from "../../conditions/ConditionText";
 import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import type { EditorEdge } from "../../document/types";
 import { useNdgEditorModalStore } from "../modals/useNdgEditorModalStore";
+import { ConditionSchema } from "@ndg/ndg-core";
 
 export const ConditionEdge = (props: EdgeProps<EditorEdge>) => {
   const {
@@ -39,7 +40,8 @@ export const ConditionEdge = (props: EdgeProps<EditorEdge>) => {
     targetPosition,
   });
 
-  const condition = data?.condition;
+  const result = ConditionSchema.safeParse(data?.condition);
+  const hasCondition = result.success && result.data;
 
   return (
     <>
@@ -54,10 +56,10 @@ export const ConditionEdge = (props: EdgeProps<EditorEdge>) => {
           <Tooltip
             content={
               <>
-                {condition && <ConditionText condition={condition} />}
-                {!condition && "Add condition"}
+                {result.success && <ConditionText condition={result.data} />}
+                {!result.data && "Add condition"}
                 {isInvalid && (
-                  <span className="block text-red-300">Unknown key</span>
+                  <span className="block text-red-300">Invalid condition</span>
                 )}
               </>
             }
@@ -66,16 +68,16 @@ export const ConditionEdge = (props: EdgeProps<EditorEdge>) => {
               onClick={() => openModal({ mode: "edit-edge", edgeId: id })}
               className={twMerge(
                 "size-4 border",
-                !condition &&
+                !hasCondition &&
                   "border-sand-400 bg-white text-sand-500 hover:border-sand-600 hover:bg-sand-50",
-                condition &&
+                hasCondition &&
                   !isInvalid &&
                   "border-sand-800 bg-sand-800 text-white",
                 isInvalid && "border-red-600 bg-red-600 text-white",
               )}
             >
-              {condition && <IconBranch className="size-2" />}
-              {!condition && <IconPlus className="size-3" />}
+              {hasCondition && <IconBranch className="size-2" />}
+              {!hasCondition && <IconPlus className="size-3" />}
             </IconButton>
           </Tooltip>
         </div>

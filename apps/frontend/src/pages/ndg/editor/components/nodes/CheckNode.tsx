@@ -8,7 +8,7 @@ export const CheckNode = (props: EditorNodeProps) => {
 
   return (
     <NodeCard nodeId={props.id} nodeKey={data.key}>
-      <NodeHeader label={data.key} type="check" />
+      <NodeHeader label={data.name} type="check" />
       <NodeBody>
         <Latex
           displayMode

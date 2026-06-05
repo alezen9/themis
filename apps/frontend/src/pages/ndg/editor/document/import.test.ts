@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { remapDocumentIds } from "./import";
 import { createEdgeId } from "./ids";
+import { editorDocumentSchema } from "./importExportSchema";
 import { EDITOR_DOCUMENT_VERSION, type EditorDocument } from "./types";
 
 const createDocument = (
@@ -14,6 +15,115 @@ const userInput = (id: string): EditorDocument["nodes"][number] => ({
   position: { x: 0, y: 0 },
   type: "user-input",
   data: { key: id, valueType: { type: "number" } },
+});
+
+describe("editorDocumentSchema", () => {
+  it("accepts draft node data and draft edge conditions", () => {
+    const document = {
+      version: EDITOR_DOCUMENT_VERSION,
+      nodes: [
+        {
+          id: "a",
+          position: { x: 0, y: 0 },
+          type: "user-input",
+          data: { symbol: "N_{Ed}" },
+        },
+      ],
+      edges: [
+        {
+          id: "a__to__b",
+          source: "a",
+          target: "b",
+          data: { condition: { invalid: true } },
+        },
+      ],
+    };
+
+    expect(editorDocumentSchema.safeParse(document).success).toBe(true);
+  });
+
+  it("defaults missing node data", () => {
+    const result = editorDocumentSchema.safeParse({
+      version: EDITOR_DOCUMENT_VERSION,
+      nodes: [{ id: "a", position: { x: 1, y: 2 }, type: "user-input" }],
+      edges: [],
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.data?.nodes[0]).toMatchObject({
+      id: "a",
+      type: "user-input",
+      position: { x: 1, y: 2 },
+      data: {},
+    });
+  });
+
+  it("rejects nodes without id, position, or type", () => {
+    expect(
+      editorDocumentSchema.safeParse({
+        version: EDITOR_DOCUMENT_VERSION,
+        nodes: [{ id: "a", type: "user-input" }],
+        edges: [],
+      }).success,
+    ).toBe(false);
+    expect(
+      editorDocumentSchema.safeParse({
+        version: EDITOR_DOCUMENT_VERSION,
+        nodes: [{ id: "a", position: { x: 0, y: 0 } }],
+        edges: [],
+      }).success,
+    ).toBe(false);
+    expect(
+      editorDocumentSchema.safeParse({
+        version: EDITOR_DOCUMENT_VERSION,
+        nodes: [{ position: { x: 0, y: 0 }, type: "user-input" }],
+        edges: [],
+      }).success,
+    ).toBe(false);
+  });
+
+  it("rejects unknown node types and invalid draft data fields", () => {
+    expect(
+      editorDocumentSchema.safeParse({
+        version: EDITOR_DOCUMENT_VERSION,
+        nodes: [
+          { id: "a", position: { x: 0, y: 0 }, type: "unknown", data: {} },
+        ],
+        edges: [],
+      }).success,
+    ).toBe(false);
+    expect(
+      editorDocumentSchema.safeParse({
+        version: EDITOR_DOCUMENT_VERSION,
+        nodes: [
+          {
+            id: "a",
+            position: { x: 0, y: 0 },
+            type: "user-input",
+            data: { key: "" },
+          },
+        ],
+        edges: [],
+      }).success,
+    ).toBe(false);
+  });
+
+  it("rejects data fields that are not part of the node's shape", () => {
+    expect(
+      editorDocumentSchema.safeParse({
+        version: EDITOR_DOCUMENT_VERSION,
+        nodes: [
+          {
+            id: "a",
+            position: { x: 0, y: 0 },
+            type: "user-input",
+            data: { key: "a", valueType: { type: "number" }, bogus: true },
+          },
+        ],
+        edges: [],
+      }).success,
+    ).toBe(false);
+  });
 });
 
 describe("remapDocumentIds", () => {
