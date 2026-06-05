@@ -49,12 +49,12 @@ export type Ec311Inputs = {
 
   gamma_M0: number;
   gamma_M1: number;
-  eta: number;
-  lambda_LT_0: number;
-  beta_LT: number;
+  eta?: number;
+  lambda_LT_0?: number;
+  beta_LT?: number;
   f_method?: string | number;
   interaction_factor_method: "both" | "method1" | "method2" | "any";
-  buckling_curves_LT_policy: "default-rolled-welded" | "general";
+  buckling_curves_LT_policy?: "default-rolled-welded" | "general";
 
   k_y: number;
   k_z: number;

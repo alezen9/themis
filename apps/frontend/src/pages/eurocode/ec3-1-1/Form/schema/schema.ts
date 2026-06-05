@@ -20,5 +20,22 @@ export const schema = shapeSchema
   .and(lateralTorsionalBucklingSchema)
   .and(nationalAnnexSchema);
 
-export type Ec3FormValues = z.input<typeof schema>;
-export type Ec3ValidFormValues = z.output<typeof schema>;
+export type Ec3FormValues = z.input<typeof shapeSchema> &
+  z.input<typeof crossSectionSchema> &
+  z.input<typeof materialSchema> &
+  z.input<typeof classificationSchema> &
+  z.input<typeof geometrySchema> &
+  z.input<typeof actionsSchema> &
+  z.input<typeof flexuralBucklingSchema> &
+  z.input<typeof lateralTorsionalBucklingSchema> &
+  z.input<typeof nationalAnnexSchema>;
+
+export type Ec3ValidFormValues = z.output<typeof shapeSchema> &
+  z.output<typeof crossSectionSchema> &
+  z.output<typeof materialSchema> &
+  z.output<typeof classificationSchema> &
+  z.output<typeof geometrySchema> &
+  z.output<typeof actionsSchema> &
+  z.output<typeof flexuralBucklingSchema> &
+  z.output<typeof lateralTorsionalBucklingSchema> &
+  z.output<typeof nationalAnnexSchema>;

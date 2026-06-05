@@ -24,6 +24,7 @@ import {
   TextLabel,
 } from "./shared";
 import { useEc311FormContext } from "./useEc311FormContext";
+import { twMerge } from "tailwind-merge";
 
 export const FormClassification = () => {
   const { registerSelect } = useEc311FormContext();
@@ -74,10 +75,19 @@ const ClassificationInfo = () => {
           </TableRow>
 
           <TableRow className={isAutoMode ? "" : "opacity-50"}>
-            <InfoTableLabelCell className="text-sm font-light">
+            <InfoTableLabelCell
+              className={twMerge(
+                "text-sm font-light",
+                isAutoMode && computedClass === 4 && "text-red-500",
+              )}
+            >
               Computed
             </InfoTableLabelCell>
-            <InfoTableValueCell>
+            <InfoTableValueCell
+              className={
+                isAutoMode && computedClass === 4 ? "text-red-500" : ""
+              }
+            >
               {formatSectionClass(computedClass)}
             </InfoTableValueCell>
             <InfoTableUnitCell />

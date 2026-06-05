@@ -3,9 +3,25 @@ import { Ec3FormValues } from "./schema/schema";
 import { useCallback } from "react";
 import { defaultValues } from "./defaultValues";
 
-type Ec311Register = ReturnType<typeof useForm<Ec3FormValues>>["register"];
+type Ec311Form = ReturnType<typeof useForm<Ec3FormValues>>;
+type Ec311Register = Ec311Form["register"];
 type Ec311FormName = Parameters<Ec311Register>[0];
 type Ec311RegisterOptions = Parameters<Ec311Register>[1];
+
+type Ec311FormContext = Ec311Form & {
+  registerNumber: (
+    name: Ec311FormName,
+    options?: Ec311RegisterOptions,
+  ) => ReturnType<Ec311Register>;
+  registerSelect: (
+    name: Ec311FormName,
+    options?: Ec311RegisterOptions,
+  ) => ReturnType<Ec311Register>;
+  registerBoolean: (
+    name: Ec311FormName,
+    options?: Ec311RegisterOptions,
+  ) => ReturnType<Ec311Register>;
+};
 
 const setValueAsNumber = (value: unknown) => {
   if (value === "" || value === null || value === undefined) return "";
@@ -14,7 +30,7 @@ const setValueAsNumber = (value: unknown) => {
   return valueAsNumber;
 };
 
-export const useEc311FormContext = () => {
+export const useEc311FormContext = (): Ec311FormContext => {
   const { register, ...rest } = useFormContext<Ec3FormValues>();
 
   const registerNumber = useCallback(
