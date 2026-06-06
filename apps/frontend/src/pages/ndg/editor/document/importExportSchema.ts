@@ -13,7 +13,7 @@ import { EDITOR_DOCUMENT_VERSION } from "./types";
 const position = z.object({ x: z.number(), y: z.number() });
 
 const draftData = <Schema extends z.ZodObject>(schema: Schema) =>
-  schema.omit({ id: true, type: true, children: true }).partial();
+  schema.omit({ id: true, type: true, children: true }).partial().loose();
 
 const draftNodeSchema = z.discriminatedUnion("type", [
   z.object({
@@ -54,15 +54,17 @@ const draftNodeSchema = z.discriminatedUnion("type", [
   }),
 ]);
 
+const draftEdgeSchema = z
+  .object({
+    id: z.string(),
+    source: z.string(),
+    target: z.string(),
+    data: z.object({ condition: z.unknown() }).optional(),
+  })
+  .loose();
+
 export const editorDocumentSchema = z.object({
   version: z.literal(EDITOR_DOCUMENT_VERSION),
   nodes: z.array(draftNodeSchema),
-  edges: z.array(
-    z.object({
-      id: z.string(),
-      source: z.string(),
-      target: z.string(),
-      data: z.object({ condition: z.unknown() }).optional(),
-    }),
-  ),
+  edges: z.array(draftEdgeSchema),
 });

@@ -9,8 +9,11 @@ export const parseDocumentFile = async (
     const result = editorDocumentSchema.safeParse(
       JSON.parse(await file.text()),
     );
-    return result.success ? (result.data as EditorDocument) : null;
-  } catch {
+    if (result.success) return result.data as EditorDocument;
+    console.error("Failed to parse NDG document:", result.error.issues);
+    return null;
+  } catch (e) {
+    console.error("Failed to read NDG document file:", e);
     return null;
   }
 };
