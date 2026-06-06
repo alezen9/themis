@@ -1,7 +1,6 @@
 import { get, useForm, useFormContext } from "react-hook-form";
 import { Ec3FormValues } from "./schema/schema";
 import { useCallback } from "react";
-import { defaultValues } from "./defaultValues";
 
 type Ec311Form = ReturnType<typeof useForm<Ec3FormValues>>;
 type Ec311Register = Ec311Form["register"];
@@ -31,31 +30,38 @@ const setValueAsNumber = (value: unknown) => {
 };
 
 export const useEc311FormContext = (): Ec311FormContext => {
-  const { register, ...rest } = useFormContext<Ec3FormValues>();
+  const { register, getValues, ...rest } = useFormContext<Ec3FormValues>();
 
   const registerNumber = useCallback(
     (name: Ec311FormName, options?: Ec311RegisterOptions) => ({
       ...register(name, { ...options, setValueAs: setValueAsNumber }),
-      defaultValue: get(defaultValues, name),
+      defaultValue: get(getValues(), name),
     }),
-    [register],
+    [register, getValues],
   );
 
   const registerSelect = useCallback(
     (name: Ec311FormName, options?: Ec311RegisterOptions) => ({
       ...register(name, options),
-      defaultValue: get(defaultValues, name),
+      defaultValue: get(getValues(), name),
     }),
-    [register],
+    [register, getValues],
   );
 
   const registerBoolean = useCallback(
     (name: Ec311FormName, options?: Ec311RegisterOptions) => ({
       ...register(name, options),
-      defaultChecked: get(defaultValues, name),
+      defaultChecked: get(getValues(), name),
     }),
-    [register],
+    [register, getValues],
   );
 
-  return { register, registerNumber, registerSelect, registerBoolean, ...rest };
+  return {
+    register,
+    getValues,
+    registerNumber,
+    registerSelect,
+    registerBoolean,
+    ...rest,
+  };
 };

@@ -8,7 +8,7 @@ import {
   lambdaLT0Values,
 } from "../options";
 import {
-  inactiveFieldSchema,
+  inactive,
   POSITIVE_NUMBER_MESSAGE,
   REQUIRED_NUMBER_MESSAGE,
 } from "./constants";
@@ -30,7 +30,7 @@ const bucklingCurvesSchema = z.discriminatedUnion("buckling_curves_LT_policy", [
   }),
   z.strictObject({
     buckling_curves_LT_policy: z.literal("general"),
-    f_method: inactiveFieldSchema,
+    f_method: inactive(z.literal(coefficientFMethodValues)),
   }),
 ]);
 

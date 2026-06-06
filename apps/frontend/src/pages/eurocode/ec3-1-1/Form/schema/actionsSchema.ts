@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { inactiveFieldSchema, REQUIRED_NUMBER_MESSAGE } from "./constants";
+import { inactive, REQUIRED_NUMBER_MESSAGE } from "./constants";
 
 export const baseActionsSchema = z.object({
   N_Ed_kN: z.number(REQUIRED_NUMBER_MESSAGE),
@@ -14,7 +14,7 @@ export const actionsSchema = z.discriminatedUnion("shape", [
   z.strictObject({
     shape: z.literal("I"),
     ...baseActionsSchema.shape,
-    T_Ed_kNm: inactiveFieldSchema,
+    T_Ed_kNm: inactive(z.number(REQUIRED_NUMBER_MESSAGE)),
   }),
   z.strictObject({
     shape: z.literal("RHS"),

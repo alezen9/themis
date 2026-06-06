@@ -393,6 +393,43 @@ describe("[EC3-1-1] PageEc3_1_1", () => {
     );
   });
 
+  it("f_method retains selected value after toggling buckling curve policy", () => {
+    render(<PageEc3_1_1 />);
+
+    const bucklingCurves = screen.getByTestId(
+      "input-buckling_curves_LT_policy",
+    );
+    const fMethod = screen.getByTestId("input-f_method");
+
+    fireEvent.click(fMethod);
+    fireEvent.mouseMove(screen.getByTestId("option-1"));
+    fireEvent.click(screen.getByTestId("option-1"));
+
+    expect(screen.getByTestId("input-f_method").textContent).toContain("1");
+
+    fireEvent.click(bucklingCurves);
+    fireEvent.mouseMove(screen.getByTestId("option-general"));
+    fireEvent.click(screen.getByTestId("option-general"));
+
+    expect(screen.queryByTestId("input-f_method")).toBeNull();
+
+    fireEvent.click(screen.getByTestId("input-buckling_curves_LT_policy"));
+    fireEvent.mouseMove(screen.getByTestId("option-default-rolled-welded"));
+    fireEvent.click(screen.getByTestId("option-default-rolled-welded"));
+
+    expect(screen.getByTestId("input-f_method").textContent).toContain("1");
+
+    fireEvent.click(screen.getByTestId("input-buckling_curves_LT_policy"));
+    fireEvent.mouseMove(screen.getByTestId("option-general"));
+    fireEvent.click(screen.getByTestId("option-general"));
+
+    fireEvent.click(screen.getByTestId("input-buckling_curves_LT_policy"));
+    fireEvent.mouseMove(screen.getByTestId("option-default-rolled-welded"));
+    fireEvent.click(screen.getByTestId("option-default-rolled-welded"));
+
+    expect(screen.getByTestId("input-f_method").textContent).toContain("1");
+  });
+
   it("marks verification output invalid when verification inputs fail", () => {
     render(<PageEc3_1_1 />);
 

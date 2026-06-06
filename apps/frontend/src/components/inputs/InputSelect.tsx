@@ -5,6 +5,7 @@ import {
   ComponentProps,
   ComponentPropsWithRef,
   useCallback,
+  useState,
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { Option } from "./shared";
@@ -32,6 +33,8 @@ export const InputSelect = (props: Props) => {
     ref,
   } = props;
 
+  const [stableDefault] = useState(defaultValue);
+
   const onValueChange = useCallback<NonNullable<OnValueChange>>(
     option => {
       const changeEvent = { target: { name, value: option?.value ?? "" } };
@@ -43,7 +46,7 @@ export const InputSelect = (props: Props) => {
   return (
     <Select.Root<Option>
       items={options}
-      defaultValue={options.find(option => option.value === defaultValue)}
+      defaultValue={options.find(option => option.value === stableDefault)}
       value={options.find(option => option.value === value)}
       required={required}
       disabled={disabled}

@@ -163,7 +163,7 @@ export const userInputCatalog: Record<string, CatalogEntry> = {
   f_method: {
     symbol: "f",
     valueType: "string",
-    values: ["default-equation", 1],
+    values: ["default-equation", "1"],
   },
   interaction_factor_method: {
     valueType: "string",

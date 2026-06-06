@@ -46,6 +46,7 @@ export const Observer = (props: Props) => {
   const runPipeline = useMemo(
     () => (values: Ec311ObservedValues) => {
       onValuesChange?.(values);
+      console.log(values);
 
       try {
         const geometryResult = gateDerivedGeometry(values);

@@ -102,7 +102,7 @@ export const interactionFactorMethodValues = extractValues(
 
 export const coefficientFMethodOptions = [
   { value: "default-equation", label: "Default equation" },
-  { value: 1, label: "1" },
+  { value: "1", label: "1" },
 ] as const satisfies Option[];
 export const coefficientFMethodValues = extractValues(
   coefficientFMethodOptions,

@@ -5,6 +5,7 @@ import {
   iGeometrySchema,
   rhsGeometrySchema,
 } from "./geometrySchema";
+import { nationalAnnexSchema } from "./nationalAnnexSchema";
 
 describe("[EC3-1-1] schema", () => {
   it("rejects I geometry with overlapping flange, web, or fillets", () => {
@@ -63,5 +64,35 @@ describe("[EC3-1-1] schema", () => {
 
     expect(result.error.issues[0]?.path).toEqual(["d_mm"]);
     expect(result.error.issues[1]?.path).toEqual(["t_mm"]);
+  });
+
+  it("inactive f_method passes through its value and does not produce errors", () => {
+    const base = {
+      annex_id: "italian",
+      gamma_M0: 1.05,
+      gamma_M1: 1.05,
+      eta: 1.0,
+      lambda_LT_0: 0.4,
+      beta_LT: 0.75,
+      interaction_factor_method: "any",
+    };
+
+    const generalResult = nationalAnnexSchema.safeParse({
+      ...base,
+      buckling_curves_LT_policy: "general",
+      f_method: "1",
+    });
+    expect(generalResult.success).toBe(true);
+    assert(generalResult.success);
+    expect(generalResult.data.f_method).toBe("1");
+
+    const switchBackResult = nationalAnnexSchema.safeParse({
+      ...base,
+      buckling_curves_LT_policy: "default-rolled-welded",
+      f_method: "1",
+    });
+    expect(switchBackResult.success).toBe(true);
+    assert(switchBackResult.success);
+    expect(switchBackResult.data.f_method).toBe("1");
   });
 });

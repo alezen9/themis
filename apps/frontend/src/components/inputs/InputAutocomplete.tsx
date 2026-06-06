@@ -7,6 +7,7 @@ import {
   useCallback,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { IconMagnifier } from "@components/Icons";
@@ -55,6 +56,8 @@ export const InputAutocomplete = (props: Props) => {
     ref,
   } = props;
 
+  const [stableDefault] = useState(defaultValue);
+
   const flatOptions = useMemo(
     () =>
       options.flatMap(option =>
@@ -78,7 +81,7 @@ export const InputAutocomplete = (props: Props) => {
   return (
     <Combobox.Root<Option>
       items={flatOptions}
-      defaultValue={optionsMap.get(defaultValue)}
+      defaultValue={optionsMap.get(stableDefault)}
       value={optionsMap.get(value)}
       autoHighlight
       highlightItemOnHover
