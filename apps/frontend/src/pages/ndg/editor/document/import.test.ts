@@ -108,21 +108,21 @@ describe("editorDocumentSchema", () => {
     ).toBe(false);
   });
 
-  it("rejects data fields that are not part of the node's shape", () => {
-    expect(
-      editorDocumentSchema.safeParse({
-        version: EDITOR_DOCUMENT_VERSION,
-        nodes: [
-          {
-            id: "a",
-            position: { x: 0, y: 0 },
-            type: "user-input",
-            data: { key: "a", valueType: { type: "number" }, bogus: true },
-          },
-        ],
-        edges: [],
-      }).success,
-    ).toBe(false);
+  it("preserves unknown data fields so editor-injected keys survive import", () => {
+    const result = editorDocumentSchema.safeParse({
+      version: EDITOR_DOCUMENT_VERSION,
+      nodes: [
+        {
+          id: "a",
+          position: { x: 0, y: 0 },
+          type: "user-input",
+          data: { key: "a", valueType: { type: "number" }, sourceNodeId: "x" },
+        },
+      ],
+      edges: [],
+    });
+    expect(result.success).toBe(true);
+    expect(result.data?.nodes[0].data).toMatchObject({ sourceNodeId: "x" });
   });
 });
 
