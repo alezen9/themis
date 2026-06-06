@@ -1,7 +1,7 @@
 import type { XYPosition } from "@xyflow/react";
 
 import type { EditorNodeInput } from "../document/editorNodeSchema";
-import type { EditorNode } from "../document/types";
+import type { EditorEdge, EditorNode } from "../document/types";
 
 export type AddNodeInput = EditorNodeInput & { sourceNodeId?: string };
 export type UpdateNodeInput = EditorNodeInput & { id: string };
@@ -14,6 +14,21 @@ export const toEditorNode = (
   const { type, ...data } = input;
   return { id, position, type, data } as EditorNode;
 };
+
+export const toExportNode = (node: EditorNode): EditorNode =>
+  ({
+    id: node.id,
+    position: node.position,
+    type: node.type,
+    data: node.data,
+  }) as EditorNode;
+
+export const toExportEdge = (edge: EditorEdge): EditorEdge => ({
+  id: edge.id,
+  source: edge.source,
+  target: edge.target,
+  ...(edge.data && { data: edge.data }),
+});
 
 export const applyNodeUpdate = (
   existing: EditorNode,

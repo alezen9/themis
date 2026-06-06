@@ -20,6 +20,8 @@ import {
 import {
   applyNodeUpdate,
   toEditorNode,
+  toExportEdge,
+  toExportNode,
   type AddNodeInput,
   type UpdateNodeInput,
 } from "./actions";
@@ -150,8 +152,8 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
 
   addNode: input =>
     set(state => {
-      const { sourceNodeId } = input;
-      const node = toEditorNode(createNodeId(), { x: 0, y: 200 }, input);
+      const { sourceNodeId, ...nodeInput } = input;
+      const node = toEditorNode(createNodeId(), { x: 0, y: 200 }, nodeInput);
       const nodes = [...state.nodes, node];
       const derived = derive(nodes, state.edges);
 
@@ -249,7 +251,11 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
 
   exportDocument: () => {
     const { nodes, edges } = get();
-    return { version: EDITOR_DOCUMENT_VERSION, nodes, edges };
+    return {
+      version: EDITOR_DOCUMENT_VERSION,
+      nodes: nodes.map(toExportNode),
+      edges: edges.map(toExportEdge),
+    };
   },
 
   exportSelected: () => {
@@ -260,8 +266,8 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
     );
     return {
       version: EDITOR_DOCUMENT_VERSION,
-      nodes: selectedNodes,
-      edges: selectedEdges,
+      nodes: selectedNodes.map(toExportNode),
+      edges: selectedEdges.map(toExportEdge),
     };
   },
 

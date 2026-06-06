@@ -108,7 +108,7 @@ describe("editorDocumentSchema", () => {
     ).toBe(false);
   });
 
-  it("preserves unknown data fields so editor-injected keys survive import", () => {
+  it("strips leaked keys so imported node data stays clean", () => {
     const result = editorDocumentSchema.safeParse({
       version: EDITOR_DOCUMENT_VERSION,
       nodes: [
@@ -122,7 +122,7 @@ describe("editorDocumentSchema", () => {
       edges: [],
     });
     expect(result.success).toBe(true);
-    expect(result.data?.nodes[0].data).toMatchObject({ sourceNodeId: "x" });
+    expect(result.data?.nodes[0].data).not.toHaveProperty("sourceNodeId");
   });
 });
 

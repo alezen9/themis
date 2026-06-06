@@ -310,6 +310,27 @@ describe("export", () => {
     expect(exported.edges).toEqual([edgeAtoB]);
   });
 
+  it("strips react flow runtime fields from exported nodes", () => {
+    useNdgEditorStore.setState({
+      nodes: [
+        {
+          ...nodeA,
+          selected: true,
+          dragging: false,
+          measured: { width: 192, height: 80 },
+        },
+      ],
+    });
+
+    const [exported] = useNdgEditorStore.getState().exportDocument().nodes;
+    expect(Object.keys(exported).sort()).toEqual([
+      "data",
+      "id",
+      "position",
+      "type",
+    ]);
+  });
+
   it("exportSelected keeps only selected nodes and their internal edges", () => {
     useNdgEditorStore.setState({
       nodes: [nodeA, nodeB, nodeC],
