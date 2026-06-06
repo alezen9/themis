@@ -3,7 +3,6 @@ import { defineNodes } from "@ndg/ndg-core";
 export const nodes = defineNodes([
   {
     id: "02480d3f-b178-48dd-a39b-b85309a61b3d",
-    symbol: "",
     children: [
       { nodeId: "a77f73f6-5d19-4d12-9ff2-35260f63f393" },
       { nodeId: "5217f3d1-f584-4fb9-a193-810d95c1f743" },
@@ -20,7 +19,7 @@ export const nodes = defineNodes([
       tableRef: "",
       verificationRef: "",
     },
-    verificationExpression: "\\frac{|N_{Ed}|}{N_{pl,Rd}} \\leq 1.0",
+    verificationExpression: "\\frac{|N_{Ed}|}{N_{c,Rd}} \\leq 1.0",
   },
   {
     id: "a77f73f6-5d19-4d12-9ff2-35260f63f393",
@@ -29,7 +28,7 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "N_Ed_N",
     valueType: { type: "number" },
-    unit: "\\mathrm{N}",
+    unit: "N",
   },
   {
     id: "5217f3d1-f584-4fb9-a193-810d95c1f743",
@@ -51,7 +50,7 @@ export const nodes = defineNodes([
       verificationRef: "",
     },
     expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
-    unit: "\\mathrm{N}",
+    unit: "N",
   },
   {
     id: "13e0cff4-8097-463b-8ff5-5364e9089fe9",
@@ -60,7 +59,7 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "A_mm2",
     valueType: { type: "number" },
-    unit: "\\mathrm{mm^{2}}",
+    unit: "mm^2",
   },
   {
     id: "a6233bbd-8ad1-46b2-a325-fcd0164c8aaf",
@@ -69,7 +68,7 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "fy_MPa",
     valueType: { type: "number" },
-    unit: "\\mathrm{MPa}",
+    unit: "MPa",
   },
   {
     id: "7ff50833-8392-4e44-a6a7-c0fd8d5cd1c8",
@@ -78,15 +77,7 @@ export const nodes = defineNodes([
     type: "coefficient",
     key: "gamma_M0",
     valueType: { type: "number" },
-    meta: {
-      sectionRef: "6.1",
-      paragraphRef: "(1)",
-      subParagraphRef: "NOTE 2B",
-      formulaRef: "",
-      tableRef: "",
-      verificationRef: "",
-    },
-    unit: "",
+    meta: { sectionRef: "6.1" },
   },
 ]);
 

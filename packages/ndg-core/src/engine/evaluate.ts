@@ -1,11 +1,12 @@
 import { get } from "lodash-es";
-import { assertDefined, assertNDGValue } from "../assertions";
+import { assertDefined, assertNDGValue, assertUndefined } from "../assertions";
 import { collectConditionKeys, evaluateCondition } from "../evaluate-condition";
 import { isSelectorNode, type Condition, type Node } from "../schema";
 import type {
   EvalCtx,
   EvalNote,
   NDGContext,
+  NDGInputValue,
   NDGTraceEntry,
   NDGValue,
 } from "../types";
@@ -21,7 +22,6 @@ export type EvaluationState = {
   nodeById: ValidatedNDG["nodeById"];
   nodeByKey: ValidatedNDG["nodeByKey"];
   runtime: RuntimeContext;
-  lookup: Record<string, NDGValue>;
   cache: Record<string, NDGValue>;
   trace: NDGTraceEntry[];
   visited: Set<string>;
@@ -43,7 +43,6 @@ export const evaluateNode = (nodeId: string, state: EvaluationState): void => {
   const value = resolveNodeValue(node, activeChildren, state, notes);
 
   state.cache[node.key] = value;
-  state.lookup[node.key] = value;
   state.trace.push(createTraceEntry(node, value, activeChildren, state, notes));
   state.visited.add(nodeId);
 };
@@ -63,24 +62,33 @@ const getActiveChildren = (node: Node, state: EvaluationState) => {
   return activeChildren;
 };
 
+const conditionContext = (
+  state: EvaluationState,
+): Record<string, NDGInputValue> => ({
+  ...state.runtime.constants,
+  ...state.runtime.values,
+  ...state.cache,
+});
+
 const matchesCondition = (condition: Condition, state: EvaluationState) => {
+  const context = conditionContext(state);
   const unresolvedKeys = collectConditionKeys(condition).filter(
-    key => !Object.hasOwn(state.lookup, key),
+    key => get(context, key) === undefined,
   );
 
   const unknownKey = unresolvedKeys.find(key => !state.nodeByKey.has(key));
-  if (unknownKey) {
-    throw new Error(`Condition references unknown key: "${unknownKey}"`);
-  }
+  assertUndefined(
+    unknownKey,
+    `Condition references unknown key: "${unknownKey}"`,
+  );
 
   for (const key of unresolvedKeys) {
     const dependency = state.nodeByKey.get(key);
-    if (!dependency)
-      throw new Error(`Condition references unknown key: "${key}"`);
+    assertDefined(dependency, `Condition references unknown key: "${key}"`);
     evaluateNode(dependency.id, state);
   }
 
-  return evaluateCondition(condition, state.lookup);
+  return evaluateCondition(condition, conditionContext(state));
 };
 
 const resolveNodeValue = (
@@ -121,7 +129,7 @@ const resolveNodeValue = (
         },
         inputs: state.runtime.values,
       };
-      const result = evaluator(state.lookup, ctx);
+      const result = evaluator(state.cache, ctx);
       assertFiniteNumberResult(node, result);
       return result;
     }

@@ -1,16 +1,17 @@
+import { get } from "lodash-es";
 import {
   type Condition,
   type ConditionOperand,
   type ConditionTuple,
 } from "./schema";
+import type { NDGInputValue } from "./types";
+import { assertDefined, assertNumber } from "./assertions";
 
-type Context = Record<string, string | number | boolean>; // constants + inputs + computed values
+type Context = Record<string, NDGInputValue>; // constants + inputs + computed values
 
 const readKey = (key: string, ctx: Context) => {
-  const value = ctx[key];
-  if (value === undefined) {
-    throw new Error(`Condition references unknown key: "${key}"`);
-  }
+  const value = get(ctx, key);
+  assertDefined(value, `Condition references unknown key: "${key}"`);
   return value;
 };
 
@@ -19,10 +20,8 @@ const resolveRightOperand = (operand: ConditionOperand, ctx: Context) => {
   return operand.value;
 };
 
-const assertNumber = (value: number | string | boolean, label: string) => {
-  if (typeof value !== "number") {
-    throw new Error(`Condition ${label} must resolve to a number`);
-  }
+const ensureNumber = (value: NDGInputValue, label: string) => {
+  assertNumber(value, `Condition ${label} must resolve to a number`);
   return value;
 };
 
@@ -41,29 +40,29 @@ export const evaluateCondition = (
     case "lt" in condition: {
       const [left, right] = condition.lt;
       return (
-        assertNumber(readKey(left, ctx), "left operand") <
-        assertNumber(resolveRightOperand(right, ctx), "right operand")
+        ensureNumber(readKey(left, ctx), "left operand") <
+        ensureNumber(resolveRightOperand(right, ctx), "right operand")
       );
     }
     case "lte" in condition: {
       const [left, right] = condition.lte;
       return (
-        assertNumber(readKey(left, ctx), "left operand") <=
-        assertNumber(resolveRightOperand(right, ctx), "right operand")
+        ensureNumber(readKey(left, ctx), "left operand") <=
+        ensureNumber(resolveRightOperand(right, ctx), "right operand")
       );
     }
     case "gt" in condition: {
       const [left, right] = condition.gt;
       return (
-        assertNumber(readKey(left, ctx), "left operand") >
-        assertNumber(resolveRightOperand(right, ctx), "right operand")
+        ensureNumber(readKey(left, ctx), "left operand") >
+        ensureNumber(resolveRightOperand(right, ctx), "right operand")
       );
     }
     case "gte" in condition: {
       const [left, right] = condition.gte;
       return (
-        assertNumber(readKey(left, ctx), "left operand") >=
-        assertNumber(resolveRightOperand(right, ctx), "right operand")
+        ensureNumber(readKey(left, ctx), "left operand") >=
+        ensureNumber(resolveRightOperand(right, ctx), "right operand")
       );
     }
     case "and" in condition:

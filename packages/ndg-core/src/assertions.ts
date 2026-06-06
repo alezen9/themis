@@ -7,6 +7,20 @@ export function assertDefined<T>(
   if (value === undefined) throw new Error(message);
 }
 
+export function assertUndefined<T>(
+  value: T | undefined,
+  message: string,
+): asserts value is undefined {
+  if (value !== undefined) throw new Error(message);
+}
+
+export function assertNumber(
+  value: unknown | undefined,
+  message: string,
+): asserts value is number {
+  if (typeof value !== "number") throw new Error(message);
+}
+
 export function assertNDGValue(
   value: unknown,
   key: string,

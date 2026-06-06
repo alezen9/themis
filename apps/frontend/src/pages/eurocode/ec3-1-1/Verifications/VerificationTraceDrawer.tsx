@@ -101,8 +101,10 @@ const VerificationTrace = (props: VerificationTraceProps) => {
 
   const { check, trace } = payload.data;
 
-  const values = trace.flatMap(entry =>
-    entry.symbol === undefined
+  const reversedTrace = trace.reverse();
+
+  const values = reversedTrace.flatMap(entry =>
+    !entry.symbol
       ? []
       : [
           {
@@ -113,15 +115,9 @@ const VerificationTrace = (props: VerificationTraceProps) => {
           },
         ],
   );
-  values.sort((a, b) => {
-    if (a.unit === b.unit) return 0;
-    if (a.unit === undefined) return 1;
-    if (b.unit === undefined) return -1;
-    return a.unit.localeCompare(b.unit);
-  });
 
-  const steps = trace.flatMap(entry =>
-    entry.expression === undefined
+  const steps = reversedTrace.flatMap(entry =>
+    !entry.expression
       ? []
       : [
           {
