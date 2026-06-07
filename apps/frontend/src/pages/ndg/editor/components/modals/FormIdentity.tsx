@@ -1,76 +1,83 @@
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { twMerge } from "tailwind-merge";
-
+import { constantCatalog } from "@ndg/ndg-core";
+import { coefficientCatalog, userInputCatalog } from "@ndg/ndg-ec3-1-1";
 import { FormField } from "@components/inputs/shared";
 import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
 import { InputRadio } from "@components/inputs/InputRadio";
+import { InputSelect } from "@components/inputs/InputSelect";
 import { InputText } from "@components/inputs/InputText";
 import { Latex } from "@components/Latex";
-
 import {
-  valueTypeOptions,
+  coefficientKeyOptions,
+  constantKeyOptions,
   tableKeyOptions,
   userInputKeyOptions,
+  valueTypeOptions,
 } from "./options";
 import { Section, SectionTitle } from "./shared";
+import { latexPreview } from "../nodes/latexPreview";
 import type { EditorNodeInput } from "../../document/editorNodeSchema";
-import { userInputCatalog } from "../../document/userInputCatalog";
 
-const FORCED_NUMERIC_TYPES: EditorNodeInput["type"][] = [
-  "check",
-  "coefficient",
-  "constant",
-];
-
-const UserInputPreview = () => {
+const SymbolUnitPreview = () => {
   const { watch } = useFormContext<EditorNodeInput>();
   const symbol = watch("symbol");
   const unit = watch("unit");
-  const tex = symbol ? (unit ? `${symbol} \\quad (${unit})` : symbol) : "";
+  const tex = latexPreview({ symbol, unit });
+  if (!tex) return null;
 
   return (
     <Latex
       displayMode
       tex={tex}
-      className={twMerge(
-        "px-1 h-auto flex items-center justify-center-safe text-3xl text-sand-900",
-        !tex && "text-lg",
-      )}
+      className="px-1 h-auto flex items-center justify-center-safe text-3xl text-sand-900"
     />
   );
-};
-
-const getKeyOptions = (type: EditorNodeInput["type"]) => {
-  if (type === "user-input") return userInputKeyOptions;
-  if (type === "table") return tableKeyOptions;
-  return null;
 };
 
 export const FormIdentity = () => {
   const { control, register, watch, setValue, subscribe } =
     useFormContext<EditorNodeInput>();
   const type = watch("type");
-  const isValueTypeForced = FORCED_NUMERIC_TYPES.includes(type);
-  const keyOptions = getKeyOptions(type);
+  const key = watch("key") ?? "";
+
+  const keyOptions =
+    type === "user-input"
+      ? userInputKeyOptions
+      : type === "table"
+        ? tableKeyOptions
+        : type === "coefficient"
+          ? coefficientKeyOptions
+          : null;
+  const showPreview =
+    type === "user-input" || type === "coefficient" || type === "constant";
+  const constantPreset = constantCatalog[key] ? key : "custom";
+  const isCustomConstant = type === "constant" && constantPreset === "custom";
 
   useEffect(() => {
     const unsubscribe = subscribe({
       name: ["type", "key"],
       formState: { values: true },
       callback: ({ values: { key = "", type } }) => {
-        if (FORCED_NUMERIC_TYPES.includes(type)) {
-          setValue("valueType", { type: "number" });
-          if (type === "check") setValue("key", "utilisation");
-          return;
-        }
         if (type === "user-input") {
           const entry = userInputCatalog[key];
           if (!entry) return;
           setValue("symbol", entry.symbol);
           setValue("unit", entry.unit);
           setValue("valueType", { type: entry.valueType });
+          return;
         }
+        if (type === "coefficient") {
+          setValue("valueType", { type: "number" });
+          const entry = coefficientCatalog[key];
+          if (!entry) return;
+          setValue("symbol", entry.symbol);
+          setValue("unit", entry.unit);
+          setValue("meta", entry.meta);
+          return;
+        }
+        if (type === "table") return;
+        setValue("valueType", { type: "number" });
       },
     });
     return () => {
@@ -98,7 +105,25 @@ export const FormIdentity = () => {
           label="Key"
           description="Unique id used by formulas"
         >
-          {keyOptions && (
+          {type === "constant" ? (
+            <div className="flex flex-col gap-2">
+              <InputSelect
+                name="constant-preset"
+                options={constantKeyOptions}
+                value={constantPreset}
+                onChange={event => {
+                  const entry = constantCatalog[event.target.value];
+                  setValue("key", entry ? event.target.value : "");
+                  setValue("symbol", entry?.symbol);
+                  setValue("unit", entry?.unit);
+                  setValue("value", undefined);
+                }}
+              />
+              {isCustomConstant && (
+                <InputText placeholder="custom_key" {...register("key")} />
+              )}
+            </div>
+          ) : keyOptions ? (
             <Controller
               name="key"
               control={control}
@@ -112,11 +137,12 @@ export const FormIdentity = () => {
                 />
               )}
             />
+          ) : (
+            <InputText {...register("key")} />
           )}
-          {!keyOptions && <InputText {...register("key")} />}
         </FormField>
-        {type === "user-input" && <UserInputPreview />}
-        {!isValueTypeForced && type !== "user-input" && (
+        {showPreview && <SymbolUnitPreview />}
+        {type === "table" && (
           <FormField
             name="valueType"
             label="Value type"

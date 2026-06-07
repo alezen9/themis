@@ -33,7 +33,7 @@ export const createTraceEntry = (
   };
 };
 
-const createEvaluatorInputs = (
+export const createEvaluatorInputs = (
   activeChildren: string[],
   state: EvaluationState,
 ) => {

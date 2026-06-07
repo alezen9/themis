@@ -8,7 +8,7 @@ import type {
   NDGSuiteRunResult,
 } from "../types";
 import { validateNDG } from "../validate-ndg";
-import { INTERNAL_CONSTANTS } from "./constants";
+import { constantValues } from "./constants";
 import { evaluateNode, type EvaluationState } from "./evaluate";
 
 export const runNDG = <
@@ -21,7 +21,7 @@ export const runNDG = <
   const validated = validateNDG(definition);
   const state: EvaluationState = {
     ...validated,
-    runtime: { ...context, constants: INTERNAL_CONSTANTS },
+    runtime: { ...context, constants: constantValues },
     cache: {},
     trace: [],
     visited: new Set(),
@@ -49,6 +49,7 @@ export const runNDG = <
         id: check.id,
         key: check.key,
         name: check.name,
+        symbol: check.symbol,
         verificationExpression: check.verificationExpression,
         meta: check.meta,
       },

@@ -18,6 +18,7 @@ export const initialDocument: EditorDocument = {
       data: {
         key: "utilisation",
         name: "Tension",
+        symbol: "u_r",
         valueType: { type: "number" },
         verificationExpression: "\\frac{N_{Ed}}{N_{pl,Rd}} \\leq 1.0",
       },
@@ -74,7 +75,11 @@ export const initialDocument: EditorDocument = {
         key: "gamma_M0",
         symbol: "\\gamma_{M0}",
         valueType: { type: "number" },
-        meta: { sectionRef: "6.1" },
+        meta: {
+          sectionRef: "6.1",
+          paragraphRef: "(1)",
+          subParagraphRef: "NOTE 2B",
+        },
       },
     },
   ],

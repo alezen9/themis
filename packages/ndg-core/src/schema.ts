@@ -134,7 +134,8 @@ export const ConstantNodeSchema = BaseNodeSchema.extend({
   type: z.literal("constant"),
   key: z.string().min(1),
   valueType: NumericValueType,
-  symbol: z.string().min(1), // overrides BaseNode's optional symbol -- required here
+  unit: z.string().optional(),
+  value: z.number().optional(), // inline value for a custom constant; named constants resolve from the registry
 });
 
 export const NodeSchema = z.discriminatedUnion("type", [

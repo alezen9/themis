@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
+import { useCallback } from "react";
+import { useFormContext, type ChangeHandler } from "react-hook-form";
 
 import { InputRadio } from "@components/inputs/InputRadio";
 
@@ -8,12 +8,27 @@ import { typeOptions } from "./options";
 import type { EditorNodeInput } from "../../document/editorNodeSchema";
 
 export const FormType = () => {
-  const { register, watch, clearErrors } = useFormContext<EditorNodeInput>();
-  const type = watch("type");
+  const { register, reset, getValues, trigger } =
+    useFormContext<EditorNodeInput>();
 
-  useEffect(() => {
-    clearErrors();
-  }, [type, clearErrors]);
+  const onTypeChange = useCallback<ChangeHandler>(
+    async e => {
+      const { value: nextType } = e.target;
+      const values = getValues();
+      reset({
+        ...values,
+        type: nextType,
+        key: "",
+        symbol: undefined,
+        unit: undefined,
+        value: undefined,
+        meta: undefined,
+        expression: undefined,
+      } as EditorNodeInput);
+      await trigger();
+    },
+    [reset, getValues, trigger],
+  );
 
   return (
     <Section>
@@ -23,6 +38,7 @@ export const FormType = () => {
           <InputRadio
             key={option.value}
             {...register("type")}
+            onChange={onTypeChange}
             value={option.value}
             label={option.label}
           />

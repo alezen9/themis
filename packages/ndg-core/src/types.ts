@@ -137,13 +137,10 @@ export type NDGTraceEntry = {
 };
 
 export type NDGRunResult<TNodes extends readonly Node[] = readonly Node[]> = {
-  check: {
-    id: CheckNode["id"];
-    key: CheckNode["key"];
-    name: CheckNode["name"];
-    verificationExpression: CheckNode["verificationExpression"];
-    meta?: CheckNode["meta"];
-  };
+  check: Pick<
+    CheckNode,
+    "id" | "key" | "name" | "symbol" | "verificationExpression" | "meta"
+  >;
   passed: boolean;
   utilisation: number;
   cache: InferCache<TNodes>;

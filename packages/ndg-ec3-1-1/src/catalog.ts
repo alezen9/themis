@@ -1,4 +1,6 @@
-type CatalogEntry = {
+import type { NodeMeta } from "@ndg/ndg-core";
+
+type InputCatalogEntry = {
   symbol?: string;
   unit?: string;
   valueType: "number" | "string" | "boolean";
@@ -6,7 +8,7 @@ type CatalogEntry = {
   positive?: boolean;
 };
 
-export const userInputCatalog: Record<string, CatalogEntry> = {
+export const userInputCatalog: Record<string, InputCatalogEntry> = {
   shape: { valueType: "string", values: ["I", "RHS", "CHS"] },
   fabrication_type: {
     valueType: "string",
@@ -155,11 +157,6 @@ export const userInputCatalog: Record<string, CatalogEntry> = {
   fy_MPa: { symbol: "f_y", unit: "MPa", valueType: "number" },
   fu_MPa: { symbol: "f_u", unit: "MPa", valueType: "number" },
 
-  gamma_M0: { symbol: "\\gamma_{M0}", valueType: "number" },
-  gamma_M1: { symbol: "\\gamma_{M1}", valueType: "number" },
-  eta: { symbol: "\\eta", valueType: "number" },
-  lambda_LT_0: { symbol: "\\bar{\\lambda}_{LT,0}", valueType: "number" },
-  beta_LT: { symbol: "\\beta_{LT}", valueType: "number" },
   f_method: {
     symbol: "f",
     valueType: "string",
@@ -211,3 +208,52 @@ export const userInputCatalog: Record<string, CatalogEntry> = {
     values: ["top-flange", "centroid", "bottom-flange"],
   },
 };
+
+export const userInputKeys = Object.keys(userInputCatalog);
+
+export const tableKeyValues: Record<string, readonly (string | number)[]> = {
+  buckling_curve_y: ["a0", "a", "b", "c", "d"],
+  buckling_curve_z: ["a0", "a", "b", "c", "d"],
+  buckling_curve_LT: ["a0", "a", "b", "c", "d"],
+};
+
+export const tableKeys = Object.keys(tableKeyValues);
+
+type CoefficientCatalogEntry = {
+  symbol?: string;
+  unit?: string;
+  meta?: NodeMeta;
+};
+
+export const coefficientCatalog: Record<string, CoefficientCatalogEntry> = {
+  gamma_M0: {
+    symbol: "\\gamma_{M0}",
+    meta: {
+      sectionRef: "6.1",
+      paragraphRef: "(1)",
+      subParagraphRef: "NOTE 2B",
+    },
+  },
+  gamma_M1: {
+    symbol: "\\gamma_{M1}",
+    meta: {
+      sectionRef: "6.1",
+      paragraphRef: "(1)",
+      subParagraphRef: "NOTE 2B",
+    },
+  },
+  eta: {
+    symbol: "\\eta",
+    meta: { sectionRef: "6.2.6", paragraphRef: "(3)", subParagraphRef: "NOTE" },
+  },
+  lambda_LT_0: {
+    symbol: "\\bar{\\lambda}_{LT,0}",
+    meta: { sectionRef: "6.3.2.3", paragraphRef: "(1)" },
+  },
+  beta_LT: {
+    symbol: "\\beta_{LT}",
+    meta: { sectionRef: "6.3.2.3", paragraphRef: "(1)" },
+  },
+};
+
+export const coefficientKeys = Object.keys(coefficientCatalog);

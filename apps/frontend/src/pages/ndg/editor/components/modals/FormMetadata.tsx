@@ -9,7 +9,6 @@ import type { EditorNodeInput } from "../../document/editorNodeSchema";
 const TYPES_WITH_META: EditorNodeInput["type"][] = [
   "check",
   "formula",
-  "coefficient",
   "table",
 ];
 

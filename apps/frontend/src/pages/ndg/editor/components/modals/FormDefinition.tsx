@@ -2,7 +2,9 @@ import { ComponentProps } from "react";
 import { useFormContext } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
+import { constantCatalog } from "@ndg/ndg-core";
 import { FormField } from "@components/inputs/shared";
+import { InputNumber } from "@components/inputs/InputNumber";
 import { InputText } from "@components/inputs/InputText";
 import { Latex } from "@components/Latex";
 
@@ -12,8 +14,13 @@ import type { EditorNodeInput } from "../../document/editorNodeSchema";
 export const FormDefinition = () => {
   const { register, watch } = useFormContext<EditorNodeInput>();
   const type = watch("type");
+  const key = watch("key") ?? "";
+  const constantPreset = constantCatalog[key] ? key : "custom";
+  const isCustomConstant = type === "constant" && constantPreset === "custom";
 
   if (type === "user-input") return null;
+  if (type === "coefficient") return null;
+  if (type === "constant" && !isCustomConstant) return null;
 
   return (
     <Section>
@@ -58,6 +65,15 @@ export const FormDefinition = () => {
             </FormField>
           </div>
         )}
+        {isCustomConstant && (
+          <FormField
+            name="value"
+            label="Value"
+            description="Fixed numeric value"
+          >
+            <InputNumber {...register("value", { valueAsNumber: true })} />
+          </FormField>
+        )}
         {type !== "check" && (
           <FormFieldLatex
             name="symbol"
@@ -67,7 +83,7 @@ export const FormDefinition = () => {
             <InputText placeholder={"\\gamma_{M0}"} {...register("symbol")} />
           </FormFieldLatex>
         )}
-        {type !== "check" && type !== "constant" && (
+        {type !== "check" && (
           <FormFieldLatex name="unit" label="Unit" description="Display unit">
             <InputText placeholder={"mm^2"} {...register("unit")} />
           </FormFieldLatex>
@@ -83,14 +99,14 @@ const FormFieldLatex = (props: ComponentProps<typeof FormField>) => {
   const value = watch(name);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 h-full">
       <FormField name={name} {...rest}>
         {children}
       </FormField>
       <Latex
         tex={value?.trim() || "Preview"}
         className={twMerge(
-          "border px-1 h-16 rounded-sm border-sand-300 flex items-center justify-center-safe text-2xl text-sand-900",
+          "border px-1 min-h-16 flex-1 rounded-sm border-sand-300 flex items-center justify-center-safe text-2xl text-sand-900",
           !value?.trim() && "text-lg",
         )}
       />

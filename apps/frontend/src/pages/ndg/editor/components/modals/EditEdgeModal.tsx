@@ -25,11 +25,13 @@ import {
 import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { useNdgEditorModalStore } from "./useNdgEditorModalStore";
 import {
+  coefficientCatalog,
+  coefficientKeys,
   tableKeyValues,
   tableKeys,
+  userInputCatalog,
   userInputKeys,
-} from "../../document/keyCatalog";
-import { userInputCatalog } from "../../document/userInputCatalog";
+} from "@ndg/ndg-ec3-1-1";
 import { ConditionText } from "../../conditions/ConditionText";
 import { formatCondition } from "../../conditions/format";
 import { parseCondition, type ParseResult } from "../../conditions/parse";
@@ -40,13 +42,16 @@ type KeyRow = { key: string; values: string };
 const formatValues = (values: readonly (string | number | boolean)[]) =>
   values.map(v => (typeof v === "string" ? `"${v}"` : String(v))).join(", ");
 
-const describeInputKey = (key: string) => {
-  const entry = userInputCatalog[key];
-  if (!entry) return "";
-  if (entry.values) return formatValues(entry.values);
-  if (entry.valueType === "number")
-    return entry.positive ? "positive number" : "number";
-  return "string";
+const describeKey = (key: string) => {
+  const input = userInputCatalog[key];
+  if (input?.values) return formatValues(input.values);
+  if (input?.valueType === "number")
+    return input.positive ? "positive number" : "number";
+  if (input) return input.valueType;
+  if (key in coefficientCatalog) return "number";
+  const tableValues = tableKeyValues[key];
+  if (tableValues) return formatValues(tableValues);
+  return "";
 };
 
 export const EditEdgeModal = () => {
@@ -86,16 +91,19 @@ const EditEdgeForm = (props: { edgeId: string; onClose: () => void }) => {
   const [text, setText] = useState(() => formatCondition(savedCondition));
   const parsed = useMemo(() => parseCondition(text), [text]);
 
-  const inputRows: KeyRow[] = userInputKeys.map(key => ({
-    key,
-    values: describeInputKey(key),
-  }));
+  const inputRows: KeyRow[] = [...userInputKeys, ...coefficientKeys].map(
+    key => ({ key, values: describeKey(key) }),
+  );
   const tableRows: KeyRow[] = tableKeys.map(key => ({
     key,
     values: formatValues(tableKeyValues[key]),
   }));
   const graphRows: KeyRow[] = useMemo(() => {
-    const standard = new Set([...userInputKeys, ...tableKeys]);
+    const standard = new Set([
+      ...userInputKeys,
+      ...tableKeys,
+      ...coefficientKeys,
+    ]);
     const seen = new Set<string>();
     const rows: KeyRow[] = [];
     for (const node of nodes) {
@@ -110,6 +118,7 @@ const EditEdgeForm = (props: { edgeId: string; onClose: () => void }) => {
   const availableKeys = new Set([
     ...userInputKeys,
     ...tableKeys,
+    ...coefficientKeys,
     ...graphRows.map(row => row.key),
   ]);
   const unknownKeys = parsed.ok

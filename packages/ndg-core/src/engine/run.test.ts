@@ -22,13 +22,13 @@ const coefficient = <K extends string>(key: K) => ({
   children: [] as Child[],
 });
 
-const constant = <K extends string>(key: K) => ({
+const constant = <K extends string>(key: K, value?: number) => ({
   type: "constant" as const,
   key,
   id: key,
-  symbol: key,
   valueType: { type: "number" as const },
   children: [] as Child[],
+  ...(value === undefined ? {} : { value }),
 });
 
 const formula = <K extends string>(
@@ -88,7 +88,7 @@ describe("runNDG — input resolution", () => {
     expect(result.cache["geometry.height"]).toBe(5);
   });
 
-  it("resolves constant nodes from the constant table", () => {
+  it("resolves named constant nodes from the registry", () => {
     const nodes = [constant("pi"), check("pi", [{ nodeId: "pi" }])];
     const definition: NDGDefinition<typeof nodes> = {
       nodes,
@@ -96,6 +96,16 @@ describe("runNDG — input resolution", () => {
     };
 
     expect(runNDG(definition, { values: {} }).cache.pi).toBe(Math.PI);
+  });
+
+  it("uses a custom constant's inline value, overriding the registry", () => {
+    const nodes = [constant("pi", 42), check("pi", [{ nodeId: "pi" }])];
+    const definition: NDGDefinition<typeof nodes> = {
+      nodes,
+      evaluate: { utilisation: ({ pi }) => pi },
+    };
+
+    expect(runNDG(definition, { values: {} }).cache.pi).toBe(42);
   });
 });
 
@@ -159,6 +169,41 @@ describe("runNDG — conditions and branching", () => {
 
     expect(result.cache.threshold).toBe(5);
     expect(result.cache.bonus).toBe(7);
+  });
+
+  it("scopes evaluator deps to active children when another path cached the inactive branch", () => {
+    const nodes = [
+      userInput("a_in"),
+      userInput("b_in"),
+      formula("a", [{ nodeId: "a_in" }], "a_in"),
+      formula("b", [{ nodeId: "b_in" }], "b_in"),
+      formula(
+        "selected",
+        [
+          { nodeId: "a", when: { eq: ["section_class", { value: 1 }] } },
+          { nodeId: "b", when: { eq: ["section_class", { value: 3 }] } },
+        ],
+        "branch",
+      ),
+      check("selected", [{ nodeId: "a" }, { nodeId: "selected" }]),
+    ];
+    const definition: NDGDefinition<typeof nodes> = {
+      nodes,
+      evaluate: {
+        a: ({ a_in }) => a_in,
+        b: ({ b_in }) => b_in,
+        selected: ({ a, b }) => a ?? b,
+        utilisation: ({ selected }) => selected,
+      },
+    };
+
+    const result = runNDG(definition, {
+      values: { section_class: 3, a_in: 1, b_in: 2 },
+    });
+
+    expect(result.cache.a).toBe(1);
+    expect(result.cache.selected).toBe(2);
+    expect(result.utilisation).toBe(2);
   });
 });
 

@@ -11,10 +11,10 @@ import type {
   NDGValue,
 } from "../types";
 import type { ValidatedNDG } from "../validate-ndg";
-import { INTERNAL_CONSTANTS } from "./constants";
-import { createTraceEntry } from "./trace";
+import { constantValues } from "./constants";
+import { createEvaluatorInputs, createTraceEntry } from "./trace";
 
-type RuntimeContext = NDGContext & { constants: typeof INTERNAL_CONSTANTS };
+type RuntimeContext = NDGContext & { constants: typeof constantValues };
 
 export type EvaluationState = {
   check: ValidatedNDG["check"];
@@ -99,7 +99,7 @@ const resolveNodeValue = (
 ): NDGValue => {
   switch (node.type) {
     case "constant": {
-      const value = state.runtime.constants[node.key];
+      const value = node.value ?? get(state.runtime.constants, node.key);
       assertDefined(value, `Unsupported constant: "${node.key}"`);
       return value;
     }
@@ -129,7 +129,8 @@ const resolveNodeValue = (
         },
         inputs: state.runtime.values,
       };
-      const result = evaluator(state.cache, ctx);
+      const deps = createEvaluatorInputs(activeChildren, state);
+      const result = evaluator(deps, ctx);
       assertFiniteNumberResult(node, result);
       return result;
     }

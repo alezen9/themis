@@ -10,6 +10,7 @@ export const nodes = defineNodes([
     type: "check",
     key: "utilisation",
     name: "Compression",
+    symbol: "u_r",
     valueType: { type: "number" },
     meta: {
       sectionRef: "6.2.4",
@@ -77,7 +78,11 @@ export const nodes = defineNodes([
     type: "coefficient",
     key: "gamma_M0",
     valueType: { type: "number" },
-    meta: { sectionRef: "6.1" },
+    meta: {
+      sectionRef: "6.1",
+      paragraphRef: "(1)",
+      subParagraphRef: "NOTE 2B",
+    },
   },
 ]);
 

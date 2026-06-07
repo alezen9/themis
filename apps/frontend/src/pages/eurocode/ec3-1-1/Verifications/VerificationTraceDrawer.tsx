@@ -101,6 +101,10 @@ const VerificationTrace = (props: VerificationTraceProps) => {
 
   const { check, trace } = payload.data;
 
+  const checkTex = check.symbol
+    ? `${check.symbol} = ${check.verificationExpression}`
+    : check.verificationExpression;
+
   const reversedTrace = trace.reverse();
 
   const values = reversedTrace.flatMap(entry =>
@@ -134,11 +138,7 @@ const VerificationTrace = (props: VerificationTraceProps) => {
   return (
     <div className="flex flex-col gap-6 text-sand-900">
       <div className="rounded-md border border-sand-100 bg-sand-50 p-5">
-        <Latex
-          displayMode
-          tex={check.verificationExpression}
-          className="justify-start text-3xl"
-        />
+        <Latex displayMode tex={checkTex} className="justify-start text-3xl" />
       </div>
 
       <Accordion>

@@ -1,6 +1,6 @@
 import { ConditionSchema } from "@ndg/ndg-core";
+import { coefficientKeys, tableKeys, userInputKeys } from "@ndg/ndg-ec3-1-1";
 import { findUnknownConditionKeys } from "../conditions/validate";
-import { tableKeys, userInputKeys } from "../document/keyCatalog";
 import { editorNodeSchema } from "../document/editorNodeSchema";
 import type { EditorEdge, EditorNode } from "../document/types";
 
@@ -19,6 +19,7 @@ export const findInvalidEdgeIds = (
   const availableKeys = new Set([
     ...userInputKeys,
     ...tableKeys,
+    ...coefficientKeys,
     ...nodes.map(node => node.data.key),
   ]);
   const invalidEdgeIds = new Set<string>();

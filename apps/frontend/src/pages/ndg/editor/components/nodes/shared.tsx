@@ -70,7 +70,7 @@ export const NodeBody = (props: NodeBodyProps) => {
       className={twMerge(
         "flex items-center justify-center",
         "rounded-xs border border-sand-300 bg-white",
-        "h-12 text-sm",
+        "min-h-12 text-sm",
         className,
       )}
     >

@@ -15,6 +15,14 @@ import v03_bending_moment_yy from "./verifications/03_bending_moment_yy/bending-
 import v04_bending_moment_zz from "./verifications/04_bending_moment_zz/bending-moment-zz";
 
 export { evaluateCondition } from "@ndg/ndg-core";
+export {
+  userInputCatalog,
+  userInputKeys,
+  tableKeyValues,
+  tableKeys,
+  coefficientCatalog,
+  coefficientKeys,
+} from "./catalog";
 export { eurocodeAnnex } from "./annexes/eurocode";
 export { italianAnnex } from "./annexes/italian-na";
 export type { Condition, ConditionOperand, NDGRunResult, NDGTraceEntry, Node };
