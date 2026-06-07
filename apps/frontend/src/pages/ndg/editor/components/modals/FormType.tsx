@@ -3,7 +3,8 @@ import { useFormContext } from "react-hook-form";
 import { InputRadio } from "@components/inputs/InputRadio";
 
 import { Section, SectionTitle } from "./shared";
-import { defaultNodeFormValues, typeOptions } from "./options";
+import { defaultNodeFormValues } from "./defaultValues";
+import { typeOptions } from "./options";
 import type { EditorNodeInput } from "../../document/editorNodeSchema";
 
 export const FormType = () => {

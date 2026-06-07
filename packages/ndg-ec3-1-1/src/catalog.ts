@@ -67,6 +67,7 @@ export const userInputCatalog: Record<string, InputCatalogEntry> = {
   S_y_mm3: { symbol: "S_y", unit: "mm^3", valueType: "number", positive: true },
   S_z_mm3: { symbol: "S_z", unit: "mm^3", valueType: "number", positive: true },
   It_mm4: { symbol: "I_t", unit: "mm^4", valueType: "number", positive: true },
+  Wt_mm3: { symbol: "W_t", unit: "mm^3", valueType: "number", positive: true },
   Iw_mm6: { symbol: "I_w", unit: "mm^6", valueType: "number", positive: true },
   centroid_y_mm: {
     symbol: "y_c",

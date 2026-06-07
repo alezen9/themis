@@ -8,10 +8,10 @@ import { InputRadio } from "@components/inputs/InputRadio";
 import { InputSelect } from "@components/inputs/InputSelect";
 import { InputText } from "@components/inputs/InputText";
 import { Latex } from "@components/Latex";
+import { defaultNodeFormValues } from "./defaultValues";
 import {
   coefficientKeyOptions,
   constantKeyOptions,
-  defaultNodeFormValues,
   tableKeyOptions,
   userInputKeyOptions,
   valueTypeOptions,

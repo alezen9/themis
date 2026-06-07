@@ -28,8 +28,8 @@ export const computeIGeometryProperties = (
     (2 * tf_mm * b_mm ** 3 + (h_mm - 2 * tf_mm) * tw_mm ** 3) / 12 +
       0.4292 * r_mm ** 4 +
       0.8584 * r_mm ** 2 * (tw_mm / 2 + (4 * r_mm) / (3 * Math.PI)) ** 2;
-  const Wel_y_mm3 = Iy_mm4 / (h_mm / 2);
-  const Wel_z_mm3 = Iz_mm4 / (b_mm / 2);
+  const Wel_y_mm3 = existing?.Wel_y_mm3 ?? Iy_mm4 / (h_mm / 2);
+  const Wel_z_mm3 = existing?.Wel_z_mm3 ?? Iz_mm4 / (b_mm / 2);
   const Wpl_y_mm3 =
     existing?.Wpl_y_mm3 ??
     b_mm * tf_mm * (h_mm - tf_mm) + (tw_mm * (h_mm - 2 * tf_mm) ** 2) / 4;
@@ -54,6 +54,7 @@ export const computeIGeometryProperties = (
         ((2 * tf_mm + tw_mm) / (4 * tf_mm + tw_mm)) *
         (0.145 + 0.1 * (r_mm / tf_mm)) *
         ((r_mm + tw_mm / 2) ** 4 - tw_mm ** 4 / 16);
+  const Wt_mm3 = existing?.Wt_mm3 ?? It_mm4 / Math.max(tw_mm, tf_mm);
   const Iw_mm6 =
     existing?.Iw_mm6 ?? ((tf_mm * b_mm ** 3) / 24) * (h_mm - tf_mm) ** 2;
   const centroid = { y_mm: b_mm / 2, z_mm: h_mm / 2 };
@@ -71,6 +72,7 @@ export const computeIGeometryProperties = (
     S_y_mm3,
     S_z_mm3,
     It_mm4,
+    Wt_mm3,
     Iw_mm6,
     centroid,
   };
@@ -79,7 +81,28 @@ export const computeIGeometryProperties = (
 const getExistingGeometryProperties = (section_id: string) => {
   const section = flangedSectionsMap.get(section_id);
   if (!section) return;
-  const { A_mm2, Iy_mm4, Iz_mm4, Wpl_y_mm3, Wpl_z_mm3, It_mm4, Iw_mm6 } =
-    section;
-  return { A_mm2, Iy_mm4, Iz_mm4, Wpl_y_mm3, Wpl_z_mm3, It_mm4, Iw_mm6 };
+  const {
+    A_mm2,
+    Iy_mm4,
+    Iz_mm4,
+    Wel_y_mm3,
+    Wel_z_mm3,
+    Wpl_y_mm3,
+    Wpl_z_mm3,
+    It_mm4,
+    Wt_mm3,
+    Iw_mm6,
+  } = section;
+  return {
+    A_mm2,
+    Iy_mm4,
+    Iz_mm4,
+    Wel_y_mm3,
+    Wel_z_mm3,
+    Wpl_y_mm3,
+    Wpl_z_mm3,
+    It_mm4,
+    Wt_mm3,
+    Iw_mm6,
+  };
 };

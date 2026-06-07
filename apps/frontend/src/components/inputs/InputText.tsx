@@ -12,7 +12,7 @@ export const InputText = (props: Props) => {
       className={twMerge(
         "h-9 w-full",
         "rounded-sm",
-        "bg-(--bg-input-default-color)",
+        "bg-(--bg-color)",
         "px-3 py-2",
         "text-sm leading-0 font-light text-gray-600",
         "transition-colors",

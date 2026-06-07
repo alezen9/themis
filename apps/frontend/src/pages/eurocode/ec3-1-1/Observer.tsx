@@ -202,6 +202,7 @@ const createVerifyInputs = (
     S_y_mm3: geometry.S_y_mm3,
     S_z_mm3: geometry.S_z_mm3,
     It_mm4: geometry.It_mm4,
+    Wt_mm3: geometry.Wt_mm3,
     Iw_mm6: geometry.Iw_mm6,
     centroid_y_mm: geometry.centroid.y_mm,
     centroid_z_mm: geometry.centroid.z_mm,

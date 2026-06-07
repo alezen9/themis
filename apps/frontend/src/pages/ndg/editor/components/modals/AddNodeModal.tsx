@@ -20,7 +20,7 @@ import { FormDefinition } from "./FormDefinition";
 import { FormIdentity } from "./FormIdentity";
 import { FormMetadata } from "./FormMetadata";
 import { FormType } from "./FormType";
-import { defaultNodeFormValues } from "./options";
+import { defaultNodeFormValues } from "./defaultValues";
 
 export const AddNodeModal = () => {
   const modal = useNdgEditorModalStore(s => s.modal);

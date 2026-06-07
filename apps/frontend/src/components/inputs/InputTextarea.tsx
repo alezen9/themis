@@ -10,9 +10,8 @@ export const InputTextarea = (props: Props) => {
     <textarea
       ref={ref}
       className={twMerge(
-        "[--bg-color:var(--bg-input-default-color)]",
         "min-h-24 w-full resize-y rounded-sm",
-        "bg-(--bg-color)",
+        "bg-(--bg-color,var(--bg-input-default-color))",
         "px-3 py-2",
         "text-sm font-light text-gray-600",
         "transition-colors",

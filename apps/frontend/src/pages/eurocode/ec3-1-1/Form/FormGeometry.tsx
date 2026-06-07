@@ -372,6 +372,17 @@ const GeometryPropertiesInfo = () => {
               <Latex tex={"mm^3"} />
             </InfoTableUnitCell>
           </TableRow>
+          <TableRow>
+            <InfoTableLabelCell>
+              <Latex tex="W_t" />
+            </InfoTableLabelCell>
+            <InfoTableValueCell>
+              {formatNumber(computedProperties.Wt_mm3)}
+            </InfoTableValueCell>
+            <InfoTableUnitCell>
+              <Latex tex={"mm^3"} />
+            </InfoTableUnitCell>
+          </TableRow>
         </TableBody>
       </InfoTable>
     </div>

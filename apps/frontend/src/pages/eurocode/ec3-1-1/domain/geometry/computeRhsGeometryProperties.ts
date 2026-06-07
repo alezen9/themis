@@ -30,8 +30,8 @@ export const computeRhsGeometryProperties = (
     existing?.Iy_mm4 ?? (b_mm * h_mm ** 3 - bi_mm * hi_mm ** 3) / 12;
   const Iz_mm4 =
     existing?.Iz_mm4 ?? (h_mm * b_mm ** 3 - hi_mm * bi_mm ** 3) / 12;
-  const Wel_y_mm3 = Iy_mm4 / (h_mm / 2);
-  const Wel_z_mm3 = Iz_mm4 / (b_mm / 2);
+  const Wel_y_mm3 = existing?.Wel_y_mm3 ?? Iy_mm4 / (h_mm / 2);
+  const Wel_z_mm3 = existing?.Wel_z_mm3 ?? Iz_mm4 / (b_mm / 2);
   const Wpl_y_mm3 =
     existing?.Wpl_y_mm3 ?? (b_mm * h_mm ** 2 - bi_mm * hi_mm ** 2) / 4;
   const Wpl_z_mm3 =
@@ -44,6 +44,7 @@ export const computeRhsGeometryProperties = (
   const Ap_mm = A_mm2 / p_mm;
   const It_mm4 =
     existing?.It_mm4 ?? (4 * Ap_mm ** 2 * (p_mm - 2.8 * Ap_mm)) / 3;
+  const Wt_mm3 = existing?.Wt_mm3 ?? It_mm4 / (Math.max(h_mm, b_mm) / 2);
   const centroid = { y_mm: b_mm / 2, z_mm: h_mm / 2 };
 
   return {
@@ -59,6 +60,7 @@ export const computeRhsGeometryProperties = (
     S_y_mm3,
     S_z_mm3,
     It_mm4,
+    Wt_mm3,
     Iw_mm6: 0,
     centroid,
   };
@@ -67,6 +69,26 @@ export const computeRhsGeometryProperties = (
 const getExistingGeometryProperties = (section_id: string) => {
   const section = hollowSectionsMap.get(section_id);
   if (!section) return;
-  const { A_mm2, Iy_mm4, Iz_mm4, Wpl_y_mm3, Wpl_z_mm3, It_mm4 } = section;
-  return { A_mm2, Iy_mm4, Iz_mm4, Wpl_y_mm3, Wpl_z_mm3, It_mm4 };
+  const {
+    A_mm2,
+    Iy_mm4,
+    Iz_mm4,
+    Wel_y_mm3,
+    Wel_z_mm3,
+    Wpl_y_mm3,
+    Wpl_z_mm3,
+    It_mm4,
+    Wt_mm3,
+  } = section;
+  return {
+    A_mm2,
+    Iy_mm4,
+    Iz_mm4,
+    Wel_y_mm3,
+    Wel_z_mm3,
+    Wpl_y_mm3,
+    Wpl_z_mm3,
+    It_mm4,
+    Wt_mm3,
+  };
 };

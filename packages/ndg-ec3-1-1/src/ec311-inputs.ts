@@ -24,6 +24,7 @@ export type Ec311Inputs = {
   S_y_mm3: number;
   S_z_mm3: number;
   It_mm4: number;
+  Wt_mm3: number;
   Iw_mm6: number;
   centroid_y_mm: number;
   centroid_z_mm: number;

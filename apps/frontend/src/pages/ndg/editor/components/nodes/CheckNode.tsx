@@ -1,11 +1,6 @@
 import { Latex } from "@components/Latex";
 import type { EditorNodeProps } from "../../document/types";
-import {
-  NodeAddChildHandle,
-  NodeBody,
-  NodeCard,
-  NodeHeader,
-} from "./shared";
+import { NodeAddChildHandle, NodeBody, NodeCard, NodeHeader } from "./shared";
 import { latexPreview } from "./latexPreview";
 
 export const CheckNode = (props: EditorNodeProps) => {
