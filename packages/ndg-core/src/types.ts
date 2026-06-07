@@ -1,4 +1,4 @@
-import type { CheckNode, Node, NodeMeta } from "./schema";
+import type { CheckNode, FormulaExpression, Node, NodeMeta } from "./schema";
 
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
@@ -56,7 +56,7 @@ type SelectorNode<TNodes extends readonly Node[]> = Extract<
   TNodes[number],
   {
     type: "formula";
-    expression?: undefined;
+    expressions?: undefined;
     children: readonly [unknown, ...unknown[]];
   }
 >;
@@ -127,7 +127,7 @@ export type NDGTraceEntry = {
   value: NDGValue;
   unit?: string;
   symbol?: string;
-  expression?: string;
+  expressions?: readonly FormulaExpression[];
   verificationExpression?: string;
   description?: string;
   meta?: NodeMeta;

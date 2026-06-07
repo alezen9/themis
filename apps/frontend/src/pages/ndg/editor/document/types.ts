@@ -5,7 +5,8 @@ import type {
   NodeProps,
 } from "@xyflow/react";
 
-export const EDITOR_DOCUMENT_VERSION = 1;
+export const EDITOR_DOCUMENT_VERSION = 2;
+export const LEGACY_EDITOR_DOCUMENT_VERSION = 1;
 
 type EditorNodeData<Type extends NdgNode["type"]> = Omit<
   Extract<NdgNode, { type: Type }>,

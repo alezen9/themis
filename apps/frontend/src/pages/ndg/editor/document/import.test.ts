@@ -3,7 +3,11 @@ import { describe, expect, it } from "vitest";
 import { remapDocumentIds } from "./import";
 import { createEdgeId } from "./ids";
 import { editorDocumentSchema } from "./importExportSchema";
-import { EDITOR_DOCUMENT_VERSION, type EditorDocument } from "./types";
+import {
+  EDITOR_DOCUMENT_VERSION,
+  LEGACY_EDITOR_DOCUMENT_VERSION,
+  type EditorDocument,
+} from "./types";
 
 const createDocument = (
   nodes: EditorDocument["nodes"],
@@ -123,6 +127,33 @@ describe("editorDocumentSchema", () => {
     });
     expect(result.success).toBe(true);
     expect(result.data?.nodes[0].data).not.toHaveProperty("sourceNodeId");
+  });
+
+  it("normalizes legacy formula expression data", () => {
+    const result = editorDocumentSchema.safeParse({
+      version: LEGACY_EDITOR_DOCUMENT_VERSION,
+      nodes: [
+        {
+          id: "formula",
+          position: { x: 0, y: 0 },
+          type: "formula",
+          data: {
+            key: "resistance",
+            valueType: { type: "number" },
+            expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
+          },
+        },
+      ],
+      edges: [],
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.data?.version).toBe(EDITOR_DOCUMENT_VERSION);
+    expect(result.data?.nodes[0].data).toEqual({
+      key: "resistance",
+      valueType: { type: "number" },
+      expressions: [{ expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}" }],
+    });
   });
 });
 

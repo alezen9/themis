@@ -1,4 +1,4 @@
-import type { NDGValue, NodeMeta } from "@ndg/ndg-core";
+import type { NodeMeta } from "@ndg/ndg-core";
 import type { VerificationRow } from "@ndg/ndg-ec3-1-1";
 import { twMerge } from "tailwind-merge";
 
@@ -23,6 +23,7 @@ import {
   InfoTableUnitCell,
   InfoTableValueCell,
 } from "../Form/shared";
+import { formatValue, stepEquation } from "./traceEquation";
 
 type VerificationTraceDrawerProps = {
   verification?: VerificationRow;
@@ -68,20 +69,6 @@ export const VerificationTraceDrawer = (
   );
 };
 
-const formatValue = (value: NDGValue) =>
-  typeof value === "number" ? formatNumber(value) : value;
-
-const stepEquation = (
-  symbol: string | undefined,
-  expression: string,
-  value: NDGValue,
-  unit: string | undefined,
-) => {
-  const lhs = symbol ? `${symbol} = ` : "";
-  const tail = unit ? `\\,${unit}` : "";
-  return `${lhs}${expression} = \\text{${formatValue(value)}}${tail}`;
-};
-
 const clauseRef = (meta: NodeMeta | undefined) => {
   if (!meta) return undefined;
   const parts: string[] = [];
@@ -105,7 +92,8 @@ const VerificationTrace = (props: VerificationTraceProps) => {
     ? `${check.symbol} = ${check.verificationExpression}`
     : check.verificationExpression;
 
-  const reversedTrace = trace.reverse();
+  const reversedTrace = [...trace].reverse();
+  const entryByKey = new Map(trace.map(entry => [entry.key, entry]));
 
   const values = reversedTrace.flatMap(entry =>
     !entry.symbol
@@ -121,15 +109,16 @@ const VerificationTrace = (props: VerificationTraceProps) => {
   );
 
   const steps = reversedTrace.flatMap(entry =>
-    !entry.expression
+    !entry.expressions?.length
       ? []
       : [
           {
             id: entry.nodeId,
             symbol: entry.symbol,
-            expression: entry.expression,
+            expressions: entry.expressions,
             value: entry.value,
             unit: entry.unit,
+            evaluatorInputs: entry.evaluatorInputs,
             ref: clauseRef(entry.meta),
           },
         ],
@@ -182,12 +171,7 @@ const VerificationTrace = (props: VerificationTraceProps) => {
             <div className="p-4">
               <Latex
                 displayMode
-                tex={stepEquation(
-                  step.symbol,
-                  step.expression,
-                  step.value,
-                  step.unit,
-                )}
+                tex={stepEquation(step, entryByKey)}
                 className="justify-start text-2xl"
               />
             </div>

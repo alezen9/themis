@@ -68,6 +68,13 @@ const ValueTypeSchema = z.discriminatedUnion("type", [
   BooleanValueType,
 ]);
 
+const FormulaExpressionSchema = z.strictObject({
+  expression: z.string().min(1),
+  calculation: z
+    .union([z.string().min(1), z.literal("").transform(() => undefined)])
+    .optional(),
+});
+
 /**
  * Root node of a verification.
  * Evaluator returns the utilisation ratio; pass = ratio <= 1.0.
@@ -89,7 +96,7 @@ export const FormulaNodeSchema = BaseNodeSchema.extend({
   key: z.string().min(1),
   valueType: ValueTypeSchema,
   meta: NodeMetaSchema.optional(),
-  expression: z.string().optional(), // LaTeX: "\frac{A \cdot f_y}{\gamma_{M0}}"
+  expressions: z.array(FormulaExpressionSchema).readonly().optional(),
   unit: z.string().optional(),
 });
 
@@ -151,6 +158,7 @@ export const NodeSchema = z.discriminatedUnion("type", [
 export const NDGSchema = z.array(NodeSchema);
 
 export type NodeMeta = z.infer<typeof NodeMetaSchema>;
+export type FormulaExpression = z.infer<typeof FormulaExpressionSchema>;
 export type Child = z.infer<typeof ChildSchema>;
 export type CheckNode = z.infer<typeof CheckNodeSchema>;
 export type Node = z.infer<typeof NodeSchema>;
@@ -170,7 +178,7 @@ export const isSelectorNode = (
 ): node is z.infer<typeof FormulaNodeSchema> => {
   return (
     node.type === "formula" &&
-    node.expression === undefined &&
+    node.expressions === undefined &&
     node.children.length > 0
   );
 };

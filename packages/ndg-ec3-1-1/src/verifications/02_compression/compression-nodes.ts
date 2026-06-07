@@ -50,7 +50,12 @@ export const nodes = defineNodes([
       tableRef: "",
       verificationRef: "",
     },
-    expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
+    expressions: [
+      {
+        expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
+        calculation: "\\frac{$A_mm2 \\cdot $fy_MPa}{$gamma_M0}",
+      },
+    ],
     unit: "N",
   },
   {

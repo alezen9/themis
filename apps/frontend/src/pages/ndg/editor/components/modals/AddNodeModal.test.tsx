@@ -127,4 +127,45 @@ describe("AddNodeModal", () => {
     );
     expect(addNode).not.toHaveBeenCalled();
   });
+
+  it("adds removes and submits formula expression rows", async () => {
+    fireEvent.click(screen.getByRole("radio", { name: "Formula" }));
+    fireEvent.change(document.querySelector<HTMLInputElement>('[name="key"]')!, {
+      target: { value: "resistance" },
+    });
+    fireEvent.change(
+      document.querySelector<HTMLTextAreaElement>(
+        '[name="expressions.0.expression"]',
+      )!,
+      { target: { value: "\\frac{A \\cdot f_y}{\\gamma_{M0}}" } },
+    );
+    fireEvent.change(
+      document.querySelector<HTMLTextAreaElement>(
+        '[name="expressions.0.calculation"]',
+      )!,
+      { target: { value: "\\frac{$A_mm2 \\cdot $fy_MPa}{$gamma_M0}" } },
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Add row" }));
+    expect(
+      document.querySelector('[name="expressions.1.expression"]'),
+    ).toBeTruthy();
+    fireEvent.click(screen.getAllByRole("button", { name: "Remove" })[1]!);
+
+    submit();
+    await waitFor(() =>
+      expect(addNode).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: "formula",
+          key: "resistance",
+          expressions: [
+            {
+              expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
+              calculation: "\\frac{$A_mm2 \\cdot $fy_MPa}{$gamma_M0}",
+            },
+          ],
+        }),
+      ),
+    );
+  });
 });

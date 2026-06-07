@@ -1,11 +1,13 @@
 import { ComponentProps } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
 import { constantCatalog } from "@ndg/ndg-core";
+import { Button } from "@components/Button";
 import { FormField } from "@components/inputs/shared";
 import { InputNumber } from "@components/inputs/InputNumber";
 import { InputText } from "@components/inputs/InputText";
+import { InputTextarea } from "@components/inputs/InputTextarea";
 import { Latex } from "@components/Latex";
 
 import { Section, SectionTitle } from "./shared";
@@ -41,18 +43,7 @@ export const FormDefinition = () => {
           </div>
         )}
         {type === "formula" && (
-          <div className="col-span-2">
-            <FormFieldLatex
-              name="expression"
-              label="Expression"
-              description="LaTeX formula shown as symbol = expression"
-            >
-              <InputText
-                placeholder={"\\frac{A \\cdot f_y}{\\gamma_{M0}}"}
-                {...register("expression")}
-              />
-            </FormFieldLatex>
-          </div>
+          <FormulaExpressionsFields />
         )}
         {type === "table" && (
           <div className="col-span-2">
@@ -92,6 +83,64 @@ export const FormDefinition = () => {
         )}
       </div>
     </Section>
+  );
+};
+
+type FormulaNodeInput = Extract<EditorNodeInput, { type: "formula" }>;
+
+const FormulaExpressionsFields = () => {
+  const { control, register } = useFormContext<FormulaNodeInput>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "expressions",
+  });
+
+  return (
+    <div className="col-span-4 flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-4">
+        <h5 className="text-sm font-light text-sand-900">Expressions</h5>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => append({ expression: "" })}
+        >
+          Add row
+        </Button>
+      </div>
+      {fields.map((field, index) => (
+        <div
+          key={field.id}
+          className="grid grid-cols-[1fr_1fr_auto] gap-4 rounded-sm border border-sand-100 p-3"
+        >
+          <FormFieldLatex
+            name={`expressions.${index}.expression`}
+            label="Expression"
+          >
+            <InputTextarea
+              placeholder={"\\frac{A \\cdot f_y}{\\gamma_{M0}}"}
+              {...register(`expressions.${index}.expression`)}
+            />
+          </FormFieldLatex>
+          <FormFieldLatex
+            name={`expressions.${index}.calculation`}
+            label="Calculation"
+          >
+            <InputTextarea
+              placeholder={"\\frac{$A_mm2 \\cdot $fy_MPa}{$gamma_M0}"}
+              {...register(`expressions.${index}.calculation`)}
+            />
+          </FormFieldLatex>
+          <Button
+            variant="danger"
+            size="sm"
+            className="self-start"
+            onClick={() => remove(index)}
+          >
+            Remove
+          </Button>
+        </div>
+      ))}
+    </div>
   );
 };
 

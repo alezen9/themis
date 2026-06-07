@@ -40,7 +40,7 @@ const formula = <K extends string>(
   key,
   id: key,
   valueType: { type: "number" as const },
-  expression,
+  ...(expression === undefined ? {} : { expressions: [{ expression }] }),
   children,
 });
 
@@ -86,6 +86,27 @@ describe("runNDG — input resolution", () => {
     const result = runNDG(definition, { values: { geometry: { height: 5 } } });
 
     expect(result.cache["geometry.height"]).toBe(5);
+  });
+
+  it("exposes formula expressions in trace entries", () => {
+    const nodes = [
+      userInput("x"),
+      formula("double", [{ nodeId: "x" }], "2x"),
+      check("double", [{ nodeId: "double" }]),
+    ];
+    const definition: NDGDefinition<typeof nodes> = {
+      nodes,
+      evaluate: {
+        double: ({ x }) => x * 2,
+        utilisation: ({ double }) => double,
+      },
+    };
+
+    const result = runNDG(definition, { values: { x: 2 } });
+
+    expect(
+      result.trace.find(entry => entry.key === "double")?.expressions,
+    ).toEqual([{ expression: "2x" }]);
   });
 
   it("resolves named constant nodes from the registry", () => {

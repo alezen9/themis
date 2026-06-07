@@ -200,7 +200,7 @@ describe("validateNDG", () => {
         key: "d",
         valueType: { type: "number" },
         id: "missing-evaluator-d",
-        expression: "x",
+        expressions: [{ expression: "x" }],
         children: [{ nodeId: "missing-evaluator-x" }],
       },
       {
@@ -272,7 +272,7 @@ describe("validateNDG", () => {
         key: "a",
         valueType: { type: "number" },
         id: "cycle-a",
-        expression: "b",
+        expressions: [{ expression: "b" }],
         children: [{ nodeId: "cycle-b" }],
       },
       {
@@ -280,7 +280,7 @@ describe("validateNDG", () => {
         key: "b",
         valueType: { type: "number" },
         id: "cycle-b",
-        expression: "a",
+        expressions: [{ expression: "a" }],
         children: [{ nodeId: "cycle-a" }],
       },
       {

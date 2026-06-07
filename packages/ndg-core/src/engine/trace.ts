@@ -20,7 +20,7 @@ export const createTraceEntry = (
     value,
     unit: "unit" in node ? node.unit : undefined,
     symbol: node.symbol,
-    expression: "expression" in node ? node.expression : undefined,
+    expressions: "expressions" in node ? node.expressions : undefined,
     verificationExpression:
       "verificationExpression" in node
         ? node.verificationExpression

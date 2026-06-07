@@ -42,7 +42,12 @@ export const initialDocument: EditorDocument = {
         key: "N_pl_Rd_N",
         valueType: { type: "number" },
         symbol: "N_{pl,Rd}",
-        expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
+        expressions: [
+          {
+            expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
+            calculation: "\\frac{$A_mm2 \\cdot $fy_MPa}{$gamma_M0}",
+          },
+        ],
       },
     },
     {

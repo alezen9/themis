@@ -60,8 +60,20 @@ export const nodes = defineNodes([
       tableRef: "",
       verificationRef: "",
     },
-    expression:
-      "\\left\\{ \\begin{array}{l l} \\frac{M_{y,Ed}}{M_{pl,y,Rd}} \\leq 1.0 & \\text{Class 1-2} \\\\[10pt] \\frac{M_{y,Ed}}{M_{el,y,Rd}} \\leq 1.0 & \\text{Class 3} \\end{array} \\right.",
+    expressions: [
+      {
+        expression:
+          "\\frac{|M_{y,Ed}|}{M_{pl,y,Rd}} \\leq 1.0 \\quad \\text{Class 1-2}",
+        calculation:
+          "\\frac{|$M_y_Ed_Nmm|}{$M_pl_y_Rd_Nmm} \\leq 1.0",
+      },
+      {
+        expression:
+          "\\frac{|M_{y,Ed}|}{M_{el,y,Rd}} \\leq 1.0 \\quad \\text{Class 3}",
+        calculation:
+          "\\frac{|$M_y_Ed_Nmm|}{$M_el_y_Rd_Nmm} \\leq 1.0",
+      },
+    ],
     unit: "Nmm",
   },
   {
@@ -83,7 +95,12 @@ export const nodes = defineNodes([
       tableRef: "",
       verificationRef: "",
     },
-    expression: "\\frac{W_{el,y} \\cdot f_y}{\\gamma_{M0}}",
+    expressions: [
+      {
+        expression: "\\frac{W_{el,y} \\cdot f_y}{\\gamma_{M0}}",
+        calculation: "\\frac{$Wel_y_mm3 \\cdot $fy_MPa}{$gamma_M0}",
+      },
+    ],
     unit: "Nmm",
   },
   {
@@ -105,7 +122,12 @@ export const nodes = defineNodes([
       tableRef: "",
       verificationRef: "",
     },
-    expression: "\\frac{W_{pl,y} \\cdot f_y}{\\gamma_{M0}}",
+    expressions: [
+      {
+        expression: "\\frac{W_{pl,y} \\cdot f_y}{\\gamma_{M0}}",
+        calculation: "\\frac{$Wpl_y_mm3 \\cdot $fy_MPa}{$gamma_M0}",
+      },
+    ],
     unit: "Nmm",
   },
   {
