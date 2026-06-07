@@ -65,15 +65,6 @@ export const FormDefinition = () => {
             </FormField>
           </div>
         )}
-        {isCustomConstant && (
-          <FormField
-            name="value"
-            label="Value"
-            description="Fixed numeric value"
-          >
-            <InputNumber {...register("value", { valueAsNumber: true })} />
-          </FormField>
-        )}
         {type !== "check" && (
           <FormFieldLatex
             name="symbol"
@@ -87,6 +78,17 @@ export const FormDefinition = () => {
           <FormFieldLatex name="unit" label="Unit" description="Display unit">
             <InputText placeholder={"mm^2"} {...register("unit")} />
           </FormFieldLatex>
+        )}
+        {isCustomConstant && (
+          <div className="col-span-2">
+            <FormField
+              name="value"
+              label="Value"
+              description="Fixed numeric value"
+            >
+              <InputNumber {...register("value", { valueAsNumber: true })} />
+            </FormField>
+          </div>
         )}
       </div>
     </Section>

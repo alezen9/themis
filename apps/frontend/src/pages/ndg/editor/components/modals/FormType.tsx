@@ -1,34 +1,14 @@
-import { useCallback } from "react";
-import { useFormContext, type ChangeHandler } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 import { InputRadio } from "@components/inputs/InputRadio";
 
 import { Section, SectionTitle } from "./shared";
-import { typeOptions } from "./options";
+import { defaultNodeFormValues, typeOptions } from "./options";
 import type { EditorNodeInput } from "../../document/editorNodeSchema";
 
 export const FormType = () => {
-  const { register, reset, getValues, trigger } =
-    useFormContext<EditorNodeInput>();
-
-  const onTypeChange = useCallback<ChangeHandler>(
-    async e => {
-      const { value: nextType } = e.target;
-      const values = getValues();
-      reset({
-        ...values,
-        type: nextType,
-        key: "",
-        symbol: undefined,
-        unit: undefined,
-        value: undefined,
-        meta: undefined,
-        expression: undefined,
-      } as EditorNodeInput);
-      await trigger();
-    },
-    [reset, getValues, trigger],
-  );
+  const { reset, trigger, watch } = useFormContext<EditorNodeInput>();
+  const type = watch("type");
 
   return (
     <Section>
@@ -37,8 +17,12 @@ export const FormType = () => {
         {typeOptions.map(option => (
           <InputRadio
             key={option.value}
-            {...register("type")}
-            onChange={onTypeChange}
+            name="type"
+            checked={type === option.value}
+            onChange={async () => {
+              reset(defaultNodeFormValues[option.value]);
+              await trigger();
+            }}
             value={option.value}
             label={option.label}
           />

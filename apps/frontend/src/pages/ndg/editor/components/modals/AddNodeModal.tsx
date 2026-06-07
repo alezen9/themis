@@ -20,6 +20,7 @@ import { FormDefinition } from "./FormDefinition";
 import { FormIdentity } from "./FormIdentity";
 import { FormMetadata } from "./FormMetadata";
 import { FormType } from "./FormType";
+import { defaultNodeFormValues } from "./options";
 
 export const AddNodeModal = () => {
   const modal = useNdgEditorModalStore(s => s.modal);
@@ -30,12 +31,12 @@ export const AddNodeModal = () => {
   const form = useForm<EditorNodeInput>({
     resolver: zodResolver(editorNodeSchema),
     mode: "onChange",
-    defaultValues: { type: "user-input", valueType: { type: "number" } },
+    defaultValues: defaultNodeFormValues["user-input"],
   });
 
   useEffect(() => {
     if (!open) return;
-    form.reset({ type: "user-input", valueType: { type: "number" } });
+    form.reset(defaultNodeFormValues["user-input"]);
   }, [open, form]);
 
   const onSubmit = form.handleSubmit(values => {

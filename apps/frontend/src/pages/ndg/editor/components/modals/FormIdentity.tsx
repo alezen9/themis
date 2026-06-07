@@ -11,6 +11,7 @@ import { Latex } from "@components/Latex";
 import {
   coefficientKeyOptions,
   constantKeyOptions,
+  defaultNodeFormValues,
   tableKeyOptions,
   userInputKeyOptions,
   valueTypeOptions,
@@ -53,12 +54,17 @@ export const FormIdentity = () => {
     type === "user-input" || type === "coefficient" || type === "constant";
   const constantPreset = constantCatalog[key] ? key : "custom";
   const isCustomConstant = type === "constant" && constantPreset === "custom";
+  const nonClearableKeyFallback =
+    type === "user-input" || type === "coefficient" || type === "table"
+      ? defaultNodeFormValues[type].key
+      : "";
 
   useEffect(() => {
     const unsubscribe = subscribe({
       name: ["type", "key"],
       formState: { values: true },
-      callback: ({ values: { key = "", type } }) => {
+      callback: ({ values: { key = "", type }, name }) => {
+        if (!name) return;
         if (type === "user-input") {
           const entry = userInputCatalog[key];
           if (!entry) return;
@@ -113,7 +119,9 @@ export const FormIdentity = () => {
                 value={constantPreset}
                 onChange={event => {
                   const entry = constantCatalog[event.target.value];
-                  setValue("key", entry ? event.target.value : "");
+                  setValue("key", entry ? event.target.value : "", {
+                    shouldValidate: true,
+                  });
                   setValue("symbol", entry?.symbol);
                   setValue("unit", entry?.unit);
                   setValue("value", undefined);
@@ -133,7 +141,12 @@ export const FormIdentity = () => {
                   options={keyOptions}
                   value={field.value ?? ""}
                   onBlur={field.onBlur}
-                  onChange={field.onChange}
+                  onChange={event => {
+                    field.onChange(
+                      event.target.value || nonClearableKeyFallback,
+                    );
+                  }}
+                  required
                 />
               )}
             />
