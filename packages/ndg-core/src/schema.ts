@@ -21,6 +21,7 @@ const ConditionTupleSchema = z
 
 const ComparisonConditionSchema = z.union([
   z.strictObject({ eq: ConditionTupleSchema }),
+  z.strictObject({ ne: ConditionTupleSchema }),
   z.strictObject({ lt: ConditionTupleSchema }),
   z.strictObject({ lte: ConditionTupleSchema }),
   z.strictObject({ gt: ConditionTupleSchema }),

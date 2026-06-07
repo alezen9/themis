@@ -37,6 +37,10 @@ export const evaluateCondition = (
       const [left, right] = condition.eq;
       return readKey(left, ctx) === resolveRightOperand(right, ctx);
     }
+    case "ne" in condition: {
+      const [left, right] = condition.ne;
+      return readKey(left, ctx) !== resolveRightOperand(right, ctx);
+    }
     case "lt" in condition: {
       const [left, right] = condition.lt;
       return (
@@ -77,6 +81,9 @@ export const evaluateCondition = (
 export const collectConditionKeys = (condition: Condition): string[] => {
   if ("eq" in condition) {
     return getConditionTupleKeys(condition.eq);
+  }
+  if ("ne" in condition) {
+    return getConditionTupleKeys(condition.ne);
   }
   if ("lt" in condition) {
     return getConditionTupleKeys(condition.lt);

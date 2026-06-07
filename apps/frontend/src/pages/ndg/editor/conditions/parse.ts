@@ -4,7 +4,7 @@ import type {
   ConditionTuple,
 } from "@ndg/ndg-core";
 
-type OperatorName = "eq" | "lt" | "lte" | "gt" | "gte";
+type OperatorName = "eq" | "ne" | "lt" | "lte" | "gt" | "gte";
 
 type Token =
   | { kind: "key"; value: string }
@@ -45,6 +45,9 @@ const tokenize = (text: string): Token[] => {
       if (end === -1) throw new Error("Unterminated string");
       tokens.push({ kind: "string", value: text.slice(i + 1, end) });
       i = end + 1;
+    } else if (text.slice(i, i + 2) === "!=" || char === "≠") {
+      tokens.push({ kind: "operator", value: "ne" });
+      i += char === "≠" ? 1 : 2;
     } else if (text.slice(i, i + 2) === "<=" || char === "≤") {
       tokens.push({ kind: "operator", value: "lte" });
       i += char === "≤" ? 1 : 2;
@@ -91,6 +94,7 @@ const comparisonByOperator: Record<
   (tuple: ConditionTuple) => Condition
 > = {
   eq: tuple => ({ eq: tuple }),
+  ne: tuple => ({ ne: tuple }),
   lt: tuple => ({ lt: tuple }),
   lte: tuple => ({ lte: tuple }),
   gt: tuple => ({ gt: tuple }),
@@ -121,7 +125,7 @@ export const parseCondition = (text: string): ParseResult => {
         throw new Error("Expected a key");
       const operatorToken = tokens[pos++];
       if (!operatorToken || operatorToken.kind !== "operator")
-        throw new Error("Expected a comparison operator (=, <, <=, >, >=)");
+        throw new Error("Expected a comparison operator (=, !=, <, <=, >, >=)");
       const operand = parseOperand();
       const tuple: ConditionTuple = [keyToken.value, operand];
       return comparisonByOperator[operatorToken.value](tuple);

@@ -8,6 +8,9 @@ describe("formatCondition", () => {
     expect(formatCondition({ eq: ["section_class", { value: 1 }] })).toBe(
       "section_class = 1",
     );
+    expect(formatCondition({ ne: ["shape", { value: "I" }] })).toBe(
+      'shape ≠ "I"',
+    );
     expect(formatCondition({ lt: ["x", { value: 2 }] })).toBe("x < 2");
     expect(formatCondition({ lte: ["x", { value: 2 }] })).toBe("x ≤ 2");
     expect(formatCondition({ gt: ["x", { value: 2 }] })).toBe("x > 2");

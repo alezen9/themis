@@ -207,6 +207,109 @@ describe("runNDG — conditions and branching", () => {
   });
 });
 
+describe("runNDG — condition-only branching formula", () => {
+  const nodes = [
+    userInput("raw"),
+    userInput("mode"),
+    userInput("low_path"),
+    userInput("high_path"),
+    formula("shared", [{ nodeId: "raw" }], "raw"),
+    formula("ratio_a", [{ nodeId: "shared" }], "shared"),
+    formula("ratio_b", [{ nodeId: "shared" }], "shared * 2"),
+    formula(
+      "ratio",
+      [
+        { nodeId: "ratio_a", when: { eq: ["mode", { value: 1 }] } },
+        { nodeId: "ratio_b", when: { eq: ["mode", { value: 2 }] } },
+      ],
+      "branch",
+    ),
+    formula(
+      "main_low",
+      [{ nodeId: "low_path" }, { nodeId: "shared" }],
+      "low_path",
+    ),
+    formula(
+      "main_high",
+      [{ nodeId: "high_path" }, { nodeId: "shared" }],
+      "high_path",
+    ),
+    check("branch", [
+      { nodeId: "ratio" },
+      { nodeId: "main_low", when: { lt: ["ratio", { value: 0.5 }] } },
+      { nodeId: "main_high", when: { gte: ["ratio", { value: 0.5 }] } },
+    ]),
+  ];
+  const definition: NDGDefinition<typeof nodes> = {
+    nodes,
+    evaluate: {
+      shared: ({ raw }) => raw,
+      ratio_a: ({ shared }) => shared,
+      ratio_b: ({ shared }) => shared * 2,
+      ratio: ({ ratio_a, ratio_b }) => ratio_a ?? ratio_b,
+      main_low: ({ low_path }) => low_path,
+      main_high: ({ high_path }) => high_path,
+      utilisation: ({ main_low, main_high }) => main_low ?? main_high,
+    },
+  };
+
+  it("evaluates a connected-but-unconsumed formula referenced by the check's conditions", () => {
+    const result = runNDG(definition, {
+      values: { raw: 0.3, mode: 1, low_path: 0.8, high_path: 2 },
+    });
+
+    expect(result.cache.ratio).toBe(0.3);
+    expect(result.cache.main_low).toBe(0.8);
+    expect(result.cache.main_high).toBeUndefined();
+    expect(result.utilisation).toBe(0.8);
+  });
+
+  it("resolves the referenced formula's own active branch and shared subtree once", () => {
+    let sharedEvaluations = 0;
+    const counted: NDGDefinition<typeof nodes> = {
+      nodes,
+      evaluate: {
+        ...definition.evaluate,
+        shared: ({ raw }) => {
+          sharedEvaluations += 1;
+          return raw;
+        },
+      },
+    };
+
+    const result = runNDG(counted, {
+      values: { raw: 0.3, mode: 1, low_path: 0.8, high_path: 2 },
+    });
+
+    expect(result.cache.ratio_a).toBe(0.3);
+    expect(result.cache.ratio_b).toBeUndefined();
+    expect(sharedEvaluations).toBe(1);
+  });
+
+  it("switches the outer branch when the referenced formula's own branch changes", () => {
+    const result = runNDG(definition, {
+      values: { raw: 0.3, mode: 2, low_path: 0.8, high_path: 2 },
+    });
+
+    expect(result.cache.ratio).toBe(0.6);
+    expect(result.cache.ratio_b).toBe(0.6);
+    expect(result.cache.ratio_a).toBeUndefined();
+    expect(result.cache.main_high).toBe(2);
+    expect(result.cache.main_low).toBeUndefined();
+    expect(result.utilisation).toBe(2);
+  });
+
+  it("exposes the referenced formula in the check's evaluator inputs trace", () => {
+    const result = runNDG(definition, {
+      values: { raw: 0.3, mode: 1, low_path: 0.8, high_path: 2 },
+    });
+
+    const checkEntry = result.trace.find(entry => entry.key === "utilisation");
+    expect(checkEntry?.evaluatorInputs?.ratio).toBe(0.3);
+    expect(checkEntry?.evaluatorInputs?.main_low).toBe(0.8);
+  });
+});
+
 // A selector formula (no evaluator) is only recognised by the typed evaluate
 // map when its children are a non-empty tuple, so these graphs are spelled out
 // with `as const` rather than via the builders.

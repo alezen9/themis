@@ -7,6 +7,7 @@ import {
 
 export const OPERATOR_SYMBOL = {
   eq: "=",
+  ne: "≠",
   lt: "<",
   lte: "≤",
   gt: ">",
@@ -36,6 +37,7 @@ export const formatCondition = (condition?: unknown): string => {
   if (!result.success) return "";
   const value = result.data;
   if ("eq" in value) return formatComparison("eq", value.eq);
+  if ("ne" in value) return formatComparison("ne", value.ne);
   if ("lt" in value) return formatComparison("lt", value.lt);
   if ("lte" in value) return formatComparison("lte", value.lte);
   if ("gt" in value) return formatComparison("gt", value.gt);

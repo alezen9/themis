@@ -18,24 +18,30 @@ export const computeIGeometryProperties = (
 
   const A_mm2 =
     existing?.A_mm2 ??
-    2 * b_mm * tf_mm + (h_mm - 2 * tf_mm) * tw_mm + 0.8584 * r_mm ** 2;
+    2 * b_mm * tf_mm + (h_mm - 2 * tf_mm) * tw_mm + (4 - Math.PI) * r_mm ** 2;
+  const fillet_area_mm2 = (1 - Math.PI / 4) * r_mm ** 2;
+  const d_fillet_y_mm = h_mm / 2 - tf_mm - (1 - 4 / (3 * Math.PI)) * r_mm;
   const Iy_mm4 =
     existing?.Iy_mm4 ??
     (b_mm * h_mm ** 3 - (b_mm - tw_mm) * (h_mm - 2 * tf_mm) ** 3) / 12 +
-      0.8584 * r_mm ** 2 * (h_mm / 2 - tf_mm) ** 2;
+      4 * fillet_area_mm2 * d_fillet_y_mm ** 2;
+  const d_fillet_z_mm = tw_mm / 2 + (4 * r_mm) / (3 * Math.PI);
   const Iz_mm4 =
     existing?.Iz_mm4 ??
     (2 * tf_mm * b_mm ** 3 + (h_mm - 2 * tf_mm) * tw_mm ** 3) / 12 +
-      0.4292 * r_mm ** 4 +
-      0.8584 * r_mm ** 2 * (tw_mm / 2 + (4 * r_mm) / (3 * Math.PI)) ** 2;
+      4 * fillet_area_mm2 * d_fillet_z_mm ** 2;
   const Wel_y_mm3 = existing?.Wel_y_mm3 ?? Iy_mm4 / (h_mm / 2);
   const Wel_z_mm3 = existing?.Wel_z_mm3 ?? Iz_mm4 / (b_mm / 2);
   const Wpl_y_mm3 =
     existing?.Wpl_y_mm3 ??
-    b_mm * tf_mm * (h_mm - tf_mm) + (tw_mm * (h_mm - 2 * tf_mm) ** 2) / 4;
+    b_mm * tf_mm * (h_mm - tf_mm) +
+      (tw_mm * (h_mm - 2 * tf_mm) ** 2) / 4 +
+      4 * fillet_area_mm2 * d_fillet_y_mm;
   const Wpl_z_mm3 =
     existing?.Wpl_z_mm3 ??
-    tf_mm * b_mm ** 2 * 0.5 + ((h_mm - 2 * tf_mm) * tw_mm ** 2) / 4;
+    tf_mm * b_mm ** 2 * 0.5 +
+      ((h_mm - 2 * tf_mm) * tw_mm ** 2) / 4 +
+      4 * fillet_area_mm2 * d_fillet_z_mm;
   const hw_mm = h_mm - 2 * tf_mm;
   const weldedShearArea_mm2 = eta * hw_mm * tw_mm;
   const rolledShearArea_mm2 =
@@ -46,7 +52,7 @@ export const computeIGeometryProperties = (
       : Math.max(rolledShearArea_mm2, weldedShearArea_mm2);
   const Av_y_mm2 = A_mm2 - hw_mm * tw_mm;
   const S_y_mm3 = Wpl_y_mm3 / 2;
-  const S_z_mm3 = (b_mm ** 2 * tf_mm) / 8;
+  const S_z_mm3 = Wpl_z_mm3 / 2;
   const It_mm4 =
     existing?.It_mm4 ??
     (2 * b_mm * tf_mm ** 3 + (h_mm - 2 * tf_mm) * tw_mm ** 3) / 3 +

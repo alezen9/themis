@@ -14,6 +14,15 @@ describe("evaluateCondition", () => {
     expect(
       evaluateCondition({ eq: ["x", { value: 6 }] }, conditionContext),
     ).toBe(false);
+    expect(
+      evaluateCondition({ ne: ["label", { value: "bye" }] }, conditionContext),
+    ).toBe(true);
+    expect(
+      evaluateCondition(
+        { ne: ["x", { key: "same_x" }] },
+        conditionContext,
+      ),
+    ).toBe(false);
   });
 
   it("evaluates numeric comparisons against literals and keys", () => {

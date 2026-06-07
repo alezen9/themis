@@ -18,6 +18,10 @@ describe("parseCondition", () => {
       ok: true,
       condition: { eq: ["shape", { value: "I" }] },
     });
+    expect(parseCondition('shape != "I"')).toEqual({
+      ok: true,
+      condition: { ne: ["shape", { value: "I" }] },
+    });
     expect(parseCondition("a <= b")).toEqual({
       ok: true,
       condition: { lte: ["a", { key: "b" }] },
@@ -59,6 +63,7 @@ describe("parseCondition", () => {
   it("round-trips every formatted condition back to the same tree", () => {
     const conditions: Condition[] = [
       { eq: ["section_class", { value: 1 }] },
+      { ne: ["shape", { value: "I" }] },
       { gte: ["lambda", { value: 0.5 }] },
       { eq: ["a", { key: "b" }] },
       {

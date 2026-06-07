@@ -40,6 +40,7 @@ const renderGroup = (
 
 const renderCondition = (condition: Condition): ReactNode => {
   if ("eq" in condition) return renderComparison("eq", condition.eq);
+  if ("ne" in condition) return renderComparison("ne", condition.ne);
   if ("lt" in condition) return renderComparison("lt", condition.lt);
   if ("lte" in condition) return renderComparison("lte", condition.lte);
   if ("gt" in condition) return renderComparison("gt", condition.gt);
