@@ -26,6 +26,7 @@ import {
   type AddNodeInput,
   type UpdateNodeInput,
 } from "./actions";
+import { computeLayout } from "./layout";
 import { canConnectNodes } from "../graph/rules";
 import { findInvalidEdgeIds, findInvalidNodeIds } from "../graph/validate";
 import { findUnreachableNodeIds } from "../graph/reachability";
@@ -118,6 +119,7 @@ type NdgEditorStore = {
   addNode: (input: AddNodeInput) => void;
   updateNode: (input: UpdateNodeInput) => void;
   deleteSelected: () => void;
+  applyAutoLayout: () => void;
   onNodesChange: (changes: NodeChange<EditorNode>[]) => void;
   onEdgesChange: (changes: EdgeChange<EditorEdge>[]) => void;
   onConnectNodes: (connection: Connection) => void;
@@ -222,6 +224,27 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
         selectedEdges: [],
         ...derive(nodes, edges),
       });
+    }),
+
+  applyAutoLayout: () =>
+    set(state => {
+      const selectedIds = new Set(state.selectedNodes.map(n => n.id));
+      const isWholeGraph = selectedIds.size < 2;
+      const subNodes = isWholeGraph
+        ? state.nodes
+        : state.nodes.filter(n => selectedIds.has(n.id));
+      if (subNodes.length < 2) return state;
+
+      const subNodeIds = new Set(subNodes.map(n => n.id));
+      const subEdges = state.edges.filter(
+        e => subNodeIds.has(e.source) && subNodeIds.has(e.target),
+      );
+      const layout = computeLayout(subNodes, subEdges);
+      const nodes = state.nodes.map(node => {
+        const position = layout.get(node.id);
+        return position ? { ...node, position } : node;
+      });
+      return withHistory(state, { nodes, ...derive(nodes, state.edges) });
     }),
 
   onNodesChange: changes =>

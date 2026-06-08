@@ -1,8 +1,9 @@
-import { ControlButton } from "@xyflow/react";
+import { ControlButton, useReactFlow } from "@xyflow/react";
 import { type ComponentProps } from "react";
 
 import {
   IconDelete,
+  IconLayout,
   IconPencil,
   IconPlus,
   IconRedo,
@@ -87,6 +88,31 @@ const DeleteButton = () => {
   );
 };
 
+const LayoutButton = () => {
+  const applyAutoLayout = useNdgEditorStore(s => s.applyAutoLayout);
+  const selectedNodes = useNdgEditorStore(s => s.selectedNodes);
+  const disabled = useNdgEditorStore(s => s.nodes.length < 2);
+  const { fitView } = useReactFlow();
+  const handleLayout = () => {
+    applyAutoLayout();
+    const fitsSelection = selectedNodes.length > 1;
+    const options = {
+      duration: 300,
+      ...(fitsSelection && { nodes: selectedNodes.map(n => ({ id: n.id })) }),
+    };
+    requestAnimationFrame(() => fitView(options));
+  };
+  return (
+    <ToolbarButton
+      title="Auto-layout"
+      disabled={disabled}
+      onClick={handleLayout}
+    >
+      <IconLayout className="size-4" />
+    </ToolbarButton>
+  );
+};
+
 export const NdgEditorActionsPanel = () => (
   <>
     <UndoButton />
@@ -94,5 +120,6 @@ export const NdgEditorActionsPanel = () => (
     <AddButton />
     <EditButton />
     <DeleteButton />
+    <LayoutButton />
   </>
 );
