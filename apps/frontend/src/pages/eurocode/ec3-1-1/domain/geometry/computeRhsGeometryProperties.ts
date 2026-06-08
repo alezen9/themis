@@ -1,7 +1,7 @@
 import { hollowSectionsMap } from "../../data/hollowSections";
-import type { Ec3FormValues } from "../../Form/schema/schema";
+import type { Ec311FormValues } from "../../Form/schema/schema";
 
-type Geometry = Ec3FormValues["rhs_geometry"];
+type Geometry = Ec311FormValues["rhs_geometry"];
 
 export const computeRhsGeometryProperties = (
   section_id: string,

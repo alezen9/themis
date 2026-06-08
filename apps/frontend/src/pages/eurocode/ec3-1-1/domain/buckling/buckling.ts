@@ -1,13 +1,13 @@
 import { Prettify } from "../../../../../utils";
 import { steelGradesMap } from "../../data/steelGrades";
-import type { Ec3FormValues } from "../../Form/schema/schema";
+import type { Ec311FormValues } from "../../Form/schema/schema";
 
 type BucklingCurve = "a0" | "a" | "b" | "c" | "d";
 type FlexuralBucklingCurves = { y: BucklingCurve; z: BucklingCurve };
 
 type Input = Prettify<
   Pick<
-    Ec3FormValues,
+    Ec311FormValues,
     | "shape"
     | "fabrication_type"
     | "steel_grade_id"
@@ -17,21 +17,21 @@ type Input = Prettify<
 >;
 
 type ISectionBucklingInput = {
-  fabrication_type: Ec3FormValues["fabrication_type"];
+  fabrication_type: Ec311FormValues["fabrication_type"];
   hOverB: number;
   tf_mm: number;
   isS460: boolean;
 };
 
 type HollowSectionBucklingInput = {
-  fabrication_type: Ec3FormValues["fabrication_type"];
+  fabrication_type: Ec311FormValues["fabrication_type"];
   isS460: boolean;
 };
 
 type LateralTorsionalBucklingInput = {
-  fabrication_type: Ec3FormValues["fabrication_type"];
+  fabrication_type: Ec311FormValues["fabrication_type"];
   hOverB: number;
-  policy: Ec3FormValues["buckling_curves_LT_policy"];
+  policy: Ec311FormValues["buckling_curves_LT_policy"];
 };
 
 const getIFlexuralBucklingCurves = (

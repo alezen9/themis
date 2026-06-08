@@ -1,7 +1,7 @@
 import { flangedSectionsMap } from "../../data/flangedSections";
-import type { Ec3FormValues } from "../../Form/schema/schema";
+import type { Ec311FormValues } from "../../Form/schema/schema";
 
-type Geometry = Ec3FormValues["i_geometry"];
+type Geometry = Ec311FormValues["i_geometry"];
 
 export const computeIGeometryProperties = (
   section_id: string,

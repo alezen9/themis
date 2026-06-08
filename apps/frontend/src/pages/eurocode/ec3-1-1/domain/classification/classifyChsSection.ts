@@ -1,9 +1,9 @@
 import { steelGradesMap } from "../../data/steelGrades";
-import type { Ec3FormValues } from "../../Form/schema/schema";
+import type { Ec311FormValues } from "../../Form/schema/schema";
 import type { Actions, Part, SectionClass } from "./types";
 import { EPSILON2 } from "./utils";
 
-type Geometry = Ec3FormValues["chs_geometry"];
+type Geometry = Ec311FormValues["chs_geometry"];
 
 export const classifyChsSection = (
   geometry: Geometry,

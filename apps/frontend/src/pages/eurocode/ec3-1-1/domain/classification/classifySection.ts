@@ -1,10 +1,10 @@
-import { Ec3FormValues } from "../../Form/schema/schema";
+import { Ec311FormValues } from "../../Form/schema/schema";
 import { classifyChsSection } from "./classifyChsSection";
 import { classifyISection } from "./classifyISection";
 import { classifyRhsSection } from "./classifyRhsSection";
 
 type Input = Pick<
-  Ec3FormValues,
+  Ec311FormValues,
   | "shape"
   | "fabrication_type"
   | "eta"

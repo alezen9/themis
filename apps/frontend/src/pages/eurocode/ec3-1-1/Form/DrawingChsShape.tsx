@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 import { Pluton2D } from "pluton-2d";
-import { Ec3FormValues } from "./schema/schema";
+import { Ec311FormValues } from "./schema/schema";
 import { chsGeometrySchema } from "./schema/geometrySchema";
 import { formatNumber } from "@formatters/number";
 import { useEc311FormContext } from "./useEc311FormContext";
 
-type DrawingShapeParams = Ec3FormValues["chs_geometry"];
+type DrawingShapeParams = Ec311FormValues["chs_geometry"];
 
 const targetHeight = 125;
 const dimensionOverflow = 15;

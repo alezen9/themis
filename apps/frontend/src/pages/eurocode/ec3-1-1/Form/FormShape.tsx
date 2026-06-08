@@ -12,7 +12,7 @@ import {
 import { useEc311FormContext } from "./useEc311FormContext";
 import { ChangeHandler } from "react-hook-form";
 import { composeSteelGradeId } from "../data/steelGrades";
-import type { Ec3FormValues } from "./schema/schema";
+import type { Ec311FormValues } from "./schema/schema";
 
 export const FormShape = () => {
   const { register, reset, getValues, trigger } = useEc311FormContext();
@@ -48,7 +48,7 @@ export const FormShape = () => {
           i_geometry: defaultValues.i_geometry,
           rhs_geometry: defaultValues.rhs_geometry,
           chs_geometry: defaultValues.chs_geometry,
-        } as Ec3FormValues);
+        } as Ec311FormValues);
 
       if (value === "CHS")
         reset({
@@ -62,7 +62,7 @@ export const FormShape = () => {
           i_geometry: defaultValues.i_geometry,
           rhs_geometry: defaultValues.rhs_geometry,
           chs_geometry: defaultValues.chs_geometry,
-        } as Ec3FormValues);
+        } as Ec311FormValues);
 
       await trigger();
     },

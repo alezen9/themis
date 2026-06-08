@@ -17,8 +17,11 @@ import { eurocodeAnnex, italianAnnex } from "@ndg/ndg-ec3-1-1";
 export const FormAnnex = () => {
   const { registerNumber, registerSelect, watch, reset, getValues, trigger } =
     useEc311FormContext();
+  const shape = watch("shape");
   const bucklingCase = watch("buckling_curves_LT_policy");
   const isBucklingCaseDefault = bucklingCase === "default-rolled-welded";
+  const isIShape = shape === "I";
+  const isChsShape = shape === "CHS";
 
   const onAnnexChange: ChangeHandler = async e => {
     const annex = [eurocodeAnnex, italianAnnex].find(
@@ -49,37 +52,48 @@ export const FormAnnex = () => {
         <InputNumber {...registerNumber?.("gamma_M1")} />
       </HorizontalInput>
 
-      <HorizontalInput name="eta" label={<LatexLabel tex="\eta" />}>
-        <InputNumber {...registerNumber?.("eta")} />
-      </HorizontalInput>
+      {!isChsShape && (
+        <HorizontalInput name="eta" label={<LatexLabel tex="\eta" />}>
+          <InputNumber {...registerNumber?.("eta")} />
+        </HorizontalInput>
+      )}
 
-      <HorizontalInput
-        name="lambda_LT_0"
-        label={<LatexLabel tex="\lambda_{LT,0}" />}
-      >
-        <InputSelect
-          {...registerSelect?.("lambda_LT_0")}
-          options={lambdaLT0Options}
-        />
-      </HorizontalInput>
+      {isIShape && (
+        <HorizontalInput
+          name="lambda_LT_0"
+          label={<LatexLabel tex="\lambda_{LT,0}" />}
+        >
+          <InputSelect
+            {...registerSelect?.("lambda_LT_0")}
+            options={lambdaLT0Options}
+          />
+        </HorizontalInput>
+      )}
 
-      <HorizontalInput name="beta_LT" label={<LatexLabel tex="\beta_{LT}" />}>
-        <InputSelect {...registerSelect?.("beta_LT")} options={betaLTOptions} />
-      </HorizontalInput>
+      {isIShape && (
+        <HorizontalInput name="beta_LT" label={<LatexLabel tex="\beta_{LT}" />}>
+          <InputSelect
+            {...registerSelect?.("beta_LT")}
+            options={betaLTOptions}
+          />
+        </HorizontalInput>
+      )}
 
-      <HorizontalInput
-        name="buckling_curves_LT_policy"
-        label={<TextLabel>Buckling curves</TextLabel>}
-      >
-        <InputSelect
-          {...registerSelect?.("buckling_curves_LT_policy", {
-            deps: ["f_method"],
-          })}
-          options={bucklingCurvesLTPolicyOptions}
-        />
-      </HorizontalInput>
+      {isIShape && (
+        <HorizontalInput
+          name="buckling_curves_LT_policy"
+          label={<TextLabel>Buckling curves</TextLabel>}
+        >
+          <InputSelect
+            {...registerSelect?.("buckling_curves_LT_policy", {
+              deps: ["f_method"],
+            })}
+            options={bucklingCurvesLTPolicyOptions}
+          />
+        </HorizontalInput>
+      )}
 
-      {isBucklingCaseDefault && (
+      {isIShape && isBucklingCaseDefault && (
         <HorizontalInput
           name="f_method"
           label={<LatexLabel tex="f" className="font-thin" />}

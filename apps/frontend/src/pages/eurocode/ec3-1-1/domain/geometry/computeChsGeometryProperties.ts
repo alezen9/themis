@@ -1,7 +1,7 @@
 import { circularSectionsMap } from "../../data/circularSections";
-import type { Ec3FormValues } from "../../Form/schema/schema";
+import type { Ec311FormValues } from "../../Form/schema/schema";
 
-type Geometry = Ec3FormValues["chs_geometry"];
+type Geometry = Ec311FormValues["chs_geometry"];
 
 export const computeChsGeometryProperties = (
   section_id: string,
