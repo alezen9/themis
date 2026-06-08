@@ -18,10 +18,7 @@ describe("evaluateCondition", () => {
       evaluateCondition({ ne: ["label", { value: "bye" }] }, conditionContext),
     ).toBe(true);
     expect(
-      evaluateCondition(
-        { ne: ["x", { key: "same_x" }] },
-        conditionContext,
-      ),
+      evaluateCondition({ ne: ["x", { key: "same_x" }] }, conditionContext),
     ).toBe(false);
   });
 

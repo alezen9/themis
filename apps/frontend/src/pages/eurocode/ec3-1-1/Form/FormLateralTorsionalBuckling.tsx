@@ -15,6 +15,7 @@ import { useEc311FormContext } from "./useEc311FormContext";
 export const FormLateralTorsionalBuckling = () => {
   const { registerBoolean, registerNumber, registerSelect, watch } =
     useEc311FormContext();
+  const shape = watch("shape");
   const includeTorsionalModes = watch("include_torsional_modes");
   const momentShape = watch("M_y_Ed_shape_LT");
   const isMomentShapeLinear = momentShape === "linear";
@@ -23,6 +24,8 @@ export const FormLateralTorsionalBuckling = () => {
 
   const showPsi = isMomentShapeLinear;
   const showSupportAndLoad = isMomentShapeParabolic || isMomentShapeTriangular;
+
+  if (shape !== "I") return null;
 
   return (
     <Section>

@@ -3,24 +3,20 @@ import { Header, SubHeader } from "@components/Header";
 import { FormProvider, useForm } from "react-hook-form";
 import { defaultValues } from "./Form/defaultValues";
 import { Form } from "./Form/Form";
-import {
-  Ec3FormValues,
-  Ec3ValidFormValues,
-  schema,
-} from "./Form/schema/schema";
+import { Ec311FormValues, schema } from "./Form/schema/schema";
 import { twMerge } from "tailwind-merge";
 import { Verifications } from "./Verifications/Verifications";
 import { Observer } from "./Observer";
 
 type Props = {
-  onValuesChange?: (values: Ec3FormValues) => void;
-  onValidValuesChange?: (values: Ec3ValidFormValues) => void;
+  onValuesChange?: (values: Ec311FormValues) => void;
+  onValidValuesChange?: (values: Ec311FormValues) => void;
 };
 
 export const PageEc3_1_1 = (props: Props) => {
   const { onValuesChange, onValidValuesChange } = props;
 
-  const form = useForm<Ec3FormValues, unknown, Ec3ValidFormValues>({
+  const form = useForm<Ec311FormValues, unknown, Ec311FormValues>({
     defaultValues,
     mode: "onChange",
     resolver: zodResolver(schema),

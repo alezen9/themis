@@ -1,10 +1,10 @@
-import { Ec3FormValues } from "../../Form/schema/schema";
+import { Ec311FormValues } from "../../Form/schema/schema";
 import { computeGeometryProperties } from "../geometry/computeGeometryProperties";
 import { classifyInternalPart } from "./classifyInternalPart";
 import { Actions, Part, RawPart, SectionClass } from "./types";
 import { maxClass } from "./utils";
 
-type Geometry = Ec3FormValues["rhs_geometry"];
+type Geometry = Ec311FormValues["rhs_geometry"];
 
 export const classifyRhsSection = (
   rhs_geometry: Geometry,

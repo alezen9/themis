@@ -1,18 +1,18 @@
-import { Ec3FormValues } from "../../Form/schema/schema";
+import { Ec311FormValues } from "../../Form/schema/schema";
 import { computeGeometryProperties } from "../geometry/computeGeometryProperties";
 import { Actions, SectionClass, type Part, type RawPart } from "./types";
 import { maxClass } from "./utils";
 import { classifyInternalPart } from "./classifyInternalPart";
 import { classifyOutstandPart } from "./classifyOutstandPart";
 
-type Geometry = Ec3FormValues["i_geometry"];
+type Geometry = Ec311FormValues["i_geometry"];
 
 export const classifyISection = (
   i_geometry: Geometry,
   steel_grade_id: string,
   section_id: string,
   actions: Actions,
-  fabrication_type: Ec3FormValues["fabrication_type"],
+  fabrication_type: Ec311FormValues["fabrication_type"],
   eta: number,
 ): [SectionClass, Part[]] => {
   const geometricProperties = computeGeometryProperties({

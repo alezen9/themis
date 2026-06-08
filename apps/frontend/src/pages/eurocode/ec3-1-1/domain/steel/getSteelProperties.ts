@@ -1,8 +1,8 @@
-import type { Ec3ValidFormValues } from "../../Form/schema/schema";
+import type { Ec311FormValues } from "../../Form/schema/schema";
 import type { SteelGrade } from "../../data/steelGrades";
 
 type SteelInputs = Pick<
-  Ec3ValidFormValues,
+  Ec311FormValues,
   "shape" | "i_geometry" | "rhs_geometry" | "chs_geometry"
 >;
 

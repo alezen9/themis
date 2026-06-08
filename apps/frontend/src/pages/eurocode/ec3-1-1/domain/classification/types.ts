@@ -1,13 +1,13 @@
-import { Ec3FormValues } from "../../Form/schema/schema";
+import { Ec311FormValues } from "../../Form/schema/schema";
 import { GeometricProperties } from "../geometry/computeGeometryProperties";
 
 export type SectionClass = 1 | 2 | 3 | 4;
 
 export type Actions = Pick<
-  Ec3FormValues,
+  Ec311FormValues,
   "N_Ed_kN" | "M_y_Ed_kNm" | "M_z_Ed_kNm"
 >;
-export type SteelGradeId = Ec3FormValues["steel_grade_id"];
+export type SteelGradeId = Ec311FormValues["steel_grade_id"];
 export type Context = GeometricProperties & Actions;
 
 export type Metadata = {

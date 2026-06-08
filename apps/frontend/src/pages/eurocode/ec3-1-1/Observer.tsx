@@ -1,12 +1,3 @@
-import { baseActionsSchema } from "./Form/schema/actionsSchema";
-import {
-  chsGeometrySchema,
-  iGeometrySchema,
-  rhsGeometrySchema,
-} from "./Form/schema/geometrySchema";
-import { materialSchema } from "./Form/schema/materialSchema";
-import { annexCoefficientsSchema } from "./Form/schema/nationalAnnexSchema";
-import { crossSectionSchema } from "./Form/schema/crossSectionSchema";
 import { useEc311FormContext } from "./Form/useEc311FormContext";
 import { useEc311DerivedStore } from "./useEc311DerivedStore";
 import verify, { type Ec311Inputs } from "@ndg/ndg-ec3-1-1";
@@ -14,19 +5,15 @@ import { steelGradesMap } from "./data/steelGrades";
 import { getBucklingCurves } from "./domain/buckling/buckling";
 import { getSteelProperties } from "./domain/steel/getSteelProperties";
 import { ReactNode, useEffect, useMemo } from "react";
-import {
-  Ec3FormValues,
-  Ec3ValidFormValues,
-  schema,
-} from "./Form/schema/schema";
+import { Ec311FormValues, schema, validateFields } from "./Form/schema/schema";
 import { computeGeometryProperties } from "./domain/geometry/computeGeometryProperties";
 import { classifySection } from "./domain/classification/classifySection";
 import { debounce } from "lodash-es";
 
 type Props = {
   children: ReactNode;
-  onValuesChange?: (values: Ec3FormValues) => void;
-  onValidValuesChange?: (values: Ec3ValidFormValues) => void;
+  onValuesChange?: (values: Ec311FormValues) => void;
+  onValidValuesChange?: (values: Ec311FormValues) => void;
 };
 
 export const Observer = (props: Props) => {
@@ -49,15 +36,13 @@ export const Observer = (props: Props) => {
       console.log(values);
 
       try {
-        const geometryResult = gateDerivedGeometry(values);
-        if (!geometryResult.success) throw new Error("Invalid geometry data");
+        if (!gateDerivedGeometry(values))
+          throw new Error("Invalid geometry data");
 
         const geometry = computeGeometryProperties(values);
         setGeometry(geometry);
 
-        const classificationResult = gateClassification(values);
-        if (!classificationResult.success)
-          throw new Error("Invalid form inputs");
+        if (!gateClassification(values)) throw new Error("Invalid form inputs");
 
         const classification = classifySection(values);
         setClassification(classification);
@@ -122,17 +107,9 @@ type Ec311SubscribeCallback = Parameters<
   ReturnType<typeof useEc311FormContext>["subscribe"]
 >[0]["callback"];
 type Ec311ObservedValues = Parameters<Ec311SubscribeCallback>[0]["values"];
-type ActiveGeometry =
-  | Ec3FormValues["i_geometry"]
-  | Ec3FormValues["rhs_geometry"]
-  | Ec3FormValues["chs_geometry"];
-type ActiveGeometrySchema =
-  | typeof iGeometrySchema
-  | typeof rhsGeometrySchema
-  | typeof chsGeometrySchema;
 
 const createVerifyInputs = (
-  inputs: Ec3ValidFormValues,
+  inputs: Ec311FormValues,
   geometry: ReturnType<typeof computeGeometryProperties>,
   classification: ReturnType<typeof classifySection>,
 ): Ec311Inputs | undefined => {
@@ -213,66 +190,21 @@ const createVerifyInputs = (
   } satisfies Ec311Inputs;
 };
 
-const gateDerivedGeometry = (values: Ec311ObservedValues) => {
-  const { shape, eta, i_geometry, rhs_geometry, chs_geometry } = values;
+const gateDerivedGeometry = (values: Ec311ObservedValues) =>
+  validateFields(values, ["i_geometry", "rhs_geometry", "chs_geometry", "eta"]);
 
-  let geometry: ActiveGeometry = i_geometry;
-  if (shape === "RHS") geometry = rhs_geometry;
-  if (shape === "CHS") geometry = chs_geometry;
-
-  let geometrySchema: ActiveGeometrySchema = iGeometrySchema;
-  if (shape === "RHS") geometrySchema = rhsGeometrySchema;
-  if (shape === "CHS") geometrySchema = chsGeometrySchema;
-
-  const geometryValid = geometrySchema.safeParse(geometry).success;
-  const etaValid = annexCoefficientsSchema.shape.eta.safeParse(eta).success;
-  return { success: geometryValid && etaValid };
-};
-
-const gateClassification = (values: Ec311ObservedValues) => {
-  const {
-    shape,
-    section_id,
-    fabrication_type,
-    steel_grade_id,
-    i_geometry,
-    rhs_geometry,
-    chs_geometry,
-    N_Ed_kN,
-    M_y_Ed_kNm,
-    M_z_Ed_kNm,
-  } = values;
-
-  let geometry: ActiveGeometry = i_geometry;
-  if (shape === "RHS") geometry = rhs_geometry;
-  if (shape === "CHS") geometry = chs_geometry;
-
-  let geometrySchema: ActiveGeometrySchema = iGeometrySchema;
-  if (shape === "RHS") geometrySchema = rhsGeometrySchema;
-  if (shape === "CHS") geometrySchema = chsGeometrySchema;
-
-  const classificationInput = {
-    shape,
-    section_id,
-    fabrication_type,
-    steel_grade_id,
-    N_Ed_kN,
-    M_y_Ed_kNm,
-    M_z_Ed_kNm,
-    ...geometry,
-  };
-
-  return crossSectionSchema
-    .and(materialSchema)
-    .and(
-      baseActionsSchema.pick({
-        N_Ed_kN: true,
-        M_y_Ed_kNm: true,
-        M_z_Ed_kNm: true,
-      }),
-    )
-    .and(geometrySchema)
-    .safeParse(classificationInput);
-};
+const gateClassification = (values: Ec311ObservedValues) =>
+  validateFields(values, [
+    "shape",
+    "section_id",
+    "fabrication_type",
+    "steel_grade_id",
+    "i_geometry",
+    "rhs_geometry",
+    "chs_geometry",
+    "N_Ed_kN",
+    "M_y_Ed_kNm",
+    "M_z_Ed_kNm",
+  ]);
 
 const gateVerify = (values: Ec311ObservedValues) => schema.safeParse(values);

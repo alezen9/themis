@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 import { Pluton2D } from "pluton-2d";
-import { Ec3FormValues } from "./schema/schema";
+import { Ec311FormValues } from "./schema/schema";
 import { iGeometrySchema } from "./schema/geometrySchema";
 import { formatNumber } from "@formatters/number";
 import { useEc311FormContext } from "./useEc311FormContext";
 
-type DrawingShapeParams = Ec3FormValues["i_geometry"];
+type DrawingShapeParams = Ec311FormValues["i_geometry"];
 
 const targetHeight = 250;
 const targetWidth = 180;

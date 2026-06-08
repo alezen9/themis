@@ -1,8 +1,8 @@
 import { get, useForm, useFormContext } from "react-hook-form";
-import { Ec3FormValues } from "./schema/schema";
+import { Ec311FormValues } from "./schema/schema";
 import { useCallback } from "react";
 
-type Ec311Form = ReturnType<typeof useForm<Ec3FormValues>>;
+type Ec311Form = ReturnType<typeof useForm<Ec311FormValues>>;
 type Ec311Register = Ec311Form["register"];
 type Ec311FormName = Parameters<Ec311Register>[0];
 type Ec311RegisterOptions = Parameters<Ec311Register>[1];
@@ -30,7 +30,7 @@ const setValueAsNumber = (value: unknown) => {
 };
 
 export const useEc311FormContext = (): Ec311FormContext => {
-  const { register, getValues, ...rest } = useFormContext<Ec3FormValues>();
+  const { register, getValues, ...rest } = useFormContext<Ec311FormValues>();
 
   const registerNumber = useCallback(
     (name: Ec311FormName, options?: Ec311RegisterOptions) => ({

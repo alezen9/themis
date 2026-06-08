@@ -5,7 +5,7 @@ import {
   SteelGrade,
   steelGrades,
 } from "../data/steelGrades";
-import { Ec3FormValues } from "./schema/schema";
+import { Ec311FormValues } from "./schema/schema";
 import { hollowSections } from "../data/hollowSections";
 import { circularSections } from "../data/circularSections";
 
@@ -33,8 +33,8 @@ const steelGradeGroups = steelGrades.reduce(
 );
 
 export const getDefaultSteelGrade = (
-  shape: Ec3FormValues["shape"],
-  fabrication_type: Ec3FormValues["fabrication_type"],
+  shape: Ec311FormValues["shape"],
+  fabrication_type: Ec311FormValues["fabrication_type"],
 ) => {
   if (shape === "I") {
     const firstS235 = steelGradeGroups.i.find(({ id }) =>
@@ -125,4 +125,4 @@ export const defaultValues = {
     italianAnnex.coefficients.interaction_factor_method,
   buckling_curves_LT_policy:
     italianAnnex.coefficients.buckling_curves_LT_policy,
-} satisfies Ec3FormValues;
+} satisfies Ec311FormValues;

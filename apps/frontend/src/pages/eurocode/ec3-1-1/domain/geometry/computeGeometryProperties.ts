@@ -1,15 +1,15 @@
-import type { Ec3FormValues } from "../../Form/schema/schema";
+import type { Ec311FormValues } from "../../Form/schema/schema";
 import { computeChsGeometryProperties } from "./computeChsGeometryProperties";
 import { computeIGeometryProperties } from "./computeIGeometryProperties";
 import { computeRhsGeometryProperties } from "./computeRhsGeometryProperties";
 
-type BaseObj = Pick<Ec3FormValues, "section_id">;
-type I_GeometryObj = Pick<Ec3FormValues, "i_geometry">;
-type RHS_GeometryObj = Pick<Ec3FormValues, "rhs_geometry">;
-type CHS_GeometryObj = Pick<Ec3FormValues, "chs_geometry">;
+type BaseObj = Pick<Ec311FormValues, "section_id">;
+type I_GeometryObj = Pick<Ec311FormValues, "i_geometry">;
+type RHS_GeometryObj = Pick<Ec311FormValues, "rhs_geometry">;
+type CHS_GeometryObj = Pick<Ec311FormValues, "chs_geometry">;
 
 type I_Input = { shape: "I" } & BaseObj &
-  Pick<Ec3FormValues, "fabrication_type" | "eta"> &
+  Pick<Ec311FormValues, "fabrication_type" | "eta"> &
   I_GeometryObj &
   Partial<RHS_GeometryObj> &
   Partial<CHS_GeometryObj>;
