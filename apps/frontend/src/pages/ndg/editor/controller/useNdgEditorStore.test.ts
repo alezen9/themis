@@ -191,6 +191,30 @@ describe("addNode", () => {
     expect(_adjacencyList.get("a")?.has(newNode.id)).toBe(true);
   });
 
+  it("positions the new node directly beneath its parent", () => {
+    const parent = { ...nodeA, position: { x: 300, y: 100 } };
+    useNdgEditorStore.setState({
+      nodes: [parent, nodeB, nodeC],
+      _nodeById: new Map([
+        ["a", parent],
+        ["b", nodeB],
+        ["c", nodeC],
+      ]),
+    });
+
+    useNdgEditorStore
+      .getState()
+      .addNode({
+        type: "user-input",
+        key: "x",
+        valueType: { type: "number" },
+        sourceNodeId: "a",
+      });
+
+    const newNode = useNdgEditorStore.getState().nodes.at(-1)!;
+    expect(newNode.position).toEqual({ x: 300, y: 270 });
+  });
+
   it("adds only the node when no sourceNodeId is provided", () => {
     useNdgEditorStore
       .getState()

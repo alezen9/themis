@@ -4,6 +4,7 @@ import type {
   EdgeChange,
   NodeChange,
   OnSelectionChangeParams,
+  XYPosition,
 } from "@xyflow/react";
 import type { Condition } from "@ndg/ndg-core";
 import { create } from "zustand";
@@ -35,6 +36,14 @@ import {
   redo as redoHistory,
   type History,
 } from "./history";
+
+const CHILD_OFFSET_Y = 170;
+
+const childPosition = (parent: EditorNode | undefined): XYPosition => {
+  if (!parent) return { x: 0, y: CHILD_OFFSET_Y };
+  const { x, y } = parent.position;
+  return { x, y: y + CHILD_OFFSET_Y };
+};
 
 const createKeyCounts = (nodes: EditorNode[]) => {
   const keyCounts = new Map<string, number>();
@@ -153,7 +162,12 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
   addNode: input =>
     set(state => {
       const { sourceNodeId, ...nodeInput } = input;
-      const node = toEditorNode(createNodeId(), { x: 0, y: 200 }, nodeInput);
+      const parent = state._nodeById.get(sourceNodeId ?? "");
+      const node = toEditorNode(
+        createNodeId(),
+        childPosition(parent),
+        nodeInput,
+      );
       const nodes = [...state.nodes, node];
       const derived = derive(nodes, state.edges);
 
