@@ -16,7 +16,10 @@ export const evaluate = defineEvaluators(nodes, {
   },
   utilisation: ({ N_Ed_N, N_pl_Rd_N }) => {
     assertFinite(N_Ed_N, "N_Ed_N must be a valid and finite value");
-    assertApplicable(N_Ed_N > 0, "Load case not applicable for sign of N_Ed_N");
+    assertApplicable(
+      N_Ed_N >= 0,
+      "Load case not applicable for sign of N_Ed_N",
+    );
     assertPositive(N_pl_Rd_N, "Denominator N_pl_Rd_N must be > 0");
 
     return N_Ed_N / N_pl_Rd_N;

@@ -3,7 +3,6 @@ import { defineNodes } from "@ndg/ndg-core";
 export const nodes = defineNodes([
   {
     id: "02480d3f-b178-48dd-a39b-b85309a61b3d",
-    symbol: "u_r",
     children: [
       { nodeId: "a77f73f6-5d19-4d12-9ff2-35260f63f393" },
       { nodeId: "1252c6ad-2b65-4bb8-a844-89bc4fad9c6f" },
@@ -23,9 +22,14 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "M_z_Ed_Nmm",
     valueType: { type: "number" },
+    displayUnit: "kNm",
   },
   {
     id: "1252c6ad-2b65-4bb8-a844-89bc4fad9c6f",
+    type: "formula",
+    variant: "select",
+    key: "M_c_Rd_Nmm",
+    valueType: { type: "number" },
     children: [
       {
         nodeId: "534220da-67ad-4584-8d1c-1b9deb304962",
@@ -41,10 +45,6 @@ export const nodes = defineNodes([
         },
       },
     ],
-    type: "formula",
-    variant: "select",
-    key: "M_c_Rd_Nmm",
-    valueType: { type: "number" },
   },
   {
     id: "534220da-67ad-4584-8d1c-1b9deb304962",
@@ -58,7 +58,15 @@ export const nodes = defineNodes([
     variant: "compute",
     key: "M_el_z_Rd_Nmm",
     valueType: { type: "number" },
-    meta: { sectionRef: "6.2.5", paragraphRef: "(2)", formulaRef: "(6.14)" },
+    meta: {
+      sectionRef: "6.2.5",
+      paragraphRef: "(2)",
+      subParagraphRef: "",
+      formulaRef: "(6.14)",
+      tableRef: "",
+      verificationRef: "",
+    },
+    displayUnit: "kNm",
     template: "\\frac{\\key{Wel_z_mm3} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
   },
   {
@@ -73,7 +81,15 @@ export const nodes = defineNodes([
     variant: "compute",
     key: "M_pl_z_Rd_Nmm",
     valueType: { type: "number" },
-    meta: { sectionRef: "6.2.5", paragraphRef: "(2)", formulaRef: "(6.13)" },
+    meta: {
+      sectionRef: "6.2.5",
+      paragraphRef: "(2)",
+      subParagraphRef: "",
+      formulaRef: "(6.13)",
+      tableRef: "",
+      verificationRef: "",
+    },
+    displayUnit: "kNm",
     template: "\\frac{\\key{Wpl_z_mm3} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
   },
   {

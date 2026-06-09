@@ -11,7 +11,6 @@ export const nodes = defineNodes([
     variant: "compute",
     key: "utilisation",
     name: "Tension",
-    symbol: "u_r",
     valueType: { type: "number" },
     meta: {
       sectionRef: "6.2.3",
@@ -21,7 +20,7 @@ export const nodes = defineNodes([
       tableRef: "",
       verificationRef: "",
     },
-    template: "\\frac{\\key{N_Ed_N}}{\\key{N_pl_Rd_N}} \\leq 1.0",
+    template: "\\frac{|\\key{N_Ed_N}|}{\\key{N_pl_Rd_N}} \\leq 1.0",
   },
   {
     id: "a77f73f6-5d19-4d12-9ff2-35260f63f393",
@@ -30,6 +29,7 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "N_Ed_N",
     valueType: { type: "number" },
+    displayUnit: "kN",
   },
   {
     id: "5217f3d1-f584-4fb9-a193-810d95c1f743",
@@ -51,6 +51,7 @@ export const nodes = defineNodes([
       tableRef: "",
       verificationRef: "",
     },
+    displayUnit: "kN",
     template: "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
   },
   {
@@ -76,11 +77,7 @@ export const nodes = defineNodes([
     type: "coefficient",
     key: "gamma_M0",
     valueType: { type: "number" },
-    meta: {
-      sectionRef: "6.1",
-      paragraphRef: "(1)",
-      subParagraphRef: "NOTE 2B",
-    },
+    meta: { sectionRef: "6.1" },
   },
 ]);
 

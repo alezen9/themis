@@ -125,13 +125,15 @@ const createVerifyInputs = (
 
   const bucklingCurves = getBucklingCurves(inputs);
 
+  const override_T_Ed_Nmm = inputs.shape === "I" ? 0 : (inputs.T_Ed_kNm ?? 0);
+
   return {
     N_Ed_N: inputs.N_Ed_kN * 1_000,
     V_y_Ed_N: inputs.V_y_Ed_kN * 1_000,
     V_z_Ed_N: inputs.V_z_Ed_kN * 1_000,
     M_y_Ed_Nmm: inputs.M_y_Ed_kNm * 1_000_000,
     M_z_Ed_Nmm: inputs.M_z_Ed_kNm * 1_000_000,
-    T_Ed_Nmm: (inputs.T_Ed_kNm ?? 0) * 1_000_000,
+    T_Ed_Nmm: override_T_Ed_Nmm * 1_000_000,
     L_mm: inputs.L_m * 1_000,
     shape: inputs.shape,
     fabrication_type: inputs.fabrication_type,

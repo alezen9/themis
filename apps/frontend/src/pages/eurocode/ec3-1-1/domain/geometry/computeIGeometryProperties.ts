@@ -42,7 +42,7 @@ export const computeIGeometryProperties = (
     tf_mm * b_mm ** 2 * 0.5 +
       ((h_mm - 2 * tf_mm) * tw_mm ** 2) / 4 +
       4 * fillet_area_mm2 * d_fillet_z_mm;
-  const hw_mm = h_mm - 2 * tf_mm;
+  const hw_mm = h_mm;
   const weldedShearArea_mm2 = eta * hw_mm * tw_mm;
   const rolledShearArea_mm2 =
     A_mm2 - 2 * b_mm * tf_mm + (tw_mm + 2 * r_mm) * tf_mm;
@@ -64,6 +64,8 @@ export const computeIGeometryProperties = (
   const Iw_mm6 =
     existing?.Iw_mm6 ?? ((tf_mm * b_mm ** 3) / 24) * (h_mm - tf_mm) ** 2;
   const centroid = { y_mm: b_mm / 2, z_mm: h_mm / 2 };
+
+  console.log({ Av_y_mm2, Av_z_mm2 });
 
   return {
     A_mm2,
