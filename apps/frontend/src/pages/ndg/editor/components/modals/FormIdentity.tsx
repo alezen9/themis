@@ -31,7 +31,7 @@ const SymbolUnitPreview = () => {
     <Latex
       displayMode
       tex={tex}
-      className="px-1 h-auto flex items-center justify-center-safe text-3xl text-sand-900"
+      className="px-1 text-3xl text-sand-900"
     />
   );
 };

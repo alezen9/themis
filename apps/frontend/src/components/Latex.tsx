@@ -26,7 +26,9 @@ export const Latex = (props: Props) => {
       {...spanProps}
       ref={ref}
       className={twMerge(
-        "flex align-baseline leading-none [&_.katex-display]:my-0 [&_.katex]:text-inherit overflow-x-auto overflow-y-hidden",
+        "flex items-center align-baseline leading-none justify-center-safe",
+        "overflow-x-auto overflow-y-hidden",
+        "[&_.katex-display]:my-0 [&_.katex]:text-inherit",
         className,
       )}
     />

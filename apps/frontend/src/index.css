@@ -2,6 +2,40 @@
 @import "katex/dist/katex.min.css";
 @import "pluton-2d/style.css";
 
+/* Custom scrollbars, applied globally.
+   WebKit/Blink honors ::-webkit-scrollbar for an exact pixel width — but only if the
+   standard scrollbar-width/color are NOT set (they disable the pseudo-elements). So those
+   standard props are scoped to engines that support scrollbar-width but not the pseudo
+   (i.e. Firefox), where `thin` is the slimmest option available. */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-sand-400);
+  border-radius: 9999px;
+}
+
+@supports (scrollbar-width: thin) and (not selector(::-webkit-scrollbar)) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-sand-400) transparent;
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 svg.pluton-root {
   --pluton-geometry-stroke: var(--color-envy-700);
   --pluton-hatch-color: var(--color-envy-200);

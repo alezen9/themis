@@ -138,7 +138,7 @@ const FormFieldLatex = (props: ComponentProps<typeof FormField>) => {
       <Latex
         tex={trimmed ? renderKeyPlaceholders(trimmed, symbolByKey) : "Preview"}
         className={twMerge(
-          "border px-1 min-h-16 flex-1 rounded-sm border-sand-300 flex items-center justify-center-safe text-2xl text-sand-900",
+          "border px-1 min-h-16 flex-1 rounded-sm border-sand-300 text-2xl text-sand-900",
           !trimmed && "text-lg",
         )}
       />

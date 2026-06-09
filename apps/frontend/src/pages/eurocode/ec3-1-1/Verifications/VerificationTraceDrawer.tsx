@@ -144,11 +144,7 @@ const VerificationTrace = (props: VerificationTraceProps) => {
     <div className="flex flex-col gap-6 text-sand-900">
       {checkTex && (
         <div className="rounded-md border border-sand-100 bg-sand-50 p-5">
-          <Latex
-            displayMode
-            tex={checkTex}
-            className="justify-start text-3xl"
-          />
+          <Latex displayMode tex={checkTex} className="text-3xl" />
         </div>
       )}
 
@@ -194,7 +190,7 @@ const VerificationTrace = (props: VerificationTraceProps) => {
               <Latex
                 displayMode
                 tex={stepEquation(step, entryByKey)}
-                className="justify-start text-2xl"
+                className="text-2xl"
               />
             </div>
           </div>
