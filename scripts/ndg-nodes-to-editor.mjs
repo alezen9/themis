@@ -161,7 +161,7 @@ const buildLayout = nodes => {
 
 // NDG children → editor edges; child.when maps to edge.data.condition.
 const toEditorDoc = (nodes, layout) => ({
-  version: 1,
+  version: 2,
   nodes: nodes.map(({ id, type, children: _, ...data }) => ({
     id,
     position: layout[id] ?? { x: 0, y: 0 },

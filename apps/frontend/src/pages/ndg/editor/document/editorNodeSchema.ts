@@ -69,8 +69,6 @@ export const editorNodeSchema = z
       unit: z.string().optional(),
     }),
   ])
-  // A compute node renders its own formula, so it needs a template; a select node
-  // inherits the winning child and has none.
   .superRefine((node, ctx) => {
     const isComputed = node.type === "check" || node.type === "formula";
     if (isComputed && node.variant === "compute" && !node.template?.trim()) {

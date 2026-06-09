@@ -43,13 +43,7 @@ export const evaluateNode = (nodeId: string, state: EvaluationState): void => {
   const value = resolveNodeValue(node, activeChildren, state, notes);
 
   state.cache[node.key] = value;
-  const entry = createTraceEntry(node, value, activeChildren, state, notes);
-  // a select node absorbs its winning child: drop the child's standalone entry
-  if (entry.resolvedFrom) {
-    const absorbed = state.trace.findIndex(e => e.key === entry.resolvedFrom);
-    if (absorbed !== -1) state.trace.splice(absorbed, 1);
-  }
-  state.trace.push(entry);
+  state.trace.push(createTraceEntry(node, value, activeChildren, state, notes));
   state.visited.add(nodeId);
 };
 

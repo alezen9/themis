@@ -1,7 +1,6 @@
 import { formatNumber } from "@formatters/number";
 import { constantCatalog } from "@ndg/ndg-core";
 
-/** Shown on select nodes, which have no formula of their own. */
 export const SELECT_PREVIEW_TEX = "\\left\\langle \\text{select} \\right\\rangle";
 
 const KEY_PATTERN = /\\key\{([^}]+)\}/g;
@@ -10,8 +9,6 @@ const escapeKey = (key: string) => `\\text{${key.replace(/_/g, "\\_")}}`;
 
 export type SymbolByKey = Record<string, string | undefined>;
 
-/** Swaps `\key{node_key}` for the referenced node's symbol, falling back to the key
- *  rendered as text until that key becomes available. */
 export const renderKeyPlaceholders = (
   template: string,
   symbolByKey?: SymbolByKey,

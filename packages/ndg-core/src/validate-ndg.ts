@@ -131,8 +131,6 @@ const comparisonEq = (condition: Condition) => {
   return { key, value: String(operand.value) };
 };
 
-/** Sound (no false positives) check: flags an `and` that requires one key to equal
- *  two different values, or an `or` whose every branch is unsatisfiable. */
 const isUnsatisfiable = (condition: Condition): boolean => {
   if ("and" in condition) {
     if (condition.and.some(isUnsatisfiable)) return true;

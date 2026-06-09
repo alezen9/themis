@@ -190,7 +190,7 @@ describe("runNDG — select node", () => {
     expect(entry?.template).toBe("E");
     expect(entry?.symbol).toBe("M_{el}");
     expect(entry?.resolvedFrom).toBe("elastic");
-    expect(result.trace.find(e => e.key === "elastic")).toBeUndefined();
+    expect(result.trace.find(e => e.key === "elastic")).toBeDefined();
   });
 
   it("throws when no child is active", () => {
@@ -211,6 +211,30 @@ describe("runNDG — select node", () => {
       evaluate: { a: () => 1, b: () => 2, utilisation: ({ picked }) => picked },
     };
     expect(() => runNDG(def, { values: {} })).toThrow(/exactly one active child/);
+  });
+
+  it("lets two select nodes resolve to the same shared child", () => {
+    const shared = [
+      formula("shared", [], "S", "W"),
+      selector("left", [
+        { nodeId: "shared", when: { eq: ["mode", { value: 1 }] } },
+      ]),
+      selector("right", [
+        { nodeId: "shared", when: { eq: ["mode", { value: 1 }] } },
+      ]),
+      check("left + right", [{ nodeId: "left" }, { nodeId: "right" }]),
+    ];
+    const def: NDGDefinition<typeof shared> = {
+      nodes: shared,
+      evaluate: { shared: () => 5, utilisation: ({ left, right }) => left + right },
+    };
+
+    const result = runNDG(def, { values: { mode: 1 } });
+
+    expect(result.cache.left).toBe(5);
+    expect(result.cache.right).toBe(5);
+    expect(result.utilisation).toBe(10);
+    expect(result.trace.find(e => e.key === "shared")).toBeDefined();
   });
 });
 

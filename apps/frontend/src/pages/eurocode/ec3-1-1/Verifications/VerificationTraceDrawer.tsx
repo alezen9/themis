@@ -90,6 +90,9 @@ const VerificationTrace = (props: VerificationTraceProps) => {
 
   const reversedTrace = [...trace].reverse();
   const entryByKey = new Map(trace.map(entry => [entry.key, entry]));
+  const absorbedKeys = new Set(
+    trace.flatMap(entry => (entry.resolvedFrom ? [entry.resolvedFrom] : [])),
+  );
 
   const checkEntry = trace.find(entry => entry.nodeId === check.id);
   const checkTex =
@@ -105,7 +108,7 @@ const VerificationTrace = (props: VerificationTraceProps) => {
     );
 
   const values = reversedTrace.flatMap(entry =>
-    !entry.symbol || entry.nodeId === check.id
+    !entry.symbol || entry.nodeId === check.id || absorbedKeys.has(entry.key)
       ? []
       : [
           {
@@ -118,7 +121,7 @@ const VerificationTrace = (props: VerificationTraceProps) => {
   );
 
   const steps = reversedTrace.flatMap(entry =>
-    !entry.template || entry.nodeId === check.id
+    !entry.template || entry.nodeId === check.id || absorbedKeys.has(entry.key)
       ? []
       : [
           {

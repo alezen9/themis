@@ -91,11 +91,11 @@ const main = async () => {
   }
 
   if (
-    doc?.version !== 1 ||
+    doc?.version !== 2 ||
     !Array.isArray(doc.nodes) ||
     !Array.isArray(doc.edges)
   )
-    fail("Input must be an EditorDocument (version: 1, nodes: [], edges: [])");
+    fail("Input must be an EditorDocument (version: 2, nodes: [], edges: [])");
 
   const result = NDGSchema.safeParse(toNdgNodes(doc));
   if (!result.success) {
