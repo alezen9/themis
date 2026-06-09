@@ -42,10 +42,11 @@ const checkNode: EditorNode = {
   position: { x: 0, y: 0 },
   type: "check",
   data: {
+    variant: "compute",
     key: "utilisation",
     name: "Check",
     valueType: { type: "number" },
-    verificationExpression: "x \\leq 1",
+    template: "x \\leq 1",
   },
 };
 

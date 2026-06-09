@@ -7,13 +7,14 @@ const entry = (
   key: string,
   value: NDGTraceEntry["value"],
   unit?: string,
-  type: NDGTraceEntry["type"] = "user-input",
+  symbol?: string,
 ): NDGTraceEntry => ({
   nodeId: key,
-  type,
+  type: "user-input",
   key,
   value,
   unit,
+  symbol,
   children: [],
 });
 
@@ -21,24 +22,18 @@ const entryByKey = (...entries: NDGTraceEntry[]) =>
   new Map(entries.map(item => [item.key, item]));
 
 describe("stepEquation", () => {
-  it("renders a single expression with calculation and result", () => {
+  it("renders the symbolic form, the substituted form and the result", () => {
     const tex = stepEquation(
       {
         symbol: "N_{pl,Rd}",
-        expressions: [
-          {
-            expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
-            calculation: "\\frac{$A_mm2 \\cdot $fy_MPa}{$gamma_M0}",
-          },
-        ],
+        template: "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
         value: 355000,
         unit: "N",
-        evaluatorInputs: { A_mm2: 1000, fy_MPa: 355, gamma_M0: 1 },
       },
       entryByKey(
-        entry("A_mm2", 1000, "mm^2"),
-        entry("fy_MPa", 355, "\\mathrm{MPa}"),
-        entry("gamma_M0", 1),
+        entry("A_mm2", 1000, "mm^2", "A"),
+        entry("fy_MPa", 355, "\\mathrm{MPa}", "f_y"),
+        entry("gamma_M0", 1, undefined, "\\gamma_{M0}"),
       ),
     );
 
@@ -48,35 +43,24 @@ describe("stepEquation", () => {
     expect(tex).toContain("= \\text{355'000.00}\\,N");
   });
 
-  it("appends the result only to the resolved row in a multi-expression block", () => {
+  it("renders an inequality template referencing a resolved resistance", () => {
     const tex = stepEquation(
       {
-        symbol: "M_{c,Rd}",
-        expressions: [
-          {
-            expression: "\\frac{|M_{Ed}|}{M_{pl,Rd}} \\leq 1.0",
-            calculation: "\\frac{|$M_Ed_Nmm|}{$M_pl_Rd_Nmm} \\leq 1.0",
-          },
-          {
-            expression: "\\frac{|M_{Ed}|}{M_{el,Rd}} \\leq 1.0",
-            calculation: "\\frac{|$M_Ed_Nmm|}{$M_el_Rd_Nmm} \\leq 1.0",
-          },
-        ],
-        value: 8000,
-        unit: "Nmm",
-        evaluatorInputs: { M_el_Rd_Nmm: 8000 },
+        symbol: "u_r",
+        template: "\\frac{|\\key{M_Ed_Nmm}|}{\\key{M_c_Rd_Nmm}} \\leq 1.0",
+        value: 0.5,
+        unit: undefined,
       },
       entryByKey(
-        entry("M_Ed_Nmm", 4000, "Nmm"),
-        entry("M_pl_Rd_Nmm", 10000, "Nmm", "formula"),
-        entry("M_el_Rd_Nmm", 8000, "Nmm", "formula"),
+        entry("M_Ed_Nmm", 4000, "Nmm", "M_{Ed}"),
+        entry("M_c_Rd_Nmm", 8000, "Nmm", "M_{el,Rd}"),
       ),
     );
 
-    expect(tex).toContain("\\left\\{ \\begin{array}{l}");
-    expect(tex).toContain("\\frac{|M_{Ed}|}{M_{pl,Rd}} \\leq 1.0 \\\\[10pt]");
+    expect(tex).toContain("u_r = \\frac{|M_{Ed}|}{M_{el,Rd}} \\leq 1.0");
     expect(tex).toContain(
-      "\\frac{|M_{Ed}|}{M_{el,Rd}} \\leq 1.0 = \\frac{|\\text{4'000.00}\\,Nmm|}{\\text{8'000.00}\\,Nmm} \\leq 1.0 = \\text{8'000.00}\\,Nmm",
+      "\\frac{|\\text{4'000.00}\\,Nmm|}{\\text{8'000.00}\\,Nmm} \\leq 1.0",
     );
+    expect(tex).toContain("= \\text{0.50}");
   });
 });

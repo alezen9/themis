@@ -3,24 +3,25 @@ import { describe, expect, it } from "vitest";
 import { latexPreview } from "./latexPreview";
 
 describe("latexPreview", () => {
-  it("renders multiple formula expressions as one left brace block", () => {
+  it("renders a keyed template with placeholders escaped as text", () => {
     expect(
       latexPreview({
-        symbol: "M_{c,Rd}",
-        expressions: [
-          {
-            expression:
-              "\\frac{M_{y,Ed}}{M_{pl,y,Rd}} \\leq 1.0 \\quad \\text{Class 1-2}",
-          },
-          {
-            expression:
-              "\\frac{M_{y,Ed}}{M_{el,y,Rd}} \\leq 1.0 \\quad \\text{Class 3}",
-          },
-        ],
-        unit: "Nmm",
+        symbol: "N_{pl,Rd}",
+        template: "\\frac{\\key{A_mm2}}{\\key{gamma_M0}}",
+        unit: "N",
       }),
     ).toBe(
-      "M_{c,Rd} = \\left\\{ \\begin{array}{l} \\frac{M_{y,Ed}}{M_{pl,y,Rd}} \\leq 1.0 \\quad \\text{Class 1-2} \\\\[10pt] \\frac{M_{y,Ed}}{M_{el,y,Rd}} \\leq 1.0 \\quad \\text{Class 3} \\end{array} \\right. \\quad (Nmm)",
+      "N_{pl,Rd} = \\frac{\\text{A\\_mm2}}{\\text{gamma\\_M0}} \\quad (N)",
     );
+  });
+
+  it("swaps keys for symbols when a symbol map is provided", () => {
+    expect(
+      latexPreview({
+        symbol: "N_{pl,Rd}",
+        template: "\\frac{\\key{A_mm2}}{\\key{gamma_M0}}",
+        symbolByKey: { A_mm2: "A", gamma_M0: "\\gamma_{M0}" },
+      }),
+    ).toBe("N_{pl,Rd} = \\frac{A}{\\gamma_{M0}}");
   });
 });

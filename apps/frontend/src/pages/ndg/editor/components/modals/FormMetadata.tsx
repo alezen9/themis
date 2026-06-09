@@ -15,8 +15,11 @@ const TYPES_WITH_META: EditorNodeInput["type"][] = [
 export const FormMetadata = () => {
   const { register, watch } = useFormContext<EditorNodeInput>();
   const type = watch("type");
+  const variant = watch("variant");
 
   if (!TYPES_WITH_META.includes(type)) return null;
+  if ((type === "check" || type === "formula") && variant === "select")
+    return null;
 
   return (
     <Section>

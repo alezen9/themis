@@ -1,7 +1,7 @@
 import { get } from "lodash-es";
 import { assertDefined, assertNDGValue, assertUndefined } from "../assertions";
 import { collectConditionKeys, evaluateCondition } from "../evaluate-condition";
-import { isSelectorNode, type Condition, type Node } from "../schema";
+import { type Condition, type Node } from "../schema";
 import type {
   EvalCtx,
   EvalNote,
@@ -43,7 +43,13 @@ export const evaluateNode = (nodeId: string, state: EvaluationState): void => {
   const value = resolveNodeValue(node, activeChildren, state, notes);
 
   state.cache[node.key] = value;
-  state.trace.push(createTraceEntry(node, value, activeChildren, state, notes));
+  const entry = createTraceEntry(node, value, activeChildren, state, notes);
+  // a select node absorbs its winning child: drop the child's standalone entry
+  if (entry.resolvedFrom) {
+    const absorbed = state.trace.findIndex(e => e.key === entry.resolvedFrom);
+    if (absorbed !== -1) state.trace.splice(absorbed, 1);
+  }
+  state.trace.push(entry);
   state.visited.add(nodeId);
 };
 
@@ -113,10 +119,15 @@ const resolveNodeValue = (
     }
     case "formula":
     case "check": {
-      const evaluator = state.evaluators[node.key];
-      if (!evaluator) {
-        return resolveAutoSelectorNode(node, activeChildren, state);
+      if (node.variant === "select") {
+        return resolveSelectNode(node, activeChildren, state);
       }
+
+      const evaluator = state.evaluators[node.key];
+      assertDefined(
+        evaluator,
+        `Missing evaluator for ${node.type} node: "${node.key}" (id: ${node.id})`,
+      );
 
       const ctx: EvalCtx = {
         addNote({ formula, latex, value, warn }) {
@@ -137,36 +148,22 @@ const resolveNodeValue = (
   }
 };
 
-const resolveAutoSelectorNode = (
+const resolveSelectNode = (
   node: Node,
   activeChildren: string[],
   state: EvaluationState,
 ) => {
-  if (!isSelectorNode(node)) {
-    throw new Error(
-      `Missing evaluator for ${node.type} node: "${node.key}" (id: ${node.id})`,
-    );
-  }
   const [childId] = activeChildren;
-  if (activeChildren.length !== 1 || !childId) {
+  if (activeChildren.length !== 1 || !childId)
     throw new Error(
-      `Auto-selector node "${node.key}" (id: ${node.id}) must have exactly one active child, got ${activeChildren.length}`,
+      `Select node "${node.key}" (id: ${node.id}) must have exactly one active child, got ${activeChildren.length}`,
     );
-  }
 
   const selectedChild = state.nodeById.get(childId);
-  if (!selectedChild) {
-    throw new Error(
-      `Auto-selector node "${node.key}" (id: ${node.id}) references unknown child "${childId}"`,
-    );
-  }
+  assertDefined(selectedChild, `Select node "${node.key}" references unknown child "${childId}"`);
 
   const selectedValue = state.cache[selectedChild.key];
-  if (selectedValue === undefined) {
-    throw new Error(
-      `Auto-selector node "${node.key}" (id: ${node.id}) selected child "${selectedChild.key}" with undefined value`,
-    );
-  }
+  assertDefined(selectedValue, `Select node "${node.key}" selected "${selectedChild.key}" with no value`);
 
   assertFiniteNumberResult(node, selectedValue);
   return selectedValue;

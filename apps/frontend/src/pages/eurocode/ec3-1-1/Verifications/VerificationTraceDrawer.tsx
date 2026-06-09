@@ -88,15 +88,24 @@ const VerificationTrace = (props: VerificationTraceProps) => {
 
   const { check, trace } = payload.data;
 
-  const checkTex = check.symbol
-    ? `${check.symbol} = ${check.verificationExpression}`
-    : check.verificationExpression;
-
   const reversedTrace = [...trace].reverse();
   const entryByKey = new Map(trace.map(entry => [entry.key, entry]));
 
+  const checkEntry = trace.find(entry => entry.nodeId === check.id);
+  const checkTex =
+    checkEntry?.template &&
+    stepEquation(
+      {
+        symbol: checkEntry.symbol,
+        template: checkEntry.template,
+        value: checkEntry.value,
+        unit: checkEntry.unit,
+      },
+      entryByKey,
+    );
+
   const values = reversedTrace.flatMap(entry =>
-    !entry.symbol
+    !entry.symbol || entry.nodeId === check.id
       ? []
       : [
           {
@@ -109,16 +118,15 @@ const VerificationTrace = (props: VerificationTraceProps) => {
   );
 
   const steps = reversedTrace.flatMap(entry =>
-    !entry.expressions?.length
+    !entry.template || entry.nodeId === check.id
       ? []
       : [
           {
             id: entry.nodeId,
             symbol: entry.symbol,
-            expressions: entry.expressions,
+            template: entry.template,
             value: entry.value,
             unit: entry.unit,
-            evaluatorInputs: entry.evaluatorInputs,
             ref: clauseRef(entry.meta),
           },
         ],
@@ -126,9 +134,11 @@ const VerificationTrace = (props: VerificationTraceProps) => {
 
   return (
     <div className="flex flex-col gap-6 text-sand-900">
-      <div className="rounded-md border border-sand-100 bg-sand-50 p-5">
-        <Latex displayMode tex={checkTex} className="justify-start text-3xl" />
-      </div>
+      {checkTex && (
+        <div className="rounded-md border border-sand-100 bg-sand-50 p-5">
+          <Latex displayMode tex={checkTex} className="justify-start text-3xl" />
+        </div>
+      )}
 
       <Accordion>
         <AccordionHeader className="px-0 py-2">

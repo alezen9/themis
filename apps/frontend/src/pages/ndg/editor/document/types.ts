@@ -1,19 +1,22 @@
-import type { Condition, Node as NdgNode } from "@ndg/ndg-core";
+import type { Condition } from "@ndg/ndg-core";
 import type {
   Edge as FlowEdge,
   Node as FlowNode,
   NodeProps,
 } from "@xyflow/react";
 
-export const EDITOR_DOCUMENT_VERSION = 2;
-export const LEGACY_EDITOR_DOCUMENT_VERSION = 1;
+import type { EditorNodeInput } from "./editorNodeSchema";
 
-type EditorNodeData<Type extends NdgNode["type"]> = Omit<
-  Extract<NdgNode, { type: Type }>,
-  "id" | "children" | "type"
+export const EDITOR_DOCUMENT_VERSION = 2;
+
+type NodeType = EditorNodeInput["type"];
+
+type EditorNodeData<Type extends NodeType> = Omit<
+  Extract<EditorNodeInput, { type: Type }>,
+  "type"
 >;
 
-type EditorNodeOf<Type extends NdgNode["type"]> = FlowNode<
+type EditorNodeOf<Type extends NodeType> = FlowNode<
   EditorNodeData<Type>,
   Type
 >;

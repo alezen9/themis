@@ -1,8 +1,9 @@
 import type { EvalCtx, NDGDefinition, NDGInputValue } from "./types";
 import {
   isComputedNode,
-  isSelectorNode,
+  isSelectNode,
   type CheckNode,
+  type Condition,
   type Node,
 } from "./schema";
 
@@ -64,11 +65,34 @@ export const validateNDG = <
     }
 
     const hasEvaluator = !!evaluators[node.key];
-    const needsEvaluator = isComputedNode(node) && !isSelectorNode(node);
+    const needsEvaluator = isComputedNode(node) && !isSelectNode(node);
     if (needsEvaluator && !hasEvaluator) {
       throw new Error(
         `Missing evaluator for ${node.type} node: "${node.key}" (id: ${node.id})`,
       );
+    }
+    if (isSelectNode(node) && hasEvaluator) {
+      throw new Error(
+        `Select node "${node.key}" (id: ${node.id}) must not have an evaluator`,
+      );
+    }
+
+    if (isComputedNode(node) && node.variant === "compute") {
+      for (const key of templateKeys(node.template)) {
+        if (!nodeByKey.has(key)) {
+          throw new Error(
+            `Template in node "${node.key}" (id: ${node.id}) references unknown key "${key}"`,
+          );
+        }
+      }
+    }
+
+    for (const child of node.children) {
+      if (child.when && isUnsatisfiable(child.when)) {
+        throw new Error(
+          `Node "${node.key}" (id: ${node.id}) has an unsatisfiable condition on child "${child.nodeId}"`,
+        );
+      }
     }
   }
 
@@ -91,6 +115,41 @@ export const validateNDG = <
   validateNoCycles(check.id, nodeById);
 
   return { check, evaluators, nodeById, nodeByKey };
+};
+
+const TEMPLATE_KEY = /\\key\{([^}]+)\}/g;
+
+const templateKeys = (template: string): string[] =>
+  [...template.matchAll(TEMPLATE_KEY)]
+    .map(match => match[1])
+    .filter((key): key is string => !!key);
+
+const comparisonEq = (condition: Condition) => {
+  if (!("eq" in condition)) return undefined;
+  const [key, operand] = condition.eq;
+  if (!("value" in operand)) return undefined;
+  return { key, value: String(operand.value) };
+};
+
+/** Sound (no false positives) check: flags an `and` that requires one key to equal
+ *  two different values, or an `or` whose every branch is unsatisfiable. */
+const isUnsatisfiable = (condition: Condition): boolean => {
+  if ("and" in condition) {
+    if (condition.and.some(isUnsatisfiable)) return true;
+    const eqByKey = new Map<string, Set<string>>();
+    for (const child of condition.and) {
+      const eq = comparisonEq(child);
+      if (!eq) continue;
+      const values = eqByKey.get(eq.key) ?? new Set<string>();
+      values.add(eq.value);
+      eqByKey.set(eq.key, values);
+    }
+    return [...eqByKey.values()].some(values => values.size > 1);
+  }
+  if ("or" in condition) {
+    return condition.or.length > 0 && condition.or.every(isUnsatisfiable);
+  }
+  return false;
 };
 
 const validateNoCycles = (

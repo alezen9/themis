@@ -45,14 +45,7 @@ export const runNDG = <
     }
 
     return {
-      check: {
-        id: check.id,
-        key: check.key,
-        name: check.name,
-        symbol: check.symbol,
-        verificationExpression: check.verificationExpression,
-        meta: check.meta,
-      },
+      check: { id: check.id, key: check.key, name: check.name },
       passed: utilisation <= 1.0,
       utilisation,
       cache: cache as InferCache<TNodes>,

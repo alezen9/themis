@@ -46,10 +46,11 @@ const checkNode: EditorNode = {
   type: "check",
   data: {
     type: "check",
+    variant: "compute",
     key: "utilisation",
     name: "Old name",
     valueType: { type: "number" },
-    verificationExpression: "x \\leq 1",
+    template: "x \\leq 1",
     symbol: "u_r",
   },
 } as EditorNode;
@@ -122,7 +123,7 @@ describe("EditNodeModal", () => {
   it("edits a check node name with no type selector", async () => {
     seed(checkNode);
 
-    expect(screen.queryAllByRole("radio")).toHaveLength(0);
+    expect(screen.queryByRole("radio", { name: "Coefficient" })).toBeNull();
     fireEvent.change(inputByName("name"), { target: { value: "New name" } });
 
     submit();

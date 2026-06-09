@@ -8,6 +8,7 @@ export const nodes = defineNodes([
       { nodeId: "5217f3d1-f584-4fb9-a193-810d95c1f743" },
     ],
     type: "check",
+    variant: "compute",
     key: "utilisation",
     name: "Compression",
     symbol: "u_r",
@@ -20,7 +21,7 @@ export const nodes = defineNodes([
       tableRef: "",
       verificationRef: "",
     },
-    verificationExpression: "\\frac{|N_{Ed}|}{N_{c,Rd}} \\leq 1.0",
+    template: "\\frac{|\\key{N_Ed_N}|}{\\key{N_c_Rd_N}} \\leq 1.0",
   },
   {
     id: "a77f73f6-5d19-4d12-9ff2-35260f63f393",
@@ -40,6 +41,7 @@ export const nodes = defineNodes([
       { nodeId: "7ff50833-8392-4e44-a6a7-c0fd8d5cd1c8" },
     ],
     type: "formula",
+    variant: "compute",
     key: "N_c_Rd_N",
     valueType: { type: "number" },
     meta: {
@@ -50,12 +52,7 @@ export const nodes = defineNodes([
       tableRef: "",
       verificationRef: "",
     },
-    expressions: [
-      {
-        expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
-        calculation: "\\frac{$A_mm2 \\cdot $fy_MPa}{$gamma_M0}",
-      },
-    ],
+    template: "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
     unit: "N",
   },
   {

@@ -1,4 +1,4 @@
-import type { CheckNode, FormulaExpression, Node, NodeMeta } from "./schema";
+import type { Node, NodeMeta } from "./schema";
 
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
@@ -52,23 +52,19 @@ type InferComputed<TNodes extends readonly Node[]> = {
     : never]: NodeValue<N>;
 };
 
-type SelectorNode<TNodes extends readonly Node[]> = Extract<
+type SelectNodeOf<TNodes extends readonly Node[]> = Extract<
   TNodes[number],
-  {
-    type: "formula";
-    expressions?: undefined;
-    children: readonly [unknown, ...unknown[]];
-  }
+  { variant: "select" }
 >;
 
-type SelectorKey<TNodes extends readonly Node[]> = Extract<
-  SelectorNode<TNodes>["key"],
+type SelectKey<TNodes extends readonly Node[]> = Extract<
+  SelectNodeOf<TNodes>["key"],
   keyof InferComputed<TNodes>
 >;
 
 type RequiredComputedKey<TNodes extends readonly Node[]> = Exclude<
   keyof InferComputed<TNodes>,
-  SelectorKey<TNodes>
+  SelectKey<TNodes>
 >;
 
 export type NDGContext = { values: Record<string, NDGInputValue> };
@@ -87,22 +83,10 @@ type EvaluateRequired<
   ) => InferComputed<TNodes>[K];
 };
 
-type EvaluateOptional<
-  TNodes extends readonly Node[],
-  TValues extends NDGContext["values"],
-> = {
-  [K in SelectorKey<TNodes>]?: (
-    deps: EvaluatorArgs<TNodes>,
-    ctx: EvalCtx<TValues>,
-  ) => InferComputed<TNodes>[K];
-};
-
 export type Evaluate<
   TNodes extends readonly Node[],
   TValues extends NDGContext["values"] = NDGContext["values"],
-> = Prettify<
-  EvaluateRequired<TNodes, TValues> & EvaluateOptional<TNodes, TValues>
->;
+> = Prettify<EvaluateRequired<TNodes, TValues>>;
 
 export type NDGDefinition<
   TNodes extends readonly Node[],
@@ -127,8 +111,8 @@ export type NDGTraceEntry = {
   value: NDGValue;
   unit?: string;
   symbol?: string;
-  expressions?: readonly FormulaExpression[];
-  verificationExpression?: string;
+  template?: string;
+  resolvedFrom?: string;
   description?: string;
   meta?: NodeMeta;
   evaluatorInputs?: Record<string, NDGValue>;
@@ -137,10 +121,7 @@ export type NDGTraceEntry = {
 };
 
 export type NDGRunResult<TNodes extends readonly Node[] = readonly Node[]> = {
-  check: Pick<
-    CheckNode,
-    "id" | "key" | "name" | "symbol" | "verificationExpression" | "meta"
-  >;
+  check: { id: string; key: string; name: string };
   passed: boolean;
   utilisation: number;
   cache: InferCache<TNodes>;

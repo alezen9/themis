@@ -6,9 +6,11 @@ import type {
   OnSelectionChangeParams,
   XYPosition,
 } from "@xyflow/react";
-import type { Condition } from "@ndg/ndg-core";
+import { constantCatalog, type Condition } from "@ndg/ndg-core";
+import { coefficientCatalog, userInputCatalog } from "@ndg/ndg-ec3-1-1";
 import { create } from "zustand";
 
+import type { SymbolByKey } from "../components/nodes/latexPreview";
 import { createEdgeId, createNodeId } from "../document/ids";
 import { remapDocumentIds } from "../document/import";
 import { initialDocument } from "../document/initialDocument";
@@ -53,6 +55,27 @@ const createKeyCounts = (nodes: EditorNode[]) => {
   return keyCounts;
 };
 
+const catalogSymbols = (
+  catalog: Record<string, { symbol?: string }>,
+): SymbolByKey =>
+  Object.fromEntries(
+    Object.entries(catalog).map(([key, entry]) => [key, entry.symbol]),
+  );
+
+const CATALOG_SYMBOLS: SymbolByKey = {
+  ...catalogSymbols(userInputCatalog),
+  ...catalogSymbols(coefficientCatalog),
+  ...catalogSymbols(constantCatalog),
+};
+
+const createSymbolByKey = (nodes: EditorNode[]): SymbolByKey => {
+  const symbolByKey: SymbolByKey = { ...CATALOG_SYMBOLS };
+  for (const node of nodes)
+    if (node.data.key && node.data.symbol)
+      symbolByKey[node.data.key] = node.data.symbol;
+  return symbolByKey;
+};
+
 const createAdjacencyList = (edges: EditorEdge[]) => {
   const map = new Map<string, Set<string>>();
   for (const edge of edges) {
@@ -70,6 +93,7 @@ const derive = (nodes: EditorNode[], edges: EditorEdge[]) => ({
   _edgeById: indexById(edges),
   _adjacencyList: createAdjacencyList(edges),
   _keyCounts: createKeyCounts(nodes),
+  _symbolByKey: createSymbolByKey(nodes),
   _invalidNodeIds: findInvalidNodeIds(nodes),
   _unreachableNodeIds: findUnreachableNodeIds(nodes, edges),
   _invalidEdgeIds: findInvalidEdgeIds(nodes, edges),
@@ -97,6 +121,7 @@ type NdgEditorStore = {
   _edgeById: Map<string, EditorEdge>;
   _adjacencyList: Map<string, Set<string>>;
   _keyCounts: Map<string, number>;
+  _symbolByKey: SymbolByKey;
   _invalidNodeIds: Set<string>;
   _unreachableNodeIds: Set<string>;
   _invalidEdgeIds: Set<string>;

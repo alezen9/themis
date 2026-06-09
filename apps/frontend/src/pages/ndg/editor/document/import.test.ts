@@ -3,11 +3,7 @@ import { describe, expect, it } from "vitest";
 import { remapDocumentIds } from "./import";
 import { createEdgeId } from "./ids";
 import { editorDocumentSchema } from "./importExportSchema";
-import {
-  EDITOR_DOCUMENT_VERSION,
-  LEGACY_EDITOR_DOCUMENT_VERSION,
-  type EditorDocument,
-} from "./types";
+import { EDITOR_DOCUMENT_VERSION, type EditorDocument } from "./types";
 
 const createDocument = (
   nodes: EditorDocument["nodes"],
@@ -129,18 +125,19 @@ describe("editorDocumentSchema", () => {
     expect(result.data?.nodes[0].data).not.toHaveProperty("sourceNodeId");
   });
 
-  it("normalizes legacy formula expression data", () => {
+  it("keeps a keyed formula template on import", () => {
     const result = editorDocumentSchema.safeParse({
-      version: LEGACY_EDITOR_DOCUMENT_VERSION,
+      version: EDITOR_DOCUMENT_VERSION,
       nodes: [
         {
           id: "formula",
           position: { x: 0, y: 0 },
           type: "formula",
           data: {
+            variant: "compute",
             key: "resistance",
             valueType: { type: "number" },
-            expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
+            template: "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
           },
         },
       ],
@@ -148,11 +145,10 @@ describe("editorDocumentSchema", () => {
     });
 
     expect(result.success).toBe(true);
-    expect(result.data?.version).toBe(EDITOR_DOCUMENT_VERSION);
-    expect(result.data?.nodes[0].data).toEqual({
+    expect(result.data?.nodes[0].data).toMatchObject({
+      variant: "compute",
       key: "resistance",
-      valueType: { type: "number" },
-      expressions: [{ expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}" }],
+      template: "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
     });
   });
 });

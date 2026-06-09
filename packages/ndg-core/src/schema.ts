@@ -30,13 +30,13 @@ const ComparisonConditionSchema = z.union([
 
 const AndConditionSchema = z.strictObject({
   get and() {
-    return z.array(ConditionSchema);
+    return z.array(ConditionSchema).readonly();
   },
 });
 
 const OrConditionSchema = z.strictObject({
   get or() {
-    return z.array(ConditionSchema);
+    return z.array(ConditionSchema).readonly();
   },
 });
 
@@ -68,37 +68,73 @@ const ValueTypeSchema = z.discriminatedUnion("type", [
   BooleanValueType,
 ]);
 
-const FormulaExpressionSchema = z.strictObject({
-  expression: z.string().min(1),
-  calculation: z
-    .union([z.string().min(1), z.literal("").transform(() => undefined)])
-    .optional(),
-});
-
 /**
- * Root node of a verification.
+ * Root node of a verification, computing the utilisation ratio directly.
+ * `template` is a keyed LaTeX string (placeholders `\key{node_key}`).
  * Evaluator returns the utilisation ratio; pass = ratio <= 1.0.
  */
-export const CheckNodeSchema = BaseNodeSchema.extend({
+export const CheckComputeNodeSchema = BaseNodeSchema.extend({
   type: z.literal("check"),
+  variant: z.literal("compute"),
   key: z.literal("utilisation"),
   name: z.string().min(1),
   valueType: NumericValueType,
   meta: NodeMetaSchema.optional(),
-  verificationExpression: z.string().min(1), // LaTeX: "\\frac{N_{Ed}}{N_{c,Rd}} \\leq 1.0"
+  template: z.string().min(1),
 });
 
 /**
- * Computed value, with optional normative equation reference.
+ * Root node that selects one of several mutually-exclusive verification branches.
+ * Pure: no formula of its own -- inherits the winning branch's display + value at
+ * runtime. The engine enforces exactly one active child.
  */
-export const FormulaNodeSchema = BaseNodeSchema.extend({
+export const CheckSelectNodeSchema = z.strictObject({
+  id: z.string(),
+  type: z.literal("check"),
+  variant: z.literal("select"),
+  key: z.literal("utilisation"),
+  name: z.string().min(1),
+  valueType: NumericValueType,
+  children: z.array(ChildSchema).readonly(),
+});
+
+export const CheckNodeSchema = z.discriminatedUnion("variant", [
+  CheckComputeNodeSchema,
+  CheckSelectNodeSchema,
+]);
+
+/**
+ * Computed value with a keyed LaTeX template (placeholders `\key{node_key}`).
+ * Children are the terms referenced by the template.
+ */
+export const FormulaComputeNodeSchema = BaseNodeSchema.extend({
   type: z.literal("formula"),
+  variant: z.literal("compute"),
   key: z.string().min(1),
   valueType: ValueTypeSchema,
   meta: NodeMetaSchema.optional(),
-  expressions: z.array(FormulaExpressionSchema).readonly().optional(),
   unit: z.string().optional(),
+  template: z.string().min(1),
 });
+
+/**
+ * Selects one of several mutually-exclusive child branches. Pure key: no template,
+ * symbol, unit or meta -- all inherited from the winning child at runtime. The engine
+ * enforces exactly one active child and overrides its key with this node's key.
+ */
+export const FormulaSelectNodeSchema = z.strictObject({
+  id: z.string(),
+  type: z.literal("formula"),
+  variant: z.literal("select"),
+  key: z.string().min(1),
+  valueType: ValueTypeSchema,
+  children: z.array(ChildSchema).readonly(),
+});
+
+export const FormulaNodeSchema = z.discriminatedUnion("variant", [
+  FormulaComputeNodeSchema,
+  FormulaSelectNodeSchema,
+]);
 
 /**
  * Value selected from a structured normative or external table.
@@ -146,9 +182,11 @@ export const ConstantNodeSchema = BaseNodeSchema.extend({
   value: z.number().optional(), // inline value for a custom constant; named constants resolve from the registry
 });
 
-export const NodeSchema = z.discriminatedUnion("type", [
-  CheckNodeSchema,
-  FormulaNodeSchema,
+export const NodeSchema = z.union([
+  CheckComputeNodeSchema,
+  CheckSelectNodeSchema,
+  FormulaComputeNodeSchema,
+  FormulaSelectNodeSchema,
   TableNodeSchema,
   CoefficientNodeSchema,
   UserInputNodeSchema,
@@ -158,27 +196,25 @@ export const NodeSchema = z.discriminatedUnion("type", [
 export const NDGSchema = z.array(NodeSchema);
 
 export type NodeMeta = z.infer<typeof NodeMetaSchema>;
-export type FormulaExpression = z.infer<typeof FormulaExpressionSchema>;
 export type Child = z.infer<typeof ChildSchema>;
 export type CheckNode = z.infer<typeof CheckNodeSchema>;
+export type FormulaNode = z.infer<typeof FormulaNodeSchema>;
 export type Node = z.infer<typeof NodeSchema>;
 export type NodeType = Node["type"];
 
 export type Condition = z.infer<typeof ConditionSchema>;
 export type ConditionOperand = z.infer<typeof ConditionOperandSchema>;
 export type ConditionTuple = z.infer<typeof ConditionTupleSchema>;
-type ComputedNode = CheckNode | z.infer<typeof FormulaNodeSchema>;
+
+export type ComputedNode = CheckNode | FormulaNode;
+export type SelectNode =
+  | z.infer<typeof CheckSelectNodeSchema>
+  | z.infer<typeof FormulaSelectNodeSchema>;
 
 export const isComputedNode = (node: Node): node is ComputedNode => {
   return node.type === "formula" || node.type === "check";
 };
 
-export const isSelectorNode = (
-  node: Node,
-): node is z.infer<typeof FormulaNodeSchema> => {
-  return (
-    node.type === "formula" &&
-    node.expressions === undefined &&
-    node.children.length > 0
-  );
+export const isSelectNode = (node: Node): node is SelectNode => {
+  return isComputedNode(node) && node.variant === "select";
 };

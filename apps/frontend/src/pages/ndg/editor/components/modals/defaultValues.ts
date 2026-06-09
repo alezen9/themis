@@ -35,8 +35,9 @@ export const defaultNodeFormValues = {
   },
   formula: {
     type: "formula",
+    variant: "compute",
     key: "",
     valueType: { type: "number" },
-    expressions: [{ expression: "" }],
+    template: "",
   },
 } as const satisfies Record<EditableNodeType, EditorNodeInput>;

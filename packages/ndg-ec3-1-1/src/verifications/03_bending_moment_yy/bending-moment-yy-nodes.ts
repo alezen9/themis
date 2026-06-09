@@ -9,18 +9,16 @@ export const nodes = defineNodes([
       { nodeId: "1252c6ad-2b65-4bb8-a844-89bc4fad9c6f" },
     ],
     type: "check",
+    variant: "compute",
     key: "utilisation",
     name: "Bending moment y-y",
     valueType: { type: "number" },
     meta: {
       sectionRef: "6.2.5",
       paragraphRef: "(1)",
-      subParagraphRef: "",
       formulaRef: "(6.12)",
-      tableRef: "",
-      verificationRef: "",
     },
-    verificationExpression: "\\frac{|M_{Ed}|}{M_{c,Rd}} \\leq 1.0",
+    template: "\\frac{|\\key{M_y_Ed_Nmm}|}{\\key{M_c_Rd_Nmm}} \\leq 1.0",
   },
   {
     id: "a77f73f6-5d19-4d12-9ff2-35260f63f393",
@@ -33,7 +31,6 @@ export const nodes = defineNodes([
   },
   {
     id: "1252c6ad-2b65-4bb8-a844-89bc4fad9c6f",
-    symbol: "M_{c,Rd}",
     children: [
       {
         nodeId: "534220da-67ad-4584-8d1c-1b9deb304962",
@@ -50,31 +47,9 @@ export const nodes = defineNodes([
       },
     ],
     type: "formula",
+    variant: "select",
     key: "M_c_Rd_Nmm",
     valueType: { type: "number" },
-    meta: {
-      sectionRef: "",
-      paragraphRef: "",
-      subParagraphRef: "",
-      formulaRef: "",
-      tableRef: "",
-      verificationRef: "",
-    },
-    expressions: [
-      {
-        expression:
-          "\\frac{|M_{y,Ed}|}{M_{pl,y,Rd}} \\leq 1.0 \\quad \\text{Class 1-2}",
-        calculation:
-          "\\frac{|$M_y_Ed_Nmm|}{$M_pl_y_Rd_Nmm} \\leq 1.0",
-      },
-      {
-        expression:
-          "\\frac{|M_{y,Ed}|}{M_{el,y,Rd}} \\leq 1.0 \\quad \\text{Class 3}",
-        calculation:
-          "\\frac{|$M_y_Ed_Nmm|}{$M_el_y_Rd_Nmm} \\leq 1.0",
-      },
-    ],
-    unit: "Nmm",
   },
   {
     id: "534220da-67ad-4584-8d1c-1b9deb304962",
@@ -85,22 +60,15 @@ export const nodes = defineNodes([
       { nodeId: "a6233bbd-8ad1-46b2-a325-fcd0164c8aaf" },
     ],
     type: "formula",
+    variant: "compute",
     key: "M_el_y_Rd_Nmm",
     valueType: { type: "number" },
     meta: {
       sectionRef: "6.2.5",
       paragraphRef: "(2)",
-      subParagraphRef: "",
       formulaRef: "(6.14)",
-      tableRef: "",
-      verificationRef: "",
     },
-    expressions: [
-      {
-        expression: "\\frac{W_{el,y} \\cdot f_y}{\\gamma_{M0}}",
-        calculation: "\\frac{$Wel_y_mm3 \\cdot $fy_MPa}{$gamma_M0}",
-      },
-    ],
+    template: "\\frac{\\key{Wel_y_mm3} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
     unit: "Nmm",
   },
   {
@@ -112,22 +80,15 @@ export const nodes = defineNodes([
       { nodeId: "eda41236-344e-4143-a8cb-d15cfb1c64ec" },
     ],
     type: "formula",
+    variant: "compute",
     key: "M_pl_y_Rd_Nmm",
     valueType: { type: "number" },
     meta: {
       sectionRef: "6.2.5",
       paragraphRef: "(2)",
-      subParagraphRef: "",
       formulaRef: "(6.13)",
-      tableRef: "",
-      verificationRef: "",
     },
-    expressions: [
-      {
-        expression: "\\frac{W_{pl,y} \\cdot f_y}{\\gamma_{M0}}",
-        calculation: "\\frac{$Wpl_y_mm3 \\cdot $fy_MPa}{$gamma_M0}",
-      },
-    ],
+    template: "\\frac{\\key{Wpl_y_mm3} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
     unit: "Nmm",
   },
   {
@@ -150,11 +111,7 @@ export const nodes = defineNodes([
       sectionRef: "6.1",
       paragraphRef: "(1)",
       subParagraphRef: "NOTE 2B",
-      formulaRef: "",
-      tableRef: "",
-      verificationRef: "",
     },
-    unit: "",
   },
   {
     id: "a6233bbd-8ad1-46b2-a325-fcd0164c8aaf",

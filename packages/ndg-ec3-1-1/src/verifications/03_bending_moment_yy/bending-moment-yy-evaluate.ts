@@ -19,10 +19,6 @@ export const evaluate = defineEvaluators(nodes, {
     return (Wel_y_mm3 * fy_MPa) / gamma_M0;
   },
 
-  M_c_Rd_Nmm: ({ M_pl_y_Rd_Nmm, M_el_y_Rd_Nmm }) => {
-    return M_pl_y_Rd_Nmm ?? M_el_y_Rd_Nmm;
-  },
-
   utilisation: ({ M_y_Ed_Nmm, M_c_Rd_Nmm }) => {
     assertFinite(M_y_Ed_Nmm, "M_y_Ed_Nmm must be a valid and finite value");
     assertPositive(M_c_Rd_Nmm, "Denominator M_c_Rd_Nmm must be > 0");

@@ -15,12 +15,25 @@ export const toEditorNode = (
   return { id, position, type, data } as EditorNode;
 };
 
+const exportNodeData = (node: EditorNode) => {
+  if (node.type === "formula" && node.data.variant === "select")
+    return { variant: "select", key: node.data.key, valueType: node.data.valueType };
+  if (node.type === "check" && node.data.variant === "select")
+    return {
+      variant: "select",
+      key: node.data.key,
+      name: node.data.name,
+      valueType: node.data.valueType,
+    };
+  return node.data;
+};
+
 export const toExportNode = (node: EditorNode): EditorNode =>
   ({
     id: node.id,
     position: node.position,
     type: node.type,
-    data: node.data,
+    data: exportNodeData(node),
   }) as EditorNode;
 
 export const toExportEdge = (edge: EditorEdge): EditorEdge => ({

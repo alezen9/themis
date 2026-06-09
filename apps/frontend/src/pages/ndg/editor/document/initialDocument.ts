@@ -16,11 +16,12 @@ export const initialDocument: EditorDocument = {
       position: { x: 0, y: 0 },
       type: "check",
       data: {
+        variant: "compute",
         key: "utilisation",
         name: "Tension",
         symbol: "u_r",
         valueType: { type: "number" },
-        verificationExpression: "\\frac{N_{Ed}}{N_{pl,Rd}} \\leq 1.0",
+        template: "\\frac{\\key{N_Ed_N}}{\\key{N_pl_Rd_N}} \\leq 1.0",
       },
     },
     {
@@ -39,15 +40,11 @@ export const initialDocument: EditorDocument = {
       position: { x: 220, y: 170 },
       type: "formula",
       data: {
+        variant: "compute",
         key: "N_pl_Rd_N",
         valueType: { type: "number" },
         symbol: "N_{pl,Rd}",
-        expressions: [
-          {
-            expression: "\\frac{A \\cdot f_y}{\\gamma_{M0}}",
-            calculation: "\\frac{$A_mm2 \\cdot $fy_MPa}{$gamma_M0}",
-          },
-        ],
+        template: "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
       },
     },
     {

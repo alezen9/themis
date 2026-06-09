@@ -1,9 +1,8 @@
 import { ComponentProps } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
 import { constantCatalog } from "@ndg/ndg-core";
-import { Button } from "@components/Button";
 import { FormField } from "@components/inputs/shared";
 import { InputNumber } from "@components/inputs/InputNumber";
 import { InputText } from "@components/inputs/InputText";
@@ -11,39 +10,43 @@ import { InputTextarea } from "@components/inputs/InputTextarea";
 import { Latex } from "@components/Latex";
 
 import { Section, SectionTitle } from "./shared";
+import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
+import { renderKeyPlaceholders } from "../nodes/latexPreview";
 import type { EditorNodeInput } from "../../document/editorNodeSchema";
 
 export const FormDefinition = () => {
   const { register, watch } = useFormContext<EditorNodeInput>();
   const type = watch("type");
+  const variant = watch("variant");
   const key = watch("key") ?? "";
   const constantPreset = constantCatalog[key] ? key : "custom";
   const isCustomConstant = type === "constant" && constantPreset === "custom";
+  const isComputed = type === "check" || type === "formula";
 
   if (type === "user-input") return null;
   if (type === "coefficient") return null;
   if (type === "constant" && !isCustomConstant) return null;
+  if (isComputed && variant === "select") return null;
 
   return (
     <Section>
       <SectionTitle>Definition</SectionTitle>
       <div className="grid grid-cols-4 grid-rows-1 gap-4">
-        {type === "check" && (
+        {isComputed && (
           <div className="col-span-4">
             <FormFieldLatex
-              name="verificationExpression"
-              label="Verification"
-              description="LaTeX condition rendered in the check node"
+              name="template"
+              label="Template"
+              description="Keyed LaTeX, e.g. \frac{\key{A_mm2} \cdot \key{fy_MPa}}{\key{gamma_M0}}"
             >
-              <InputText
-                placeholder={"\\frac{N_{Ed}}{N_{pl,Rd}} \\leq 1"}
-                {...register("verificationExpression")}
+              <InputTextarea
+                placeholder={
+                  "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}"
+                }
+                {...register("template")}
               />
             </FormFieldLatex>
           </div>
-        )}
-        {type === "formula" && (
-          <FormulaExpressionsFields />
         )}
         {type === "table" && (
           <div className="col-span-2">
@@ -86,68 +89,12 @@ export const FormDefinition = () => {
   );
 };
 
-type FormulaNodeInput = Extract<EditorNodeInput, { type: "formula" }>;
-
-const FormulaExpressionsFields = () => {
-  const { control, register } = useFormContext<FormulaNodeInput>();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "expressions",
-  });
-
-  return (
-    <div className="col-span-4 flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-4">
-        <h5 className="text-sm font-light text-sand-900">Expressions</h5>
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => append({ expression: "" })}
-        >
-          Add row
-        </Button>
-      </div>
-      {fields.map((field, index) => (
-        <div
-          key={field.id}
-          className="grid grid-cols-[1fr_1fr_auto] gap-4 rounded-sm border border-sand-100 p-3"
-        >
-          <FormFieldLatex
-            name={`expressions.${index}.expression`}
-            label="Expression"
-          >
-            <InputTextarea
-              placeholder={"\\frac{A \\cdot f_y}{\\gamma_{M0}}"}
-              {...register(`expressions.${index}.expression`)}
-            />
-          </FormFieldLatex>
-          <FormFieldLatex
-            name={`expressions.${index}.calculation`}
-            label="Calculation"
-          >
-            <InputTextarea
-              placeholder={"\\frac{$A_mm2 \\cdot $fy_MPa}{$gamma_M0}"}
-              {...register(`expressions.${index}.calculation`)}
-            />
-          </FormFieldLatex>
-          <Button
-            variant="danger"
-            size="sm"
-            className="self-start"
-            onClick={() => remove(index)}
-          >
-            Remove
-          </Button>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 const FormFieldLatex = (props: ComponentProps<typeof FormField>) => {
   const { name, children, ...rest } = props;
   const { watch } = useFormContext();
+  const symbolByKey = useNdgEditorStore(s => s._symbolByKey);
   const value = watch(name);
+  const trimmed = typeof value === "string" ? value.trim() : "";
 
   return (
     <div className="flex flex-col gap-2 h-full">
@@ -155,10 +102,10 @@ const FormFieldLatex = (props: ComponentProps<typeof FormField>) => {
         {children}
       </FormField>
       <Latex
-        tex={value?.trim() || "Preview"}
+        tex={trimmed ? renderKeyPlaceholders(trimmed, symbolByKey) : "Preview"}
         className={twMerge(
           "border px-1 min-h-16 flex-1 rounded-sm border-sand-300 flex items-center justify-center-safe text-2xl text-sand-900",
-          !value?.trim() && "text-lg",
+          !trimmed && "text-lg",
         )}
       />
     </div>
