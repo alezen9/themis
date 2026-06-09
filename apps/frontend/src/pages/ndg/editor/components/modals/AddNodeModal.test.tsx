@@ -98,7 +98,7 @@ describe("AddNodeModal", () => {
     );
   });
 
-  it("derives symbol/unit/valueType from the catalog when a user-input key is picked", async () => {
+  it("derives symbol/valueType from the catalog when a user-input key is picked", async () => {
     pickFromSelect("input-key-trigger", "M_y_Ed_Nmm");
     await waitFor(() =>
       expect("error" in screen.getByTestId("field-key").dataset).toBe(false),
@@ -112,7 +112,6 @@ describe("AddNodeModal", () => {
           type: "user-input",
           key: "M_y_Ed_Nmm",
           symbol: entry.symbol,
-          unit: entry.unit,
           valueType: { type: entry.valueType },
         }),
       ),
@@ -130,9 +129,10 @@ describe("AddNodeModal", () => {
 
   it("submits a compute formula with a keyed template", async () => {
     fireEvent.click(screen.getByRole("radio", { name: "Formula" }));
-    fireEvent.change(document.querySelector<HTMLInputElement>('[name="key"]')!, {
-      target: { value: "resistance" },
-    });
+    fireEvent.change(
+      document.querySelector<HTMLInputElement>('[name="key"]')!,
+      { target: { value: "resistance" } },
+    );
     fireEvent.change(
       document.querySelector<HTMLTextAreaElement>('[name="template"]')!,
       {
@@ -149,7 +149,8 @@ describe("AddNodeModal", () => {
           type: "formula",
           variant: "compute",
           key: "resistance",
-          template: "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
+          template:
+            "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
         }),
       ),
     );

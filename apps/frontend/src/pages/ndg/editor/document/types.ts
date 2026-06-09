@@ -16,10 +16,7 @@ type EditorNodeData<Type extends NodeType> = Omit<
   "type"
 >;
 
-type EditorNodeOf<Type extends NodeType> = FlowNode<
-  EditorNodeData<Type>,
-  Type
->;
+type EditorNodeOf<Type extends NodeType> = FlowNode<EditorNodeData<Type>, Type>;
 
 type CheckEditorNode = EditorNodeOf<"check">;
 type CoefficientEditorNode = EditorNodeOf<"coefficient">;

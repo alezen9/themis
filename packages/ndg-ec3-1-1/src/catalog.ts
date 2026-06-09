@@ -2,7 +2,6 @@ import type { NodeMeta } from "@ndg/ndg-core";
 
 type InputCatalogEntry = {
   symbol?: string;
-  unit?: string;
   valueType: "number" | "string" | "boolean";
   values?: readonly (string | number | boolean)[];
   positive?: boolean;
@@ -16,147 +15,47 @@ export const userInputCatalog: Record<string, InputCatalogEntry> = {
   },
   section_class: { valueType: "number", values: [1, 2, 3] },
 
-  N_Ed_N: { symbol: "N_{Ed}", unit: "N", valueType: "number" },
-  V_y_Ed_N: { symbol: "V_{y,Ed}", unit: "N", valueType: "number" },
-  V_z_Ed_N: { symbol: "V_{z,Ed}", unit: "N", valueType: "number" },
-  M_y_Ed_Nmm: { symbol: "M_{y,Ed}", unit: "N{\\cdot}mm", valueType: "number" },
-  M_z_Ed_Nmm: { symbol: "M_{z,Ed}", unit: "N{\\cdot}mm", valueType: "number" },
-  T_Ed_Nmm: { symbol: "T_{Ed}", unit: "N{\\cdot}mm", valueType: "number" },
+  N_Ed_N: { symbol: "N_{Ed}", valueType: "number" },
+  V_y_Ed_N: { symbol: "V_{y,Ed}", valueType: "number" },
+  V_z_Ed_N: { symbol: "V_{z,Ed}", valueType: "number" },
+  M_y_Ed_Nmm: { symbol: "M_{y,Ed}", valueType: "number" },
+  M_z_Ed_Nmm: { symbol: "M_{z,Ed}", valueType: "number" },
+  T_Ed_Nmm: { symbol: "T_{Ed}", valueType: "number" },
 
-  L_mm: { symbol: "L", unit: "mm", valueType: "number", positive: true },
+  L_mm: { symbol: "L", valueType: "number", positive: true },
 
-  A_mm2: { symbol: "A", unit: "mm^2", valueType: "number", positive: true },
-  Iy_mm4: { symbol: "I_y", unit: "mm^4", valueType: "number", positive: true },
-  Iz_mm4: { symbol: "I_z", unit: "mm^4", valueType: "number", positive: true },
-  Wpl_y_mm3: {
-    symbol: "W_{pl,y}",
-    unit: "mm^3",
-    valueType: "number",
-    positive: true,
-  },
-  Wpl_z_mm3: {
-    symbol: "W_{pl,z}",
-    unit: "mm^3",
-    valueType: "number",
-    positive: true,
-  },
-  Wel_y_mm3: {
-    symbol: "W_{el,y}",
-    unit: "mm^3",
-    valueType: "number",
-    positive: true,
-  },
-  Wel_z_mm3: {
-    symbol: "W_{el,z}",
-    unit: "mm^3",
-    valueType: "number",
-    positive: true,
-  },
-  Av_y_mm2: {
-    symbol: "A_{v,y}",
-    unit: "mm^2",
-    valueType: "number",
-    positive: true,
-  },
-  Av_z_mm2: {
-    symbol: "A_{v,z}",
-    unit: "mm^2",
-    valueType: "number",
-    positive: true,
-  },
-  S_y_mm3: { symbol: "S_y", unit: "mm^3", valueType: "number", positive: true },
-  S_z_mm3: { symbol: "S_z", unit: "mm^3", valueType: "number", positive: true },
-  It_mm4: { symbol: "I_t", unit: "mm^4", valueType: "number", positive: true },
-  Wt_mm3: { symbol: "W_t", unit: "mm^3", valueType: "number", positive: true },
-  Iw_mm6: { symbol: "I_w", unit: "mm^6", valueType: "number", positive: true },
-  centroid_y_mm: {
-    symbol: "y_c",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  centroid_z_mm: {
-    symbol: "z_c",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
+  A_mm2: { symbol: "A", valueType: "number", positive: true },
+  Iy_mm4: { symbol: "I_y", valueType: "number", positive: true },
+  Iz_mm4: { symbol: "I_z", valueType: "number", positive: true },
+  Wpl_y_mm3: { symbol: "W_{pl,y}", valueType: "number", positive: true },
+  Wpl_z_mm3: { symbol: "W_{pl,z}", valueType: "number", positive: true },
+  Wel_y_mm3: { symbol: "W_{el,y}", valueType: "number", positive: true },
+  Wel_z_mm3: { symbol: "W_{el,z}", valueType: "number", positive: true },
+  Av_y_mm2: { symbol: "A_{v,y}", valueType: "number", positive: true },
+  Av_z_mm2: { symbol: "A_{v,z}", valueType: "number", positive: true },
+  S_y_mm3: { symbol: "S_y", valueType: "number", positive: true },
+  S_z_mm3: { symbol: "S_z", valueType: "number", positive: true },
+  It_mm4: { symbol: "I_t", valueType: "number", positive: true },
+  Wt_mm3: { symbol: "W_t", valueType: "number", positive: true },
+  Iw_mm6: { symbol: "I_w", valueType: "number", positive: true },
+  centroid_y_mm: { symbol: "y_c", valueType: "number", positive: true },
+  centroid_z_mm: { symbol: "z_c", valueType: "number", positive: true },
 
-  "i_geometry.h_mm": {
-    symbol: "h",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  "i_geometry.b_mm": {
-    symbol: "b",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  "i_geometry.tw_mm": {
-    symbol: "t_w",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  "i_geometry.tf_mm": {
-    symbol: "t_f",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  "i_geometry.r_mm": {
-    symbol: "r",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  "rhs_geometry.h_mm": {
-    symbol: "h",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  "rhs_geometry.b_mm": {
-    symbol: "b",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  "rhs_geometry.tw_mm": {
-    symbol: "t_w",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  "rhs_geometry.ri_mm": {
-    symbol: "r_i",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  "rhs_geometry.ro_mm": {
-    symbol: "r_o",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  "chs_geometry.d_mm": {
-    symbol: "d",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
-  "chs_geometry.t_mm": {
-    symbol: "t",
-    unit: "mm",
-    valueType: "number",
-    positive: true,
-  },
+  "i_geometry.h_mm": { symbol: "h", valueType: "number", positive: true },
+  "i_geometry.b_mm": { symbol: "b", valueType: "number", positive: true },
+  "i_geometry.tw_mm": { symbol: "t_w", valueType: "number", positive: true },
+  "i_geometry.tf_mm": { symbol: "t_f", valueType: "number", positive: true },
+  "i_geometry.r_mm": { symbol: "r", valueType: "number", positive: true },
+  "rhs_geometry.h_mm": { symbol: "h", valueType: "number", positive: true },
+  "rhs_geometry.b_mm": { symbol: "b", valueType: "number", positive: true },
+  "rhs_geometry.tw_mm": { symbol: "t_w", valueType: "number", positive: true },
+  "rhs_geometry.ri_mm": { symbol: "r_i", valueType: "number", positive: true },
+  "rhs_geometry.ro_mm": { symbol: "r_o", valueType: "number", positive: true },
+  "chs_geometry.d_mm": { symbol: "d", valueType: "number", positive: true },
+  "chs_geometry.t_mm": { symbol: "t", valueType: "number", positive: true },
 
-  fy_MPa: { symbol: "f_y", unit: "MPa", valueType: "number" },
-  fu_MPa: { symbol: "f_u", unit: "MPa", valueType: "number" },
+  fy_MPa: { symbol: "f_y", valueType: "number" },
+  fu_MPa: { symbol: "f_u", valueType: "number" },
 
   f_method: {
     symbol: "f",
@@ -220,11 +119,7 @@ export const tableKeyValues: Record<string, readonly (string | number)[]> = {
 
 export const tableKeys = Object.keys(tableKeyValues);
 
-type CoefficientCatalogEntry = {
-  symbol?: string;
-  unit?: string;
-  meta?: NodeMeta;
-};
+type CoefficientCatalogEntry = { symbol?: string; meta?: NodeMeta };
 
 export const coefficientCatalog: Record<string, CoefficientCatalogEntry> = {
   gamma_M0: {

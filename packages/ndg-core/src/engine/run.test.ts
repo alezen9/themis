@@ -173,8 +173,12 @@ describe("runNDG — select node", () => {
   };
 
   it("forwards the value of the single active child", () => {
-    expect(runNDG(definition, { values: { section_class: 2 } }).cache.resistance).toBe(10);
-    expect(runNDG(definition, { values: { section_class: 3 } }).cache.resistance).toBe(20);
+    expect(
+      runNDG(definition, { values: { section_class: 2 } }).cache.resistance,
+    ).toBe(10);
+    expect(
+      runNDG(definition, { values: { section_class: 3 } }).cache.resistance,
+    ).toBe(20);
   });
 
   it("evaluates only the active branch", () => {
@@ -210,7 +214,9 @@ describe("runNDG — select node", () => {
       nodes: ambiguous,
       evaluate: { a: () => 1, b: () => 2, utilisation: ({ picked }) => picked },
     };
-    expect(() => runNDG(def, { values: {} })).toThrow(/exactly one active child/);
+    expect(() => runNDG(def, { values: {} })).toThrow(
+      /exactly one active child/,
+    );
   });
 
   it("lets two select nodes resolve to the same shared child", () => {
@@ -226,7 +232,10 @@ describe("runNDG — select node", () => {
     ];
     const def: NDGDefinition<typeof shared> = {
       nodes: shared,
-      evaluate: { shared: () => 5, utilisation: ({ left, right }) => left + right },
+      evaluate: {
+        shared: () => 5,
+        utilisation: ({ left, right }) => left + right,
+      },
     };
 
     const result = runNDG(def, { values: { mode: 1 } });

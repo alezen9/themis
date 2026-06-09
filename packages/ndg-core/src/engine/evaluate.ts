@@ -154,10 +154,16 @@ const resolveSelectNode = (
     );
 
   const selectedChild = state.nodeById.get(childId);
-  assertDefined(selectedChild, `Select node "${node.key}" references unknown child "${childId}"`);
+  assertDefined(
+    selectedChild,
+    `Select node "${node.key}" references unknown child "${childId}"`,
+  );
 
   const selectedValue = state.cache[selectedChild.key];
-  assertDefined(selectedValue, `Select node "${node.key}" selected "${selectedChild.key}" with no value`);
+  assertDefined(
+    selectedValue,
+    `Select node "${node.key}" selected "${selectedChild.key}" with no value`,
+  );
 
   assertFiniteNumberResult(node, selectedValue);
   return selectedValue;

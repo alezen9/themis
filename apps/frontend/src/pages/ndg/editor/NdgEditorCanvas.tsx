@@ -55,6 +55,7 @@ export const NdgEditorCanvas = () => {
       className="ndg-editor-flow"
       nodes={nodes}
       edges={edges}
+      connectionRadius={32}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       defaultEdgeOptions={{
@@ -63,7 +64,6 @@ export const NdgEditorCanvas = () => {
       }}
       edgeTypes={edgeTypes}
       nodeTypes={nodeTypes}
-      elevateEdgesOnSelect
       maxZoom={8}
       minZoom={0.05}
       onConnect={onConnectNodes}

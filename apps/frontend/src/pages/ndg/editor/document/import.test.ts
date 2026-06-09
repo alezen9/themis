@@ -137,7 +137,8 @@ describe("editorDocumentSchema", () => {
             variant: "compute",
             key: "resistance",
             valueType: { type: "number" },
-            template: "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
+            template:
+              "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
           },
         },
       ],

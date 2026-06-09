@@ -1,5 +1,5 @@
 import type { NodeMeta } from "@ndg/ndg-core";
-import type { VerificationRow } from "@ndg/ndg-ec3-1-1";
+import { applyDisplayUnit, type VerificationRow } from "@ndg/ndg-ec3-1-1";
 import { twMerge } from "tailwind-merge";
 
 import {
@@ -40,6 +40,7 @@ export const VerificationTraceDrawer = (
 
   return (
     <Drawer
+      className="max-w-max"
       open={!!verification}
       onOpenChange={open => {
         if (!open) onClose();
@@ -102,23 +103,26 @@ const VerificationTrace = (props: VerificationTraceProps) => {
         symbol: checkEntry.symbol,
         template: checkEntry.template,
         value: checkEntry.value,
-        unit: checkEntry.unit,
+        key: checkEntry.key,
+        displayUnit: checkEntry.displayUnit,
       },
       entryByKey,
     );
 
-  const values = reversedTrace.flatMap(entry =>
-    !entry.symbol || entry.nodeId === check.id || absorbedKeys.has(entry.key)
-      ? []
-      : [
-          {
-            id: entry.nodeId,
-            symbol: entry.symbol,
-            value: entry.value,
-            unit: entry.unit,
-          },
-        ],
-  );
+  const values = reversedTrace.flatMap(entry => {
+    if (
+      !entry.symbol ||
+      entry.nodeId === check.id ||
+      absorbedKeys.has(entry.key)
+    )
+      return [];
+    const { value, label } = applyDisplayUnit(
+      entry.value,
+      entry.key,
+      entry.displayUnit,
+    );
+    return [{ id: entry.nodeId, symbol: entry.symbol, value, unit: label }];
+  });
 
   const steps = reversedTrace.flatMap(entry =>
     !entry.template || entry.nodeId === check.id || absorbedKeys.has(entry.key)
@@ -129,7 +133,8 @@ const VerificationTrace = (props: VerificationTraceProps) => {
             symbol: entry.symbol,
             template: entry.template,
             value: entry.value,
-            unit: entry.unit,
+            key: entry.key,
+            displayUnit: entry.displayUnit,
             ref: clauseRef(entry.meta),
           },
         ],
@@ -139,7 +144,11 @@ const VerificationTrace = (props: VerificationTraceProps) => {
     <div className="flex flex-col gap-6 text-sand-900">
       {checkTex && (
         <div className="rounded-md border border-sand-100 bg-sand-50 p-5">
-          <Latex displayMode tex={checkTex} className="justify-start text-3xl" />
+          <Latex
+            displayMode
+            tex={checkTex}
+            className="justify-start text-3xl"
+          />
         </div>
       )}
 

@@ -11,16 +11,19 @@ export const CheckNode = (props: EditorNodeProps) => {
 
   const tex =
     data.variant === "compute"
-      ? latexPreview({ symbol: data.symbol, template: data.template, symbolByKey })
+      ? latexPreview({
+          symbol: data.symbol,
+          template: data.template,
+          key: data.key,
+          symbolByKey,
+        })
       : SELECT_PREVIEW_TEX;
 
   return (
     <NodeCard nodeId={props.id} nodeKey={data.key}>
       <NodeHeader label={data.name} type="check" />
       <NodeBody>
-        {tex && (
-          <Latex displayMode tex={tex} className="justify-center-safe px-1" />
-        )}
+        <Latex displayMode tex={tex} className="justify-center-safe px-1" />
       </NodeBody>
       <NodeAddChildHandle sourceNodeId={props.id} />
     </NodeCard>

@@ -23,8 +23,8 @@ import type { EditorNodeInput } from "../../document/editorNodeSchema";
 const SymbolUnitPreview = () => {
   const { watch } = useFormContext<EditorNodeInput>();
   const symbol = watch("symbol");
-  const unit = watch("unit");
-  const tex = latexPreview({ symbol, unit });
+  const key = watch("key");
+  const tex = latexPreview({ symbol, key });
   if (!tex) return null;
 
   return (
@@ -85,7 +85,6 @@ export const FormIdentity = () => {
           const entry = userInputCatalog[key];
           if (!entry) return;
           setValue("symbol", entry.symbol);
-          setValue("unit", entry.unit);
           setValue("valueType", { type: entry.valueType });
           return;
         }
@@ -94,7 +93,6 @@ export const FormIdentity = () => {
           const entry = coefficientCatalog[key];
           if (!entry) return;
           setValue("symbol", entry.symbol);
-          setValue("unit", entry.unit);
           setValue("meta", entry.meta);
           return;
         }
@@ -147,7 +145,6 @@ export const FormIdentity = () => {
                       shouldValidate: true,
                     });
                     setValue("symbol", entry?.symbol);
-                    setValue("unit", entry?.unit);
                     setValue("value", undefined);
                   }}
                 />

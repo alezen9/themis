@@ -6,14 +6,12 @@ import { stepEquation } from "./traceEquation";
 const entry = (
   key: string,
   value: NDGTraceEntry["value"],
-  unit?: string,
   symbol?: string,
 ): NDGTraceEntry => ({
   nodeId: key,
   type: "user-input",
   key,
   value,
-  unit,
   symbol,
   children: [],
 });
@@ -28,18 +26,19 @@ describe("stepEquation", () => {
         symbol: "N_{pl,Rd}",
         template: "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
         value: 355000,
-        unit: "N",
+        key: "N_pl_Rd_N",
+        displayUnit: undefined,
       },
       entryByKey(
-        entry("A_mm2", 1000, "mm^2", "A"),
-        entry("fy_MPa", 355, "\\mathrm{MPa}", "f_y"),
-        entry("gamma_M0", 1, undefined, "\\gamma_{M0}"),
+        entry("A_mm2", 1000, "A"),
+        entry("fy_MPa", 355, "f_y"),
+        entry("gamma_M0", 1, "\\gamma_{M0}"),
       ),
     );
 
     expect(tex).toContain("N_{pl,Rd} = \\frac{A \\cdot f_y}{\\gamma_{M0}}");
     expect(tex).toContain("\\text{1'000.00}\\,mm^2");
-    expect(tex).toContain("\\text{355.00}\\,\\mathrm{MPa}");
+    expect(tex).toContain("\\text{355.00}\\,MPa");
     expect(tex).toContain("= \\text{355'000.00}\\,N");
   });
 
@@ -47,20 +46,36 @@ describe("stepEquation", () => {
     const tex = stepEquation(
       {
         symbol: "u_r",
-        template: "\\frac{|\\key{M_Ed_Nmm}|}{\\key{M_c_Rd_Nmm}} \\leq 1.0",
+        template: "\\frac{|\\key{M_y_Ed_Nmm}|}{\\key{M_c_Rd_Nmm}} \\leq 1.0",
         value: 0.5,
-        unit: undefined,
+        key: "utilisation",
+        displayUnit: undefined,
       },
       entryByKey(
-        entry("M_Ed_Nmm", 4000, "Nmm", "M_{Ed}"),
-        entry("M_c_Rd_Nmm", 8000, "Nmm", "M_{el,Rd}"),
+        entry("M_y_Ed_Nmm", 4000, "M_{Ed}"),
+        entry("M_c_Rd_Nmm", 8000, "M_{el,Rd}"),
       ),
     );
 
     expect(tex).toContain("u_r = \\frac{|M_{Ed}|}{M_{el,Rd}} \\leq 1.0");
     expect(tex).toContain(
-      "\\frac{|\\text{4'000.00}\\,Nmm|}{\\text{8'000.00}\\,Nmm} \\leq 1.0",
+      "\\frac{|\\text{4'000.00}\\,N{\\cdot}mm|}{\\text{8'000.00}\\,N{\\cdot}mm} \\leq 1.0",
     );
     expect(tex).toContain("= \\text{0.50}");
+  });
+
+  it("converts the result to the authored display unit", () => {
+    const tex = stepEquation(
+      {
+        symbol: "M_{c,Rd}",
+        template: "\\key{M_pl_Rd_Nmm}",
+        value: 8_000_000,
+        key: "M_c_Rd_Nmm",
+        displayUnit: "kNm",
+      },
+      entryByKey(entry("M_pl_Rd_Nmm", 8_000_000, "M_{pl,Rd}")),
+    );
+
+    expect(tex).toContain("= \\text{8.00}\\,kN{\\cdot}m");
   });
 });

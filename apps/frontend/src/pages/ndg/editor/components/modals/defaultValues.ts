@@ -9,14 +9,12 @@ export const defaultNodeFormValues = {
     type: "user-input",
     key: "N_Ed_N",
     symbol: userInputCatalog.N_Ed_N.symbol,
-    unit: userInputCatalog.N_Ed_N.unit,
     valueType: { type: userInputCatalog.N_Ed_N.valueType },
   },
   coefficient: {
     type: "coefficient",
     key: "gamma_M0",
     symbol: coefficientCatalog.gamma_M0.symbol,
-    unit: coefficientCatalog.gamma_M0.unit,
     meta: coefficientCatalog.gamma_M0.meta,
     valueType: { type: "number" },
   },
@@ -24,7 +22,6 @@ export const defaultNodeFormValues = {
     type: "constant",
     key: "E",
     symbol: constantCatalog.E.symbol,
-    unit: constantCatalog.E.unit,
     valueType: { type: "number" },
   },
   table: {

@@ -15,9 +15,7 @@ export const UserInputNode = (props: EditorNodeProps) => {
       <Handle type="target" position={Position.Top} />
       <NodeHeader label={data.key} type="input" />
       <NodeBody>
-        {tex && (
-          <Latex displayMode tex={tex} className="justify-center-safe px-1" />
-        )}
+        <Latex displayMode tex={tex} className="justify-center-safe px-1" />
       </NodeBody>
     </NodeCard>
   );

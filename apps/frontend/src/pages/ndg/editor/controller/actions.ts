@@ -17,7 +17,11 @@ export const toEditorNode = (
 
 const exportNodeData = (node: EditorNode) => {
   if (node.type === "formula" && node.data.variant === "select")
-    return { variant: "select", key: node.data.key, valueType: node.data.valueType };
+    return {
+      variant: "select",
+      key: node.data.key,
+      valueType: node.data.valueType,
+    };
   if (node.type === "check" && node.data.variant === "select")
     return {
       variant: "select",

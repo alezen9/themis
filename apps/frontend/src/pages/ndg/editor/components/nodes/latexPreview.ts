@@ -1,7 +1,9 @@
 import { formatNumber } from "@formatters/number";
 import { constantCatalog } from "@ndg/ndg-core";
+import { unitLabel } from "@ndg/ndg-ec3-1-1";
 
-export const SELECT_PREVIEW_TEX = "\\left\\langle \\text{select} \\right\\rangle";
+export const SELECT_PREVIEW_TEX =
+  "\\left\\langle \\text{select} \\right\\rangle";
 
 const KEY_PATTERN = /\\key\{([^}]+)\}/g;
 
@@ -21,14 +23,14 @@ export const renderKeyPlaceholders = (
 type LatexPreviewNode = {
   symbol?: string;
   template?: string;
-  unit?: string;
   key?: string;
   value?: number;
   symbolByKey?: SymbolByKey;
 };
 
 export const latexPreview = (node: LatexPreviewNode) => {
-  const { symbol, unit, value, template, key, symbolByKey } = node;
+  const { symbol, value, template, key, symbolByKey } = node;
+  const unit = key ? unitLabel(key) : undefined;
   const constantValue = value ?? constantCatalog[key ?? ""]?.value;
   const formattedValue =
     constantValue !== undefined ? formatNumber(constantValue) : undefined;
@@ -36,6 +38,6 @@ export const latexPreview = (node: LatexPreviewNode) => {
     ? renderKeyPlaceholders(template, symbolByKey)
     : formattedValue;
   const body = [symbol, definition].filter(Boolean).join(" = ");
-  if (!body) return unit ? `(${unit})` : undefined;
+  if (!body) return unit ? `(${unit})` : "";
   return unit ? `${body} \\quad (${unit})` : body;
 };

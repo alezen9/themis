@@ -28,12 +28,7 @@ export const initialDocument: EditorDocument = {
       id: designForceId,
       position: { x: -220, y: 170 },
       type: "user-input",
-      data: {
-        key: "N_Ed_N",
-        valueType: { type: "number" },
-        symbol: "N_{Ed}",
-        unit: "N",
-      },
+      data: { key: "N_Ed_N", valueType: { type: "number" }, symbol: "N_{Ed}" },
     },
     {
       id: plasticResistanceId,
@@ -51,23 +46,13 @@ export const initialDocument: EditorDocument = {
       id: areaId,
       position: { x: 0, y: 340 },
       type: "user-input",
-      data: {
-        key: "A_mm2",
-        valueType: { type: "number" },
-        symbol: "A",
-        unit: "mm^2",
-      },
+      data: { key: "A_mm2", valueType: { type: "number" }, symbol: "A" },
     },
     {
       id: yieldStrengthId,
       position: { x: 220, y: 340 },
       type: "user-input",
-      data: {
-        key: "fy_MPa",
-        valueType: { type: "number" },
-        symbol: "f_y",
-        unit: "MPa",
-      },
+      data: { key: "fy_MPa", valueType: { type: "number" }, symbol: "f_y" },
     },
     {
       id: safetyFactorId,

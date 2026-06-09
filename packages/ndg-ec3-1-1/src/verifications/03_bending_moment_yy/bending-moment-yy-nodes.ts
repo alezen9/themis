@@ -13,11 +13,7 @@ export const nodes = defineNodes([
     key: "utilisation",
     name: "Bending moment y-y",
     valueType: { type: "number" },
-    meta: {
-      sectionRef: "6.2.5",
-      paragraphRef: "(1)",
-      formulaRef: "(6.12)",
-    },
+    meta: { sectionRef: "6.2.5", paragraphRef: "(1)", formulaRef: "(6.12)" },
     template: "\\frac{|\\key{M_y_Ed_Nmm}|}{\\key{M_c_Rd_Nmm}} \\leq 1.0",
   },
   {
@@ -27,7 +23,6 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "M_y_Ed_Nmm",
     valueType: { type: "number" },
-    unit: "N{\\cdot}mm",
   },
   {
     id: "1252c6ad-2b65-4bb8-a844-89bc4fad9c6f",
@@ -63,13 +58,8 @@ export const nodes = defineNodes([
     variant: "compute",
     key: "M_el_y_Rd_Nmm",
     valueType: { type: "number" },
-    meta: {
-      sectionRef: "6.2.5",
-      paragraphRef: "(2)",
-      formulaRef: "(6.14)",
-    },
+    meta: { sectionRef: "6.2.5", paragraphRef: "(2)", formulaRef: "(6.14)" },
     template: "\\frac{\\key{Wel_y_mm3} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
-    unit: "Nmm",
   },
   {
     id: "5217f3d1-f584-4fb9-a193-810d95c1f743",
@@ -83,13 +73,8 @@ export const nodes = defineNodes([
     variant: "compute",
     key: "M_pl_y_Rd_Nmm",
     valueType: { type: "number" },
-    meta: {
-      sectionRef: "6.2.5",
-      paragraphRef: "(2)",
-      formulaRef: "(6.13)",
-    },
+    meta: { sectionRef: "6.2.5", paragraphRef: "(2)", formulaRef: "(6.13)" },
     template: "\\frac{\\key{Wpl_y_mm3} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
-    unit: "Nmm",
   },
   {
     id: "2bdfed5e-53f9-4fd1-b8d1-61d02638f454",
@@ -98,7 +83,6 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "Wel_y_mm3",
     valueType: { type: "number" },
-    unit: "mm^3",
   },
   {
     id: "7ff50833-8392-4e44-a6a7-c0fd8d5cd1c8",
@@ -120,7 +104,6 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "fy_MPa",
     valueType: { type: "number" },
-    unit: "\\mathrm{MPa}",
   },
   {
     id: "eda41236-344e-4143-a8cb-d15cfb1c64ec",
@@ -129,7 +112,6 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "Wpl_y_mm3",
     valueType: { type: "number" },
-    unit: "mm^3",
   },
 ]);
 

@@ -36,7 +36,6 @@ const userInputNode: EditorNode = {
     key: "N_Ed_N",
     valueType: { type: "number" },
     symbol: "X_CUSTOM",
-    unit: "u_custom",
   },
 } as EditorNode;
 
@@ -74,13 +73,12 @@ describe("EditNodeModal", () => {
           id: "n1",
           key: "N_Ed_N",
           symbol: "X_CUSTOM",
-          unit: "u_custom",
         }),
       ),
     );
   });
 
-  it("re-derives symbol/unit when the key is changed", async () => {
+  it("re-derives symbol when the key is changed", async () => {
     seed(userInputNode);
 
     fireEvent.click(screen.getByTestId("input-key-trigger"));
@@ -95,7 +93,6 @@ describe("EditNodeModal", () => {
           id: "n1",
           key: "M_y_Ed_Nmm",
           symbol: entry.symbol,
-          unit: entry.unit,
         }),
       ),
     );

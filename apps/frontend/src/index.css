@@ -51,10 +51,6 @@ svg.pluton-root[data-drawing-error] {
   stroke-width: 2;
 }
 
-.ndg-editor-flow .react-flow__edgelabel-renderer {
-  z-index: 1001;
-}
-
 .ndg-editor-flow .react-flow__node.draggable.dragging,
 .ndg-editor-flow .react-flow__pane.dragging {
   cursor: grabbing;

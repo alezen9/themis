@@ -33,7 +33,7 @@ export const editorNodeSchema = z
       key: z.string().min(1),
       valueType,
       meta: NodeMetaSchema.optional(),
-      unit: z.string().optional(),
+      displayUnit: z.string().optional(),
       template: z.string().optional(),
     }),
     z.object({
@@ -41,7 +41,7 @@ export const editorNodeSchema = z
       type: z.literal("user-input"),
       key: z.string().min(1),
       valueType,
-      unit: z.string().optional(),
+      displayUnit: z.string().optional(),
     }),
     z.object({
       ...identity,
@@ -49,14 +49,14 @@ export const editorNodeSchema = z
       key: z.string().min(1),
       valueType,
       meta: NodeMetaSchema.optional(),
-      unit: z.string().optional(),
+      displayUnit: z.string().optional(),
     }),
     z.object({
       ...identity,
       type: z.literal("constant"),
       key: z.string().min(1),
       valueType,
-      unit: z.string().optional(),
+      displayUnit: z.string().optional(),
       value: z.number().optional(),
     }),
     z.object({
@@ -66,7 +66,7 @@ export const editorNodeSchema = z
       valueType,
       meta: NodeMetaSchema.optional(),
       source: z.string().min(1),
-      unit: z.string().optional(),
+      displayUnit: z.string().optional(),
     }),
   ])
   .superRefine((node, ctx) => {

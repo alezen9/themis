@@ -30,7 +30,6 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "N_Ed_N",
     valueType: { type: "number" },
-    unit: "N",
   },
   {
     id: "5217f3d1-f584-4fb9-a193-810d95c1f743",
@@ -53,7 +52,6 @@ export const nodes = defineNodes([
       verificationRef: "",
     },
     template: "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
-    unit: "N",
   },
   {
     id: "13e0cff4-8097-463b-8ff5-5364e9089fe9",
@@ -62,7 +60,6 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "A_mm2",
     valueType: { type: "number" },
-    unit: "mm^2",
   },
   {
     id: "a6233bbd-8ad1-46b2-a325-fcd0164c8aaf",
@@ -71,7 +68,6 @@ export const nodes = defineNodes([
     type: "user-input",
     key: "fy_MPa",
     valueType: { type: "number" },
-    unit: "MPa",
   },
   {
     id: "7ff50833-8392-4e44-a6a7-c0fd8d5cd1c8",

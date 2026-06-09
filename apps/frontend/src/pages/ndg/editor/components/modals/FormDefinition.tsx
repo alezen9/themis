@@ -1,10 +1,12 @@
 import { ComponentProps } from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
 import { constantCatalog } from "@ndg/ndg-core";
+import { displayUnitOptions, unitLabel } from "@ndg/ndg-ec3-1-1";
 import { FormField } from "@components/inputs/shared";
 import { InputNumber } from "@components/inputs/InputNumber";
+import { InputSelect } from "@components/inputs/InputSelect";
 import { InputText } from "@components/inputs/InputText";
 import { InputTextarea } from "@components/inputs/InputTextarea";
 import { Latex } from "@components/Latex";
@@ -15,24 +17,32 @@ import { renderKeyPlaceholders } from "../nodes/latexPreview";
 import type { EditorNodeInput } from "../../document/editorNodeSchema";
 
 export const FormDefinition = () => {
-  const { register, watch } = useFormContext<EditorNodeInput>();
+  const { register, watch, control } = useFormContext<EditorNodeInput>();
   const type = watch("type");
   const variant = watch("variant");
   const key = watch("key") ?? "";
   const constantPreset = constantCatalog[key] ? key : "custom";
   const isCustomConstant = type === "constant" && constantPreset === "custom";
   const isComputed = type === "check" || type === "formula";
+  const isSelect = isComputed && variant === "select";
 
-  if (type === "user-input") return null;
-  if (type === "coefficient") return null;
-  if (type === "constant" && !isCustomConstant) return null;
-  if (isComputed && variant === "select") return null;
+  const unitOptions = displayUnitOptions(key);
+  const derivedUnit = unitLabel(key);
+
+  const showTemplate = isComputed && !isSelect;
+  const showSource = type === "table";
+  const showSymbol = type === "formula" || type === "table" || isCustomConstant;
+  const showValue = isCustomConstant;
+  const showUnit = !isSelect && unitOptions.length > 0;
+
+  if (!showTemplate && !showSource && !showSymbol && !showValue && !showUnit)
+    return null;
 
   return (
     <Section>
       <SectionTitle>Definition</SectionTitle>
       <div className="grid grid-cols-4 grid-rows-1 gap-4">
-        {isComputed && (
+        {showTemplate && (
           <div className="col-span-4">
             <FormFieldLatex
               name="template"
@@ -48,7 +58,7 @@ export const FormDefinition = () => {
             </FormFieldLatex>
           </div>
         )}
-        {type === "table" && (
+        {showSource && (
           <div className="col-span-2">
             <FormField
               name="source"
@@ -59,7 +69,7 @@ export const FormDefinition = () => {
             </FormField>
           </div>
         )}
-        {type !== "check" && (
+        {showSymbol && (
           <FormFieldLatex
             name="symbol"
             label="Symbol"
@@ -68,12 +78,36 @@ export const FormDefinition = () => {
             <InputText placeholder={"\\gamma_{M0}"} {...register("symbol")} />
           </FormFieldLatex>
         )}
-        {type !== "check" && (
-          <FormFieldLatex name="unit" label="Unit" description="Display unit">
-            <InputText placeholder={"mm^2"} {...register("unit")} />
-          </FormFieldLatex>
+        {showUnit && (
+          <div className="col-span-2">
+            <FormField
+              name="displayUnit"
+              label="Display unit"
+              description="Compute unit derives from the key"
+            >
+              <div className="flex items-center gap-3">
+                <Controller
+                  name="displayUnit"
+                  control={control}
+                  render={({ field }) => (
+                    <InputSelect
+                      {...field}
+                      options={unitOptions.map(unit => ({
+                        value: unit.key,
+                        label: unit.key,
+                      }))}
+                      value={field.value ?? unitOptions[0]?.key ?? ""}
+                    />
+                  )}
+                />
+                {derivedUnit && (
+                  <Latex tex={`(${derivedUnit})`} className="text-sand-600" />
+                )}
+              </div>
+            </FormField>
+          </div>
         )}
-        {isCustomConstant && (
+        {showValue && (
           <div className="col-span-2">
             <FormField
               name="value"

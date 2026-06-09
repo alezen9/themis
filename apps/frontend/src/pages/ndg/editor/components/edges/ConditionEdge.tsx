@@ -45,7 +45,12 @@ export const ConditionEdge = (props: EdgeProps<EditorEdge>) => {
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} />
+      <BaseEdge
+        id={id}
+        path={edgePath}
+        markerEnd={markerEnd}
+        interactionWidth={24}
+      />
       <EdgeLabelRenderer>
         <div
           className="nodrag nopan pointer-events-auto absolute"

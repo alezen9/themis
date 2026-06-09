@@ -109,7 +109,7 @@ export type NDGTraceEntry = {
   type: Node["type"];
   key: string;
   value: NDGValue;
-  unit?: string;
+  displayUnit?: string;
   symbol?: string;
   template?: string;
   resolvedFrom?: string;

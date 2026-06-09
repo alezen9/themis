@@ -8,7 +8,7 @@ describe("latexPreview", () => {
       latexPreview({
         symbol: "N_{pl,Rd}",
         template: "\\frac{\\key{A_mm2}}{\\key{gamma_M0}}",
-        unit: "N",
+        key: "N_pl_Rd_N",
       }),
     ).toBe(
       "N_{pl,Rd} = \\frac{\\text{A\\_mm2}}{\\text{gamma\\_M0}} \\quad (N)",

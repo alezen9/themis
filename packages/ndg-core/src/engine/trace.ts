@@ -15,7 +15,10 @@ export const createTraceEntry = (
     const winner = state.nodeById.get(childId ?? "");
     assertDefined(winner, `Select node "${node.key}" resolved no active child`);
     const winnerEntry = state.trace.find(entry => entry.nodeId === winner.id);
-    assertDefined(winnerEntry, `Select node "${node.key}" has no child to inherit`);
+    assertDefined(
+      winnerEntry,
+      `Select node "${node.key}" has no child to inherit`,
+    );
 
     return {
       ...winnerEntry,
@@ -36,7 +39,7 @@ export const createTraceEntry = (
     type: node.type,
     key: node.key,
     value,
-    unit: "unit" in node ? node.unit : undefined,
+    displayUnit: "displayUnit" in node ? node.displayUnit : undefined,
     symbol: node.symbol,
     template: "template" in node ? node.template : undefined,
     description: node.description,

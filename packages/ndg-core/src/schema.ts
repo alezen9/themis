@@ -113,7 +113,7 @@ export const FormulaComputeNodeSchema = BaseNodeSchema.extend({
   key: z.string().min(1),
   valueType: ValueTypeSchema,
   meta: NodeMetaSchema.optional(),
-  unit: z.string().optional(),
+  displayUnit: z.string().optional(),
   template: z.string().min(1),
 });
 
@@ -146,7 +146,7 @@ export const TableNodeSchema = BaseNodeSchema.extend({
   valueType: ValueTypeSchema,
   meta: NodeMetaSchema.optional(),
   source: z.string().min(1), // e.g. "EC3-Table-6.2"
-  unit: z.string().optional(),
+  displayUnit: z.string().optional(),
 });
 
 /**
@@ -157,7 +157,7 @@ export const CoefficientNodeSchema = BaseNodeSchema.extend({
   key: z.string().min(1),
   valueType: NumericValueType,
   meta: NodeMetaSchema.optional(),
-  unit: z.string().optional(),
+  displayUnit: z.string().optional(),
 });
 
 /**
@@ -167,7 +167,7 @@ export const UserInputNodeSchema = BaseNodeSchema.extend({
   type: z.literal("user-input"),
   key: z.string().min(1),
   valueType: ValueTypeSchema,
-  unit: z.string().optional(),
+  displayUnit: z.string().optional(),
 });
 
 /**
@@ -178,7 +178,7 @@ export const ConstantNodeSchema = BaseNodeSchema.extend({
   type: z.literal("constant"),
   key: z.string().min(1),
   valueType: NumericValueType,
-  unit: z.string().optional(),
+  displayUnit: z.string().optional(),
   value: z.number().optional(), // inline value for a custom constant; named constants resolve from the registry
 });
 
