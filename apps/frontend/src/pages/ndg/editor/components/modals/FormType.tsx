@@ -1,14 +1,12 @@
-import { useFormContext } from "react-hook-form";
-
 import { InputRadio } from "@components/inputs/InputRadio";
 
 import { Section, SectionTitle } from "./shared";
 import { defaultNodeFormValues } from "./defaultValues";
 import { typeOptions } from "./options";
-import type { EditorNodeInput } from "../../document/editorNodeSchema";
+import { useNdgEditorNodeFormContext } from "./useNdgEditorNodeFormContext";
 
 export const FormType = () => {
-  const { reset, trigger, watch } = useFormContext<EditorNodeInput>();
+  const { reset, trigger, watch } = useNdgEditorNodeFormContext();
   const type = watch("type");
 
   return (

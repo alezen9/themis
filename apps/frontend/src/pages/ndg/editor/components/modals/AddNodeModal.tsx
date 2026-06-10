@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import {
@@ -23,30 +22,8 @@ import { FormType } from "./FormType";
 import { defaultNodeFormValues } from "./defaultValues";
 
 export const AddNodeModal = () => {
-  const modal = useNdgEditorModalStore(s => s.modal);
   const closeModal = useNdgEditorModalStore(s => s.closeModal);
-  const addNode = useNdgEditorStore(s => s.addNode);
-  const open = modal?.mode === "create-node";
-
-  const form = useForm<EditorNodeInput>({
-    resolver: zodResolver(editorNodeSchema),
-    mode: "onChange",
-    defaultValues: defaultNodeFormValues["user-input"],
-  });
-
-  useEffect(() => {
-    if (!open) return;
-    form.reset(defaultNodeFormValues["user-input"]);
-  }, [open, form]);
-
-  const onSubmit = form.handleSubmit(values => {
-    addNode({
-      ...values,
-      sourceNodeId:
-        modal?.mode === "create-node" ? modal.sourceNodeId : undefined,
-    });
-    closeModal();
-  });
+  const open = useNdgEditorModalStore(s => s.modal?.mode === "create-node");
 
   return (
     <Dialog
@@ -61,16 +38,39 @@ export const AddNodeModal = () => {
         </DialogHeader>
       }
     >
-      <DialogContent className="gap-8">
-        <form id="add-node-form" onSubmit={onSubmit}>
-          <FormProvider {...form}>
-            <FormType />
-            <FormIdentity />
-            <FormDefinition />
-            <FormMetadata />
-          </FormProvider>
-        </form>
-      </DialogContent>
+      <AddNodeForm />
     </Dialog>
+  );
+};
+
+const AddNodeForm = () => {
+  const addNode = useNdgEditorStore(s => s.addNode);
+  const closeModal = useNdgEditorModalStore(s => s.closeModal);
+  const sourceNodeId = useNdgEditorModalStore(s =>
+    s.modal?.mode === "create-node" ? s.modal.sourceNodeId : undefined,
+  );
+
+  const form = useForm<EditorNodeInput>({
+    resolver: zodResolver(editorNodeSchema),
+    mode: "onChange",
+    defaultValues: defaultNodeFormValues["user-input"],
+  });
+
+  const onSubmit = form.handleSubmit(values => {
+    addNode({ ...values, sourceNodeId });
+    closeModal();
+  });
+
+  return (
+    <DialogContent className="gap-8">
+      <form id="add-node-form" onSubmit={onSubmit}>
+        <FormProvider {...form}>
+          <FormType />
+          <FormIdentity />
+          <FormDefinition />
+          <FormMetadata />
+        </FormProvider>
+      </form>
+    </DialogContent>
   );
 };

@@ -1,10 +1,11 @@
 import { ComponentProps } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
 import { constantCatalog } from "@ndg/ndg-core";
 import { displayUnitOptions, unitLabel } from "@ndg/ndg-ec3-1-1";
 import { FormField } from "@components/inputs/shared";
+import { useNdgEditorNodeFormContext } from "./useNdgEditorNodeFormContext";
 import { InputNumber } from "@components/inputs/InputNumber";
 import { InputSelect } from "@components/inputs/InputSelect";
 import { InputText } from "@components/inputs/InputText";
@@ -14,10 +15,10 @@ import { Latex } from "@components/Latex";
 import { Section, SectionTitle } from "./shared";
 import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { renderKeyPlaceholders } from "../nodes/latexPreview";
-import type { EditorNodeInput } from "../../document/editorNodeSchema";
 
 export const FormDefinition = () => {
-  const { register, watch, control } = useFormContext<EditorNodeInput>();
+  const { register, registerSelect, registerNumber, watch } =
+    useNdgEditorNodeFormContext();
   const type = watch("type");
   const variant = watch("variant");
   const key = watch("key") ?? "";
@@ -86,19 +87,13 @@ export const FormDefinition = () => {
               description="Compute unit derives from the key"
             >
               <div className="flex items-center gap-3">
-                <Controller
-                  name="displayUnit"
-                  control={control}
-                  render={({ field }) => (
-                    <InputSelect
-                      {...field}
-                      options={unitOptions.map(unit => ({
-                        value: unit.key,
-                        label: unit.key,
-                      }))}
-                      value={field.value ?? unitOptions[0]?.key ?? ""}
-                    />
-                  )}
+                <InputSelect
+                  key={key}
+                  {...registerSelect("displayUnit")}
+                  options={unitOptions.map(unit => ({
+                    value: unit.key,
+                    label: unit.key,
+                  }))}
                 />
                 {derivedUnit && (
                   <Latex tex={`(${derivedUnit})`} className="text-sand-600" />
@@ -114,7 +109,7 @@ export const FormDefinition = () => {
               label="Value"
               description="Fixed numeric value"
             >
-              <InputNumber {...register("value", { valueAsNumber: true })} />
+              <InputNumber {...registerNumber("value")} />
             </FormField>
           </div>
         )}

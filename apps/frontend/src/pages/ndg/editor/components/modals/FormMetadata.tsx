@@ -1,9 +1,8 @@
-import { useFormContext } from "react-hook-form";
-
 import { FormField } from "@components/inputs/shared";
 import { InputText } from "@components/inputs/InputText";
 
 import { Section, SectionTitle } from "./shared";
+import { useNdgEditorNodeFormContext } from "./useNdgEditorNodeFormContext";
 import type { EditorNodeInput } from "../../document/editorNodeSchema";
 
 const TYPES_WITH_META: EditorNodeInput["type"][] = [
@@ -13,7 +12,7 @@ const TYPES_WITH_META: EditorNodeInput["type"][] = [
 ];
 
 export const FormMetadata = () => {
-  const { register, watch } = useFormContext<EditorNodeInput>();
+  const { register, watch } = useNdgEditorNodeFormContext();
   const type = watch("type");
   const variant = watch("variant");
 

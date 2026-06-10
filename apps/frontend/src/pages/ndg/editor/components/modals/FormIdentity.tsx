@@ -1,14 +1,14 @@
-import { useEffect } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useCallback } from "react";
+import type { ChangeHandler } from "react-hook-form";
 import { constantCatalog } from "@ndg/ndg-core";
 import { coefficientCatalog, userInputCatalog } from "@ndg/ndg-ec3-1-1";
-import { FormField } from "@components/inputs/shared";
+import { FormField, type Option } from "@components/inputs/shared";
+import { useNdgEditorNodeFormContext } from "./useNdgEditorNodeFormContext";
 import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
 import { InputRadio } from "@components/inputs/InputRadio";
 import { InputSelect } from "@components/inputs/InputSelect";
 import { InputText } from "@components/inputs/InputText";
 import { Latex } from "@components/Latex";
-import { defaultNodeFormValues } from "./defaultValues";
 import {
   coefficientKeyOptions,
   constantKeyOptions,
@@ -20,24 +20,26 @@ import { Section, SectionTitle } from "./shared";
 import { latexPreview } from "../nodes/latexPreview";
 import type { EditorNodeInput } from "../../document/editorNodeSchema";
 
+const keyOptionsByType: Partial<Record<EditorNodeInput["type"], Option[]>> = {
+  "user-input": userInputKeyOptions,
+  table: tableKeyOptions,
+  coefficient: coefficientKeyOptions,
+};
+
 const SymbolUnitPreview = () => {
-  const { watch } = useFormContext<EditorNodeInput>();
+  const { watch } = useNdgEditorNodeFormContext();
   const symbol = watch("symbol");
   const key = watch("key");
   const tex = latexPreview({ symbol, key });
   if (!tex) return null;
 
   return (
-    <Latex
-      displayMode
-      tex={tex}
-      className="px-1 text-3xl text-sand-900"
-    />
+    <Latex displayMode tex={tex} className="px-1 text-3xl text-sand-900" />
   );
 };
 
 const VariantField = () => {
-  const { register } = useFormContext<EditorNodeInput>();
+  const { register } = useNdgEditorNodeFormContext();
   return (
     <FormField
       name="variant"
@@ -53,57 +55,46 @@ const VariantField = () => {
 };
 
 export const FormIdentity = () => {
-  const { control, register, watch, setValue, subscribe } =
-    useFormContext<EditorNodeInput>();
+  const { register, registerSelect, watch, setValue, reset, getValues } =
+    useNdgEditorNodeFormContext();
   const type = watch("type");
   const key = watch("key") ?? "";
 
-  const keyOptions =
-    type === "user-input"
-      ? userInputKeyOptions
-      : type === "table"
-        ? tableKeyOptions
-        : type === "coefficient"
-          ? coefficientKeyOptions
-          : null;
+  const keyOptions = keyOptionsByType[type] ?? null;
   const showPreview =
     type === "user-input" || type === "coefficient" || type === "constant";
   const constantPreset = constantCatalog[key] ? key : "custom";
-  const isCustomConstant = type === "constant" && constantPreset === "custom";
-  const nonClearableKeyFallback =
-    type === "user-input" || type === "coefficient" || type === "table"
-      ? defaultNodeFormValues[type].key
-      : "";
+  const isCustomConstant = type === "constant" && !constantCatalog[key];
 
-  useEffect(() => {
-    const unsubscribe = subscribe({
-      name: ["type", "key"],
-      formState: { values: true },
-      callback: ({ values: { key = "", type }, name }) => {
-        if (!name) return;
-        if (type === "user-input") {
-          const entry = userInputCatalog[key];
-          if (!entry) return;
-          setValue("symbol", entry.symbol);
-          setValue("valueType", { type: entry.valueType });
-          return;
-        }
-        if (type === "coefficient") {
-          setValue("valueType", { type: "number" });
-          const entry = coefficientCatalog[key];
-          if (!entry) return;
-          setValue("symbol", entry.symbol);
-          setValue("meta", entry.meta);
-          return;
-        }
-        if (type === "table") return;
-        setValue("valueType", { type: "number" });
-      },
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, [subscribe, setValue]);
+  const onKeyChange = useCallback<ChangeHandler>(
+    async event => {
+      const values = getValues();
+      const key = event.target.value;
+      if (values.type === "user-input") {
+        const entry = userInputCatalog[key];
+        reset({
+          ...values,
+          key,
+          ...(entry && {
+            symbol: entry.symbol,
+            valueType: { type: entry.valueType },
+          }),
+        });
+        return;
+      }
+      if (values.type === "coefficient") {
+        const entry = coefficientCatalog[key];
+        reset({
+          ...values,
+          key,
+          ...(entry && { symbol: entry.symbol, meta: entry.meta }),
+        });
+        return;
+      }
+      if (values.type === "table") reset({ ...values, key });
+    },
+    [getValues, reset],
+  );
 
   if (type === "check") {
     return (
@@ -153,23 +144,12 @@ export const FormIdentity = () => {
                 )}
               </div>
             ) : keyOptions ? (
-              <Controller
-                name="key"
-                control={control}
-                render={({ field }) => (
-                  <InputAutocomplete
-                    name={field.name}
-                    options={keyOptions}
-                    value={field.value ?? ""}
-                    onBlur={field.onBlur}
-                    onChange={event => {
-                      field.onChange(
-                        event.target.value || nonClearableKeyFallback,
-                      );
-                    }}
-                    required
-                  />
-                )}
+              <InputAutocomplete
+                key={type}
+                {...registerSelect("key")}
+                onChange={onKeyChange}
+                options={keyOptions}
+                required
               />
             ) : (
               <InputText {...register("key")} />

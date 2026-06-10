@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import {
@@ -22,32 +21,8 @@ import { FormMetadata } from "./FormMetadata";
 import { FormType } from "./FormType";
 
 export const EditNodeModal = () => {
-  const modal = useNdgEditorModalStore(s => s.modal);
   const closeModal = useNdgEditorModalStore(s => s.closeModal);
-  const updateNode = useNdgEditorStore(s => s.updateNode);
-  const getNodeById = useNdgEditorStore(s => s.getNodeById);
-  const open = modal?.mode === "edit-node";
-
-  const form = useForm<EditorNodeInput>({
-    resolver: zodResolver(editorNodeSchema),
-    mode: "onChange",
-  });
-
-  useEffect(() => {
-    if (!open || modal?.mode !== "edit-node") return;
-    const node = getNodeById(modal.nodeId);
-    if (!node) return;
-    form.reset({ type: node.type, ...node.data } as EditorNodeInput);
-  }, [open, modal, form, getNodeById]);
-
-  const onSubmit = form.handleSubmit(values => {
-    if (modal?.mode !== "edit-node") return;
-    updateNode({ ...values, id: modal.nodeId });
-    closeModal();
-  });
-
-  const isCheckNode =
-    modal?.mode === "edit-node" && getNodeById(modal.nodeId)?.type === "check";
+  const open = useNdgEditorModalStore(s => s.modal?.mode === "edit-node");
 
   return (
     <Dialog
@@ -62,16 +37,45 @@ export const EditNodeModal = () => {
         </DialogHeader>
       }
     >
-      <DialogContent className="gap-8">
-        <form id="edit-node-form" onSubmit={onSubmit}>
-          <FormProvider {...form}>
-            {!isCheckNode && <FormType />}
-            <FormIdentity />
-            <FormDefinition />
-            <FormMetadata />
-          </FormProvider>
-        </form>
-      </DialogContent>
+      <EditNodeForm />
     </Dialog>
+  );
+};
+
+const EditNodeForm = () => {
+  const updateNode = useNdgEditorStore(s => s.updateNode);
+  const getNodeById = useNdgEditorStore(s => s.getNodeById);
+  const closeModal = useNdgEditorModalStore(s => s.closeModal);
+  const nodeId = useNdgEditorModalStore(s =>
+    s.modal?.mode === "edit-node" ? s.modal.nodeId : undefined,
+  );
+  const node = nodeId ? getNodeById(nodeId) : undefined;
+
+  const form = useForm<EditorNodeInput>({
+    resolver: zodResolver(editorNodeSchema),
+    mode: "onChange",
+    defaultValues: node
+      ? ({ type: node.type, ...node.data } as EditorNodeInput)
+      : undefined,
+  });
+
+  if (!node) return null;
+
+  const onSubmit = form.handleSubmit(values => {
+    updateNode({ ...values, id: node.id });
+    closeModal();
+  });
+
+  return (
+    <DialogContent className="gap-8">
+      <form id="edit-node-form" onSubmit={onSubmit}>
+        <FormProvider {...form}>
+          {node.type !== "check" && <FormType />}
+          <FormIdentity />
+          <FormDefinition />
+          <FormMetadata />
+        </FormProvider>
+      </form>
+    </DialogContent>
   );
 };
