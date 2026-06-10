@@ -14,7 +14,7 @@ export const setValueAsNumber = (value: unknown) => {
   return valueAsNumber;
 };
 
-export const useTypedFormContext = <T extends FieldValues>() => {
+export const useTypedFormContext = <T extends FieldValues = FieldValues>() => {
   const context = useFormContext<T>();
   const { register, getValues } = context;
 

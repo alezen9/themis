@@ -70,6 +70,10 @@ export const InputAutocomplete = (props: Props) => {
     [flatOptions],
   );
 
+  const [inputValue, setInputValue] = useState(
+    () => optionsMap.get(stableDefault)?.label ?? "",
+  );
+
   const onValueChange = useCallback<NonNullable<OnValueChange>>(
     option => {
       const changeEvent = { target: { name, value: option?.value ?? "" } };
@@ -92,6 +96,8 @@ export const InputAutocomplete = (props: Props) => {
       required={required}
       name={name}
       inputRef={ref}
+      inputValue={inputValue}
+      onInputValueChange={setInputValue}
       onValueChange={onValueChange}
       isItemEqualToValue={isOptionEqualToValue}
     >
@@ -118,7 +124,10 @@ export const InputAutocomplete = (props: Props) => {
               )}
               <Combobox.Input
                 data-testid={name ? `input-${name}` : undefined}
-                onBlur={onBlur}
+                onBlur={event => {
+                  setInputValue(option?.label ?? "");
+                  onBlur?.(event);
+                }}
                 placeholder={placeholder}
                 className={twMerge(
                   "flex h-full w-full min-w-0 flex-1 items-center text-center rounded-l-sm",

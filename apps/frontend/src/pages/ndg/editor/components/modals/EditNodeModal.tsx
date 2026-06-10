@@ -1,5 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { useState } from "react";
 
 import {
   Dialog,
@@ -11,14 +10,15 @@ import { Button } from "@components/Button";
 
 import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { useNdgEditorModalStore } from "./useNdgEditorModalStore";
-import {
-  editorNodeSchema,
-  type EditorNodeInput,
-} from "../../document/editorNodeSchema";
-import { FormDefinition } from "./FormDefinition";
-import { FormIdentity } from "./FormIdentity";
-import { FormMetadata } from "./FormMetadata";
-import { FormType } from "./FormType";
+import type { EditorNodeInput } from "../../document/editorNodeSchema";
+import type { EditorNode } from "../../document/types";
+import { NodeForm } from "./NodeForm";
+import { NodeTypeSelector } from "./nodeFields";
+import { EditableNodeType } from "./options";
+import { defaultNodeFormValues } from "./defaultValues";
+
+const seedFromNode = (node: EditorNode) =>
+  ({ type: node.type, ...node.data }) as EditorNodeInput;
 
 export const EditNodeModal = () => {
   const closeModal = useNdgEditorModalStore(s => s.closeModal);
@@ -37,12 +37,12 @@ export const EditNodeModal = () => {
         </DialogHeader>
       }
     >
-      <EditNodeForm />
+      <EditNodeBody />
     </Dialog>
   );
 };
 
-const EditNodeForm = () => {
+const EditNodeBody = () => {
   const updateNode = useNdgEditorStore(s => s.updateNode);
   const getNodeById = useNdgEditorStore(s => s.getNodeById);
   const closeModal = useNdgEditorModalStore(s => s.closeModal);
@@ -50,32 +50,33 @@ const EditNodeForm = () => {
     s.modal?.mode === "edit-node" ? s.modal.nodeId : undefined,
   );
   const node = nodeId ? getNodeById(nodeId) : undefined;
-
-  const form = useForm<EditorNodeInput>({
-    resolver: zodResolver(editorNodeSchema),
-    mode: "onChange",
-    defaultValues: node
-      ? ({ type: node.type, ...node.data } as EditorNodeInput)
-      : undefined,
-  });
+  const [type, setType] = useState<EditableNodeType>(
+    node && node.type !== "check" ? node.type : "user-input",
+  );
 
   if (!node) return null;
 
-  const onSubmit = form.handleSubmit(values => {
+  const onSubmit = (values: EditorNodeInput) => {
     updateNode({ ...values, id: node.id });
     closeModal();
-  });
+  };
+
+  const seed: EditorNodeInput =
+    node.type === "check" || type === node.type
+      ? seedFromNode(node)
+      : defaultNodeFormValues[type];
 
   return (
     <DialogContent className="gap-8">
-      <form id="edit-node-form" onSubmit={onSubmit}>
-        <FormProvider {...form}>
-          {node.type !== "check" && <FormType />}
-          <FormIdentity />
-          <FormDefinition />
-          <FormMetadata />
-        </FormProvider>
-      </form>
+      {node.type !== "check" && (
+        <NodeTypeSelector value={type} onChange={setType} />
+      )}
+      <NodeForm
+        key={type}
+        seed={seed}
+        formId="edit-node-form"
+        onSubmit={onSubmit}
+      />
     </DialogContent>
   );
 };

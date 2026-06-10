@@ -1,5 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { useState } from "react";
 
 import {
   Dialog,
@@ -11,14 +10,10 @@ import { Button } from "@components/Button";
 
 import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 import { useNdgEditorModalStore } from "./useNdgEditorModalStore";
-import {
-  editorNodeSchema,
-  type EditorNodeInput,
-} from "../../document/editorNodeSchema";
-import { FormDefinition } from "./FormDefinition";
-import { FormIdentity } from "./FormIdentity";
-import { FormMetadata } from "./FormMetadata";
-import { FormType } from "./FormType";
+import type { EditorNodeInput } from "../../document/editorNodeSchema";
+import { NodeForm } from "./NodeForm";
+import { NodeTypeSelector } from "./nodeFields";
+import { EditableNodeType } from "./options";
 import { defaultNodeFormValues } from "./defaultValues";
 
 export const AddNodeModal = () => {
@@ -38,39 +33,33 @@ export const AddNodeModal = () => {
         </DialogHeader>
       }
     >
-      <AddNodeForm />
+      <AddNodeBody />
     </Dialog>
   );
 };
 
-const AddNodeForm = () => {
+const AddNodeBody = () => {
   const addNode = useNdgEditorStore(s => s.addNode);
   const closeModal = useNdgEditorModalStore(s => s.closeModal);
   const sourceNodeId = useNdgEditorModalStore(s =>
     s.modal?.mode === "create-node" ? s.modal.sourceNodeId : undefined,
   );
+  const [type, setType] = useState<EditableNodeType>("user-input");
 
-  const form = useForm<EditorNodeInput>({
-    resolver: zodResolver(editorNodeSchema),
-    mode: "onChange",
-    defaultValues: defaultNodeFormValues["user-input"],
-  });
-
-  const onSubmit = form.handleSubmit(values => {
+  const onSubmit = (values: EditorNodeInput) => {
     addNode({ ...values, sourceNodeId });
     closeModal();
-  });
+  };
 
   return (
     <DialogContent className="gap-8">
-      <form id="add-node-form" onSubmit={onSubmit}>
-        <FormProvider {...form}>
-          <FormType />
-          <FormIdentity />
-          <FormDefinition />
-          <FormMetadata />
-        </FormProvider>
-      </form>
+      <NodeTypeSelector value={type} onChange={setType} />
+      <NodeForm
+        key={type}
+        seed={defaultNodeFormValues[type]}
+        formId="add-node-form"
+        onSubmit={onSubmit}
+      />
     </DialogContent>
   );
 };
