@@ -10,7 +10,7 @@ import {
 } from "./options";
 import { useCallback } from "react";
 import { InputRadio } from "@components/inputs/InputRadio";
-import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
+import { FormInputAutocomplete } from "@components/inputs/FormInputAutocomplete";
 import { ChangeHandler } from "react-hook-form";
 import {
   defaultCHSSection,
@@ -55,8 +55,7 @@ const toChsGeometry = (section?: CircularSection) => {
 };
 
 export const FormSection = () => {
-  const { register, registerSelect, watch, reset, getValues, trigger } =
-    useEc311FormContext();
+  const { register, watch, reset, getValues, trigger } = useEc311FormContext();
   const shape = watch("shape");
 
   const onSectionChange = useCallback<ChangeHandler>(
@@ -113,11 +112,9 @@ export const FormSection = () => {
     <Section>
       <SectionTitle>Cross section</SectionTitle>
       <HorizontalInput name="section_id" label={<TextLabel>Section</TextLabel>}>
-        <InputAutocomplete
-          key={shape}
-          {...registerSelect?.("section_id")}
+        <FormInputAutocomplete
+          name="section_id"
           onChange={onSectionChange}
-          defaultValue={sectionOptionsMap[shape].defaultValue}
           options={sectionOptionsMap[shape].options}
         />
       </HorizontalInput>

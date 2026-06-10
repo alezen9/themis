@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { constantCatalog } from "@ndg/ndg-core";
-import { displayUnitOptions } from "@ndg/ndg-ec3-1-1";
+import { getDisplayUnitOptionsByKey } from "@ndg/ndg-ec3-1-1";
 import { FormField } from "@components/inputs/shared";
 import { useTypedFormContext } from "@components/inputs/useTypedFormContext";
 import { InputNumber } from "@components/inputs/InputNumber";
@@ -50,7 +50,7 @@ const ConstantFields = () => {
   const key = watch("key") ?? "";
   const isCustom = !constantCatalog[key];
   const preset = constantCatalog[key] ? key : "custom";
-  const showDefinition = isCustom || displayUnitOptions(key).length > 0;
+  const showDefinition = isCustom || getDisplayUnitOptionsByKey(key).length > 0;
 
   return (
     <>

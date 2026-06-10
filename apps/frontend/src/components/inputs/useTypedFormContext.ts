@@ -26,14 +26,6 @@ export const useTypedFormContext = <T extends FieldValues = FieldValues>() => {
     [register, getValues],
   );
 
-  const registerSelect = useCallback(
-    (name: Path<T>, options?: RegisterOptions<T, Path<T>>) => ({
-      ...register(name, options),
-      defaultValue: get(getValues(), name),
-    }),
-    [register, getValues],
-  );
-
   const registerBoolean = useCallback(
     (name: Path<T>, options?: RegisterOptions<T, Path<T>>) => ({
       ...register(name, options),
@@ -42,5 +34,5 @@ export const useTypedFormContext = <T extends FieldValues = FieldValues>() => {
     [register, getValues],
   );
 
-  return { ...context, registerNumber, registerSelect, registerBoolean };
+  return { ...context, registerNumber, registerBoolean };
 };

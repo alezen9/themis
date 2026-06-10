@@ -71,8 +71,17 @@ export const InputAutocomplete = (props: Props) => {
   );
 
   const [inputValue, setInputValue] = useState(
-    () => optionsMap.get(stableDefault)?.label ?? "",
+    () => optionsMap.get(value ?? stableDefault)?.label ?? "",
   );
+
+  // when controlled, follow an external value change (e.g. RHF reset) in the
+  // displayed text immediately; uncontrolled keeps value === undefined so it
+  // never triggers.
+  const [syncedValue, setSyncedValue] = useState(value);
+  if (value !== syncedValue) {
+    setSyncedValue(value);
+    setInputValue(optionsMap.get(value)?.label ?? "");
+  }
 
   const onValueChange = useCallback<NonNullable<OnValueChange>>(
     option => {

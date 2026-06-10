@@ -1,11 +1,11 @@
-import { useCallback } from "react";
+import { ChangeEventHandler, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChangeHandler, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 
 import { coefficientCatalog } from "@ndg/ndg-ec3-1-1";
 import { FormField } from "@components/inputs/shared";
 import { useTypedFormContext } from "@components/inputs/useTypedFormContext";
-import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
+import { FormInputAutocomplete } from "@components/inputs/FormInputAutocomplete";
 
 import { Section, SectionTitle } from "./shared";
 import { DisplayUnitField, SymbolKeyPreview } from "./nodeFields";
@@ -39,20 +39,16 @@ export const CoefficientForm = (props: Props) => {
 };
 
 const CoefficientFields = () => {
-  const { registerSelect, getValues, reset } =
-    useTypedFormContext<CoefficientNode>();
+  const { setValue } = useTypedFormContext<CoefficientNode>();
 
-  const onKeyChange = useCallback<ChangeHandler>(
-    async event => {
-      const key = event.target.value;
-      const entry = coefficientCatalog[key];
-      reset({
-        ...getValues(),
-        key,
-        ...(entry && { symbol: entry.symbol, meta: entry.meta }),
-      });
+  const onKeyChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    event => {
+      const entry = coefficientCatalog[event.target.value];
+      if (!entry) return;
+      setValue("symbol", entry.symbol);
+      setValue("meta", entry.meta);
     },
-    [getValues, reset],
+    [setValue],
   );
 
   return (
@@ -65,8 +61,8 @@ const CoefficientFields = () => {
             label="Key"
             description="Unique id used by formulas"
           >
-            <InputAutocomplete
-              {...registerSelect("key")}
+            <FormInputAutocomplete
+              name="key"
               onChange={onKeyChange}
               options={coefficientKeyOptions}
               required

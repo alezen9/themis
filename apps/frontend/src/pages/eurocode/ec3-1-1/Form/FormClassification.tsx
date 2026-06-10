@@ -3,7 +3,7 @@ import {
   AccordionContent,
   AccordionHeader,
 } from "@components/Accordion";
-import { InputSelect } from "@components/inputs/InputSelect";
+import { FormInputSelect } from "@components/inputs/FormInputSelect";
 import { HorizontalInput } from "@components/inputs/shared";
 import { TableBody, TableHeader, TableRow } from "@components/Table";
 import { formatNumber } from "@formatters/number";
@@ -27,8 +27,6 @@ import { useEc311FormContext } from "./useEc311FormContext";
 import { twMerge } from "tailwind-merge";
 
 export const FormClassification = () => {
-  const { registerSelect } = useEc311FormContext();
-
   return (
     <Section>
       <SectionTitle>Classification</SectionTitle>
@@ -36,10 +34,7 @@ export const FormClassification = () => {
         name="section_class"
         label={<TextLabel>Class</TextLabel>}
       >
-        <InputSelect
-          {...registerSelect?.("section_class")}
-          options={sectionClassOptions}
-        />
+        <FormInputSelect name="section_class" options={sectionClassOptions} />
       </HorizontalInput>
       <ClassificationInfo />
     </Section>

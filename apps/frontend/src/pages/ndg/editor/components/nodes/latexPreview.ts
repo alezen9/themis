@@ -1,6 +1,6 @@
 import { formatNumber } from "@formatters/number";
 import { constantCatalog } from "@ndg/ndg-core";
-import { unitLabel } from "@ndg/ndg-ec3-1-1";
+import { unitTex } from "@ndg/ndg-ec3-1-1";
 
 export const SELECT_PREVIEW_TEX =
   "\\left\\langle \\text{select} \\right\\rangle";
@@ -30,7 +30,7 @@ type LatexPreviewNode = {
 
 export const latexPreview = (node: LatexPreviewNode) => {
   const { symbol, value, template, key, symbolByKey } = node;
-  const unit = key ? unitLabel(key) : undefined;
+  const unit = key ? unitTex(key) : undefined;
   const constantValue = value ?? constantCatalog[key ?? ""]?.value;
   const formattedValue =
     constantValue !== undefined ? formatNumber(constantValue) : undefined;

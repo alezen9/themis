@@ -1,6 +1,6 @@
 import { Accordion, AccordionContent } from "@components/Accordion";
 import { InputNumber } from "@components/inputs/InputNumber";
-import { InputSelect } from "@components/inputs/InputSelect";
+import { FormInputSelect } from "@components/inputs/FormInputSelect";
 import { InputToggle } from "@components/inputs/InputToggle";
 import { HorizontalInput } from "@components/inputs/shared";
 import { SpacingDivider } from "@components/Dividers";
@@ -13,8 +13,7 @@ import { LatexLabel, Section, SectionTitle, TextLabel } from "./shared";
 import { useEc311FormContext } from "./useEc311FormContext";
 
 export const FormLateralTorsionalBuckling = () => {
-  const { registerBoolean, registerNumber, registerSelect, watch } =
-    useEc311FormContext();
+  const { registerBoolean, registerNumber, watch } = useEc311FormContext();
   const shape = watch("shape");
   const includeTorsionalModes = watch("include_torsional_modes");
   const momentShape = watch("M_y_Ed_shape_LT");
@@ -71,10 +70,11 @@ export const FormLateralTorsionalBuckling = () => {
                 />
               }
             >
-              <InputSelect
-                {...registerSelect?.("M_y_Ed_shape_LT", {
+              <FormInputSelect
+                name="M_y_Ed_shape_LT"
+                rules={{
                   deps: ["psi_y_LT", "support_condition_LT", "load_LT"],
-                })}
+                }}
                 options={momentShapeOptions}
               />
             </HorizontalInput>
@@ -94,8 +94,8 @@ export const FormLateralTorsionalBuckling = () => {
                   name="support_condition_LT"
                   label={<TextLabel>LT support</TextLabel>}
                 >
-                  <InputSelect
-                    {...registerSelect?.("support_condition_LT")}
+                  <FormInputSelect
+                    name="support_condition_LT"
                     options={supportConditionOptions}
                   />
                 </HorizontalInput>
@@ -103,8 +103,8 @@ export const FormLateralTorsionalBuckling = () => {
                   name="load_LT"
                   label={<TextLabel>Load application</TextLabel>}
                 >
-                  <InputSelect
-                    {...registerSelect?.("load_LT")}
+                  <FormInputSelect
+                    name="load_LT"
                     options={loadApplicationLTOptions}
                   />
                 </HorizontalInput>

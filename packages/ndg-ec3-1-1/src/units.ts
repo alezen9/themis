@@ -1,67 +1,67 @@
 import type { NDGValue } from "@ndg/ndg-core";
 
-type DisplayUnit = { key: string; label: string; factor: number };
-type UnitEntry = { label: string; family: readonly DisplayUnit[] };
+type DisplayUnit = { key: string; tex: string; factor: number };
+type UnitEntry = { tex: string; family: readonly DisplayUnit[] };
 
 const UNIT_TOKENS: Record<string, UnitEntry> = {
   N: {
-    label: "N",
+    tex: "N",
     family: [
-      { key: "N", label: "N", factor: 1 },
-      { key: "kN", label: "kN", factor: 1e-3 },
-      { key: "MN", label: "MN", factor: 1e-6 },
+      { key: "N", tex: "N", factor: 1 },
+      { key: "kN", tex: "kN", factor: 1e-3 },
+      { key: "MN", tex: "MN", factor: 1e-6 },
     ],
   },
   Nmm: {
-    label: "N{\\cdot}mm",
+    tex: "N{\\cdot}mm",
     family: [
-      { key: "Nmm", label: "N{\\cdot}mm", factor: 1 },
-      { key: "Nm", label: "N{\\cdot}m", factor: 1e-3 },
-      { key: "kNm", label: "kN{\\cdot}m", factor: 1e-6 },
+      { key: "Nmm", tex: "N{\\cdot}mm", factor: 1 },
+      { key: "Nm", tex: "N{\\cdot}m", factor: 1e-3 },
+      { key: "kNm", tex: "kN{\\cdot}m", factor: 1e-6 },
     ],
   },
   MPa: {
-    label: "MPa",
+    tex: "MPa",
     family: [
-      { key: "MPa", label: "MPa", factor: 1 },
-      { key: "GPa", label: "GPa", factor: 1e-3 },
+      { key: "MPa", tex: "MPa", factor: 1 },
+      { key: "GPa", tex: "GPa", factor: 1e-3 },
     ],
   },
   mm: {
-    label: "mm",
+    tex: "mm",
     family: [
-      { key: "mm", label: "mm", factor: 1 },
-      { key: "cm", label: "cm", factor: 1e-1 },
-      { key: "m", label: "m", factor: 1e-3 },
+      { key: "mm", tex: "mm", factor: 1 },
+      { key: "cm", tex: "cm", factor: 1e-1 },
+      { key: "m", tex: "m", factor: 1e-3 },
     ],
   },
   mm2: {
-    label: "mm^2",
+    tex: "mm^2",
     family: [
-      { key: "mm2", label: "mm^2", factor: 1 },
-      { key: "cm2", label: "cm^2", factor: 1e-2 },
-      { key: "m2", label: "m^2", factor: 1e-6 },
+      { key: "mm2", tex: "mm^2", factor: 1 },
+      { key: "cm2", tex: "cm^2", factor: 1e-2 },
+      { key: "m2", tex: "m^2", factor: 1e-6 },
     ],
   },
   mm3: {
-    label: "mm^3",
+    tex: "mm^3",
     family: [
-      { key: "mm3", label: "mm^3", factor: 1 },
-      { key: "cm3", label: "cm^3", factor: 1e-3 },
+      { key: "mm3", tex: "mm^3", factor: 1 },
+      { key: "cm3", tex: "cm^3", factor: 1e-3 },
     ],
   },
   mm4: {
-    label: "mm^4",
+    tex: "mm^4",
     family: [
-      { key: "mm4", label: "mm^4", factor: 1 },
-      { key: "cm4", label: "cm^4", factor: 1e-4 },
+      { key: "mm4", tex: "mm^4", factor: 1 },
+      { key: "cm4", tex: "cm^4", factor: 1e-4 },
     ],
   },
   mm6: {
-    label: "mm^6",
+    tex: "mm^6",
     family: [
-      { key: "mm6", label: "mm^6", factor: 1 },
-      { key: "cm6", label: "cm^6", factor: 1e-6 },
+      { key: "mm6", tex: "mm^6", factor: 1 },
+      { key: "cm6", tex: "cm^6", factor: 1e-6 },
     ],
   },
 };
@@ -69,21 +69,24 @@ const UNIT_TOKENS: Record<string, UnitEntry> = {
 const entryOf = (key: string): UnitEntry | undefined =>
   UNIT_TOKENS[key.split("_").pop() ?? ""];
 
-export const unitLabel = (key: string): string | undefined =>
-  entryOf(key)?.label;
+export const unitTex = (key: string): string | undefined => entryOf(key)?.tex;
 
-export const displayUnitOptions = (key: string): readonly DisplayUnit[] =>
-  entryOf(key)?.family ?? [];
+export const getDisplayUnitOptionsByKey = (key: string) =>
+  entryOf(key)?.family.map(unit => ({
+    value: unit.key,
+    label: unit.key,
+    ctx: { tex: unit.tex },
+  })) ?? [];
 
 export const applyDisplayUnit = (
   value: NDGValue,
   key: string,
   displayUnit: string | undefined,
-): { value: NDGValue; label: string | undefined } => {
+): { value: NDGValue; tex: string | undefined } => {
   const entry = entryOf(key);
-  if (!entry) return { value, label: undefined };
+  if (!entry) return { value, tex: undefined };
   const chosen = entry.family.find(unit => unit.key === displayUnit);
   const converted =
     typeof value === "number" && chosen ? value * chosen.factor : value;
-  return { value: converted, label: chosen?.label ?? entry.label };
+  return { value: converted, tex: chosen?.tex ?? entry.tex };
 };

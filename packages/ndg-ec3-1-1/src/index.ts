@@ -26,7 +26,7 @@ export {
   coefficientCatalog,
   coefficientKeys,
 } from "./catalog";
-export { unitLabel, displayUnitOptions, applyDisplayUnit } from "./units";
+export { unitTex, getDisplayUnitOptionsByKey, applyDisplayUnit } from "./units";
 export { eurocodeAnnex } from "./annexes/eurocode";
 export { italianAnnex } from "./annexes/italian-na";
 export type { Condition, ConditionOperand, NDGRunResult, NDGTraceEntry, Node };

@@ -1,12 +1,12 @@
-import { ComponentProps } from "react";
+import { ComponentProps, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
-import { displayUnitOptions } from "@ndg/ndg-ec3-1-1";
+import { getDisplayUnitOptionsByKey } from "@ndg/ndg-ec3-1-1";
 import { FormField } from "@components/inputs/shared";
 import { useTypedFormContext } from "@components/inputs/useTypedFormContext";
+import { FormInputSelect } from "@components/inputs/FormInputSelect";
 import { InputRadio } from "@components/inputs/InputRadio";
-import { InputSelect } from "@components/inputs/InputSelect";
 import { InputText } from "@components/inputs/InputText";
 import { Latex } from "@components/Latex";
 
@@ -87,16 +87,23 @@ export const SymbolKeyPreview = () => {
 const useDisplayUnit = () => {
   const { watch } = useTypedFormContext();
   const key = watch("key") ?? "";
-  const unitOptions = displayUnitOptions(key);
-  const selected = watch("displayUnit") ?? unitOptions[0]?.key;
-  const label = unitOptions.find(unit => unit.key === selected)?.label;
-  return { unitOptions, unitTex: label ? `(${label})` : "" };
+  const options = getDisplayUnitOptionsByKey(key);
+  const selected = watch("displayUnit") ?? options[0]?.value;
+  const tex = options.find(option => option.value === selected)?.ctx.tex;
+  return { options, unitTex: tex ? `(${tex})` : "" };
 };
 
 const DisplayUnitControl = () => {
-  const { watch, getValues, registerSelect } = useTypedFormContext();
+  const { watch, setValue } = useTypedFormContext();
   const key = watch("key") ?? "";
-  const unitOptions = displayUnitOptions(key);
+  const displayUnit = watch("displayUnit");
+  const options = getDisplayUnitOptionsByKey(key);
+  const isValid = options.some(option => option.value === displayUnit);
+
+  useEffect(() => {
+    if (!isValid)
+      setValue("displayUnit", getDisplayUnitOptionsByKey(key)[0]?.value);
+  }, [key, isValid, setValue]);
 
   return (
     <FormField
@@ -104,22 +111,14 @@ const DisplayUnitControl = () => {
       label="Display unit"
       description="Unit the value is shown in"
     >
-      <InputSelect
-        key={key}
-        {...registerSelect("displayUnit")}
-        defaultValue={getValues("displayUnit") ?? unitOptions[0]?.key}
-        options={unitOptions.map(unit => ({
-          value: unit.key,
-          label: unit.key,
-        }))}
-      />
+      <FormInputSelect name="displayUnit" options={options} />
     </FormField>
   );
 };
 
 export const DisplayUnitField = () => {
-  const { unitOptions, unitTex } = useDisplayUnit();
-  if (!unitOptions.length) return null;
+  const { options, unitTex } = useDisplayUnit();
+  if (!options.length) return null;
 
   return (
     <>
@@ -134,8 +133,8 @@ export const DisplayUnitField = () => {
 };
 
 export const DisplayUnitColumn = () => {
-  const { unitOptions, unitTex } = useDisplayUnit();
-  if (!unitOptions.length) return null;
+  const { options, unitTex } = useDisplayUnit();
+  if (!options.length) return null;
 
   return (
     <div className="flex flex-col gap-2 h-full">

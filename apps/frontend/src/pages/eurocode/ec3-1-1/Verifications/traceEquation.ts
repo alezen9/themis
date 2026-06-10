@@ -14,7 +14,7 @@ const displayTerm = (
   displayUnit: string | undefined,
 ) => {
   const converted = applyDisplayUnit(value, key, displayUnit);
-  const unit = converted.label ? `\\,${converted.label}` : "";
+  const unit = converted.tex ? `\\,${converted.tex}` : "";
   return `\\text{${formatValue(converted.value)}}${unit}`;
 };
 

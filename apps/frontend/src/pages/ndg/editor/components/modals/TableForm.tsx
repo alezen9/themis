@@ -3,7 +3,7 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { FormField } from "@components/inputs/shared";
 import { useTypedFormContext } from "@components/inputs/useTypedFormContext";
-import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
+import { FormInputAutocomplete } from "@components/inputs/FormInputAutocomplete";
 import { InputRadio } from "@components/inputs/InputRadio";
 import { InputText } from "@components/inputs/InputText";
 
@@ -43,7 +43,7 @@ export const TableForm = (props: Props) => {
 };
 
 const TableFields = () => {
-  const { register, registerSelect } = useTypedFormContext<TableNode>();
+  const { register } = useTypedFormContext<TableNode>();
 
   return (
     <>
@@ -56,11 +56,7 @@ const TableFields = () => {
               label="Key"
               description="Unique id used by formulas"
             >
-              <InputAutocomplete
-                {...registerSelect("key")}
-                options={tableKeyOptions}
-                required
-              />
+              <FormInputAutocomplete name="key" options={tableKeyOptions} required />
             </FormField>
           </div>
           <div className="col-span-2">

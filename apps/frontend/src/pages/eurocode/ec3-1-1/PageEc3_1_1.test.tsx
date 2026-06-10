@@ -52,6 +52,30 @@ describe("[EC3-1-1] PageEc3_1_1", () => {
     vi.useRealTimers();
   });
 
+  it("resets section class to auto on shape change", async () => {
+    const onValuesChange = vi.fn();
+
+    render(<PageEc3_1_1 onValuesChange={onValuesChange} />);
+
+    fireEvent.click(screen.getByTestId("input-section_class"));
+    fireEvent.mouseMove(screen.getByTestId("option-2"));
+    fireEvent.click(screen.getByTestId("option-2"));
+    act(() => {
+      vi.advanceTimersByTime(60);
+    });
+    expect(onValuesChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ section_class: 2 }),
+    );
+
+    fireEvent.click(screen.getByRole("radio", { name: "RHS" }));
+    act(() => {
+      vi.advanceTimersByTime(60);
+    });
+    expect(onValuesChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ shape: "RHS", section_class: "auto" }),
+    );
+  });
+
   it("emits raw values for inactive and reactivated moment fields", async () => {
     const onValuesChange = vi.fn();
 

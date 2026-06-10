@@ -116,12 +116,12 @@ const VerificationTrace = (props: VerificationTraceProps) => {
       absorbedKeys.has(entry.key)
     )
       return [];
-    const { value, label } = applyDisplayUnit(
+    const { value, tex } = applyDisplayUnit(
       entry.value,
       entry.key,
       entry.displayUnit,
     );
-    return [{ id: entry.nodeId, symbol: entry.symbol, value, unit: label }];
+    return [{ id: entry.nodeId, symbol: entry.symbol, value, unit: tex }];
   });
 
   const steps = reversedTrace.flatMap(entry =>

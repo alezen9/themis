@@ -1,11 +1,11 @@
-import { useCallback } from "react";
+import { ChangeEventHandler, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChangeHandler, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 
 import { userInputCatalog } from "@ndg/ndg-ec3-1-1";
 import { FormField } from "@components/inputs/shared";
 import { useTypedFormContext } from "@components/inputs/useTypedFormContext";
-import { InputAutocomplete } from "@components/inputs/InputAutocomplete";
+import { FormInputAutocomplete } from "@components/inputs/FormInputAutocomplete";
 
 import { Section, SectionTitle } from "./shared";
 import { DisplayUnitField, SymbolKeyPreview } from "./nodeFields";
@@ -39,23 +39,16 @@ export const UserInputForm = (props: Props) => {
 };
 
 const UserInputFields = () => {
-  const { registerSelect, getValues, reset } =
-    useTypedFormContext<UserInputNode>();
+  const { setValue } = useTypedFormContext<UserInputNode>();
 
-  const onKeyChange = useCallback<ChangeHandler>(
-    async event => {
-      const key = event.target.value;
-      const entry = userInputCatalog[key];
-      reset({
-        ...getValues(),
-        key,
-        ...(entry && {
-          symbol: entry.symbol,
-          valueType: { type: entry.valueType },
-        }),
-      });
+  const onKeyChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    event => {
+      const entry = userInputCatalog[event.target.value];
+      if (!entry) return;
+      setValue("symbol", entry.symbol);
+      setValue("valueType", { type: entry.valueType });
     },
-    [getValues, reset],
+    [setValue],
   );
 
   return (
@@ -68,8 +61,8 @@ const UserInputFields = () => {
             label="Key"
             description="Unique id used by formulas"
           >
-            <InputAutocomplete
-              {...registerSelect("key")}
+            <FormInputAutocomplete
+              name="key"
               onChange={onKeyChange}
               options={userInputKeyOptions}
               required

@@ -1,7 +1,7 @@
 import { HorizontalInput } from "@components/inputs/shared";
 import { SpacingDivider } from "@components/Dividers";
 import { LatexLabel, Section, SectionTitle, TextLabel } from "./shared";
-import { InputSelect } from "@components/inputs/InputSelect";
+import { FormInputSelect } from "@components/inputs/FormInputSelect";
 import { InputNumber } from "@components/inputs/InputNumber";
 import { momentShapeOptions, supportConditionOptions } from "./options";
 import { useEc311FormContext } from "./useEc311FormContext";
@@ -18,7 +18,7 @@ export const FormFlexuralBuckling = () => {
 };
 
 const MomentY = () => {
-  const { registerNumber, registerSelect, watch } = useEc311FormContext();
+  const { registerNumber, watch } = useEc311FormContext();
   const momentShape = watch("M_y_Ed_shape");
   const isMomentShapeLinear = momentShape === "linear";
   const isMomentShapeParabolic = momentShape === "parabolic";
@@ -37,10 +37,9 @@ const MomentY = () => {
         name="M_y_Ed_shape"
         label={<LatexLabel tex="M_{y} \; shape" className="text-[1.25rem]" />}
       >
-        <InputSelect
-          {...registerSelect?.("M_y_Ed_shape", {
-            deps: ["psi_y", "support_condition_y"],
-          })}
+        <FormInputSelect
+          name="M_y_Ed_shape"
+          rules={{ deps: ["psi_y", "support_condition_y"] }}
           options={momentShapeOptions}
         />
       </HorizontalInput>
@@ -56,8 +55,8 @@ const MomentY = () => {
           name="support_condition_y"
           label={<TextLabel>Support y</TextLabel>}
         >
-          <InputSelect
-            {...registerSelect?.("support_condition_y")}
+          <FormInputSelect
+            name="support_condition_y"
             options={supportConditionOptions}
           />
         </HorizontalInput>
@@ -67,7 +66,7 @@ const MomentY = () => {
 };
 
 const MomentZ = () => {
-  const { registerNumber, registerSelect, watch } = useEc311FormContext();
+  const { registerNumber, watch } = useEc311FormContext();
   const momentShape = watch("M_z_Ed_shape");
   const isMomentShapeLinear = momentShape === "linear";
   const isMomentShapeParabolic = momentShape === "parabolic";
@@ -86,10 +85,9 @@ const MomentZ = () => {
         name="M_z_Ed_shape"
         label={<LatexLabel tex="M_{z} \; shape" className="text-[1.25rem]" />}
       >
-        <InputSelect
-          {...registerSelect?.("M_z_Ed_shape", {
-            deps: ["psi_z", "support_condition_z"],
-          })}
+        <FormInputSelect
+          name="M_z_Ed_shape"
+          rules={{ deps: ["psi_z", "support_condition_z"] }}
           options={momentShapeOptions}
         />
       </HorizontalInput>
@@ -105,8 +103,8 @@ const MomentZ = () => {
           name="support_condition_z"
           label={<TextLabel>Support z</TextLabel>}
         >
-          <InputSelect
-            {...registerSelect?.("support_condition_z")}
+          <FormInputSelect
+            name="support_condition_z"
             options={supportConditionOptions}
           />
         </HorizontalInput>
