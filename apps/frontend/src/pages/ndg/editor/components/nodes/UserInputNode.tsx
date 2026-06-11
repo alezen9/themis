@@ -1,6 +1,6 @@
 import { Latex } from "@components/Latex";
 import type { EditorNodeProps } from "../../document/types";
-import { NodeBody, NodeCard, NodeHeader } from "./shared";
+import { NodeBody, NodeCard } from "./shared";
 import { latexPreview } from "./latexPreview";
 import { Handle, Position } from "@xyflow/react";
 
@@ -11,9 +11,13 @@ export const UserInputNode = (props: EditorNodeProps) => {
   const tex = latexPreview(data);
 
   return (
-    <NodeCard nodeId={props.id} nodeKey={data.key}>
+    <NodeCard
+      nodeId={props.id}
+      nodeKey={data.key}
+      kind="user-input"
+      label={data.key}
+    >
       <Handle type="target" position={Position.Top} />
-      <NodeHeader label={data.key} type="input" />
       <NodeBody>
         <Latex displayMode tex={tex} className="px-1 text-sm" />
       </NodeBody>
