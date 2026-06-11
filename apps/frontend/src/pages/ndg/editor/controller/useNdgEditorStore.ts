@@ -41,6 +41,7 @@ import {
 } from "./history";
 
 const CHILD_OFFSET_Y = 170;
+const DUPLICATE_OFFSET = 24;
 
 const childPosition = (parent: EditorNode | undefined): XYPosition => {
   if (!parent) return { x: 0, y: CHILD_OFFSET_Y };
@@ -143,6 +144,7 @@ type NdgEditorStore = {
 
   addNode: (input: AddNodeInput) => void;
   updateNode: (input: UpdateNodeInput) => void;
+  duplicateSelected: () => void;
   deleteSelected: () => void;
   applyAutoLayout: () => void;
   onNodesChange: (changes: NodeChange<EditorNode>[]) => void;
@@ -227,6 +229,37 @@ export const useNdgEditorStore = create<NdgEditorStore>((set, get) => ({
       const updated = applyNodeUpdate(existing, input);
       const nodes = state.nodes.map(n => (n.id === input.id ? updated : n));
       return withHistory(state, { nodes, ...derive(nodes, state.edges) });
+    }),
+
+  duplicateSelected: () =>
+    set(state => {
+      const sources = state.selectedNodes.filter(n => n.type !== "check");
+      if (sources.length === 0) return state;
+
+      const clones = sources.map(node => ({
+        ...node,
+        id: createNodeId(),
+        position: {
+          x: node.position.x + DUPLICATE_OFFSET,
+          y: node.position.y - DUPLICATE_OFFSET,
+        },
+        selected: true,
+      })) as EditorNode[];
+
+      const nodes = [
+        ...state.nodes.map(n => (n.selected ? { ...n, selected: false } : n)),
+        ...clones,
+      ];
+      const edges = state.edges.map(e =>
+        e.selected ? { ...e, selected: false } : e,
+      );
+      return withHistory(state, {
+        nodes,
+        edges,
+        selectedNodes: clones,
+        selectedEdges: [],
+        ...derive(nodes, edges),
+      });
     }),
 
   deleteSelected: () =>

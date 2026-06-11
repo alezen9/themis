@@ -9,6 +9,7 @@ export const KeyboardShortcuts = (props: Props) => {
   const { children } = props;
   const undo = useNdgEditorStore(state => state.undo);
   const redo = useNdgEditorStore(state => state.redo);
+  const duplicateSelected = useNdgEditorStore(state => state.duplicateSelected);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -22,12 +23,17 @@ export const KeyboardShortcuts = (props: Props) => {
           else undo();
           break;
         }
+        case "KeyD": {
+          event.preventDefault();
+          duplicateSelected();
+          break;
+        }
       }
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [undo, redo]);
+  }, [undo, redo, duplicateSelected]);
 
   return <div className="size-full">{children}</div>;
 };
