@@ -1,5 +1,5 @@
-import type { NodeMeta } from "@ndg/ndg-core";
-import { applyDisplayUnit, type VerificationRow } from "@ndg/ndg-ec3-1-1";
+import { scaleToUnit, type NodeMeta } from "@ndg/ndg-core";
+import type { VerificationRow } from "@ndg/ndg-ec3-1-1";
 import { twMerge } from "tailwind-merge";
 
 import {
@@ -23,7 +23,7 @@ import {
   InfoTableUnitCell,
   InfoTableValueCell,
 } from "../Form/shared";
-import { formatValue, stepEquation } from "./traceEquation";
+import { buildStepEquation, formatValue } from "./traceEquation";
 
 type VerificationTraceDrawerProps = {
   verification?: VerificationRow;
@@ -97,17 +97,7 @@ const VerificationTrace = (props: VerificationTraceProps) => {
 
   const checkEntry = trace.find(entry => entry.nodeId === check.id);
   const checkTex =
-    checkEntry?.template &&
-    stepEquation(
-      {
-        symbol: checkEntry.symbol,
-        template: checkEntry.template,
-        value: checkEntry.value,
-        key: checkEntry.key,
-        displayUnit: checkEntry.displayUnit,
-      },
-      entryByKey,
-    );
+    checkEntry?.template && buildStepEquation(checkEntry, entryByKey);
 
   const values = reversedTrace.flatMap(entry => {
     if (
@@ -116,7 +106,7 @@ const VerificationTrace = (props: VerificationTraceProps) => {
       absorbedKeys.has(entry.key)
     )
       return [];
-    const { value, tex } = applyDisplayUnit(
+    const { value, tex } = scaleToUnit(
       entry.value,
       entry.key,
       entry.displayUnit,
@@ -124,20 +114,11 @@ const VerificationTrace = (props: VerificationTraceProps) => {
     return [{ id: entry.nodeId, symbol: entry.symbol, value, unit: tex }];
   });
 
-  const steps = reversedTrace.flatMap(entry =>
-    !entry.template || entry.nodeId === check.id || absorbedKeys.has(entry.key)
-      ? []
-      : [
-          {
-            id: entry.nodeId,
-            symbol: entry.symbol,
-            template: entry.template,
-            value: entry.value,
-            key: entry.key,
-            displayUnit: entry.displayUnit,
-            ref: clauseRef(entry.meta),
-          },
-        ],
+  const steps = reversedTrace.filter(
+    entry =>
+      entry.template &&
+      entry.nodeId !== check.id &&
+      !absorbedKeys.has(entry.key),
   );
 
   return (
@@ -176,25 +157,28 @@ const VerificationTrace = (props: VerificationTraceProps) => {
       </Accordion>
 
       <div className="flex flex-col gap-3">
-        {steps.map(step => (
-          <div
-            key={step.id}
-            className="overflow-hidden rounded-md border border-sand-100 bg-sand-50"
-          >
-            {step.ref && (
-              <div className="border-b border-sand-100 bg-sand-100 px-4 py-2 text-xs font-semibold tracking-widest text-sand-600 uppercase">
-                {step.ref}
+        {steps.map(step => {
+          const ref = clauseRef(step.meta);
+          return (
+            <div
+              key={step.nodeId}
+              className="overflow-hidden rounded-md border border-sand-100 bg-sand-50"
+            >
+              {ref && (
+                <div className="border-b border-sand-100 bg-sand-100 px-4 py-2 text-xs font-semibold tracking-widest text-sand-600 uppercase">
+                  {ref}
+                </div>
+              )}
+              <div className="p-4">
+                <Latex
+                  displayMode
+                  tex={buildStepEquation(step, entryByKey)}
+                  className="text-2xl"
+                />
               </div>
-            )}
-            <div className="p-4">
-              <Latex
-                displayMode
-                tex={stepEquation(step, entryByKey)}
-                className="text-2xl"
-              />
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

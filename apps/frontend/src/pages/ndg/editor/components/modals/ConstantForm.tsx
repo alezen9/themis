@@ -1,8 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { constantCatalog } from "@ndg/ndg-core";
-import { getDisplayUnitOptionsByKey } from "@ndg/ndg-ec3-1-1";
+import { constantCatalog, getBaseUnit, getUnitOptions } from "@ndg/ndg-core";
 import { FormField } from "@components/inputs/shared";
 import { useTypedFormContext } from "@components/inputs/useTypedFormContext";
 import { InputNumber } from "@components/inputs/InputNumber";
@@ -50,7 +49,7 @@ const ConstantFields = () => {
   const key = watch("key") ?? "";
   const isCustom = !constantCatalog[key];
   const preset = constantCatalog[key] ? key : "custom";
-  const showDefinition = isCustom || getDisplayUnitOptionsByKey(key).length > 0;
+  const showDefinition = isCustom || getUnitOptions(key).length > 0;
 
   return (
     <>
@@ -70,15 +69,21 @@ const ConstantFields = () => {
                   value={preset}
                   onChange={event => {
                     const entry = constantCatalog[event.target.value];
-                    setValue("key", entry ? event.target.value : "", {
-                      shouldValidate: true,
-                    });
+                    const newKey = entry ? event.target.value : "";
+                    setValue("key", newKey, { shouldValidate: true });
                     setValue("symbol", entry?.symbol);
                     setValue("value", undefined);
+                    setValue("displayUnit", getBaseUnit(newKey)?.key);
                   }}
                 />
                 {isCustom && (
-                  <InputText placeholder="custom_key" {...register("key")} />
+                  <InputText
+                    placeholder="custom_key"
+                    {...register("key", {
+                      onChange: event =>
+                        setValue("displayUnit", getBaseUnit(event.target.value)?.key),
+                    })}
+                  />
                 )}
               </div>
             </FormField>

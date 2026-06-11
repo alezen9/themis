@@ -2,6 +2,7 @@ import { ChangeEventHandler, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
+import { getBaseUnit } from "@ndg/ndg-core";
 import { coefficientCatalog } from "@ndg/ndg-ec3-1-1";
 import { FormField } from "@components/inputs/shared";
 import { useTypedFormContext } from "@components/inputs/useTypedFormContext";
@@ -43,6 +44,7 @@ const CoefficientFields = () => {
 
   const onKeyChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
     event => {
+      setValue("displayUnit", getBaseUnit(event.target.value)?.key);
       const entry = coefficientCatalog[event.target.value];
       if (!entry) return;
       setValue("symbol", entry.symbol);

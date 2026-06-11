@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { constantCatalog } from "@ndg/ndg-core";
@@ -9,9 +15,6 @@ import { useNdgEditorModalStore } from "./useNdgEditorModalStore";
 import { useNdgEditorStore } from "../../controller/useNdgEditorStore";
 
 const addNode = vi.fn();
-
-const submit = () =>
-  fireEvent.submit(document.getElementById("add-node-form")!);
 
 const pickFromSelect = (testid: string, value: string) => {
   fireEvent.click(screen.getByTestId(testid));
@@ -46,7 +49,7 @@ describe("AddNodeModal", () => {
       expect("error" in screen.getByTestId("field-key").dataset).toBe(false),
     );
 
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     await waitFor(() =>
       expect(addNode).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -65,7 +68,7 @@ describe("AddNodeModal", () => {
       expect("error" in screen.getByTestId("field-key").dataset).toBe(false),
     );
 
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     await waitFor(() =>
       expect(addNode).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -85,7 +88,7 @@ describe("AddNodeModal", () => {
     );
     pickFromSelect("input-constant-preset", "pi");
 
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     await waitFor(() =>
       expect(addNode).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -104,7 +107,7 @@ describe("AddNodeModal", () => {
       expect("error" in screen.getByTestId("field-key").dataset).toBe(false),
     );
 
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     const entry = userInputCatalog.M_y_Ed_Nmm;
     await waitFor(() =>
       expect(addNode).toHaveBeenCalledWith(
@@ -118,9 +121,23 @@ describe("AddNodeModal", () => {
     );
   });
 
+  it("seeds the base display unit when a user-input key with units is picked", async () => {
+    pickFromSelect("input-key-trigger", "M_y_Ed_Nmm");
+    await waitFor(() =>
+      expect("error" in screen.getByTestId("field-key").dataset).toBe(false),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() =>
+      expect(addNode).toHaveBeenCalledWith(
+        expect.objectContaining({ key: "M_y_Ed_Nmm", displayUnit: "Nmm" }),
+      ),
+    );
+  });
+
   it("blocks formula save while the key is empty", async () => {
     fireEvent.click(screen.getByRole("radio", { name: "Formula" }));
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     await waitFor(() =>
       expect("error" in screen.getByTestId("field-key").dataset).toBe(true),
     );
@@ -130,11 +147,11 @@ describe("AddNodeModal", () => {
   it("submits a compute formula with a keyed template", async () => {
     fireEvent.click(screen.getByRole("radio", { name: "Formula" }));
     fireEvent.change(
-      document.querySelector<HTMLInputElement>('[name="key"]')!,
+      within(screen.getByTestId("field-key")).getByRole("textbox"),
       { target: { value: "resistance" } },
     );
     fireEvent.change(
-      document.querySelector<HTMLTextAreaElement>('[name="template"]')!,
+      within(screen.getByTestId("field-template")).getByRole("textbox"),
       {
         target: {
           value: "\\frac{\\key{A_mm2} \\cdot \\key{fy_MPa}}{\\key{gamma_M0}}",
@@ -142,7 +159,7 @@ describe("AddNodeModal", () => {
       },
     );
 
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     await waitFor(() =>
       expect(addNode).toHaveBeenCalledWith(
         expect.objectContaining({

@@ -1,3 +1,5 @@
+import { getBaseUnit } from "@ndg/ndg-core";
+
 import type { EditorNodeInput } from "../../document/editorNodeSchema";
 import { CheckForm } from "./CheckForm";
 import { CoefficientForm } from "./CoefficientForm";
@@ -12,8 +14,15 @@ type Props = {
   onSubmit: (values: EditorNodeInput) => void;
 };
 
+const seedWithUnit = (seed: EditorNodeInput): EditorNodeInput => {
+  if (seed.type === "check" || seed.displayUnit) return seed;
+  const baseDisplayUnit = getBaseUnit(seed.key)?.key;
+  return baseDisplayUnit ? { ...seed, displayUnit: baseDisplayUnit } : seed;
+};
+
 export const NodeForm = (props: Props) => {
-  const { seed, formId, onSubmit } = props;
+  const { formId, onSubmit } = props;
+  const seed = seedWithUnit(props.seed);
 
   switch (seed.type) {
     case "user-input":

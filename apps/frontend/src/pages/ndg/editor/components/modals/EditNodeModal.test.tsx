@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { coefficientCatalog, userInputCatalog } from "@ndg/ndg-ec3-1-1";
@@ -21,12 +27,6 @@ const seed = (node: EditorNode) => {
   render(<EditNodeModal />);
 };
 
-const submit = () =>
-  fireEvent.submit(document.getElementById("edit-node-form")!);
-
-const inputByName = (name: string) =>
-  document.querySelector<HTMLInputElement>(`[name="${name}"]`)!;
-
 const userInputNode: EditorNode = {
   id: "n1",
   position: { x: 0, y: 0 },
@@ -36,6 +36,19 @@ const userInputNode: EditorNode = {
     key: "N_Ed_N",
     valueType: { type: "number" },
     symbol: "X_CUSTOM",
+  },
+} as EditorNode;
+
+const unitNode: EditorNode = {
+  id: "u1",
+  position: { x: 0, y: 0 },
+  type: "user-input",
+  data: {
+    type: "user-input",
+    key: "M_y_Ed_Nmm",
+    valueType: { type: "number" },
+    symbol: "M_{y,Ed}",
+    displayUnit: "kNm",
   },
 } as EditorNode;
 
@@ -54,19 +67,19 @@ const checkNode: EditorNode = {
   },
 } as EditorNode;
 
-beforeEach(() => {
-  updateNode.mockReset();
-});
-
-afterEach(() => {
-  vi.restoreAllMocks();
-});
-
 describe("EditNodeModal", () => {
+  beforeEach(() => {
+    updateNode.mockReset();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("loads a stored node without re-deriving from the catalog", async () => {
     seed(userInputNode);
 
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     await waitFor(() =>
       expect(updateNode).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -85,7 +98,7 @@ describe("EditNodeModal", () => {
     fireEvent.mouseMove(screen.getByTestId("option-M_y_Ed_Nmm"));
     fireEvent.click(screen.getByTestId("option-M_y_Ed_Nmm"));
 
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     const entry = userInputCatalog.M_y_Ed_Nmm;
     await waitFor(() =>
       expect(updateNode).toHaveBeenCalledWith(
@@ -103,7 +116,7 @@ describe("EditNodeModal", () => {
 
     fireEvent.click(screen.getByRole("radio", { name: "Coefficient" }));
 
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     await waitFor(() =>
       expect(updateNode).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -117,13 +130,58 @@ describe("EditNodeModal", () => {
     );
   });
 
+  it("shows and preserves a stored display unit on open", async () => {
+    seed(unitNode);
+
+    expect(screen.getByTestId("input-displayUnit").textContent).toContain(
+      "kNm",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() =>
+      expect(updateNode).toHaveBeenCalledWith(
+        expect.objectContaining({ id: "u1", displayUnit: "kNm" }),
+      ),
+    );
+  });
+
+  it("reseeds the base display unit when the key changes", async () => {
+    seed(userInputNode);
+
+    fireEvent.click(screen.getByTestId("input-key-trigger"));
+    fireEvent.mouseMove(screen.getByTestId("option-M_y_Ed_Nmm"));
+    fireEvent.click(screen.getByTestId("option-M_y_Ed_Nmm"));
+
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() =>
+      expect(updateNode).toHaveBeenCalledWith(
+        expect.objectContaining({ key: "M_y_Ed_Nmm", displayUnit: "Nmm" }),
+      ),
+    );
+  });
+
+  it("hides the display unit when the key has no units", async () => {
+    seed(unitNode);
+
+    fireEvent.click(screen.getByTestId("input-key-trigger"));
+    fireEvent.mouseMove(screen.getByTestId("option-section_class"));
+    fireEvent.click(screen.getByTestId("option-section_class"));
+
+    await waitFor(() =>
+      expect(screen.queryByTestId("field-displayUnit")).toBeNull(),
+    );
+  });
+
   it("edits a check node name with no type selector", async () => {
     seed(checkNode);
 
     expect(screen.queryByRole("radio", { name: "Coefficient" })).toBeNull();
-    fireEvent.change(inputByName("name"), { target: { value: "New name" } });
+    fireEvent.change(
+      within(screen.getByTestId("field-name")).getByRole("textbox"),
+      { target: { value: "New name" } },
+    );
 
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     await waitFor(() =>
       expect(updateNode).toHaveBeenCalledWith(
         expect.objectContaining({ id: "c1", name: "New name" }),

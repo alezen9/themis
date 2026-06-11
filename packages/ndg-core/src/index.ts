@@ -5,3 +5,5 @@ export { collectConditionKeys, evaluateCondition } from "./evaluate-condition";
 export { runNDG, runNDGSuite } from "./engine/run";
 export { constantCatalog } from "./engine/constants";
 export { validateNDG } from "./validate-ndg";
+export { resolveKeyRefs, templateKeys } from "./template";
+export { getBaseUnit, getUnitOptions, scaleToUnit } from "./units";

@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
+import { getBaseUnit } from "@ndg/ndg-core";
 import { FormField } from "@components/inputs/shared";
 import { useTypedFormContext } from "@components/inputs/useTypedFormContext";
 import { InputText } from "@components/inputs/InputText";
@@ -42,7 +43,7 @@ export const FormulaForm = (props: Props) => {
 };
 
 const FormulaFields = () => {
-  const { register, watch } = useTypedFormContext<FormulaNode>();
+  const { register, setValue, watch } = useTypedFormContext<FormulaNode>();
   const isSelect = watch("variant") === "select";
 
   return (
@@ -56,7 +57,12 @@ const FormulaFields = () => {
               label="Key"
               description="Unique id used by formulas"
             >
-              <InputText {...register("key")} />
+              <InputText
+                {...register("key", {
+                  onChange: event =>
+                    setValue("displayUnit", getBaseUnit(event.target.value)?.key),
+                })}
+              />
             </FormField>
           </div>
           <div className="col-span-2">

@@ -6,6 +6,7 @@ import {
   type Condition,
   type Node,
 } from "./schema";
+import { templateKeys } from "./template";
 
 type Evaluator = (
   deps: Record<string, number | string | boolean>,
@@ -116,13 +117,6 @@ export const validateNDG = <
 
   return { check, evaluators, nodeById, nodeByKey };
 };
-
-const TEMPLATE_KEY = /\\key\{([^}]+)\}/g;
-
-const templateKeys = (template: string): string[] =>
-  [...template.matchAll(TEMPLATE_KEY)]
-    .map(match => match[1])
-    .filter((key): key is string => !!key);
 
 const comparisonEq = (condition: Condition) => {
   if (!("eq" in condition)) return undefined;

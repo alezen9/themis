@@ -1,11 +1,8 @@
 import { formatNumber } from "@formatters/number";
-import { constantCatalog } from "@ndg/ndg-core";
-import { unitTex } from "@ndg/ndg-ec3-1-1";
+import { constantCatalog, getBaseUnit, resolveKeyRefs } from "@ndg/ndg-core";
 
 export const SELECT_PREVIEW_TEX =
   "\\left\\langle \\text{select} \\right\\rangle";
-
-const KEY_PATTERN = /\\key\{([^}]+)\}/g;
 
 const escapeKey = (key: string) => `\\text{${key.replace(/_/g, "\\_")}}`;
 
@@ -14,11 +11,7 @@ export type SymbolByKey = Record<string, string | undefined>;
 export const renderKeyPlaceholders = (
   template: string,
   symbolByKey?: SymbolByKey,
-) =>
-  template.replace(
-    KEY_PATTERN,
-    (_match, key: string) => symbolByKey?.[key] ?? escapeKey(key),
-  );
+) => resolveKeyRefs(template, key => symbolByKey?.[key] ?? escapeKey(key));
 
 type LatexPreviewNode = {
   symbol?: string;
@@ -30,7 +23,7 @@ type LatexPreviewNode = {
 
 export const latexPreview = (node: LatexPreviewNode) => {
   const { symbol, value, template, key, symbolByKey } = node;
-  const unit = key ? unitTex(key) : undefined;
+  const unit = key ? getBaseUnit(key)?.tex : undefined;
   const constantValue = value ?? constantCatalog[key ?? ""]?.value;
   const formattedValue =
     constantValue !== undefined ? formatNumber(constantValue) : undefined;

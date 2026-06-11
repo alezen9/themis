@@ -23,25 +23,21 @@ const seed = (data?: { condition?: Condition }) => {
   render(<EditEdgeModal />);
 };
 
-const type = (value: string) =>
-  fireEvent.change(document.querySelector("textarea")!, { target: { value } });
-
-const submit = () =>
-  fireEvent.submit(document.getElementById("edit-edge-form")!);
-
-beforeEach(() => {
-  setEdgeCondition.mockReset();
-});
-
-afterEach(() => {
-  vi.restoreAllMocks();
-});
-
 describe("EditEdgeModal", () => {
+  beforeEach(() => {
+    setEdgeCondition.mockReset();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("saves a valid parsed condition", () => {
     seed();
-    type("section_class = 1");
-    submit();
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "section_class = 1" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     expect(setEdgeCondition).toHaveBeenCalledWith("e1", {
       eq: ["section_class", { value: 1 }],
     });
@@ -49,17 +45,21 @@ describe("EditEdgeModal", () => {
 
   it("blocks save and flags an unknown key", () => {
     seed();
-    type("nope = 1");
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "nope = 1" },
+    });
     expect(screen.getByText(/Unknown key/i)).toBeTruthy();
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     expect(setEdgeCondition).not.toHaveBeenCalled();
   });
 
   it("blocks save and shows a parse error", () => {
     seed();
-    type("section_class =");
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "section_class =" },
+    });
     expect(screen.getByText("Expected a value")).toBeTruthy();
-    submit();
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
     expect(setEdgeCondition).not.toHaveBeenCalled();
   });
 
