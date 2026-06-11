@@ -91,7 +91,10 @@ export const FormAnnex = () => {
           name="f_method"
           label={<LatexLabel tex="f" className="font-thin" />}
         >
-          <FormInputSelect name="f_method" options={coefficientFMethodOptions} />
+          <FormInputSelect
+            name="f_method"
+            options={coefficientFMethodOptions}
+          />
         </HorizontalInput>
       )}
 

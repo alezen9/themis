@@ -50,8 +50,7 @@ const findUnits = (key: string): Unit[] => {
   return familyByToken.get(unitToken) ?? [];
 };
 
-export const getBaseUnit = (key: string): Unit | undefined =>
-  findUnits(key)[0];
+export const getBaseUnit = (key: string): Unit | undefined => findUnits(key)[0];
 
 export const getUnitOptions = (key: string) =>
   findUnits(key).map(unit => ({

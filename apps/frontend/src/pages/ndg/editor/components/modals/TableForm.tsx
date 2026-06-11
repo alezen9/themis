@@ -56,7 +56,11 @@ const TableFields = () => {
               label="Key"
               description="Unique id used by formulas"
             >
-              <FormInputAutocomplete name="key" options={tableKeyOptions} required />
+              <FormInputAutocomplete
+                name="key"
+                options={tableKeyOptions}
+                required
+              />
             </FormField>
           </div>
           <div className="col-span-2">

@@ -81,7 +81,10 @@ const ConstantFields = () => {
                     placeholder="custom_key"
                     {...register("key", {
                       onChange: event =>
-                        setValue("displayUnit", getBaseUnit(event.target.value)?.key),
+                        setValue(
+                          "displayUnit",
+                          getBaseUnit(event.target.value)?.key,
+                        ),
                     })}
                   />
                 )}
