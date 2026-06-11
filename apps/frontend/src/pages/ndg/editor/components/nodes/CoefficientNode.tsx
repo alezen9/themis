@@ -15,7 +15,7 @@ export const CoefficientNode = (props: EditorNodeProps) => {
       <Handle type="target" position={Position.Top} />
       <NodeHeader label={data.key} type="coefficient" />
       <NodeBody>
-        <Latex displayMode tex={tex} className="px-1" />
+        <Latex displayMode tex={tex} className="px-1 text-sm" />
       </NodeBody>
     </NodeCard>
   );

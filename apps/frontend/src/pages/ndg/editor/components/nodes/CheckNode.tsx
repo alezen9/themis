@@ -23,7 +23,7 @@ export const CheckNode = (props: EditorNodeProps) => {
     <NodeCard nodeId={props.id} nodeKey={data.key}>
       <NodeHeader label={data.name} type="check" />
       <NodeBody>
-        <Latex displayMode tex={tex} className="px-1" />
+        <Latex displayMode tex={tex} className="px-1 text-sm" />
       </NodeBody>
       <NodeAddChildHandle sourceNodeId={props.id} />
     </NodeCard>

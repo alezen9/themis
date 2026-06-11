@@ -1,36 +1,31 @@
-import { render, type KatexOptions } from "katex";
-import { useEffect, useRef, type ComponentPropsWithoutRef } from "react";
+import { useMemo, type ComponentPropsWithoutRef } from "react";
 import { twMerge } from "tailwind-merge";
+
+import { texToSvg } from "./mathjax";
 
 type SpanProps = Omit<
   ComponentPropsWithoutRef<"span">,
   "children" | "dangerouslySetInnerHTML"
 >;
 
-type KatexProps = Pick<KatexOptions, "displayMode">;
-
-type OtherProps = { tex: string };
-
-type Props = SpanProps & KatexProps & OtherProps;
+type Props = SpanProps & { tex: string; displayMode?: boolean };
 
 export const Latex = (props: Props) => {
   const { tex, displayMode = false, className, ...spanProps } = props;
-  const ref = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    if (!ref.current) return;
-    render(tex, ref.current, { displayMode, throwOnError: false });
-  }, [displayMode, tex]);
+  const html = useMemo(() => texToSvg(tex, displayMode), [tex, displayMode]);
 
   return (
     <span
       {...spanProps}
-      ref={ref}
       className={twMerge(
-        "flex items-center align-baseline leading-none justify-center-safe",
-        "overflow-x-auto overflow-y-hidden",
-        "[&_.katex-display]:my-0 [&_.katex]:text-inherit",
+        "[&>svg]:text-[0.75em]",
+        displayMode
+          ? "flex w-full items-center justify-center-safe overflow-x-auto overflow-y-hidden leading-none"
+          : "inline-block align-middle",
         className,
       )}
+      // eslint-disable-next-line @eslint-react/dom-no-dangerously-set-innerhtml
+      dangerouslySetInnerHTML={{ __html: html }}
     />
   );
 };

@@ -15,7 +15,7 @@ export const ConstantNode = (props: EditorNodeProps) => {
       <Handle type="target" position={Position.Top} />
       <NodeHeader label={data.key} type="const" />
       <NodeBody>
-        <Latex displayMode tex={tex} className="px-1" />
+        <Latex displayMode tex={tex} className="px-1 text-sm" />
       </NodeBody>
     </NodeCard>
   );

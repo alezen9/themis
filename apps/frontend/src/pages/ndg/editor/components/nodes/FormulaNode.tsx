@@ -20,7 +20,7 @@ export const FormulaNode = (props: EditorNodeProps) => {
       <Handle type="target" position={Position.Top} />
       <NodeHeader label={data.key} type="formula" />
       <NodeBody>
-        <Latex displayMode tex={tex} className="px-1" />
+        <Latex displayMode tex={tex} className="px-1 text-sm" />
       </NodeBody>
       <NodeAddChildHandle sourceNodeId={props.id} />
     </NodeCard>

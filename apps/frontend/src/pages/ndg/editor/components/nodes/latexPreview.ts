@@ -4,7 +4,11 @@ import { constantCatalog, getBaseUnit, resolveKeyRefs } from "@ndg/ndg-core";
 export const SELECT_PREVIEW_TEX =
   "\\left\\langle \\text{select} \\right\\rangle";
 
-const escapeKey = (key: string) => `\\text{${key.replace(/_/g, "\\_")}}`;
+// styled via the html package's \class; CSS classes follow key-<scope>-<state>
+const UNRESOLVED_KEY_CLASS = "key-ndg-editor-unresolved";
+
+const escapeKey = (key: string) =>
+  `\\class{${UNRESOLVED_KEY_CLASS}}{\\text{${key}}}`;
 
 export type SymbolByKey = Record<string, string | undefined>;
 

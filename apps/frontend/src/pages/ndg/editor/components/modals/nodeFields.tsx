@@ -1,6 +1,5 @@
 import { ComponentProps } from "react";
 import { useFormContext } from "react-hook-form";
-import { twMerge } from "tailwind-merge";
 
 import { getUnitOptions } from "@ndg/ndg-core";
 import { FormField } from "@components/inputs/shared";
@@ -46,17 +45,15 @@ const PreviewPlain = (props: { tex: string }) => (
   <Latex
     displayMode
     tex={props.tex}
-    className="px-1 h-16 text-3xl text-sand-900"
+    className="px-1 min-h-16 h-full items-center text-2xl text-sand-900"
   />
 );
 
 const PreviewBox = (props: { tex: string }) => (
   <Latex
+    displayMode
     tex={props.tex || "Preview"}
-    className={twMerge(
-      "border px-1 min-h-16 flex-1 rounded-sm border-sand-300 text-2xl text-sand-900",
-      !props.tex && "text-lg",
-    )}
+    className="border px-1 min-h-16 flex-1 rounded-sm border-sand-300 text-sand-900 text-lg"
   />
 );
 

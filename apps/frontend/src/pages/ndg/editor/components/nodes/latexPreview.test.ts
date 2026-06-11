@@ -11,7 +11,7 @@ describe("latexPreview", () => {
         key: "N_pl_Rd_N",
       }),
     ).toBe(
-      "N_{pl,Rd} = \\frac{\\text{A\\_mm2}}{\\text{gamma\\_M0}} \\quad (N)",
+      "N_{pl,Rd} = \\frac{\\class{key-ndg-editor-unresolved}{\\text{A_mm2}}}{\\class{key-ndg-editor-unresolved}{\\text{gamma_M0}}} \\quad (N)",
     );
   });
 

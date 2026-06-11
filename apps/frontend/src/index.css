@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "katex/dist/katex.min.css";
 @import "pluton-2d/style.css";
 
 /* Custom scrollbars, applied globally.
@@ -52,10 +51,6 @@ svg.pluton-root[data-drawing-error] {
   --pluton-hatch-color: var(--color-red-200);
 }
 
-.katex {
-  font-size: 0.75em;
-}
-
 .ndg-editor-flow,
 .ndg-editor-flow .react-flow__pane,
 .ndg-editor-flow .react-flow__pane.draggable,
@@ -88,6 +83,12 @@ svg.pluton-root[data-drawing-error] {
 .ndg-editor-flow .react-flow__node.draggable.dragging,
 .ndg-editor-flow .react-flow__pane.dragging {
   cursor: grabbing;
+}
+
+/* MathJax \key{} placeholder tags. Class names: key-<scope>-<state>.
+   fontCache:"none" glyphs fill currentColor, so `color` recolors the term. */
+.key-ndg-editor-unresolved {
+  color: #0ea5e9;
 }
 
 .ndg-editor-flow .react-flow__controls {
