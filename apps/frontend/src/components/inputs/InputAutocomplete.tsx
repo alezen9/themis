@@ -113,7 +113,7 @@ export const InputAutocomplete = (props: Props) => {
       <Combobox.InputGroup
         className={twMerge(
           "group/input relative flex w-full grow gap-1 items-center h-9",
-          "has-[data-disabled]:opacity-30 has-[data-disabled]:pointer-events-none",
+          "has-data-disabled:opacity-30 has-data-disabled:pointer-events-none",
         )}
       >
         <Combobox.Value>

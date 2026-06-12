@@ -299,7 +299,7 @@ export const nodes = defineNodes([
       verificationRef: "",
     },
     template:
-      "\\frac{|\\key{V_z_Ed_N}| \\cdot \\key{S_2_mm3}}{\\key{Iy_mm4} \\cdot \\key{i_geometry.tf_mm}} + \\frac{|\\key{V_y_Ed_N}| \\cdot \\key{S_1_mm3}}{\\key{Iz_mm4} \\cdot \\key{i_geometry.tf_mm}}",
+      "\\frac{|\\key{V_z_Ed_N}| \\cdot \\key{S_1_mm3}}{\\key{Iy_mm4} \\cdot \\key{i_geometry.tf_mm}} + \\frac{|\\key{V_y_Ed_N}| \\cdot \\key{S_2_mm3}}{\\key{Iz_mm4} \\cdot \\key{i_geometry.tf_mm}}",
   },
   {
     id: "c7afa181-073e-4ced-84ed-3a756d14569d",

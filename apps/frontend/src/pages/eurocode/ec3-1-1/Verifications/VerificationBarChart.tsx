@@ -33,7 +33,7 @@ const getVerificationStatus = (
   threshold: number,
 ): VerificationStatus => {
   if (ratio === null) return "na";
-  return ratio < threshold ? "pass" : "fail";
+  return ratio <= threshold ? "pass" : "fail";
 };
 
 const getFibonacciTicks = (maxRatio: number, extraTicks: number) => {

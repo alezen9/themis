@@ -33,7 +33,6 @@ export const Observer = (props: Props) => {
   const runPipeline = useMemo(
     () => (values: Ec311ObservedValues) => {
       onValuesChange?.(values);
-      console.log(values);
 
       try {
         if (!gateDerivedGeometry(values))
@@ -61,7 +60,6 @@ export const Observer = (props: Props) => {
         const verifications = verify(verifyInputs);
         setVerifications(verifications);
         setVerificationsState({ isValid: true });
-        console.log(verifications);
       } catch (error) {
         let reason = "Invalid inputs";
         if (error instanceof Error) reason = error.message;

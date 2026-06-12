@@ -1,4 +1,5 @@
 import { defineConfig } from "vitest/config";
+import { defaultClientConditions } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
@@ -7,7 +8,7 @@ export default defineConfig({
   base: "/themis/",
   resolve: {
     alias: { tslib: "tslib/tslib.es6.js" },
-    conditions: ["development"],
+    conditions: [...defaultClientConditions, "development"],
     tsconfigPaths: true,
   },
   build: { chunkSizeWarningLimit: 1536 },

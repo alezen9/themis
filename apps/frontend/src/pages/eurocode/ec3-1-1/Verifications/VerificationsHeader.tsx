@@ -31,7 +31,7 @@ export const VerificationsHeader = () => {
     return {
       formattedValue: formatNumber(maxUtilisationFactor),
       reason: undefined,
-      status: maxUtilisationFactor < threshold ? "pass" : "fail",
+      status: maxUtilisationFactor <= threshold ? "pass" : "fail",
     };
   }, [threshold, verifications, verificationsState]);
 

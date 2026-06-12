@@ -10,6 +10,12 @@ export const assertFinite = (value: number, message?: string) => {
 
 export const assertPositive = (value: number, message: string) => {
   assertFinite(value);
+  if (value > 0) return;
+  throw new Ec3VerificationError({ type: "invalid-input-domain", message });
+};
+
+export const assertNonNegative = (value: number, message: string) => {
+  assertFinite(value);
   if (value >= 0) return;
   throw new Ec3VerificationError({ type: "invalid-input-domain", message });
 };

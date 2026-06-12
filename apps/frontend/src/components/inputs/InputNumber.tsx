@@ -36,7 +36,7 @@ export const InputNumber = (props: Props) => {
           "text-gray-600",
           "px-3 py-2",
           "font-light leading-0",
-          "-webkit-appearance-none",
+          "appearance-none",
           "focus:outline-none",
           "transition-colors",
           "tabular-nums",

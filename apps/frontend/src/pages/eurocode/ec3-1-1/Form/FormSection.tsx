@@ -74,11 +74,6 @@ export const FormSection = () => {
         ...values,
         ...{
           [name]: value,
-          ...(!isEmptySectionId && {
-            steel_grade_id: composeSteelGradeId(
-              getDefaultSteelGrade(shape, values.fabrication_type),
-            ),
-          }),
           ...(shouldUpdateGeometry && {
             ...(shape === "I" && { i_geometry }),
             ...(shape === "RHS" && { rhs_geometry }),

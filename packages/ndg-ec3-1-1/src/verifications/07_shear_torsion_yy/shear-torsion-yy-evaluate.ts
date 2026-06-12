@@ -1,4 +1,8 @@
-import { assertFinite, assertPositive } from "../../assertions";
+import {
+  assertFinite,
+  assertNonNegative,
+  assertPositive,
+} from "../../assertions";
 import { defineEvaluators } from "../../define";
 import { nodes } from "./shear-torsion-yy-nodes";
 
@@ -75,8 +79,8 @@ export const evaluate = defineEvaluators(nodes, {
     assertPositive(tf_mm, "i_geometry.tf_mm must be > 0");
 
     return (
-      (Math.abs(deps.V_z_Ed_N) * deps.S_2_mm3) / (deps.Iy_mm4 * tf_mm) +
-      (Math.abs(deps.V_y_Ed_N) * deps.S_1_mm3) / (deps.Iz_mm4 * tf_mm)
+      (Math.abs(deps.V_z_Ed_N) * deps.S_1_mm3) / (deps.Iy_mm4 * tf_mm) +
+      (Math.abs(deps.V_y_Ed_N) * deps.S_2_mm3) / (deps.Iz_mm4 * tf_mm)
     );
   },
 
@@ -114,7 +118,7 @@ export const evaluate = defineEvaluators(nodes, {
     assertPositive(h_mm, "i_geometry.h_mm must be > 0");
     assertPositive(b_mm, "i_geometry.b_mm must be > 0");
     assertPositive(tw_mm, "i_geometry.tw_mm must be > 0");
-    assertPositive(r_mm, "i_geometry.r_mm must be > 0");
+    assertNonNegative(r_mm, "i_geometry.r_mm must be >= 0");
 
     return (tf_mm * (h_mm - tf_mm) * (b_mm - tw_mm - 2 * r_mm)) / 4;
   },
@@ -127,7 +131,7 @@ export const evaluate = defineEvaluators(nodes, {
     assertPositive(tf_mm, "i_geometry.tf_mm must be > 0");
     assertPositive(b_mm, "i_geometry.b_mm must be > 0");
     assertPositive(tw_mm, "i_geometry.tw_mm must be > 0");
-    assertPositive(r_mm, "i_geometry.r_mm must be > 0");
+    assertNonNegative(r_mm, "i_geometry.r_mm must be >= 0");
 
     return (tf_mm * (b_mm ** 2 - (tw_mm + 2 * r_mm) ** 2)) / 8;
   },

@@ -20,12 +20,13 @@ export const computeIGeometryProperties = (
     existing?.A_mm2 ??
     2 * b_mm * tf_mm + (h_mm - 2 * tf_mm) * tw_mm + (4 - Math.PI) * r_mm ** 2;
   const fillet_area_mm2 = (1 - Math.PI / 4) * r_mm ** 2;
-  const d_fillet_y_mm = h_mm / 2 - tf_mm - (1 - 4 / (3 * Math.PI)) * r_mm;
+  const fillet_centroid_mm = ((10 - 3 * Math.PI) / (12 - 3 * Math.PI)) * r_mm;
+  const d_fillet_y_mm = h_mm / 2 - tf_mm - fillet_centroid_mm;
   const Iy_mm4 =
     existing?.Iy_mm4 ??
     (b_mm * h_mm ** 3 - (b_mm - tw_mm) * (h_mm - 2 * tf_mm) ** 3) / 12 +
       4 * fillet_area_mm2 * d_fillet_y_mm ** 2;
-  const d_fillet_z_mm = tw_mm / 2 + (4 * r_mm) / (3 * Math.PI);
+  const d_fillet_z_mm = tw_mm / 2 + fillet_centroid_mm;
   const Iz_mm4 =
     existing?.Iz_mm4 ??
     (2 * tf_mm * b_mm ** 3 + (h_mm - 2 * tf_mm) * tw_mm ** 3) / 12 +
@@ -42,7 +43,7 @@ export const computeIGeometryProperties = (
     tf_mm * b_mm ** 2 * 0.5 +
       ((h_mm - 2 * tf_mm) * tw_mm ** 2) / 4 +
       4 * fillet_area_mm2 * d_fillet_z_mm;
-  const hw_mm = h_mm;
+  const hw_mm = h_mm - 2 * tf_mm;
   const weldedShearArea_mm2 = eta * hw_mm * tw_mm;
   const rolledShearArea_mm2 =
     A_mm2 - 2 * b_mm * tf_mm + (tw_mm + 2 * r_mm) * tf_mm;
@@ -53,19 +54,26 @@ export const computeIGeometryProperties = (
   const Av_y_mm2 = A_mm2 - hw_mm * tw_mm;
   const S_y_mm3 = Wpl_y_mm3 / 2;
   const S_z_mm3 = Wpl_z_mm3 / 2;
+  const junction_dia_mm =
+    ((tf_mm + r_mm) ** 2 + tw_mm * (r_mm + tw_mm / 4)) / (2 * r_mm + tf_mm);
+
+  const junction_factor =
+    -0.042 +
+    0.2204 * (tw_mm / tf_mm) +
+    0.1355 * (r_mm / tf_mm) -
+    0.0865 * ((tw_mm * r_mm) / tf_mm ** 2) -
+    0.0725 * (tw_mm / tf_mm) ** 2;
+
   const It_mm4 =
     existing?.It_mm4 ??
     (2 * b_mm * tf_mm ** 3 + (h_mm - 2 * tf_mm) * tw_mm ** 3) / 3 +
-      2 *
-        ((2 * tf_mm + tw_mm) / (4 * tf_mm + tw_mm)) *
-        (0.145 + 0.1 * (r_mm / tf_mm)) *
-        ((r_mm + tw_mm / 2) ** 4 - tw_mm ** 4 / 16);
-  const Wt_mm3 = existing?.Wt_mm3 ?? It_mm4 / Math.max(tw_mm, tf_mm);
+      2 * junction_factor * junction_dia_mm ** 4 -
+      0.42 * tf_mm ** 4;
+
+  const Wt_mm3 = It_mm4 / Math.max(tw_mm, tf_mm);
   const Iw_mm6 =
     existing?.Iw_mm6 ?? ((tf_mm * b_mm ** 3) / 24) * (h_mm - tf_mm) ** 2;
   const centroid = { y_mm: b_mm / 2, z_mm: h_mm / 2 };
-
-  console.log({ Av_y_mm2, Av_z_mm2 });
 
   return {
     A_mm2,
@@ -98,7 +106,6 @@ const getExistingGeometryProperties = (section_id: string) => {
     Wpl_y_mm3,
     Wpl_z_mm3,
     It_mm4,
-    Wt_mm3,
     Iw_mm6,
   } = section;
   return {
@@ -110,7 +117,6 @@ const getExistingGeometryProperties = (section_id: string) => {
     Wpl_y_mm3,
     Wpl_z_mm3,
     It_mm4,
-    Wt_mm3,
     Iw_mm6,
   };
 };
