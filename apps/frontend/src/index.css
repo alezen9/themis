@@ -91,6 +91,12 @@ svg.pluton-root[data-drawing-error] {
   color: #0ea5e9;
 }
 
+/* Trace highlight: each tagged term carries a transparent bbox rect behind the
+   glyph -- a hit area over the whole term (every browser), filled when active. */
+.trace-formula [class*="var-"] {
+  cursor: pointer;
+}
+
 .ndg-editor-flow .react-flow__controls {
   overflow: hidden;
   border: 1px solid var(--color-sand-200);
@@ -163,6 +169,18 @@ svg.pluton-root[data-drawing-error] {
   --color-envy-800: #303f34;
   --color-envy-900: #2b362e;
   --color-envy-950: #151e18;
+
+  --color-plum-50: #f6f1f8;
+  --color-plum-100: #ebe0ef;
+  --color-plum-200: #d8c4e0;
+  --color-plum-300: #bd9dcb;
+  --color-plum-400: #a37ab4;
+  --color-plum-500: #8a5fa0;
+  --color-plum-600: #6f4a82;
+  --color-plum-700: #5b3d6a;
+  --color-plum-800: #4c3557;
+  --color-plum-900: #402e49;
+  --color-plum-950: #281a30;
 
   --font-fredoka: Fredoka, Inter;
 }

@@ -60,7 +60,8 @@ export const computeRhsGeometryProperties = (
   const wpl_y_outer_corner_mm3 =
     ((4 - Math.PI) / 4) * ro_mm ** 2 * (h_mm / 2 - ro_mm) + ro_mm ** 3 / 6;
   const wpl_y_inner_corner_mm3 =
-    ((4 - Math.PI) / 4) * ri_mm ** 2 * (h_mm / 2 - tw_mm - ri_mm) + ri_mm ** 3 / 6;
+    ((4 - Math.PI) / 4) * ri_mm ** 2 * (h_mm / 2 - tw_mm - ri_mm) +
+    ri_mm ** 3 / 6;
   const Wpl_y_mm3 =
     existing?.Wpl_y_mm3 ??
     (b_mm * h_mm ** 2 - bi_mm * hi_mm ** 2) / 4 -
@@ -70,7 +71,8 @@ export const computeRhsGeometryProperties = (
   const wpl_z_outer_corner_mm3 =
     ((4 - Math.PI) / 4) * ro_mm ** 2 * (b_mm / 2 - ro_mm) + ro_mm ** 3 / 6;
   const wpl_z_inner_corner_mm3 =
-    ((4 - Math.PI) / 4) * ri_mm ** 2 * (b_mm / 2 - tw_mm - ri_mm) + ri_mm ** 3 / 6;
+    ((4 - Math.PI) / 4) * ri_mm ** 2 * (b_mm / 2 - tw_mm - ri_mm) +
+    ri_mm ** 3 / 6;
   const Wpl_z_mm3 =
     existing?.Wpl_z_mm3 ??
     (h_mm * b_mm ** 2 - hi_mm * bi_mm ** 2) / 4 -

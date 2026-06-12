@@ -15,6 +15,7 @@ import "mathjax-full/js/input/tex/noerrors/NoErrorsConfiguration.js";
 import "mathjax-full/js/input/tex/mathtools/MathtoolsConfiguration.js";
 import "mathjax-full/js/input/tex/color/ColorConfiguration.js";
 import "mathjax-full/js/input/tex/enclose/EncloseConfiguration.js";
+import "mathjax-full/js/input/tex/bbox/BboxConfiguration.js";
 import "mathjax-full/js/input/tex/html/HtmlConfiguration.js";
 
 const adaptor = liteAdaptor();
@@ -30,6 +31,7 @@ const doc = mathjax.document("", {
       "mathtools",
       "color",
       "enclose",
+      "bbox",
       "html",
     ],
   }),

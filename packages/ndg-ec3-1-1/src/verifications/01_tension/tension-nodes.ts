@@ -3,6 +3,7 @@ import { defineNodes } from "@ndg/ndg-core";
 export const nodes = defineNodes([
   {
     id: "02480d3f-b178-48dd-a39b-b85309a61b3d",
+    symbol: "u_r",
     children: [
       { nodeId: "a77f73f6-5d19-4d12-9ff2-35260f63f393" },
       { nodeId: "5217f3d1-f584-4fb9-a193-810d95c1f743" },

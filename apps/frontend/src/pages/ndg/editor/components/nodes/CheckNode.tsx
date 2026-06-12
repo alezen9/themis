@@ -21,7 +21,12 @@ export const CheckNode = (props: EditorNodeProps) => {
       : SELECT_PREVIEW_TEX;
 
   return (
-    <NodeCard nodeId={props.id} nodeKey={data.key} kind={kind} label={data.name}>
+    <NodeCard
+      nodeId={props.id}
+      nodeKey={data.key}
+      kind={kind}
+      label={data.name}
+    >
       <NodeBody>
         <Latex displayMode tex={tex} className="px-1 text-sm" />
       </NodeBody>

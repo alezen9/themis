@@ -7,7 +7,12 @@ export const TableNode = (props: EditorNodeProps) => {
   if (type !== "table") return null;
 
   return (
-    <NodeCard nodeId={props.id} nodeKey={data.key} kind="table" label={data.key}>
+    <NodeCard
+      nodeId={props.id}
+      nodeKey={data.key}
+      kind="table"
+      label={data.key}
+    >
       <Handle type="target" position={Position.Top} />
       {data.source && (
         <NodeBody className="truncate px-2 py-1 text-[10px] text-slate-500">

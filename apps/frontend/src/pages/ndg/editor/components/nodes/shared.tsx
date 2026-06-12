@@ -10,7 +10,11 @@ import type { EditorNodeInput } from "../../document/editorNodeSchema";
 
 type NodeColorKind = EditorNodeInput["type"] | "select";
 
-type NodeStyle = { label: string; cardClassName: string; badgeClassName: string };
+type NodeStyle = {
+  label: string;
+  cardClassName: string;
+  badgeClassName: string;
+};
 
 const NODE_STYLES: Record<NodeColorKind, NodeStyle> = {
   select: {
